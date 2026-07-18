@@ -22,6 +22,28 @@ Inside the interactive session (`tokn` with no args, or `tokn agent-repl`):
 
 ---
 
+## Run anywhere — the soul outlives the body
+
+TOKN is a single static binary with no runtime dependencies, so the *same* TOKN
+runs on your laptop, an air-gapped box, or **any cloud — GCP, Azure, or AWS**.
+
+But portability is the easy part. TOKN separates the **body** (the ephemeral
+compute an agent runs on) from the **soul** (its identity, memory, trajectory,
+and cryptographic proof-of-work):
+
+- **Bring Your Own Cloud (BYOC)** — TOKN leases short-lived workers on *your*
+  infrastructure. When a worker is torn down, the soul persists and re-embodies
+  on the next one — nothing is lost.
+- **Swarm** — many bodies, one intent: decompose a job into a task graph and run
+  it across a fleet of sub-agents, spanning regions or clouds.
+- **Federation (agent-to-agent)** — TOKN instances discover and delegate to one
+  another over a peer mesh, so work flows to wherever capacity lives.
+
+The *body* may be spun up, torn down, or moved between clouds — the *soul*
+carries on, verifiable and continuous.
+
+---
+
 ## Core commands
 
 | Command | What it does |
