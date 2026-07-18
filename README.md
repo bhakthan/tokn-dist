@@ -7,6 +7,9 @@ source lives in a private repository.
 
 > Start here: download for your OS → put it on your `PATH` → run `tokn license trial`.
 
+> Curious what it does? See **[CAPABILITIES.md](CAPABILITIES.md)** for a quick tour —
+> or just run `tokn --help` after installing.
+
 ---
 
 ## 1. Download
@@ -24,19 +27,19 @@ Grab the latest build for your platform from the
 
 ## 2. Put it on your PATH
 
-=== Windows (PowerShell)
+**Windows (PowerShell)**
 ```powershell
 Move-Item .\tokn_windows_amd64.exe C:\Tools\tokn.exe
 [Environment]::SetEnvironmentVariable("Path", "$env:Path;C:\Tools", "User")
 ```
 
-=== macOS
+**macOS**
 ```bash
 chmod +x tokn_darwin_arm64
 sudo mv tokn_darwin_arm64 /usr/local/bin/tokn
 ```
 
-=== Linux
+**Linux**
 ```bash
 chmod +x tokn_linux_amd64
 sudo mv tokn_linux_amd64 /usr/local/bin/tokn
