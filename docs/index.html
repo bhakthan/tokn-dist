@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>TOKN-dist — traffic &amp; downloads</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root { --bg:#0d1117; --panel:#161b22; --border:#30363d; --fg:#e6edf3; --muted:#8b949e;
+          --accent:#58a6ff; --accent2:#3fb950; --accent3:#d29922; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+         font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+  header { padding:24px 20px 8px; max-width:1100px; margin:0 auto; }
+  h1 { margin:0 0 4px; font-size:22px; }
+  .sub { color:var(--muted); font-size:13px; }
+  main { max-width:1100px; margin:0 auto; padding:12px 20px 60px; }
+  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; margin:16px 0 24px; }
+  .card { background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:14px 16px; }
+  .card .n { font-size:26px; font-weight:700; }
+  .card .l { color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.04em; }
+  .panel { background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px; margin:16px 0; }
+  .panel h2 { margin:0 0 12px; font-size:15px; }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  th,td { text-align:left; padding:7px 10px; border-bottom:1px solid var(--border); }
+  th { color:var(--muted); font-weight:600; }
+  td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
+  .note { color:var(--muted); font-size:12.5px; border-left:3px solid var(--accent3); padding:8px 12px; background:#1c1a12; border-radius:6px; }
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media (max-width:720px){ .two{ grid-template-columns:1fr; } }
+  a { color:var(--accent); }
+  .stamp { color:var(--muted); font-size:12px; margin-top:6px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>TOKN-dist — traffic &amp; downloads</h1>
+  <div class="sub">Daily snapshots of clones, views, and release downloads —
+    persisted so they survive GitHub's 14-day traffic-retention window.</div>
+</header>
+<main>
+  <div class="note">
+    GitHub never reveals <strong>who</strong> clones or downloads — only daily
+    counts and unique-visitor counts. Download counts are cumulative all-time
+    (never erased); clones/views are captured daily because GitHub deletes
+    anything older than 14 days.
+  </div>
+
+  <div class="cards" id="cards"></div>
+
+  <div class="two">
+    <div class="panel"><h2>Clones per day</h2><canvas id="clones"></canvas></div>
+    <div class="panel"><h2>Views per day</h2><canvas id="views"></canvas></div>
+  </div>
+
+  <div class="panel"><h2>Downloads per day (delta) &amp; cumulative total</h2><canvas id="downloads"></canvas></div>
+
+  <div class="panel">
+    <h2>Downloads by asset (cumulative, all-time)</h2>
+    <table id="assets"><thead><tr><th>Asset</th><th class="num">Downloads</th></tr></thead><tbody></tbody></table>
+  </div>
+
+  <div class="two">
+    <div class="panel">
+      <h2>Top referrers (last 14 days)</h2>
+      <table id="referrers"><thead><tr><th>Source</th><th class="num">Views</th><th class="num">Uniques</th></tr></thead><tbody></tbody></table>
+    </div>
+    <div class="panel">
+      <h2>Top paths (last 14 days)</h2>
+      <table id="paths"><thead><tr><th>Path</th><th class="num">Views</th><th class="num">Uniques</th></tr></thead><tbody></tbody></table>
+    </div>
+  </div>
+
+  <div class="stamp" id="stamp"></div>
+</main>
+
+<script>
+const AX = { grid:{ color:'#21262d' }, ticks:{ color:'#8b949e' } };
+const OPT = { responsive:true, plugins:{ legend:{ labels:{ color:'#e6edf3' } } },
+              scales:{ x:AX, y:{ ...AX, beginAtZero:true } } };
+
+function sortedKeys(o){ return Object.keys(o||{}).sort(); }
+function td(v){ const d=document.createElement('td'); d.className='num'; d.textContent=v; return d; }
+
+fetch('data/history.json?_=' + Date.now())
+  .then(r => r.json())
+  .then(h => {
+    const cloneDays = sortedKeys(h.clones_daily);
+    const viewDays  = sortedKeys(h.views_daily);
+    const snapDays  = sortedKeys(h.downloads_snapshots);
+    const latestSnap = snapDays.length ? h.downloads_snapshots[snapDays[snapDays.length-1]] : {total:0, assets:{}};
+
+    const sum = (days,o,f) => days.reduce((a,d)=>a+(f(o[d])||0),0);
+    const cards = [
+      ['Total downloads', latestSnap.total || 0],
+      ['Clones (14d)',  sum(cloneDays,h.clones_daily,x=>x.count)],
+      ['Clone uniques (14d)', sum(cloneDays,h.clones_daily,x=>x.uniques)],
+      ['Views (14d)',   sum(viewDays,h.views_daily,x=>x.count)],
+      ['View uniques (14d)', sum(viewDays,h.views_daily,x=>x.uniques)],
+      ['Days tracked',  snapDays.length],
+    ];
+    document.getElementById('cards').innerHTML = cards.map(
+      ([l,n]) => `<div class="card"><div class="n">${n}</div><div class="l">${l}</div></div>`
+    ).join('');
+
+    new Chart(document.getElementById('clones'), { type:'line', options:OPT, data:{
+      labels:cloneDays, datasets:[
+        { label:'Clones', data:cloneDays.map(d=>h.clones_daily[d].count), borderColor:'#58a6ff', backgroundColor:'#58a6ff33', tension:.25 },
+        { label:'Uniques', data:cloneDays.map(d=>h.clones_daily[d].uniques), borderColor:'#3fb950', backgroundColor:'#3fb95033', tension:.25 },
+      ]}});
+
+    new Chart(document.getElementById('views'), { type:'line', options:OPT, data:{
+      labels:viewDays, datasets:[
+        { label:'Views', data:viewDays.map(d=>h.views_daily[d].count), borderColor:'#58a6ff', backgroundColor:'#58a6ff33', tension:.25 },
+        { label:'Uniques', data:viewDays.map(d=>h.views_daily[d].uniques), borderColor:'#3fb950', backgroundColor:'#3fb95033', tension:.25 },
+      ]}});
+
+    const dlDays = sortedKeys(h.downloads_daily);
+    const cumLabels = snapDays;
+    new Chart(document.getElementById('downloads'), { type:'bar', options:{
+        ...OPT, scales:{ x:AX, y:{ ...AX, beginAtZero:true }, y1:{ ...AX, position:'right', beginAtZero:true, grid:{ drawOnChartArea:false } } }
+      }, data:{
+        labels:cumLabels, datasets:[
+          { type:'bar', label:'New downloads / day', yAxisID:'y',
+            data:cumLabels.map(d=>h.downloads_daily[d]||0), backgroundColor:'#d2992288', borderColor:'#d29922' },
+          { type:'line', label:'Cumulative total', yAxisID:'y1', tension:.25,
+            data:cumLabels.map(d=>h.downloads_snapshots[d].total), borderColor:'#58a6ff', backgroundColor:'#58a6ff33' },
+        ]}});
+
+    const at = document.querySelector('#assets tbody');
+    Object.entries(latestSnap.assets||{}).sort((a,b)=>b[1]-a[1]).forEach(([name,c])=>{
+      const tr=document.createElement('tr');
+      const n=document.createElement('td'); n.textContent=name; tr.appendChild(n); tr.appendChild(td(c)); at.appendChild(tr);
+    });
+
+    const rt = document.querySelector('#referrers tbody');
+    (h.referrers||[]).forEach(r=>{ const tr=document.createElement('tr');
+      const n=document.createElement('td'); n.textContent=r.referrer; tr.appendChild(n);
+      tr.appendChild(td(r.count)); tr.appendChild(td(r.uniques)); rt.appendChild(tr); });
+    if(!(h.referrers||[]).length) rt.innerHTML='<tr><td colspan="3" style="color:#8b949e">No referrer data yet</td></tr>';
+
+    const pt = document.querySelector('#paths tbody');
+    (h.paths||[]).forEach(p=>{ const tr=document.createElement('tr');
+      const n=document.createElement('td'); n.textContent=p.path; tr.appendChild(n);
+      tr.appendChild(td(p.count)); tr.appendChild(td(p.uniques)); pt.appendChild(tr); });
+    if(!(h.paths||[]).length) pt.innerHTML='<tr><td colspan="3" style="color:#8b949e">No path data yet</td></tr>';
+
+    document.getElementById('stamp').textContent =
+      'Last updated: ' + (h.updated_at || '—') + ' · repo: ' + (h.repo || '—');
+  })
+  .catch(e => {
+    document.getElementById('cards').innerHTML =
+      '<div class="card"><div class="n">—</div><div class="l">No data yet</div></div>';
+    document.getElementById('stamp').textContent = 'Could not load data/history.json: ' + e;
+  });
+</script>
+</body>
+</html>

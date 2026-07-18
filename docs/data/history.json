@@ -1,0 +1,135 @@
+{
+  "clones_daily": {
+    "2026-07-05": {
+      "count": 0,
+      "uniques": 0
+    },
+    "2026-07-06": {
+      "count": 0,
+      "uniques": 0
+    },
+    "2026-07-07": {
+      "count": 0,
+      "uniques": 0
+    },
+    "2026-07-08": {
+      "count": 0,
+      "uniques": 0
+    },
+    "2026-07-09": {
+      "count": 0,
+      "uniques": 0
+    },
+    "2026-07-10": {
+      "count": 0,
+      "uniques": 0
+    },
+    "2026-07-11": {
+      "count": 0,
+      "uniques": 0
+    },
+    "2026-07-12": {
+      "count": 0,
+      "uniques": 0
+    },
+    "2026-07-13": {
+      "count": 0,
+      "uniques": 0
+    },
+    "2026-07-14": {
+      "count": 0,
+      "uniques": 0
+    },
+    "2026-07-15": {
+      "count": 0,
+      "uniques": 0
+    },
+    "2026-07-16": {
+      "count": 0,
+      "uniques": 0
+    },
+    "2026-07-17": {
+      "count": 0,
+      "uniques": 0
+    },
+    "2026-07-18": {
+      "count": 0,
+      "uniques": 0
+    }
+  },
+  "downloads_daily": {},
+  "downloads_snapshots": {
+    "2026-07-18": {
+      "assets": {
+        "tokn_darwin_amd64": 0,
+        "tokn_darwin_arm64": 0,
+        "tokn_linux_amd64": 0,
+        "tokn_linux_arm64": 0,
+        "tokn_windows_amd64.exe": 0
+      },
+      "total": 0
+    }
+  },
+  "paths": [],
+  "referrers": [],
+  "repo": "bhakthan/tokn-dist",
+  "updated_at": "2026-07-18T16:12:44.998383+00:00",
+  "views_daily": {
+    "2026-07-05": {
+      "count": 0,
+      "uniques": 0
+    },
+    "2026-07-06": {
+      "count": 0,
+      "uniques": 0
+    },
+    "2026-07-07": {
+      "count": 0,
+      "uniques": 0
+    },
+    "2026-07-08": {
+      "count": 0,
+      "uniques": 0
+    },
+    "2026-07-09": {
+      "count": 0,
+      "uniques": 0
+    },
+    "2026-07-10": {
+      "count": 0,
+      "uniques": 0
+    },
+    "2026-07-11": {
+      "count": 0,
+      "uniques": 0
+    },
+    "2026-07-12": {
+      "count": 0,
+      "uniques": 0
+    },
+    "2026-07-13": {
+      "count": 0,
+      "uniques": 0
+    },
+    "2026-07-14": {
+      "count": 0,
+      "uniques": 0
+    },
+    "2026-07-15": {
+      "count": 0,
+      "uniques": 0
+    },
+    "2026-07-16": {
+      "count": 0,
+      "uniques": 0
+    },
+    "2026-07-17": {
+      "count": 0,
+      "uniques": 0
+    },
+    "2026-07-18": {
+      "count": 0,
+      "uniques": 0
+    }
+  }
+}
