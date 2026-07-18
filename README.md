@@ -10,6 +10,16 @@ source lives in a private repository.
 > Curious what it does? See **[CAPABILITIES.md](CAPABILITIES.md)** for a quick tour —
 > or just run `tokn --help` after installing.
 
+> 🔑 **Bring your own model.** TOKN needs an LLM provider (OpenAI, Azure OpenAI,
+> Anthropic/Claude, Gemini, or a local runtime). See **[SETUP.md](SETUP.md)** to
+> configure your provider and API key in under a minute.
+
+> ⚖️ **Legal:** TOKN is proprietary, evaluation-only software provided **"as is",
+> with no warranty and no liability**. It may **not** be copied, redistributed, or
+> reverse-engineered. AI output is not professional advice and must be verified;
+> you are responsible for compliance and assume all risk. By downloading or using
+> TOKN you agree to the **[License & Disclaimer](LICENSE.md)** — please read it.
+
 ---
 
 ## 1. Download
@@ -51,7 +61,24 @@ tokn --version
 tokn --help
 ```
 
-## 3. Start your 14-day trial
+## 3. Point TOKN at a model
+
+TOKN is **bring-your-own-model** — it runs against a provider you already have
+(OpenAI, Azure OpenAI, Anthropic/Claude, Gemini) or a local runtime (Ollama,
+llama.cpp/GGUF, ONNX). Set two variables plus your key, e.g.:
+
+```bash
+export NOSPACE_MODEL_PROVIDER=openai
+export NOSPACE_MODEL_NAME=gpt-4o
+export OPENAI_API_KEY=sk-...
+tokn auth status        # confirms the provider is configured & ready
+```
+
+Prefer a file? Drop the same keys in a `.env` in your working directory (TOKN
+auto-loads it, non-overriding — just keep it out of git). **Full provider matrix,
+Azure `az login` auth, and local-model setup: [SETUP.md](SETUP.md).**
+
+## 4. Start your 14-day trial
 
 TOKN runs in a free **community** tier by default. Unlock the full feature
 surface with a **14-day trial** — no account, no phone-home, fully offline:
@@ -65,7 +92,7 @@ The trial writes a signed, machine-bound token to `~/.tokn/license.json` and is
 limited to **one trial per machine**. When it expires, TOKN automatically
 reverts to the community tier — the binary keeps working.
 
-## 4. Stay up to date (works during the trial)
+## 5. Stay up to date (works during the trial)
 
 TOKN updates itself in place — no reinstall, no package manager:
 
@@ -89,8 +116,25 @@ Updating **does not** reset or invalidate an active trial.
 
 ## Support & licensing
 
-- Questions, trial extensions, or Pro/Enterprise licensing: **licensing@tokn.dev**
+- Questions, trial extensions, or Pro/Enterprise licensing: **open an issue in this repo**
 - Found a bug during your trial? Open an issue in this repo.
 
-_TOKN is a commercial product. This distribution repo contains released binaries
-only; the source code is maintained privately._
+## Legal & disclaimer
+
+TOKN is **proprietary, evaluation-only** software. **All Rights Reserved.**
+
+- Provided **"AS IS", with no warranty of any kind.**
+- The owner/contributors are **not liable for any damages** arising from its use.
+- You **may not copy, redistribute, modify, or reverse-engineer** it.
+- AI output **is not professional advice**, may be wrong, and **must be
+  independently verified**. Domain features (medical, legal, financial, etc.) are
+  decision-support only — **not** certified for clinical, production, or regulated
+  use.
+- **You are solely responsible for compliance** with all applicable laws
+  (data protection, export control, sector regulations) and **assume all risk**.
+
+**By downloading or using TOKN you accept the full
+[License & Disclaimer](LICENSE.md).**
+
+_This distribution repo contains released binaries only; the source code is
+maintained privately and is not licensed hereunder._

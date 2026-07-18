@@ -44,6 +44,29 @@ carries on, verifiable and continuous.
 
 ---
 
+## Works with your existing coding agent
+
+You don't have to leave the tools you already use. TOKN can act as a **tool server**
+that plugs its whole capability surface into other AI coding agents:
+
+```bash
+tokn serve --mode mcp        # expose TOKN's tools over the Model Context Protocol
+```
+
+- **MCP (Model Context Protocol)** — attach TOKN to **Claude Code**, **GitHub
+  Copilot CLI**, **Cursor**, or any MCP-capable client, and its tools, modes, and
+  domain harnesses appear as callable tools inside that agent.
+- **Other protocols** — the same `tokn serve` also speaks **A2A** (agent-to-agent),
+  an **OpenAI-compatible** tool endpoint, and **webhooks** (`--mode a2a|openai|webhook`).
+- **Machine-readable contract** — `tokn introspect` emits a JSON description of
+  every mode, flag, provider, and tool, so another agent can discover TOKN's
+  interface automatically.
+
+So you can keep driving from Claude Code or Copilot CLI and reach for TOKN's
+trust-first modes and regulated-domain guardrails when a task needs them.
+
+---
+
 ## Core commands
 
 | Command | What it does |
@@ -100,4 +123,8 @@ tokn --help
 ---
 
 **This is a trial build for feedback.** Found something confusing, broken, or
-missing? Open an issue in this repo or email **licensing@tokn.dev**.
+missing? **Open an issue in this repo.**
+
+_Proprietary, evaluation-only software — no warranty, no liability, no
+redistribution. AI output is not professional advice; verify before you rely on
+it. See the full [License & Disclaimer](LICENSE.md)._
