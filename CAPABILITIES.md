@@ -217,6 +217,34 @@ covered:
 Each harness enforces sector-appropriate guardrails — the point of TOKN is
 **trust-first** automation, not just output. Run `/learn domains` to explore.
 
+## Customizable per organization — not one-size-fits-all
+
+Most coding agents give you a single `AGENTS.md`/`CLAUDE.md` file and call it
+customization. TOKN goes further: **every prompt is data, not baked-in code**, so
+an organization can tune the agent's behavior — including inside regulated
+domains — **without recompiling or waiting on a vendor release**.
+
+- **Prompt-as-data overrides** — the system prompt for *every* mode, domain, tool,
+  and intent is externalized. Drop a file under `.nospace/prompts/` (per project)
+  or `~/.nospace/prompts/` (per user/org) and it takes precedence over the built-in
+  default. When a new model lands with different instruction-following, tuning is a
+  file edit — not a redeploy.
+- **Org rules that stick** — `.nospace/instructions.md`, `context.md`, and a
+  learned `memory.json` carry your conventions, guardrails, and gotchas across every
+  session. Capture them conversationally with `/teach` (`/teach rule "all errors
+  must be wrapped with %w"`).
+- **Tune the domain guardrails** — because gates and validators are configurable,
+  an enterprise can encode *its own* regulatory posture (formularies, thresholds,
+  jurisdictions, disclosure language) on top of a shipped harness — something a
+  fixed, model-baked coding agent simply can't offer.
+- **Bring your own skills** — install org skills from `.github/skills`,
+  `.agents/skills`, or `.claude/skills`; `skillsync` absorbs an organization's
+  skills and contributes improvements back.
+
+The result: the *same* TOKN binary behaves like **your** organization's agent —
+its voice, its rules, its domain gates — with zero forking and zero recompile.
+Run `/learn customize` to see it end to end.
+
 ## Real data science & ML — graded, not guessed
 
 TOKN doesn't just *talk* about models — it builds them and is **scored by an
