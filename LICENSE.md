@@ -9,7 +9,12 @@ for evaluation only**. The source code is **not** licensed, published, or made
 available under this distribution.
 
 > **Read this before downloading or running the Software.** By downloading,
-> installing, or using the Software you agree to all terms below. If you do not
+> cloning, installing, or using the Software — or this repository — you agree to
+> all terms below. If you do not agree, do not download, clone, install, or use
+> the Software. **Cloning or downloading this repository grants you no right to
+> extract, reconstruct, retrain on, or reverse engineer the Software or its
+> internals (including by using AI/LLM tools), and participation in the feedback
+> program is a binding condition of your license (Section 1).** If you do not
 > agree, do not download, install, or use the Software.
 
 ---
@@ -23,6 +28,17 @@ your internal, non-production purposes**, and only for the duration of a valid
 trial or other license period expressly granted by Licensor. No other rights are
 granted, by implication, estoppel, or otherwise.
 
+**1.1 Feedback is a binding condition of this license.** This is a
+**feedback-first evaluation program**. Your license is expressly conditioned on
+your **good-faith participation** in it: you agree to provide Licensor
+reasonable feedback about your use of the Software (defects, usability,
+suggestions) when requested. You grant Licensor a **perpetual, irrevocable,
+worldwide, royalty-free, sublicensable license** to use, act on, and incorporate
+that feedback into any product without restriction or obligation to you.
+Declining to participate, or attempting to obtain the value of the Software
+without providing feedback, is a **material breach** and grounds for immediate
+revocation under Section 9.
+
 ## 2. Restrictions — what you may NOT do
 
 You may **not**, in whole or in part:
@@ -31,9 +47,14 @@ You may **not**, in whole or in part:
   make the Software available** to any third party;
 - **Modify, adapt, translate, or create derivative works** of the Software;
 - **Reverse engineer, decompile, disassemble,** or otherwise attempt to derive
-  the source code, underlying ideas, algorithms, structure, or organization of
-  the Software, except to the limited extent this restriction is expressly
-  prohibited by applicable mandatory law;
+  the source code, prompts, model weights, configurations, underlying ideas,
+  algorithms, structure, or organization of the Software — **including by
+  extracting, decoding, or analyzing its binaries, strings, or embedded data
+  with any AI/LLM, decompiler, or other automated tool** — except to the limited
+  extent this restriction is expressly prohibited by applicable mandatory law;
+- **Use the Software, its binaries, or its output to train, fine-tune, or build
+  any model, dataset, prompt library, or system,** or to otherwise reconstruct or
+  approximate the Software or its confidential internals;
 - **Circumvent, disable, or tamper with** any license, trial, security, usage, or
   technical-protection mechanism;
 - **Remove, obscure, or alter** any copyright, trademark, proprietary, or other

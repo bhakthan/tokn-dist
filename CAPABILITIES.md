@@ -166,9 +166,13 @@ tokn --help
 
 ---
 
-**This is a trial build for feedback.** Found something confusing, broken, or
-missing? **Open an issue in this repo.**
+**This is a feedback-first trial build.** Providing feedback is a **condition of
+use**, not a favor — it's the entire point of this early program, and it's the
+one thing that **cannot** be reverse-engineered out of the binary. Found
+something confusing, broken, or missing? **Open an issue in this repo.**
 
 _Proprietary, evaluation-only software — no warranty, no liability, no
-redistribution. AI output is not professional advice; verify before you rely on
-it. See the full [License & Disclaimer](LICENSE.md)._
+redistribution, and **no reverse engineering or AI/LLM-assisted extraction** of
+its internals. Cloning or downloading grants no such rights. AI output is not
+professional advice; verify before you rely on it. See the full
+[License & Disclaimer](LICENSE.md)._

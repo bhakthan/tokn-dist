@@ -16,9 +16,13 @@ source lives in a private repository.
 
 > ⚖️ **Legal:** TOKN is proprietary, evaluation-only software provided **"as is",
 > with no warranty and no liability**. It may **not** be copied, redistributed, or
-> reverse-engineered. AI output is not professional advice and must be verified;
-> you are responsible for compliance and assume all risk. By downloading or using
-> TOKN you agree to the **[License & Disclaimer](LICENSE.md)** — please read it.
+> reverse-engineered — **including any attempt to extract, reconstruct, or retrain
+> on its internals with AI/LLM tools**. Cloning or downloading this repo grants you
+> **no** such rights. This is a **feedback-first program**: providing feedback is a
+> **condition** of the trial. AI output is not professional advice and must be
+> verified; you are responsible for compliance and assume all risk. By downloading,
+> cloning, or using TOKN you agree to the **[License & Disclaimer](LICENSE.md)** —
+> please read it.
 
 ---
 
