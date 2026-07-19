@@ -95,6 +95,37 @@ carries on, verifiable and continuous.
 
 ---
 
+## Bring your own everything — runs fully air-gapped
+
+TOKN is built for the environments other coding agents can't touch: a locked-down
+enterprise network, a classified enclave, a factory floor, a plane. It needs **no
+internet connection, no vendor account, and no cloud API key** to run.
+
+- **No internet** — a single static binary with no runtime dependencies and
+  **offline licensing** (no sign-up, no phone-home, no telemetry required). Drop it
+  on an air-gapped box and `tokn license trial` works with zero network.
+- **No vendor account** — you are never forced onto one provider's login. Point
+  TOKN at **your own model** — a local model via Ollama / llama.cpp, or an
+  on-prem/self-hosted endpoint — and it runs entirely inside your perimeter.
+- **No cloud API key** — bring your own weights and your own compute. **BYO model +
+  BYO cloud (BYOC)** means secrets, prompts, and data never leave your walls.
+
+So the same TOKN that rides the frontier online also runs **completely offline** —
+your code and your context stay on your metal. Learn it with `/learn air-gap` and
+`/learn local-models`.
+
+## Multi-modal inputs — reason over more than text
+
+TOKN isn't limited to text. It accepts **multi-modal inputs** — images today
+(diagrams, screenshots, scanned documents, charts), with sensor/signal payloads
+behind the same contract — and runs them through a harness that turns non-text
+into **typed, confidence-tagged claims** your domain guardrails can actually gate
+on, not just a caption. Reasoning is delegated to a vision-capable model you
+choose; if none is configured, TOKN fails closed with clear guidance instead of a
+cryptic error.
+
+---
+
 ## Works with your existing coding agent
 
 You don't have to leave the tools you already use. TOKN can act as a **tool server**
