@@ -53,8 +53,8 @@
       "uniques": 0
     },
     "2026-07-18": {
-      "count": 0,
-      "uniques": 0
+      "count": 64,
+      "uniques": 38
     }
   },
   "downloads_daily": {
@@ -82,10 +82,77 @@
       "total": 0
     }
   },
-  "paths": [],
-  "referrers": [],
+  "paths": [
+    {
+      "count": 21,
+      "path": "/bhakthan/tokn-dist",
+      "title": "Overview",
+      "uniques": 1
+    },
+    {
+      "count": 13,
+      "path": "/bhakthan/tokn-dist/tree/main",
+      "title": "/tree/main",
+      "uniques": 1
+    },
+    {
+      "count": 8,
+      "path": "/bhakthan/tokn-dist/blob/main/CAPABILITIES.md",
+      "title": "/blob/main/CAPABILITIES.md",
+      "uniques": 1
+    },
+    {
+      "count": 6,
+      "path": "/bhakthan/tokn-dist/releases/tag/v0.2.8",
+      "title": "/releases/tag/v0.2.8",
+      "uniques": 1
+    },
+    {
+      "count": 5,
+      "path": "/bhakthan/tokn-dist/graphs/traffic",
+      "title": "/graphs/traffic",
+      "uniques": 1
+    },
+    {
+      "count": 5,
+      "path": "/bhakthan/tokn-dist/pulse",
+      "title": "/pulse",
+      "uniques": 1
+    },
+    {
+      "count": 2,
+      "path": "/bhakthan/tokn-dist/blob/main/docs/index.html",
+      "title": "/blob/main/docs/index.html",
+      "uniques": 1
+    },
+    {
+      "count": 2,
+      "path": "/bhakthan/tokn-dist/tree/main/docs",
+      "title": "/tree/main/docs",
+      "uniques": 1
+    },
+    {
+      "count": 1,
+      "path": "/bhakthan/tokn-dist/blob/main/LICENSE.md",
+      "title": "/blob/main/LICENSE.md",
+      "uniques": 1
+    },
+    {
+      "count": 1,
+      "path": "/bhakthan/tokn-dist/blob/main/README.md",
+      "title": "/blob/main/README.md",
+      "uniques": 1
+    }
+  ],
+  "referrers": [
+    {
+      "count": 59,
+      "referrer": "github.com",
+      "uniques": 1
+    }
+  ],
   "repo": "bhakthan/tokn-dist",
-  "updated_at": "2026-07-19T08:35:48.138674+00:00",
+  "updated_at": "2026-07-19T13:14:42.312529+00:00",
   "views_daily": {
     "2026-07-05": {
       "count": 0,
@@ -140,8 +207,8 @@
       "uniques": 0
     },
     "2026-07-18": {
-      "count": 0,
-      "uniques": 0
+      "count": 70,
+      "uniques": 1
     }
   }
 }
