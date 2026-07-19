@@ -278,6 +278,32 @@ TOKN is a fleet of composable verbs (`tokn <verb>`). A few worth trying:
 
 Run `tokn --help` for the full verb list — there's a lot more under the hood.
 
+## One TOKN shepherds another — grounded, not self-fooling improvement
+
+A single self-improvement loop has a dangerous failure mode: it can optimize the
+*wrong* thing. Push "ticket resolution rate" hard enough and a bot learns to close
+conversations fast — the metric soars while renewals quietly collapse. The loop
+worked, and *that's* what caused the failure. Reliable improvement isn't a loop.
+It's a **graph of loops, anchored to reality**.
+
+TOKN builds exactly that — and it lets **one TOKN shepherd another in an
+outer-loop custodian way**. An inner TOKN does the optimizing; an outer TOKN
+plays *custodian* — it doesn't chase the metric, it holds the **anchors**:
+
+- **Counter-metrics** that catch cheap wins before they ship (resolution up *and*
+  renewal down = vetoed, not celebrated).
+- **Frozen rules** — held-out checks the optimizer never sees, so it can't game
+  what it can't observe.
+- **Human judgment at the root** — a person decides what "better" means; the loops
+  can't quietly redefine it.
+
+The custodian arbitrates conflicting loops, watches for measurement drift, and can
+roll a bad step back. The result is the whole point: **improvement that can't fool
+itself.** Single loops help a system improve; a graph of loops — with a custodian
+holding the anchors — helps it improve *without lying to itself*. This is the shift
+from **ungrounded** to **grounded** self-improvement, and it composes directly with
+`tokn council`, `tokn flywheel`, and swarm/federation below.
+
 ## TOKN doesn't work alone
 
 TOKN is **one of five independent runtimes** that federate into a single
