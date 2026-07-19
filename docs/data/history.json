@@ -57,9 +57,21 @@
       "uniques": 0
     }
   },
-  "downloads_daily": {},
+  "downloads_daily": {
+    "2026-07-19": 0
+  },
   "downloads_snapshots": {
     "2026-07-18": {
+      "assets": {
+        "tokn_darwin_amd64": 0,
+        "tokn_darwin_arm64": 0,
+        "tokn_linux_amd64": 0,
+        "tokn_linux_arm64": 0,
+        "tokn_windows_amd64.exe": 0
+      },
+      "total": 0
+    },
+    "2026-07-19": {
       "assets": {
         "tokn_darwin_amd64": 0,
         "tokn_darwin_arm64": 0,
@@ -73,7 +85,7 @@
   "paths": [],
   "referrers": [],
   "repo": "bhakthan/tokn-dist",
-  "updated_at": "2026-07-18T16:16:01.090458+00:00",
+  "updated_at": "2026-07-19T08:35:48.138674+00:00",
   "views_daily": {
     "2026-07-05": {
       "count": 0,
