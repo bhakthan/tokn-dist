@@ -140,6 +140,11 @@ with no rewrite and no lock-in. The frontier moves; TOKN moves with it.
 
 The pitch in one line: **bet on the harness, not on this month's model.**
 
+> **Where this comes from.** TOKN grew out of the *Agent Harness Engineering*
+> concept — the idea that the durable engineering surface for agents is the
+> harness around the model, not the model itself. Read the public write-up:
+> <https://app.openagentschool.org/concepts/agent-harness-engineering>.
+
 ---
 
 ## A mind that watches itself — the global workspace (`tspace`)
