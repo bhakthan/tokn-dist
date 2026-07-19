@@ -108,6 +108,39 @@ covered:
 Each harness enforces sector-appropriate guardrails — the point of TOKN is
 **trust-first** automation, not just output. Run `/learn domains` to explore.
 
+## Real data science & ML — graded, not guessed
+
+TOKN doesn't just *talk* about models — it builds them and is **scored by an
+objective harness**. Point it at a dataset and a metric, and it will engineer
+features, train, and **cross-validate** a model — but the task only passes if it
+**beats your baseline by a margin**, so you get genuine lift instead of an agent
+that quietly satisfices to the floor.
+
+- **Grounded experiments** — propose and run experiments whose results are graded
+  by a *real* harness command (your own `go test` / `python` oracle), not by the
+  model's opinion of its own work.
+- **Autodesign** — optimize against weighted quality dimensions and pass/fail
+  gates, tracking a **Pareto frontier** across competing objectives.
+- **Decoupled evaluator** — the optimizer never grades its own homework; scoring
+  is separated from generation so numbers mean something.
+
+The result: measurable RMSE/accuracy on the board, an audit trail of what was
+tried, and a hard gate between "looks done" and "is done."
+
+## Signature verbs — one binary, many superpowers
+
+TOKN is a fleet of composable verbs (`tokn <verb>`). A few worth trying:
+
+| Verb | The pitch |
+|------|-----------|
+| `tokn council` | **Inter-runtime Triangulation Council** — independent runtimes (built on *different* stacks) each drop a blind, provenance-grounded verdict; the council converges them into **audit-grade consensus** with a dissent ledger. Agreement becomes *calibrated confidence*, not groupthink. |
+| `tokn flywheel` | **Agent Quality Flywheel** — plan-first `eval → fix → re-eval` cycles gated against a baseline, so quality is *measured* and regressions are caught before they ship. |
+| `tokn swarm-plan` / `swarm-build` | Decompose one intent into a task graph and run it across a fleet of sub-agents — many bodies, one goal. |
+| `tokn evolve` | Iteratively mutate and select toward a target — let the harness, not a hunch, pick the winner. |
+| `tokn self-provision` / `self-deploy` | TOKN can **stand itself up** on *your* GCP or Azure and keep operating — the soul re-embodies wherever there's capacity. |
+
+Run `tokn --help` for the full verb list — there's a lot more under the hood.
+
 ## Everything else
 
 Memory & recall, background task tracking, code generation, a built-in wiki
