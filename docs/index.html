@@ -31,6 +31,9 @@
   @media (max-width:720px){ .two{ grid-template-columns:1fr; } }
   a { color:var(--accent); }
   .stamp { color:var(--muted); font-size:12px; margin-top:6px; }
+  .empty { display:none; color:var(--fg); border-left:3px solid var(--accent2);
+           padding:12px 14px; background:#0f1a12; border-radius:8px; margin:16px 0; }
+  .empty strong { color:var(--accent2); }
 </style>
 </head>
 <body>
@@ -48,6 +51,15 @@
   </div>
 
   <div class="cards" id="cards"></div>
+
+  <div class="empty" id="empty">
+    <strong>✓ Dashboard healthy — no external activity yet.</strong>
+    Every metric below is genuinely <strong>0</strong>: nobody has cloned,
+    viewed, or downloaded a binary from this public repo so far. This is the
+    expected state before the trial is shared — the charts are flat, not broken.
+    The daily snapshot (06:17&nbsp;UTC) will fill in automatically the moment
+    someone interacts.
+  </div>
 
   <div class="two">
     <div class="panel"><h2>Clones per day</h2><canvas id="clones"></canvas></div>
@@ -103,6 +115,11 @@ fetch('data/history.json?_=' + Date.now())
     document.getElementById('cards').innerHTML = cards.map(
       ([l,n]) => `<div class="card"><div class="n">${n}</div><div class="l">${l}</div></div>`
     ).join('');
+
+    const totalActivity = (latestSnap.total||0)
+      + sum(cloneDays,h.clones_daily,x=>x.count)
+      + sum(viewDays,h.views_daily,x=>x.count);
+    if (totalActivity === 0) document.getElementById('empty').style.display = 'block';
 
     new Chart(document.getElementById('clones'), { type:'line', options:OPT, data:{
       labels:cloneDays, datasets:[
