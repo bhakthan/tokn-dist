@@ -141,6 +141,17 @@ TOKN is a fleet of composable verbs (`tokn <verb>`). A few worth trying:
 
 Run `tokn --help` for the full verb list — there's a lot more under the hood.
 
+## TOKN doesn't work alone
+
+TOKN is **one of five independent runtimes** that federate into a single
+**agentic organization**. The other four are sibling products — each built on a
+*different* technology stack — spanning sense-making, specialized reasoning, and
+governance. They discover and delegate to one another over a peer mesh, and
+converge their conclusions through `tokn council` into audit-grade consensus.
+
+You're evaluating the TOKN runtime here; the wider org is how *one intent* scales
+across *many minds*. More on the siblings as they become available.
+
 ## Everything else
 
 Memory & recall, background task tracking, code generation, a built-in wiki
