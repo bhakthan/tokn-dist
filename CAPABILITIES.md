@@ -20,6 +20,57 @@ Inside the interactive session (`tokn` with no args, or `tokn agent-repl`):
 > Counts below are deliberately approximate — run the commands above for the
 > exact surface shipped in your version.
 
+> **You're seeing roughly 5% of TOKN.** This page hand-picks about a dozen
+> headline themes out of a shipped surface of **155 slash commands, 184
+> hands-on `/learn` lessons, 17 regulated-domain harnesses, and ~300 documented
+> capability sections**. Treat everything below as a teaser — `tokn --help`,
+> `/help`, and `/learn` reveal the other 95%.
+
+---
+
+## Point it at a repo and just ask — your first 5 minutes
+
+The fastest way to feel what TOKN does: `cd` into any repository, start `tokn`,
+and ask a plain-English question. No setup, no indexing step, no config.
+
+```text
+> I just cloned this repo. Give me the 30-second tour.
+
+  · reading README.md, package.json
+  · listing src/ (18 files)
+
+It's a TypeScript REST API (Express + Prisma). Request flow:
+routes/*.ts → services/*.ts → Prisma → Postgres. Auth is JWT
+middleware in src/middleware/auth.ts.
+```
+
+Then go deeper — TOKN reads, greps, and traces so you don't have to:
+
+```text
+> How does a login request get authenticated end to end?
+
+1. POST /auth/login → routes/auth.ts:login()
+2. services/auth.ts:verify() compares the password with bcrypt.compare()
+3. On success it signs a JWT (HS256, 24h) with the user id
+4. middleware/auth.ts verifies the token and attaches req.user
+
+Note: the JWT secret is read from process.env.JWT_SECRET with no
+fallback — the server will crash on boot if it's unset.
+```
+
+That last line is the hook: TOKN flags a **real risk it noticed while tracing**,
+without being asked. Ask `"what could go wrong here?"` to turn any exploration
+into a mini code review — then say `"now make the change"` and it acts with the
+context already loaded.
+
+Want it even faster on a big repo? `/codebase` builds a persistent symbol/call
+graph once (stored at `.nospace/codebase-graph.json`) so *"who calls Y?"* and
+*"where is X used?"* answer instantly — no re-grepping every session.
+
+- **Zero onboarding** — works on the first question, in any language or stack.
+- **It traces, not guesses** — answers cite the files and lines it actually read.
+- **Understand → change → verify** — the same session that explained the code can fix it.
+
 ---
 
 ## Run anywhere — the soul outlives the body
