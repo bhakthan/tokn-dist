@@ -122,9 +122,9 @@ trust-first modes and regulated-domain guardrails when a task needs them.
 
 Models come and go every few weeks. **TOKN is the layer that outlives them.** It's
 model-agnostic and provider-agnostic by design: point it at whatever the best
-frontier model is *this* week — GPT-5.x, Claude Opus, Gemini 3, DeepSeek, GLM, or a
-local model — across OpenAI, Azure, and gateway providers, with no rewrite and no
-lock-in. The frontier moves; TOKN moves with it.
+frontier model is *this* week — GPT-5.x, Claude Opus, Gemini 3, DeepSeek, Qwen,
+Kimi, GLM, Inkling, or a local model — across OpenAI, Azure, and gateway providers,
+with no rewrite and no lock-in. The frontier moves; TOKN moves with it.
 
 - **Frontier Council** (`--mode fc`) — two or more frontier models from *different*
   providers form a council: one leads and proposes each step while the others
