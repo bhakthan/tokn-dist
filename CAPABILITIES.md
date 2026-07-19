@@ -67,6 +67,62 @@ trust-first modes and regulated-domain guardrails when a task needs them.
 
 ---
 
+## Ride the frontier — TOKN is not a model, it's the harness that drives them
+
+Models come and go every few weeks. **TOKN is the layer that outlives them.** It's
+model-agnostic and provider-agnostic by design: point it at whatever the best
+frontier model is *this* week — GPT-5.x, Claude Opus, Gemini 3, DeepSeek, GLM, or a
+local model — across OpenAI, Azure, and gateway providers, with no rewrite and no
+lock-in. The frontier moves; TOKN moves with it.
+
+- **Frontier Council** (`--mode fc`) — two or more frontier models from *different*
+  providers form a council: one leads and proposes each step while the others
+  review and vote. Disagreement triggers retries with cooling temperature — you get
+  triangulated judgment, not single-model groupthink.
+- **Mind reincarnation** — when one provider's frontier model stalls, rate-limits,
+  or hits a wall, the *mind* re-embodies on another provider's frontier model that
+  still clears the task's quality floor, and resumes. The work never silently
+  downgrades below the bar you set.
+- **Pushed harder than they push themselves** — TOKN's decoupled evaluator and hard
+  gates mean a frontier model has to *prove* the result, not just assert it. That's
+  how latent model bugs and shortcuts surface instead of shipping.
+
+The pitch in one line: **bet on the harness, not on this month's model.**
+
+---
+
+## A mind that watches itself — the global workspace (`tspace`)
+
+Most agents can't tell you *why* they did something, or notice when they're being
+manipulated. TOKN runs a **global workspace** — inspired by cognitive-science
+"global workspace theory" — a live, salience-ranked blackboard of what it's
+attending to, the facts and plans in play, and a second, safety-critical channel of
+**self-monitoring** signals:
+
+- **prompt-injection**, **fabrication**, **evaluation-awareness**, **errors**, and
+  **hidden-goal drift** — each recorded the moment TOKN detects it.
+- **An auditable ledger** — every entry is ordered and inspectable; when TOKN steers
+  or suppresses its own attention, that intervention is logged, not hidden.
+- **Fail-closed on safety** — TOKN won't quietly bury an injection or fabrication
+  alert; suppressing a safety signal requires explicit approval and is always
+  audited.
+- **In-memory only** — the workspace never touches disk, so introspection can't
+  become a leak.
+
+Look inside a running session at any time:
+
+```
+/tspace signals        # what self-monitoring flags are active right now
+/tspace trace          # ordered ledger of attention, facts, plans
+/tspace interventions  # every time TOKN steered or suppressed itself — and why
+```
+
+This is the difference between an agent that merely *acts* and one you can *hold
+accountable*.
+
+---
+
+
 ## Core commands
 
 | Command | What it does |
@@ -88,6 +144,8 @@ change how it plans, builds, and checks its own work, including:
   dimensions and pass/fail gates.
 - **Critique** — multi-model adversarial synthesis that surfaces disagreement
   and documents dissent.
+- **Frontier Council** — rival frontier models from different providers vote on
+  every step, so judgment is triangulated, not single-model.
 - **Swarm** — decompose a job into a task graph and run it across sub-agents.
 - **Self-improvement** — capture what worked, prune context, and get better over
   a long-running task.
