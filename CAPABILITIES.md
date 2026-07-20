@@ -219,6 +219,8 @@ accountable*.
 | `tokn license trial` | Start your free 14-day trial (offline, one per machine) |
 | `tokn license status` | Show tier, expiry, days remaining |
 | `tokn update` | Update the binary in place (safe during trial) |
+| `tokn config doctor` | Show which config files & env vars are active, grouped by category |
+| `tokn config list --all` | Full inventory of every recognized config file TOKN can pick up |
 | `tokn --help` / `tokn <cmd> --help` | Full, version-accurate help |
 
 ## Working modes
@@ -276,6 +278,18 @@ domains — **without recompiling or waiting on a vendor release**.
 - **Bring your own skills** — install org skills from `.github/skills`,
   `.agents/skills`, or `.claude/skills`; `skillsync` absorbs an organization's
   skills and contributes improvements back.
+- **A federated config surface you can actually see** — configuration spans ~40+
+  recognized files across nine categories (credentials, models, external
+  connections, prompts, instructions, policy, per-domain plugs, orchestration,
+  skills) rooted at `.nospace/` (project) and `~/.tokn/config/` (user), all
+  resolving with one precedence: **process env → project → user → embedded**.
+  Run `tokn config doctor` to see exactly what's active on your machine — nothing
+  is hidden, and secrets are always redacted.
+- **Pluggable external connections (incl. Microsoft IQ)** — MCP servers, Fabric /
+  Snowflake warehouses, and the Microsoft IQ stack (Work IQ · Fabric IQ · Foundry
+  IQ) plug in via `.mcp.json`, **disabled and trust-gated by default** so an
+  offline user is never affected. Enable one, `tokn mcp trust add <server>`, and
+  `tokn mcp ping` to verify — air-gap-by-default stays intact.
 
 The result: the *same* TOKN binary behaves like **your** organization's agent —
 its voice, its rules, its domain gates — with zero forking and zero recompile.

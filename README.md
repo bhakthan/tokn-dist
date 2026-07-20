@@ -83,6 +83,7 @@ export NOSPACE_MODEL_PROVIDER=openai
 export NOSPACE_MODEL_NAME=gpt-4o
 export OPENAI_API_KEY=sk-...
 tokn auth status        # confirms the provider is configured & ready
+tokn config doctor      # see every config file & env var TOKN picks up (secrets redacted)
 ```
 
 Prefer a file? Drop the same keys in a `.env` in your working directory (TOKN
