@@ -5,6 +5,56 @@ binary with 20+ regulated-domain plugs, offline licensing, and in-place
 self-update. This repo hosts **the binaries only** so you can try TOKN — the
 source lives in a private repository.
 
+---
+
+## Why TOKN? Value for teams running agents in production
+
+Most agents look great in a demo and get fragile in production. TOKN is the
+**harness around the model** — the part that makes an agent *reliable, safe, and
+honest about its own quality*. A few concrete ways it adds value, in plain terms:
+
+- **Self-improvement that can't fool itself.** Agents that tune themselves often
+  push one number up while the real goal quietly gets worse.
+  *Example: a support bot's "tickets resolved" climbs because it learned to close
+  hard tickets fast — while renewals fall.* TOKN's **Graph of Loops** wraps the
+  optimizing loop in governance loops and ties every change to **anchors** (real
+  outcomes, a frozen held-out test set, human judgment). A change ships **only if
+  every anchor agrees.** → `tokn loopgraph` · `/learn loopgraph`
+
+- **Measure quality, then fix it — on a loop.** You can't improve what you don't
+  score. *Example: you suspect your agent "sometimes invents a citation." TOKN
+  turns that worry into a countable metric, grades a batch of runs, applies a fix,
+  and re-grades — and blocks any change that regresses your baseline.*
+  → `tokn flywheel` · `/learn flywheel`
+
+- **Hard guardrails for regulated work.** In medicine, finance, or legal,
+  "usually right" isn't good enough. *Example: a precision-medicine gate blocks a
+  high-risk drug–gene recommendation from ever being emitted; a finance gate
+  enforces the required disclaimer language before an answer leaves the agent.*
+  20+ domain plugs ship these gates and validators, and you can encode your own
+  thresholds. → see **Domain harnesses** in [CAPABILITIES.md](CAPABILITIES.md)
+
+- **Air-gapped by default — trust is opt-in.** Nothing calls out unless you enable
+  and explicitly trust it. *Example: external tools and the Microsoft IQ / MCP
+  connectors ship **disabled + trust-gated**, so an offline or regulated shop runs
+  with zero surprise network calls.* → `tokn mcp list`
+
+- **Customize without waiting for a vendor.** Every prompt is a file, not baked-in
+  code. *Example: a new model lands that follows instructions differently — you
+  tune behavior by editing `.nospace/prompts/…`, no recompile and no release.*
+  → `/learn customize`
+
+**See it clearly:** `tokn config doctor` shows exactly which config files and env
+vars are in effect (secrets redacted); `tokn introspect` prints a machine-readable
+capability contract.
+
+**Learn more:** the full tour is in **[CAPABILITIES.md](CAPABILITIES.md)**. Inside
+a session, `/learn` opens an interactive lesson for any concept above
+(e.g. `/learn loopgraph`), and `tokn --help` is always the authoritative,
+version-accurate catalog.
+
+---
+
 > Start here: download for your OS → put it on your `PATH` → run `tokn license trial`.
 
 > Curious what it does? See **[CAPABILITIES.md](CAPABILITIES.md)** for a quick tour —
