@@ -1,5 +1,14 @@
 # What TOKN can do
 
+**In one line:** TOKN is the *harness around the model* — the layer that makes an
+agent **reliable, safe, and honest about its own quality** in production, not just
+impressive in a demo. It turns "self-improvement" into something that can't fool
+itself (grounded by real-outcome **anchors**), makes quality **measurable and
+regression-gated**, enforces **hard guardrails** for regulated work, and stays
+**air-gapped by default** so nothing calls out unless you trust it. New here?
+The plain-language value proposition with concrete examples is in the
+**[README](README.md#why-tokn-value-for-teams-running-agents-in-production)**.
+
 A quick tour of TOKN's capabilities for trial users. This is a **curated
 overview**, not an exhaustive list — the binary itself is the always-current,
 authoritative catalog:
