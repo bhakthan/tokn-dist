@@ -111,8 +111,12 @@ enterprise network, a classified enclave, a factory floor, a plane. It needs **n
 internet connection, no vendor account, and no cloud API key** to run.
 
 - **No internet** — a single static binary with no runtime dependencies and
-  **offline licensing** (no sign-up, no phone-home, no telemetry required). Drop it
-  on an air-gapped box and `tokn license trial` works with zero network.
+  **offline licensing** (no sign-up, no account). Drop it on an air-gapped box and
+  `tokn license trial` works with zero network. The only built-in call-home is an
+  anonymous install ping (version + OS + a one-way hashed machine id, never your code
+  or data); on an offline box it queues locally and flushes only if the machine ever
+  reaches the internet, and turns off completely with `TOKN_NO_TELEMETRY=1` (or the
+  cross-tool `DO_NOT_TRACK=1`).
 - **No vendor account** — you are never forced onto one provider's login. Point
   TOKN at **your own model** — a local model via Ollama / llama.cpp, or an
   on-prem/self-hosted endpoint — and it runs entirely inside your perimeter.

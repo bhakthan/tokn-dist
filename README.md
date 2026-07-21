@@ -34,10 +34,15 @@ honest about its own quality*. A few concrete ways it adds value, in plain terms
   20+ domain plugs ship these gates and validators, and you can encode your own
   thresholds. → see **Domain harnesses** in [CAPABILITIES.md](CAPABILITIES.md)
 
-- **Air-gapped by default — trust is opt-in.** Nothing calls out unless you enable
-  and explicitly trust it. *Example: external tools and the Microsoft IQ / MCP
-  connectors ship **disabled + trust-gated**, so an offline or regulated shop runs
-  with zero surprise network calls.* → `tokn mcp list`
+- **Air-gapped by default — your code and data never leave your metal.** Your
+  code, prompts, and context call out to nothing unless you enable and explicitly
+  trust it. *Example: external tools and the Microsoft IQ / MCP connectors ship
+  **disabled + trust-gated**, so an offline or regulated shop runs with zero
+  surprise network calls.* → `tokn mcp list`. The **only** built-in network call is
+  a single anonymous install ping (TOKN version + OS/arch + a one-way hashed machine
+  id — never your code, prompts, or data). On an air-gapped box it queues locally and
+  only flushes if that machine is ever online; disable it entirely with
+  `TOKN_NO_TELEMETRY=1` (or `DO_NOT_TRACK=1`).
 
 - **Customize without waiting for a vendor.** Every prompt is a file, not baked-in
   code. *Example: a new model lands that follows instructions differently — you
