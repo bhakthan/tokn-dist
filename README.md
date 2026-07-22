@@ -72,6 +72,14 @@ version-accurate catalog.
 > rules, human judgment). A win is accepted **only if every anchor agrees** —
 > improvement that can't fool itself. Try `tokn loopgraph` or `/learn loopgraph`.
 
+> 🧾 **Also new — the Design-Loop Card.** Every `autodesign` / `autoresearch` run now
+> emits a portable card that records *how* a result emerged (bounds, evaluator
+> feedback, held-out check, rejected-candidate graveyard) — and a **fail-closed
+> verdict**. A win selected only by the in-loop evaluator is an honest
+> *unconfirmed-win*, never a contribution; **only a held-out-confirmed win is
+> reportable**. It catches the "simulator escape" (beating a benchmark by exploiting a
+> weakened evaluator) instead of shipping it.
+
 > 🔑 **Bring your own model.** TOKN needs an LLM provider (OpenAI, Azure OpenAI,
 > Anthropic/Claude, Gemini, or a local runtime). See **[SETUP.md](SETUP.md)** to
 > configure your provider and API key in under a minute.

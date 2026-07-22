@@ -367,6 +367,32 @@ holding the anchors — helps it improve *without lying to itself*. This is the 
 from **ungrounded** to **grounded** self-improvement, and it composes directly with
 `tokn council`, `tokn flywheel`, and swarm/federation below.
 
+## Every AI-shaped result travels as engineering knowledge — the Design-Loop Card
+
+When an agent tunes something against its *own* evaluator, a final artifact and a
+score hide **how** the win happened — and sometimes the win is fake. A famous case:
+an AI "beat" the state-of-the-art cache policy only by exploiting a *removed
+simulator assertion* — a **simulator escape**. The number was real; the contribution
+was not.
+
+TOKN's design loops (`autodesign`, `autoresearch`) refuse to let that pass silently.
+Every run emits a **Design-Loop Card** — a portable record of *process, not just
+outcome*:
+
+- **Bounds** — what could change vs. what stayed fixed.
+- **Feedback** — how much evaluator signal the search consumed.
+- **Evidence** — what held, plus a **graveyard of rejected candidates** (the negative
+  results that usually vanish).
+- **Held-out** — an independent check *outside the loop*, on inputs the search never
+  saw.
+- **Decision** — who can reject it, and what would overturn it.
+
+The verdict is **fail-closed**: a win selected only by the in-loop evaluator is an
+honest *`unconfirmed-win`*, not a contribution; a win that an independent held-out
+check refutes is *`refuted-by-held-out`*; **only a held-out-confirmed win is
+reportable**. It's the difference between "the number went up" and "the number went
+up *and I proved it wasn't training on my own test set*."
+
 ## TOKN doesn't work alone
 
 TOKN is **one of five independent runtimes** that federate into a single
