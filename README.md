@@ -138,8 +138,10 @@ tokn --help
 ## 3. Point TOKN at a model
 
 TOKN is **bring-your-own-model** — it runs against a provider you already have
-(OpenAI, Azure OpenAI, Anthropic/Claude, Gemini) or a local runtime (Ollama,
-llama.cpp/GGUF, ONNX). Set two variables plus your key, e.g.:
+(OpenAI, Azure OpenAI, Anthropic/Claude, Gemini, OpenRouter, Fireworks) or a local
+runtime (Ollama, llama.cpp/GGUF, ONNX). It even drives **computer-use** models —
+Microsoft's **Fara1.5** (via `tokn fara-run`, with a real coordinate browser) and
+**MagenticBrain**. Set two variables plus your key, e.g.:
 
 ```bash
 export NOSPACE_MODEL_PROVIDER=openai

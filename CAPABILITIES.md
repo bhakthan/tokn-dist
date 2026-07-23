@@ -139,6 +139,38 @@ cryptic error.
 
 ---
 
+## Computer use — drive a screen, not just a chat
+
+TOKN can act as the **outer-loop custodian for a computer-use model**: it feeds the
+model a screenshot, lets it decide one grounded action, and actuates that action on
+a real page — then captures the next frame and repeats, with history and a
+human-approval gate on sensitive steps.
+
+- **Microsoft Fara1.5** — TOKN wires Microsoft's **Fara1.5** computer-use VLM
+  end-to-end. `tokn fara-step` runs a single observe→act turn; `tokn fara-run`
+  drives a bounded, multi-step **observe → think → act → observe** trajectory. A
+  tolerant parser accepts both the canonical `computer_use` tool-call JSON and
+  Fara's nested-XML action DSL, so grounded clicks, typing, scrolling, navigation,
+  and `terminate` all decode reliably.
+- **Real coordinate browser** — pass `--live-browser --url <page>` and TOKN opens a
+  real Chromium/Edge over the DevTools Protocol, dispatches the model's **pixel
+  clicks, typing, key chords, and scrolls at absolute coordinates**, and captures
+  real screenshots each step. The viewport is locked to the model's grounding
+  resolution so coordinates map 1:1. No browser installed? TOKN detects it first and
+  prints a friendly, copy-pasteable install hint — never a raw crash.
+- **Approval gate, fail-closed** — critical points (`ask_user_question`) pause the
+  loop by default; you opt into automation with `--auto-approve`.
+- **MagenticBrain** — TOKN also drives Microsoft's **MagenticBrain** agent model
+  through the same provider layer, with a **think / no-think** control for reasoning
+  depth and **prompted tool-calling** for endpoints that don't expose native
+  tool-call parameters — so it works even against managed deployments that strip
+  custom inference flags.
+- **Model-free dry run** — `tokn fara-run --dry-run --live-browser --url <page>`
+  exercises the whole browser actuator with a canned trajectory, so you can validate
+  the computer-use loop without any model endpoint at all.
+
+---
+
 ## Works with your existing coding agent
 
 You don't have to leave the tools you already use. TOKN can act as a **tool server**
@@ -167,8 +199,9 @@ trust-first modes and regulated-domain guardrails when a task needs them.
 Models come and go every few weeks. **TOKN is the layer that outlives them.** It's
 model-agnostic and provider-agnostic by design: point it at whatever the best
 frontier model is *this* week — GPT-5.x, Claude Opus, Gemini 3, DeepSeek, Qwen,
-Kimi, GLM, Inkling, or a local model — across OpenAI, Azure, and gateway providers,
-with no rewrite and no lock-in. The frontier moves; TOKN moves with it.
+Kimi, GLM, Inkling, Microsoft's Fara1.5 and MagenticBrain, or a local model —
+across OpenAI, Azure, **OpenRouter**, **Fireworks**, and gateway providers, with no
+rewrite and no lock-in. The frontier moves; TOKN moves with it.
 
 - **Frontier Council** (`--mode fc`) — two or more frontier models from *different*
   providers form a council: one leads and proposes each step while the others
