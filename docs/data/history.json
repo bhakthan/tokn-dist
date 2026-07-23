@@ -67,13 +67,18 @@
     "2026-07-21": {
       "count": 27,
       "uniques": 16
+    },
+    "2026-07-22": {
+      "count": 25,
+      "uniques": 17
     }
   },
   "downloads_daily": {
     "2026-07-19": 0,
     "2026-07-20": 0,
     "2026-07-21": 1,
-    "2026-07-22": 0
+    "2026-07-22": 0,
+    "2026-07-23": 0
   },
   "downloads_snapshots": {
     "2026-07-18": {
@@ -125,23 +130,33 @@
         "tokn_windows_amd64.exe": 0
       },
       "total": 0
+    },
+    "2026-07-23": {
+      "assets": {
+        "tokn_darwin_amd64": 0,
+        "tokn_darwin_arm64": 0,
+        "tokn_linux_amd64": 0,
+        "tokn_linux_arm64": 0,
+        "tokn_windows_amd64.exe": 0
+      },
+      "total": 0
     }
   },
   "paths": [
     {
-      "count": 61,
+      "count": 62,
       "path": "/bhakthan/tokn-dist",
       "title": "Overview",
       "uniques": 3
     },
     {
-      "count": 34,
+      "count": 35,
       "path": "/bhakthan/tokn-dist/blob/main/CAPABILITIES.md",
       "title": "/blob/main/CAPABILITIES.md",
       "uniques": 4
     },
     {
-      "count": 31,
+      "count": 32,
       "path": "/bhakthan/tokn-dist/tree/main",
       "title": "/tree/main",
       "uniques": 2
@@ -165,7 +180,7 @@
       "uniques": 1
     },
     {
-      "count": 7,
+      "count": 11,
       "path": "/bhakthan/tokn-dist/blob/main/README.md",
       "title": "/blob/main/README.md",
       "uniques": 3
@@ -177,21 +192,21 @@
       "uniques": 1
     },
     {
-      "count": 4,
+      "count": 5,
       "path": "/bhakthan/tokn-dist/releases/tag/v0.2.9",
       "title": "/releases/tag/v0.2.9",
       "uniques": 2
     },
     {
-      "count": 3,
-      "path": "/bhakthan/tokn-dist/blob/main/docs/index.html",
-      "title": "/blob/main/docs/index.html",
+      "count": 4,
+      "path": "/bhakthan/tokn-dist/tree/main/docs",
+      "title": "/tree/main/docs",
       "uniques": 1
     }
   ],
   "referrers": [
     {
-      "count": 104,
+      "count": 108,
       "referrer": "github.com",
       "uniques": 1
     },
@@ -202,7 +217,7 @@
     }
   ],
   "repo": "bhakthan/tokn-dist",
-  "updated_at": "2026-07-22T08:47:04.475077+00:00",
+  "updated_at": "2026-07-23T08:46:33.147660+00:00",
   "views_daily": {
     "2026-07-05": {
       "count": 0,
@@ -270,6 +285,10 @@
     },
     "2026-07-21": {
       "count": 16,
+      "uniques": 2
+    },
+    "2026-07-22": {
+      "count": 9,
       "uniques": 2
     }
   }
