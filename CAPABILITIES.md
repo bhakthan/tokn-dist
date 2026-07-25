@@ -200,8 +200,26 @@ Models come and go every few weeks. **TOKN is the layer that outlives them.** It
 model-agnostic and provider-agnostic by design: point it at whatever the best
 frontier model is *this* week — GPT-5.x, Claude Opus, Gemini 3, DeepSeek, Qwen,
 Kimi, GLM, Inkling, Microsoft's Fara1.5 and MagenticBrain, or a local model —
-across OpenAI, Azure, **OpenRouter**, **Fireworks**, and gateway providers, with no
-rewrite and no lock-in. The frontier moves; TOKN moves with it.
+with no rewrite and no lock-in. The frontier moves; TOKN moves with it.
+
+**29 providers are wired and runnable**, not merely listed:
+
+- **Local, no account** — Ollama, llama.cpp/GGUF, ONNX Runtime GenAI.
+- **Major hosted** — OpenAI, Azure OpenAI / AI Foundry, Anthropic, Google Gemini,
+  AWS Bedrock, Google Vertex AI.
+- **Aggregators & GPU clouds** — OpenRouter, Fireworks, Hugging Face Inference
+  Providers, Together AI, Baseten, NVIDIA NIM, SiliconFlow, ModelScope.
+- **Other hosted** — Groq, xAI (Grok), Mistral, Cohere, Perplexity.
+- **Chinese frontier labs** — DeepSeek, Alibaba DashScope (Qwen), Moonshot AI
+  (Kimi), Z.AI / Zhipu (GLM), MiniMax. TOKN defaults to each lab's
+  **international** endpoint and lets you switch to the mainland-China host with
+  a single environment variable.
+
+Every one of them is also **diagnosable**: `tokn doctor --provider <id>` checks
+the credential, endpoint and reachability, and tells you exactly what to fix. A
+build gate asserts that the set TOKN can *diagnose* and the set it can *run* stay
+identical in both directions — so the docs can never promise a provider the
+binary won't actually drive.
 
 - **Frontier Council** (`--mode fc`) — two or more frontier models from *different*
   providers form a council: one leads and proposes each step while the others
