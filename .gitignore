@@ -1,0 +1,4 @@
+# Python bytecode cache from scripts/ (runtime artifact, never source-controlled)
+__pycache__/
+*.pyc
+
