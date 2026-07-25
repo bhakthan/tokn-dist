@@ -75,6 +75,10 @@
     "2026-07-23": {
       "count": 8,
       "uniques": 7
+    },
+    "2026-07-24": {
+      "count": 21,
+      "uniques": 14
     }
   },
   "downloads_daily": {
@@ -83,7 +87,8 @@
     "2026-07-21": 1,
     "2026-07-22": 0,
     "2026-07-23": 0,
-    "2026-07-24": 2
+    "2026-07-24": 2,
+    "2026-07-25": 0
   },
   "downloads_snapshots": {
     "2026-07-18": {
@@ -155,6 +160,16 @@
         "tokn_windows_amd64.exe": 2
       },
       "total": 2
+    },
+    "2026-07-25": {
+      "assets": {
+        "tokn_darwin_amd64": 0,
+        "tokn_darwin_arm64": 0,
+        "tokn_linux_amd64": 0,
+        "tokn_linux_arm64": 0,
+        "tokn_windows_amd64.exe": 2
+      },
+      "total": 2
     }
   },
   "downloads_state": {
@@ -175,25 +190,25 @@
       "last": 0
     },
     "tokn_windows_amd64.exe": {
-      "carry": 0,
-      "last": 2
+      "carry": 2,
+      "last": 0
     }
   },
   "paths": [
     {
-      "count": 65,
+      "count": 68,
       "path": "/bhakthan/tokn-dist",
       "title": "Overview",
       "uniques": 3
     },
     {
-      "count": 37,
+      "count": 38,
       "path": "/bhakthan/tokn-dist/blob/main/CAPABILITIES.md",
       "title": "/blob/main/CAPABILITIES.md",
       "uniques": 4
     },
     {
-      "count": 33,
+      "count": 34,
       "path": "/bhakthan/tokn-dist/tree/main",
       "title": "/tree/main",
       "uniques": 2
@@ -223,7 +238,7 @@
       "uniques": 3
     },
     {
-      "count": 7,
+      "count": 9,
       "path": "/bhakthan/tokn-dist/releases/tag/v0.2.9",
       "title": "/releases/tag/v0.2.9",
       "uniques": 2
@@ -243,7 +258,7 @@
   ],
   "referrers": [
     {
-      "count": 118,
+      "count": 125,
       "referrer": "github.com",
       "uniques": 1
     },
@@ -254,7 +269,7 @@
     }
   ],
   "repo": "bhakthan/tokn-dist",
-  "updated_at": "2026-07-24T08:45:07.907317+00:00",
+  "updated_at": "2026-07-25T08:26:21.324457+00:00",
   "views_daily": {
     "2026-07-05": {
       "count": 0,
@@ -331,6 +346,10 @@
     "2026-07-23": {
       "count": 13,
       "uniques": 2
+    },
+    "2026-07-24": {
+      "count": 9,
+      "uniques": 1
     }
   }
 }
