@@ -202,7 +202,7 @@ frontier model is *this* week — GPT-5.x, Claude Opus, Gemini 3, DeepSeek, Qwen
 Kimi, GLM, Inkling, Microsoft's Fara1.5 and MagenticBrain, or a local model —
 with no rewrite and no lock-in. The frontier moves; TOKN moves with it.
 
-**29 providers are wired and runnable**, not merely listed:
+**27 providers are wired and runnable**, not merely listed:
 
 - **Local, no account** — Ollama, llama.cpp/GGUF, ONNX Runtime GenAI.
 - **Major hosted** — OpenAI, Azure OpenAI / AI Foundry, Anthropic, Google Gemini,
@@ -307,7 +307,7 @@ Run `/learn modes` in a session for the current, complete list.
 
 ## Domain harnesses
 
-TOKN ships **20+ regulated-domain plugs** — each adds domain-aware tools,
+TOKN ships **29 regulated-domain plugs** — each adds domain-aware tools,
 validators, and safety gates for a specialized field. A sampling of the sectors
 covered:
 
@@ -454,6 +454,31 @@ converge their conclusions through `tokn council` into audit-grade consensus.
 
 You're evaluating the TOKN runtime here; the wider org is how *one intent* scales
 across *many minds*. More on the siblings as they become available.
+
+## Guardrails you cannot accidentally opt out of
+
+Every tool call — from the main agent loop, a domain research engine, an MCP
+client, or the HTTP API — passes through **one** enforcement point. Permission
+checks, destructive-command blocking, secret scanning, and domain safety gates
+are properties of *calling a tool*, not something each execution surface has to
+remember to do.
+
+- **Network serve modes are authenticated.** `tokn serve` requires a shared
+  secret (`TOKN_SERVE_TOKEN`) before it will talk to anything that is not
+  loopback. Proxy headers are ignored, because they are attacker-controlled.
+- **Secrets never reach long-term memory.** Anything TOKN remembers is scanned
+  for credentials first, using a single authoritative detector rather than four
+  drifting copies of "what a secret looks like".
+- **Shell execution is sandboxed from your credentials.** Commands do not
+  inherit your API keys, so a command whose output goes back to a model provider
+  cannot carry them along.
+- **Cost accounting is honest.** If a provider does not report token usage, TOKN
+  records "unknown" — it never reports a call as free. If a model's price is
+  unknown, spend is attributed but not silently added to your totals.
+
+These are enforced by tests that fail the build when a new code path tries to
+escape them — including tests that fail when a rule is *removed*, so the
+protection can only grow.
 
 ## Everything else
 
