@@ -65,14 +65,14 @@ version-accurate catalog.
 > Curious what it does? See **[CAPABILITIES.md](CAPABILITIES.md)** for a quick tour —
 > or just run `tokn --help` after installing.
 
-> ✨ **New in v0.2.9 — Graph of Loops.** A single self-improvement loop can optimize
-> the wrong thing (raise a metric while the real goal quietly degrades). v0.2.9 lets
+> ✨ **Graph of Loops.** A single self-improvement loop can optimize
+> the wrong thing (raise a metric while the real goal quietly degrades). TOKN lets
 > one TOKN act as an **outer-loop custodian** over another: an optimizing loop wrapped
 > by governance loops and grounded by **anchors** (real outcomes, frozen held-out
 > rules, human judgment). A win is accepted **only if every anchor agrees** —
 > improvement that can't fool itself. Try `tokn loopgraph` or `/learn loopgraph`.
 
-> 🧾 **Also new — the Design-Loop Card.** Every `autodesign` / `autoresearch` run now
+> 🧾 **The Design-Loop Card.** Every `autodesign` / `autoresearch` run now
 > emits a portable card that records *how* a result emerged (bounds, evaluator
 > feedback, held-out check, rejected-candidate graveyard) — and a **fail-closed
 > verdict**. A win selected only by the in-loop evaluator is an honest
