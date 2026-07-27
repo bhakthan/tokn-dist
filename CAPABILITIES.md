@@ -482,8 +482,7 @@ protection can only grow.
 
 ## Everything else
 
-Memory & recall, background task tracking, code generation, a built-in wiki
-(`tokn wiki serve` on full builds), self-hosted licensing, native web search,
+Memory & recall, background task tracking, code generation, self-hosted licensing, native web search,
 and more. The fastest way to discover it all is simply:
 
 ```bash
