@@ -99,6 +99,10 @@
     "2026-07-29": {
       "count": 13,
       "uniques": 9
+    },
+    "2026-07-30": {
+      "count": 8,
+      "uniques": 4
     }
   },
   "downloads_daily": {
@@ -113,7 +117,8 @@
     "2026-07-27": 1,
     "2026-07-28": 3,
     "2026-07-29": 0,
-    "2026-07-30": 0
+    "2026-07-30": 0,
+    "2026-07-31": 0
   },
   "downloads_snapshots": {
     "2026-07-18": {
@@ -251,6 +256,18 @@
         "tokn_windows_amd64.exe": 4
       },
       "total": 6
+    },
+    "2026-07-31": {
+      "assets": {
+        "SHA256SUMS": 1,
+        "SHA256SUMS.sig": 1,
+        "tokn_darwin_amd64": 0,
+        "tokn_darwin_arm64": 0,
+        "tokn_linux_amd64": 0,
+        "tokn_linux_arm64": 0,
+        "tokn_windows_amd64.exe": 4
+      },
+      "total": 6
     }
   },
   "downloads_state": {
@@ -285,7 +302,7 @@
   },
   "paths": [
     {
-      "count": 90,
+      "count": 91,
       "path": "/bhakthan/tokn-dist",
       "title": "Overview",
       "uniques": 3
@@ -347,7 +364,7 @@
   ],
   "referrers": [
     {
-      "count": 163,
+      "count": 164,
       "referrer": "github.com",
       "uniques": 1
     },
@@ -358,7 +375,7 @@
     }
   ],
   "repo": "bhakthan/tokn-dist",
-  "updated_at": "2026-07-30T09:05:16.208397+00:00",
+  "updated_at": "2026-07-31T09:19:06.903324+00:00",
   "views_daily": {
     "2026-07-05": {
       "count": 0,
@@ -458,6 +475,10 @@
     },
     "2026-07-29": {
       "count": 6,
+      "uniques": 1
+    },
+    "2026-07-30": {
+      "count": 1,
       "uniques": 1
     }
   }
