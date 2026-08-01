@@ -103,6 +103,10 @@
     "2026-07-30": {
       "count": 8,
       "uniques": 4
+    },
+    "2026-07-31": {
+      "count": 6,
+      "uniques": 5
     }
   },
   "downloads_daily": {
@@ -118,7 +122,8 @@
     "2026-07-28": 3,
     "2026-07-29": 0,
     "2026-07-30": 0,
-    "2026-07-31": 0
+    "2026-07-31": 0,
+    "2026-08-01": 0
   },
   "downloads_snapshots": {
     "2026-07-18": {
@@ -268,6 +273,18 @@
         "tokn_windows_amd64.exe": 4
       },
       "total": 6
+    },
+    "2026-08-01": {
+      "assets": {
+        "SHA256SUMS": 1,
+        "SHA256SUMS.sig": 1,
+        "tokn_darwin_amd64": 0,
+        "tokn_darwin_arm64": 0,
+        "tokn_linux_amd64": 0,
+        "tokn_linux_arm64": 0,
+        "tokn_windows_amd64.exe": 4
+      },
+      "total": 6
     }
   },
   "downloads_state": {
@@ -302,13 +319,13 @@
   },
   "paths": [
     {
-      "count": 91,
+      "count": 94,
       "path": "/bhakthan/tokn-dist",
       "title": "Overview",
       "uniques": 3
     },
     {
-      "count": 40,
+      "count": 41,
       "path": "/bhakthan/tokn-dist/blob/main/CAPABILITIES.md",
       "title": "/blob/main/CAPABILITIES.md",
       "uniques": 4
@@ -350,32 +367,32 @@
       "uniques": 1
     },
     {
+      "count": 10,
+      "path": "/bhakthan/tokn-dist/releases",
+      "title": "/releases",
+      "uniques": 1
+    },
+    {
       "count": 9,
       "path": "/bhakthan/tokn-dist/releases/tag/v0.2.9",
       "title": "/releases/tag/v0.2.9",
       "uniques": 2
-    },
-    {
-      "count": 9,
-      "path": "/bhakthan/tokn-dist/releases",
-      "title": "/releases",
-      "uniques": 1
     }
   ],
   "referrers": [
     {
-      "count": 164,
+      "count": 166,
       "referrer": "github.com",
       "uniques": 1
     },
     {
-      "count": 16,
+      "count": 17,
       "referrer": "linkedin.com",
       "uniques": 4
     }
   ],
   "repo": "bhakthan/tokn-dist",
-  "updated_at": "2026-07-31T09:19:06.903324+00:00",
+  "updated_at": "2026-08-01T08:35:22.610927+00:00",
   "views_daily": {
     "2026-07-05": {
       "count": 0,
@@ -480,6 +497,10 @@
     "2026-07-30": {
       "count": 1,
       "uniques": 1
+    },
+    "2026-07-31": {
+      "count": 6,
+      "uniques": 2
     }
   }
 }
