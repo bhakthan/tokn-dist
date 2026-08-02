@@ -107,6 +107,10 @@
     "2026-07-31": {
       "count": 6,
       "uniques": 5
+    },
+    "2026-08-01": {
+      "count": 4,
+      "uniques": 3
     }
   },
   "downloads_daily": {
@@ -123,7 +127,8 @@
     "2026-07-29": 0,
     "2026-07-30": 0,
     "2026-07-31": 0,
-    "2026-08-01": 0
+    "2026-08-01": 0,
+    "2026-08-02": 3
   },
   "downloads_snapshots": {
     "2026-07-18": {
@@ -285,16 +290,28 @@
         "tokn_windows_amd64.exe": 4
       },
       "total": 6
+    },
+    "2026-08-02": {
+      "assets": {
+        "SHA256SUMS": 2,
+        "SHA256SUMS.sig": 2,
+        "tokn_darwin_amd64": 0,
+        "tokn_darwin_arm64": 0,
+        "tokn_linux_amd64": 0,
+        "tokn_linux_arm64": 0,
+        "tokn_windows_amd64.exe": 5
+      },
+      "total": 9
     }
   },
   "downloads_state": {
     "SHA256SUMS": {
       "carry": 1,
-      "last": 0
+      "last": 1
     },
     "SHA256SUMS.sig": {
       "carry": 1,
-      "last": 0
+      "last": 1
     },
     "tokn_darwin_amd64": {
       "carry": 0,
@@ -314,50 +331,50 @@
     },
     "tokn_windows_amd64.exe": {
       "carry": 4,
-      "last": 0
+      "last": 1
     }
   },
   "paths": [
     {
-      "count": 94,
+      "count": 75,
       "path": "/bhakthan/tokn-dist",
       "title": "Overview",
       "uniques": 3
     },
     {
-      "count": 41,
+      "count": 33,
       "path": "/bhakthan/tokn-dist/blob/main/CAPABILITIES.md",
       "title": "/blob/main/CAPABILITIES.md",
       "uniques": 4
     },
     {
-      "count": 34,
+      "count": 21,
       "path": "/bhakthan/tokn-dist/tree/main",
       "title": "/tree/main",
       "uniques": 2
     },
     {
-      "count": 24,
+      "count": 20,
       "path": "/bhakthan/tokn-dist/graphs/traffic",
       "title": "/graphs/traffic",
       "uniques": 1
     },
     {
-      "count": 22,
+      "count": 18,
       "path": "/bhakthan/tokn-dist/pulse",
       "title": "/pulse",
       "uniques": 1
     },
     {
-      "count": 19,
-      "path": "/bhakthan/tokn-dist/releases/tag/v0.2.8",
-      "title": "/releases/tag/v0.2.8",
+      "count": 13,
+      "path": "/bhakthan/tokn-dist/blob/main/README.md",
+      "title": "/blob/main/README.md",
       "uniques": 3
     },
     {
       "count": 13,
-      "path": "/bhakthan/tokn-dist/blob/main/README.md",
-      "title": "/blob/main/README.md",
+      "path": "/bhakthan/tokn-dist/releases/tag/v0.2.8",
+      "title": "/releases/tag/v0.2.8",
       "uniques": 3
     },
     {
@@ -381,7 +398,7 @@
   ],
   "referrers": [
     {
-      "count": 166,
+      "count": 110,
       "referrer": "github.com",
       "uniques": 1
     },
@@ -389,10 +406,15 @@
       "count": 17,
       "referrer": "linkedin.com",
       "uniques": 4
+    },
+    {
+      "count": 1,
+      "referrer": "com.linkedin.android",
+      "uniques": 1
     }
   ],
   "repo": "bhakthan/tokn-dist",
-  "updated_at": "2026-08-01T08:35:22.610927+00:00",
+  "updated_at": "2026-08-02T08:38:24.050524+00:00",
   "views_daily": {
     "2026-07-05": {
       "count": 0,
@@ -499,6 +521,10 @@
       "uniques": 1
     },
     "2026-07-31": {
+      "count": 6,
+      "uniques": 2
+    },
+    "2026-08-01": {
       "count": 6,
       "uniques": 2
     }
