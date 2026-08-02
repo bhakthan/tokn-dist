@@ -60,7 +60,8 @@ version-accurate catalog.
 
 ---
 
-> Start here: download for your OS → put it on your `PATH` → run `tokn license trial`.
+> Start here: download for your OS → **verify the signature** → put it on your
+> `PATH` → run `tokn license trial`.
 
 > Curious what it does? See **[CAPABILITIES.md](CAPABILITIES.md)** for a quick tour —
 > or just run `tokn --help` after installing.
@@ -109,7 +110,149 @@ Grab the latest build for your platform from the
 | Linux | x86_64 | `tokn_linux_amd64` |
 | Linux | arm64 | `tokn_linux_arm64` |
 
-## 2. Put it on your PATH
+Every release also publishes **`SHA256SUMS`** and **`SHA256SUMS.sig`**. Download
+them too — you need both for step 2.
+
+**Windows (PowerShell)**
+```powershell
+gh release download v0.3.1 --repo bhakthan/tokn-dist `
+  --pattern "tokn_windows_amd64.exe" --pattern "SHA256SUMS*" `
+  --dir . --clobber
+```
+
+**macOS / Linux**
+```bash
+gh release download v0.3.1 --repo bhakthan/tokn-dist \
+  --pattern "tokn_$(uname -s | tr A-Z a-z)_*" --pattern "SHA256SUMS*" \
+  --dir . --clobber
+```
+
+Swap `v0.3.1` for `--pattern ... latest` by using
+`gh release download --repo bhakthan/tokn-dist` with no tag. Prefer these URLs
+over scraping the releases page: the assets are the artifact, the HTML is not.
+
+## 2. Verify what you downloaded
+
+TOKN is a binary that will run with your permissions on your machine. Verify it.
+There are **two independent layers**, and they are not equally strong.
+
+### The release public key
+
+This is the ed25519 public key that signs every TOKN release manifest. It is
+published here, in the README, **on purpose** — it has to reach you by a path
+other than the download it authenticates:
+
+```
+3O2DznsYRy+OU2gTIbpvOfw0O6tUIIRQfiOUDbfoHxo=
+```
+
+It is also printed in the release notes of every release. The two should always
+agree; if they ever disagree, **stop** and open an issue.
+
+### Layer 1 — the checksum (integrity)
+
+Confirms the bytes arrived intact and match what the release claims.
+
+**Windows (PowerShell)**
+```powershell
+(Get-FileHash .\tokn_windows_amd64.exe -Algorithm SHA256).Hash.ToLower()
+Select-String -Path .\SHA256SUMS -Pattern "tokn_windows_amd64.exe"
+# the two hashes must match, character for character
+```
+
+**macOS**
+```bash
+shasum -a 256 -c SHA256SUMS --ignore-missing
+```
+
+**Linux**
+```bash
+sha256sum -c SHA256SUMS --ignore-missing
+```
+
+### Layer 2 — the signature (authenticity)
+
+**This is the layer that actually matters.** The checksum alone buys you very
+little: anyone who can replace the binary in a release can replace `SHA256SUMS`
+in the same breath, and your checksum will match a file they wrote. The
+signature is the part they cannot forge without the private key, which is never
+in this repo, never in the binary, and never in CI logs.
+
+`SHA256SUMS.sig` is base64 of a raw 64-byte ed25519 signature over the exact
+bytes of `SHA256SUMS`. Verify it with OpenSSL — already present on macOS and
+Linux, and shipped with Git for Windows at
+`C:\Program Files\Git\usr\bin\openssl.exe`:
+
+**Windows (PowerShell)**
+```powershell
+$ssl = "C:\Program Files\Git\usr\bin\openssl.exe"
+$KEY = "3O2DznsYRy+OU2gTIbpvOfw0O6tUIIRQfiOUDbfoHxo="
+
+# wrap the raw key as a PEM SubjectPublicKeyInfo (the prefix is the fixed
+# 12-byte ed25519 DER header — it is the same for every ed25519 key)
+"-----BEGIN PUBLIC KEY-----`nMCowBQYDK2VwAyEA$KEY`n-----END PUBLIC KEY-----" |
+  Set-Content tokn-release.pem -Encoding ascii
+
+# decode the base64 signature to raw bytes
+[IO.File]::WriteAllBytes("$PWD\SHA256SUMS.sig.raw",
+  [Convert]::FromBase64String((Get-Content SHA256SUMS.sig -Raw).Trim()))
+
+& $ssl pkeyutl -verify -pubin -inkey tokn-release.pem `
+  -rawin -in SHA256SUMS -sigfile SHA256SUMS.sig.raw
+```
+
+**macOS / Linux**
+```bash
+KEY=3O2DznsYRy+OU2gTIbpvOfw0O6tUIIRQfiOUDbfoHxo=
+
+printf -- '-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA%s\n-----END PUBLIC KEY-----\n' "$KEY" \
+  > tokn-release.pem
+base64 -d < SHA256SUMS.sig > SHA256SUMS.sig.raw   # macOS: base64 -D
+
+openssl pkeyutl -verify -pubin -inkey tokn-release.pem \
+  -rawin -in SHA256SUMS -sigfile SHA256SUMS.sig.raw
+```
+
+Expected output — and **nothing else is acceptable**:
+
+```
+Signature Verified Successfully
+```
+
+Anything else (`Signature Verification Failure`, a non-zero exit code, an
+OpenSSL error) means **do not run the binary**. A failure here is not a
+formatting problem to work around; it is the check doing its job.
+
+> **Two honest caveats.**
+>
+> 1. **Do not take the public key from the binary you are verifying.** TOKN
+>    compiles this same key in so that `tokn update` can verify future releases,
+>    but using it to check the download it came from is circular — a substituted
+>    binary would simply carry a substituted key and cheerfully approve itself.
+>    Use the key from this README, or from the release notes.
+> 2. **`openssl` must not come from the download either.** Use your system's
+>    OpenSSL or the one Git installed. This is why the instructions above use a
+>    third-party tool rather than a `tokn verify` subcommand — asking an
+>    unverified binary whether it is trustworthy is not a security check.
+>
+> OpenSSL 3.x is required (`-rawin` is how it does ed25519). Check with
+> `openssl version`.
+
+### After the first install, this is automatic
+
+You only do the above **once**, for your first download. From then on:
+
+```
+tokn update
+```
+
+performs *both* layers itself before it will replace the running binary, and it
+is **fail-closed** — no bypass environment variable, no `--force`, no "continue
+anyway" prompt. It refuses a release with no `SHA256SUMS` at all, and it prints
+which layer it applied so you can see whether authenticity was checked or only
+integrity.
+
+## 3. Put it on your PATH
 
 **Windows (PowerShell)**
 ```powershell
@@ -135,7 +278,7 @@ tokn --version
 tokn --help
 ```
 
-## 3. Point TOKN at a model
+## 4. Point TOKN at a model
 
 TOKN is **bring-your-own-model** — it runs against a provider you already have
 (OpenAI, Azure OpenAI, Anthropic/Claude, Gemini, OpenRouter, Fireworks) or a local
@@ -155,7 +298,7 @@ Prefer a file? Drop the same keys in a `.env` in your working directory (TOKN
 auto-loads it, non-overriding — just keep it out of git). **Full provider matrix,
 Azure `az login` auth, and local-model setup: [SETUP.md](SETUP.md).**
 
-## 4. Start your 14-day trial
+## 5. Start your 14-day trial
 
 TOKN runs in a free **community** tier by default. Unlock the full feature
 surface with a **14-day trial** — no account, no phone-home, fully offline:
@@ -169,7 +312,7 @@ The trial writes a signed, machine-bound token to `~/.tokn/license.json` and is
 limited to **one trial per machine**. When it expires, TOKN automatically
 reverts to the community tier — the binary keeps working.
 
-## 5. Stay up to date (works during the trial)
+## 6. Stay up to date (works during the trial)
 
 TOKN updates itself in place — no reinstall, no package manager:
 
