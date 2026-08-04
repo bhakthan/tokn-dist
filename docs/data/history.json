@@ -111,6 +111,14 @@
     "2026-08-01": {
       "count": 4,
       "uniques": 3
+    },
+    "2026-08-02": {
+      "count": 7,
+      "uniques": 6
+    },
+    "2026-08-03": {
+      "count": 5,
+      "uniques": 4
     }
   },
   "downloads_daily": {
@@ -129,7 +137,8 @@
     "2026-07-31": 0,
     "2026-08-01": 0,
     "2026-08-02": 3,
-    "2026-08-03": 0
+    "2026-08-03": 0,
+    "2026-08-04": 0
   },
   "downloads_snapshots": {
     "2026-07-18": {
@@ -315,6 +324,18 @@
         "tokn_windows_amd64.exe": 5
       },
       "total": 9
+    },
+    "2026-08-04": {
+      "assets": {
+        "SHA256SUMS": 2,
+        "SHA256SUMS.sig": 2,
+        "tokn_darwin_amd64": 0,
+        "tokn_darwin_arm64": 0,
+        "tokn_linux_amd64": 0,
+        "tokn_linux_arm64": 0,
+        "tokn_windows_amd64.exe": 5
+      },
+      "total": 9
     }
   },
   "downloads_state": {
@@ -349,46 +370,16 @@
   },
   "paths": [
     {
-      "count": 75,
+      "count": 41,
       "path": "/bhakthan/tokn-dist",
       "title": "Overview",
-      "uniques": 3
+      "uniques": 1
     },
     {
-      "count": 33,
+      "count": 12,
       "path": "/bhakthan/tokn-dist/blob/main/CAPABILITIES.md",
       "title": "/blob/main/CAPABILITIES.md",
-      "uniques": 4
-    },
-    {
-      "count": 21,
-      "path": "/bhakthan/tokn-dist/tree/main",
-      "title": "/tree/main",
       "uniques": 2
-    },
-    {
-      "count": 20,
-      "path": "/bhakthan/tokn-dist/graphs/traffic",
-      "title": "/graphs/traffic",
-      "uniques": 1
-    },
-    {
-      "count": 18,
-      "path": "/bhakthan/tokn-dist/pulse",
-      "title": "/pulse",
-      "uniques": 1
-    },
-    {
-      "count": 13,
-      "path": "/bhakthan/tokn-dist/blob/main/README.md",
-      "title": "/blob/main/README.md",
-      "uniques": 3
-    },
-    {
-      "count": 13,
-      "path": "/bhakthan/tokn-dist/releases/tag/v0.2.8",
-      "title": "/releases/tag/v0.2.8",
-      "uniques": 3
     },
     {
       "count": 12,
@@ -397,28 +388,58 @@
       "uniques": 1
     },
     {
-      "count": 10,
+      "count": 11,
+      "path": "/bhakthan/tokn-dist/blob/main/README.md",
+      "title": "/blob/main/README.md",
+      "uniques": 3
+    },
+    {
+      "count": 11,
+      "path": "/bhakthan/tokn-dist/releases/tag/v0.3.1",
+      "title": "/releases/tag/v0.3.1",
+      "uniques": 1
+    },
+    {
+      "count": 8,
+      "path": "/bhakthan/tokn-dist/graphs/traffic",
+      "title": "/graphs/traffic",
+      "uniques": 1
+    },
+    {
+      "count": 8,
+      "path": "/bhakthan/tokn-dist/pulse",
+      "title": "/pulse",
+      "uniques": 1
+    },
+    {
+      "count": 7,
       "path": "/bhakthan/tokn-dist/releases",
       "title": "/releases",
       "uniques": 1
     },
     {
-      "count": 9,
+      "count": 6,
       "path": "/bhakthan/tokn-dist/releases/tag/v0.2.9",
       "title": "/releases/tag/v0.2.9",
-      "uniques": 2
+      "uniques": 1
+    },
+    {
+      "count": 3,
+      "path": "/bhakthan/tokn-dist/tree/main",
+      "title": "/tree/main",
+      "uniques": 1
     }
   ],
   "referrers": [
     {
-      "count": 110,
+      "count": 76,
       "referrer": "github.com",
       "uniques": 1
     },
     {
-      "count": 17,
+      "count": 7,
       "referrer": "linkedin.com",
-      "uniques": 4
+      "uniques": 1
     },
     {
       "count": 1,
@@ -427,7 +448,7 @@
     }
   ],
   "repo": "bhakthan/tokn-dist",
-  "updated_at": "2026-08-03T10:07:59.990637+00:00",
+  "updated_at": "2026-08-04T09:11:33.524068+00:00",
   "views_daily": {
     "2026-07-05": {
       "count": 0,
@@ -540,6 +561,14 @@
     "2026-08-01": {
       "count": 6,
       "uniques": 2
+    },
+    "2026-08-02": {
+      "count": 5,
+      "uniques": 1
+    },
+    "2026-08-03": {
+      "count": 2,
+      "uniques": 1
     }
   }
 }
