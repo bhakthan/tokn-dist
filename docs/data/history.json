@@ -127,6 +127,14 @@
     "2026-08-05": {
       "count": 3,
       "uniques": 2
+    },
+    "2026-08-06": {
+      "count": 3,
+      "uniques": 2
+    },
+    "2026-08-07": {
+      "count": 4,
+      "uniques": 3
     }
   },
   "downloads_daily": {
@@ -149,7 +157,8 @@
     "2026-08-04": 0,
     "2026-08-05": 0,
     "2026-08-06": 0,
-    "2026-08-07": 0
+    "2026-08-07": 0,
+    "2026-08-08": 2
   },
   "downloads_snapshots": {
     "2026-07-18": {
@@ -383,12 +392,24 @@
         "tokn_windows_amd64.exe": 5
       },
       "total": 9
+    },
+    "2026-08-08": {
+      "assets": {
+        "SHA256SUMS": 3,
+        "SHA256SUMS.sig": 2,
+        "tokn_darwin_amd64": 0,
+        "tokn_darwin_arm64": 0,
+        "tokn_linux_amd64": 0,
+        "tokn_linux_arm64": 0,
+        "tokn_windows_amd64.exe": 6
+      },
+      "total": 11
     }
   },
   "downloads_state": {
     "SHA256SUMS": {
       "carry": 2,
-      "last": 0
+      "last": 1
     },
     "SHA256SUMS.sig": {
       "carry": 2,
@@ -412,7 +433,7 @@
     },
     "tokn_windows_amd64.exe": {
       "carry": 5,
-      "last": 0
+      "last": 1
     }
   },
   "paths": [
@@ -420,7 +441,13 @@
       "count": 38,
       "path": "/bhakthan/tokn-dist",
       "title": "Overview",
-      "uniques": 1
+      "uniques": 2
+    },
+    {
+      "count": 16,
+      "path": "/bhakthan/tokn-dist/releases/tag/v0.3.1",
+      "title": "/releases/tag/v0.3.1",
+      "uniques": 2
     },
     {
       "count": 12,
@@ -429,64 +456,58 @@
       "uniques": 1
     },
     {
-      "count": 12,
-      "path": "/bhakthan/tokn-dist/releases/tag/v0.3.1",
-      "title": "/releases/tag/v0.3.1",
-      "uniques": 1
-    },
-    {
-      "count": 7,
-      "path": "/bhakthan/tokn-dist/blob/main/CAPABILITIES.md",
-      "title": "/blob/main/CAPABILITIES.md",
-      "uniques": 2
-    },
-    {
-      "count": 7,
-      "path": "/bhakthan/tokn-dist/graphs/traffic",
-      "title": "/graphs/traffic",
-      "uniques": 1
-    },
-    {
-      "count": 7,
-      "path": "/bhakthan/tokn-dist/pulse",
-      "title": "/pulse",
-      "uniques": 1
-    },
-    {
-      "count": 6,
+      "count": 8,
       "path": "/bhakthan/tokn-dist/releases",
       "title": "/releases",
       "uniques": 1
     },
     {
-      "count": 4,
-      "path": "/bhakthan/tokn-dist/blob/main/README.md",
-      "title": "/blob/main/README.md",
-      "uniques": 2
+      "count": 6,
+      "path": "/bhakthan/tokn-dist/blob/main/CAPABILITIES.md",
+      "title": "/blob/main/CAPABILITIES.md",
+      "uniques": 3
     },
     {
-      "count": 4,
-      "path": "/bhakthan/tokn-dist/releases/tag/v0.2.9",
-      "title": "/releases/tag/v0.2.9",
+      "count": 6,
+      "path": "/bhakthan/tokn-dist/blob/main/README.md",
+      "title": "/blob/main/README.md",
+      "uniques": 3
+    },
+    {
+      "count": 6,
+      "path": "/bhakthan/tokn-dist/graphs/traffic",
+      "title": "/graphs/traffic",
       "uniques": 1
     },
     {
-      "count": 2,
+      "count": 6,
+      "path": "/bhakthan/tokn-dist/pulse",
+      "title": "/pulse",
+      "uniques": 1
+    },
+    {
+      "count": 3,
       "path": "/bhakthan/tokn-dist/tree/main",
       "title": "/tree/main",
+      "uniques": 1
+    },
+    {
+      "count": 1,
+      "path": "/bhakthan/tokn-dist/commit/59346de37c47b0f6a6874381cfaab6948db71083",
+      "title": "/commit/59346de37c47b0f6a6874381cfaab6948db71083",
       "uniques": 1
     }
   ],
   "referrers": [
     {
-      "count": 69,
+      "count": 60,
       "referrer": "github.com",
-      "uniques": 1
+      "uniques": 2
     },
     {
-      "count": 3,
+      "count": 4,
       "referrer": "linkedin.com",
-      "uniques": 1
+      "uniques": 2
     },
     {
       "count": 1,
@@ -495,7 +516,7 @@
     }
   ],
   "repo": "bhakthan/tokn-dist",
-  "updated_at": "2026-08-07T07:44:30.612928+00:00",
+  "updated_at": "2026-08-08T07:17:50.106507+00:00",
   "views_daily": {
     "2026-07-05": {
       "count": 0,
@@ -624,6 +645,14 @@
     "2026-08-05": {
       "count": 2,
       "uniques": 1
+    },
+    "2026-08-06": {
+      "count": 4,
+      "uniques": 1
+    },
+    "2026-08-07": {
+      "count": 19,
+      "uniques": 3
     }
   }
 }
