@@ -139,6 +139,10 @@
     "2026-08-08": {
       "count": 17,
       "uniques": 12
+    },
+    "2026-08-09": {
+      "count": 4,
+      "uniques": 3
     }
   },
   "downloads_daily": {
@@ -163,7 +167,8 @@
     "2026-08-06": 0,
     "2026-08-07": 0,
     "2026-08-08": 2,
-    "2026-08-09": 0
+    "2026-08-09": 0,
+    "2026-08-10": 2
   },
   "downloads_snapshots": {
     "2026-07-18": {
@@ -421,12 +426,24 @@
         "tokn_windows_amd64.exe": 6
       },
       "total": 11
+    },
+    "2026-08-10": {
+      "assets": {
+        "SHA256SUMS": 4,
+        "SHA256SUMS.sig": 2,
+        "tokn_darwin_amd64": 0,
+        "tokn_darwin_arm64": 0,
+        "tokn_linux_amd64": 0,
+        "tokn_linux_arm64": 0,
+        "tokn_windows_amd64.exe": 7
+      },
+      "total": 13
     }
   },
   "downloads_state": {
     "SHA256SUMS": {
       "carry": 3,
-      "last": 0
+      "last": 1
     },
     "SHA256SUMS.sig": {
       "carry": 2,
@@ -450,27 +467,21 @@
     },
     "tokn_windows_amd64.exe": {
       "carry": 6,
-      "last": 0
+      "last": 1
     }
   },
   "paths": [
     {
-      "count": 38,
+      "count": 29,
       "path": "/bhakthan/tokn-dist",
       "title": "Overview",
       "uniques": 2
     },
     {
-      "count": 17,
+      "count": 18,
       "path": "/bhakthan/tokn-dist/releases/tag/v0.3.1",
       "title": "/releases/tag/v0.3.1",
       "uniques": 2
-    },
-    {
-      "count": 12,
-      "path": "/bhakthan/tokn-dist/releases/tag/v0.3.0",
-      "title": "/releases/tag/v0.3.0",
-      "uniques": 1
     },
     {
       "count": 8,
@@ -485,21 +496,27 @@
       "uniques": 3
     },
     {
-      "count": 6,
+      "count": 5,
       "path": "/bhakthan/tokn-dist/blob/main/CAPABILITIES.md",
       "title": "/blob/main/CAPABILITIES.md",
       "uniques": 3
     },
     {
-      "count": 6,
+      "count": 3,
       "path": "/bhakthan/tokn-dist/graphs/traffic",
       "title": "/graphs/traffic",
       "uniques": 1
     },
     {
-      "count": 6,
+      "count": 3,
       "path": "/bhakthan/tokn-dist/pulse",
       "title": "/pulse",
+      "uniques": 1
+    },
+    {
+      "count": 3,
+      "path": "/bhakthan/tokn-dist/releases/tag/v0.3.0",
+      "title": "/releases/tag/v0.3.0",
       "uniques": 1
     },
     {
@@ -510,14 +527,14 @@
     },
     {
       "count": 1,
-      "path": "/bhakthan/tokn-dist/commit/59346de37c47b0f6a6874381cfaab6948db71083",
-      "title": "/commit/59346de37c47b0f6a6874381cfaab6948db71083",
+      "path": "/bhakthan/tokn-dist/issues",
+      "title": "/issues",
       "uniques": 1
     }
   ],
   "referrers": [
     {
-      "count": 60,
+      "count": 39,
       "referrer": "github.com",
       "uniques": 2
     },
@@ -533,7 +550,7 @@
     }
   ],
   "repo": "bhakthan/tokn-dist",
-  "updated_at": "2026-08-09T07:18:51.824366+00:00",
+  "updated_at": "2026-08-10T08:07:12.655792+00:00",
   "views_daily": {
     "2026-07-05": {
       "count": 0,
@@ -674,6 +691,10 @@
     "2026-08-08": {
       "count": 2,
       "uniques": 2
+    },
+    "2026-08-09": {
+      "count": 2,
+      "uniques": 1
     }
   }
 }
