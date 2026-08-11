@@ -21,6 +21,7 @@ sentence that describes it.
 | [`key-management.md`](key-management.md) | Release signing key, trial seed, fingerprints, rotation |
 | [`macos-code-signing.md`](macos-code-signing.md) | Developer ID signing, hardened runtime, notarization, Gatekeeper |
 | [`supply-chain.md`](supply-chain.md) | Build provenance attestation, SBOMs, vulnerability scanning |
+| [`decisions-pending.md`](decisions-pending.md) | **Start here for the three open decisions**: Apple enrolment, immutable releases, provenance |
 
 ## Control status
 
