@@ -33,7 +33,7 @@ easy to come away believing a mechanism is active when only its tooling exists.
 | SHA-256 manifest per release | **Live** | `SHA256SUMS` published for both variants |
 | ed25519 signature over the manifest | **Live** | `SHA256SUMS.sig`; public key compiled into the binary, so `tokn update` verifies authenticity offline |
 | Update refuses unverified downloads | **Live** | See [`update-process.md`](update-process.md) |
-| Signing-key fingerprint published | **Live** | Below, and mirrored out-of-band — see [`key-management.md`](key-management.md) |
+| Signing-key fingerprint published | **Partial** | Published in both repos, but both are under one GitHub account — not yet on a genuinely independent channel. See below |
 | Signing key held offline / in hardware | **Not done** | Currently a file on the release engineer's workstation. This is the weakest link in the chain today; hardening path in [`key-management.md`](key-management.md) |
 | macOS Developer ID signing + notarization | **Tooling ready, not active** | Requires Apple Developer Program enrolment. macOS binaries are currently **ad-hoc signed and Gatekeeper rejects them** |
 | Build provenance attestation | **Tooling ready, blocked on plan + build location** | Two independent gaps: releases are built on a workstation rather than in CI, and artifact attestations in a **private** repo require GitHub Enterprise Cloud. See [`supply-chain.md`](supply-chain.md) |
@@ -55,13 +55,26 @@ SHA-256 fingerprint of the raw 32-byte public key:
             364e425ec887eb4b13e0c83927679f603608eab679c893fd3f8e508a22c7d14a
 ```
 
-**Why the fingerprint is also published elsewhere.** Comparing a signature
-against a key you obtained from the same repository that served you the binary
-proves very little: an attacker who can replace the binary can usually also
-replace the key you would check it against. The fingerprint is therefore
-mirrored on at least one channel that an attacker would have to compromise
-*separately*. See [`key-management.md`](key-management.md) for the current list
-of publication channels and for how to verify a key you have in hand.
+**Where the fingerprint is published, and why it matters.** Comparing a
+signature against a key you obtained from the same place that served you the
+binary proves very little: an attacker who can replace the binary can usually
+also replace the key you would check it against. A fingerprint is only useful
+for detecting that kind of compromise if it also appears somewhere the attacker
+would have to breach *separately*.
+
+Current publication locations, stated precisely:
+
+| Location | Independent of the release channel? |
+|---|---|
+| This file, in `bhakthan/tokn` (source) | No |
+| `docs/security/README.md` in `bhakthan/tokn-dist` (public) | **No** — same GitHub account and owner |
+| A genuinely out-of-band channel | **Not yet published** |
+
+Both current copies live under the same GitHub account, so an attacker who
+compromised that account could change both. **The fingerprint is therefore not
+yet independently verifiable**, and this table will say so until it is.
+[`key-management.md`](key-management.md) covers the candidate out-of-band
+channels and how to verify a key you have in hand.
 
 If a fingerprint you find anywhere disagrees with the value above, **do not
 install the binary** — report it via the process in
