@@ -159,6 +159,10 @@
     "2026-08-13": {
       "count": 3,
       "uniques": 2
+    },
+    "2026-08-14": {
+      "count": 9,
+      "uniques": 5
     }
   },
   "downloads_daily": {
@@ -188,7 +192,8 @@
     "2026-08-11": 0,
     "2026-08-12": 2,
     "2026-08-13": 0,
-    "2026-08-14": 0
+    "2026-08-14": 0,
+    "2026-08-15": 4
   },
   "downloads_snapshots": {
     "2026-07-18": {
@@ -506,16 +511,28 @@
         "tokn_windows_amd64.exe": 7
       },
       "total": 15
+    },
+    "2026-08-15": {
+      "assets": {
+        "SHA256SUMS": 6,
+        "SHA256SUMS.sig": 4,
+        "tokn_darwin_amd64": 0,
+        "tokn_darwin_arm64": 0,
+        "tokn_linux_amd64": 1,
+        "tokn_linux_arm64": 0,
+        "tokn_windows_amd64.exe": 8
+      },
+      "total": 19
     }
   },
   "downloads_state": {
     "SHA256SUMS": {
       "carry": 4,
-      "last": 0
+      "last": 2
     },
     "SHA256SUMS.sig": {
       "carry": 3,
-      "last": 0
+      "last": 1
     },
     "tokn_darwin_amd64": {
       "carry": 0,
@@ -535,21 +552,21 @@
     },
     "tokn_windows_amd64.exe": {
       "carry": 7,
-      "last": 0
+      "last": 1
     }
   },
   "paths": [
     {
-      "count": 15,
-      "path": "/bhakthan/tokn-dist",
-      "title": "Overview",
-      "uniques": 2
-    },
-    {
-      "count": 14,
+      "count": 13,
       "path": "/bhakthan/tokn-dist/releases/tag/v0.3.1",
       "title": "/releases/tag/v0.3.1",
       "uniques": 3
+    },
+    {
+      "count": 12,
+      "path": "/bhakthan/tokn-dist",
+      "title": "Overview",
+      "uniques": 2
     },
     {
       "count": 9,
@@ -558,7 +575,7 @@
       "uniques": 4
     },
     {
-      "count": 8,
+      "count": 9,
       "path": "/bhakthan/tokn-dist/blob/main/CAPABILITIES.md",
       "title": "/blob/main/CAPABILITIES.md",
       "uniques": 2
@@ -589,25 +606,25 @@
     },
     {
       "count": 1,
-      "path": "/bhakthan/tokn-dist/stargazers",
-      "title": "/stargazers",
+      "path": "/bhakthan/tokn-dist/releases/tag/v0.3.2",
+      "title": "/releases/tag/v0.3.2",
       "uniques": 1
     },
     {
       "count": 1,
-      "path": "/bhakthan/tokn-dist/tree/main/.github",
-      "title": "/tree/main/.github",
+      "path": "/bhakthan/tokn-dist/stargazers",
+      "title": "/stargazers",
       "uniques": 1
     }
   ],
   "referrers": [
     {
-      "count": 21,
+      "count": 19,
       "referrer": "github.com",
       "uniques": 2
     },
     {
-      "count": 7,
+      "count": 6,
       "referrer": "linkedin.com",
       "uniques": 3
     },
@@ -618,7 +635,7 @@
     }
   ],
   "repo": "bhakthan/tokn-dist",
-  "updated_at": "2026-08-14T07:52:51.086523+00:00",
+  "updated_at": "2026-08-15T07:00:04.852637+00:00",
   "views_daily": {
     "2026-07-05": {
       "count": 0,
@@ -779,6 +796,10 @@
     "2026-08-13": {
       "count": 1,
       "uniques": 1
+    },
+    "2026-08-14": {
+      "count": 4,
+      "uniques": 2
     }
   }
 }
