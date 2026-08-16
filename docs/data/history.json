@@ -163,6 +163,10 @@
     "2026-08-14": {
       "count": 9,
       "uniques": 5
+    },
+    "2026-08-15": {
+      "count": 7,
+      "uniques": 5
     }
   },
   "downloads_daily": {
@@ -193,7 +197,8 @@
     "2026-08-12": 2,
     "2026-08-13": 0,
     "2026-08-14": 0,
-    "2026-08-15": 4
+    "2026-08-15": 4,
+    "2026-08-16": 0
   },
   "downloads_snapshots": {
     "2026-07-18": {
@@ -523,6 +528,18 @@
         "tokn_windows_amd64.exe": 8
       },
       "total": 19
+    },
+    "2026-08-16": {
+      "assets": {
+        "SHA256SUMS": 6,
+        "SHA256SUMS.sig": 4,
+        "tokn_darwin_amd64": 0,
+        "tokn_darwin_arm64": 0,
+        "tokn_linux_amd64": 1,
+        "tokn_linux_arm64": 0,
+        "tokn_windows_amd64.exe": 8
+      },
+      "total": 19
     }
   },
   "downloads_state": {
@@ -557,22 +574,16 @@
   },
   "paths": [
     {
-      "count": 13,
+      "count": 12,
       "path": "/bhakthan/tokn-dist/releases/tag/v0.3.1",
       "title": "/releases/tag/v0.3.1",
       "uniques": 3
     },
     {
-      "count": 12,
+      "count": 11,
       "path": "/bhakthan/tokn-dist",
       "title": "Overview",
       "uniques": 2
-    },
-    {
-      "count": 9,
-      "path": "/bhakthan/tokn-dist/blob/main/README.md",
-      "title": "/blob/main/README.md",
-      "uniques": 4
     },
     {
       "count": 9,
@@ -581,28 +592,22 @@
       "uniques": 2
     },
     {
-      "count": 7,
-      "path": "/bhakthan/tokn-dist/tree/main",
-      "title": "/tree/main",
-      "uniques": 2
+      "count": 8,
+      "path": "/bhakthan/tokn-dist/blob/main/README.md",
+      "title": "/blob/main/README.md",
+      "uniques": 3
     },
     {
-      "count": 6,
+      "count": 8,
       "path": "/bhakthan/tokn-dist/releases",
       "title": "/releases",
       "uniques": 1
     },
     {
-      "count": 1,
-      "path": "/bhakthan/tokn-dist/graphs/traffic",
-      "title": "/graphs/traffic",
-      "uniques": 1
-    },
-    {
-      "count": 1,
-      "path": "/bhakthan/tokn-dist/pulse",
-      "title": "/pulse",
-      "uniques": 1
+      "count": 7,
+      "path": "/bhakthan/tokn-dist/tree/main",
+      "title": "/tree/main",
+      "uniques": 2
     },
     {
       "count": 1,
@@ -614,6 +619,12 @@
       "count": 1,
       "path": "/bhakthan/tokn-dist/stargazers",
       "title": "/stargazers",
+      "uniques": 1
+    },
+    {
+      "count": 1,
+      "path": "/bhakthan/tokn-dist/tree/main/.github",
+      "title": "/tree/main/.github",
       "uniques": 1
     }
   ],
@@ -627,15 +638,10 @@
       "count": 6,
       "referrer": "linkedin.com",
       "uniques": 3
-    },
-    {
-      "count": 1,
-      "referrer": "com.linkedin.android",
-      "uniques": 1
     }
   ],
   "repo": "bhakthan/tokn-dist",
-  "updated_at": "2026-08-15T07:00:04.852637+00:00",
+  "updated_at": "2026-08-16T07:01:57.091484+00:00",
   "views_daily": {
     "2026-07-05": {
       "count": 0,
@@ -800,6 +806,10 @@
     "2026-08-14": {
       "count": 4,
       "uniques": 2
+    },
+    "2026-08-15": {
+      "count": 3,
+      "uniques": 1
     }
   }
 }
