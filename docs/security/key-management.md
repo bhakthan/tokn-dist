@@ -7,8 +7,8 @@ This document covers the cryptographic keys used in TOKN's release and licensing
 | Key | Algorithm | Purpose | Location |
 |-----|-----------|---------|----------|
 | **Release signing key** | Ed25519 | Signs `SHA256SUMS` manifests so `tokn update` can verify authenticity | `~/.tokn-release/signing.key` (private), `signing.key.pub` (public) |
-| **Trial HMAC seed** | HMAC-SHA256 seed | Derives trial license tokens; must be identical across releases or existing trials stop verifying | `~/.tokn-release/trial-seed.txt` |
-| **Release public key** (license) | Ed25519 | Verifies paid license signatures (not yet active) | `~/.tokn-release/release-key.pub` |
+| **Trial HMAC seed** | HMAC-SHA256 seed | Derives trial license tokens; ships inside every binary by design, so it is a stability requirement rather than a secret — it must be identical across releases or existing trials stop verifying | `~/.tokn-release/trial-seed.txt` |
+| **License signing key** | Ed25519 | Signs paid (`pro` / `enterprise`) licenses. The private half is never distributed and never enters a build; only the public half is compiled in. **Not yet active** — no released binary embeds a license public key, so paid tiers are unreachable on published builds | private half offline; public half at `~/.tokn-release/release-key.pub` |
 | **Apple Developer ID** (forward-looking) | RSA 2048 (Apple-issued) | macOS code signing, notarization, Gatekeeper | Apple Developer account; see [macos-code-signing.md](macos-code-signing.md) |
 
 ## Release Signing Key
@@ -108,13 +108,40 @@ The trial seed (`~/.tokn-release/trial-seed.txt`) is used to derive trial licens
 
 ### Risk
 
-The seed has the same storage weakness as the signing key (plaintext file on a workstation). Additionally, unlike the signing key, the seed must be available to the *build* (it is compiled into the binary), so it cannot easily be moved to a non-exportable HSM.
+The seed is **compiled into every released binary** and is therefore recoverable
+by anyone holding a copy of the software. This is not a storage weakness to be
+fixed; it is a direct consequence of TOKN verifying licenses fully offline, with
+no phone-home. A symmetric seed that must verify signatures inside the user's
+own process cannot also be secret from that user.
+
+The correct conclusion is not "protect the seed harder" but "do not rely on it
+for anything that matters". Trial signing resists accident and casual tampering;
+it is not an anti-piracy control. See
+[threat-model.md](threat-model.md#trial-licensing-is-not-a-security-control).
+
+Two properties do **not** depend on the seed staying secret, and both are
+enforced at verification time:
+
+- an `hmac-sha256` signature may authorize **only** the `trial` tier — paid
+  tiers require an ed25519 signature from an offline key that is never
+  distributed;
+- the maximum trial term is checked when a license is verified, not only when it
+  is issued.
 
 ### Mitigation
 
-- Treat the seed as a long-lived secret with the same protection level as the signing key.
-- If the seed is lost, issue a new one and communicate the trial reset to affected users.
-- The seed is never sent over the network by the built binary; it is used purely for local HMAC computation.
+- Treat the seed as a **build input that must stay stable**, not as a
+  confidentiality boundary. Its real operational risk is *changing* it, which
+  silently invalidates trials issued by prior releases.
+- Because it must be available to the build, it cannot move to a non-exportable
+  HSM — and there is no security benefit in trying, since the value ships anyway.
+- Do not co-locate it with the release signing key in tooling or in reasoning:
+  the signing key is genuinely secret and genuinely high-impact, and grouping a
+  non-secret alongside it erodes the handling discipline the signing key needs.
+- The seed is never sent over the network by the built binary; it is used purely
+  for local HMAC computation.
+- If TOKN later requires trials that resist a determined user, the fix is
+  server-side issuance, not a better hiding place.
 
 ## Key Rotation
 

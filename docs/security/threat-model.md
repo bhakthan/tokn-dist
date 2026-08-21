@@ -7,7 +7,7 @@ This document describes the threat model for TOKN — an AI agent CLI that execu
 | Asset | Where it lives | Compromise impact |
 |-------|---------------|-------------------|
 | **Release signing private key** (ed25519) | `~/.tokn-release/signing.key` on the release engineer's workstation | Attacker can sign arbitrary binaries that every TOKN user will accept via `tokn update` — remote code execution at scale |
-| **Trial HMAC seed** | `~/.tokn-release/trial-seed.txt` on the release engineer's workstation | Attacker can forge valid trial licenses; existing trials may stop verifying if seed changes |
+| **Trial HMAC seed** | `~/.tokn-release/trial-seed.txt`, and — by design — compiled into every released binary | Not a confidentiality boundary. Trial signing is casual-abuse-resistant only; see "Trial licensing is not a security control" below. Changing it stops existing trials from verifying |
 | **User source code and prompts** | User's machine; transmitted to configured model provider | Exfiltration via model provider compromise or prompt injection |
 | **User's model-provider API keys** | User's environment / `~/.nospace/config.toml` | Unauthorized model usage; billing fraud; data exfiltration through the provider |
 | **The update channel** | GitHub release assets on `bhakthan/tokn-dist` | Supply-chain attack: distribute malicious binaries to all users who run `tokn update` |
@@ -52,7 +52,7 @@ Source: `environment-manager/internal/agent/plugins/agentplugin.go` (path traver
 | Adversary | Capability | Primary target |
 |-----------|-----------|----------------|
 | **Compromised GitHub token** | Write access to `bhakthan/tokn-dist` releases | Update channel — publish malicious binaries |
-| **Compromised release workstation** | Access to signing key, trial seed, release scripts | All assets — sign malicious releases, forge trials |
+| **Compromised release workstation** | Access to signing key, release scripts | All assets — sign malicious releases |
 | **Malicious repository content** | Control of files the agent reads (cloned repo, fetched URL) | Prompt injection → arbitrary tool execution |
 | **Compromised model provider** | Full visibility into prompts and responses; ability to inject tool calls | User source code; arbitrary command execution via manipulated responses |
 | **Network attacker (MITM)** | Intercept/modify traffic to non-HTTPS endpoints | Telemetry data; update payloads (mitigated by HTTPS enforcement) |
@@ -128,6 +128,37 @@ Source: `environment-manager/internal/agent/plugins/agentplugin.go` (path traver
 
 **Residual risk:** The agent has full access to the user's environment. A successful prompt injection can trivially exfiltrate any environment variable. The sensitive-access guard is a detection/alerting layer, not a prevention layer.
 
+## Trial licensing is not a security control
+
+Stated plainly, because a security document that overstates protection is worse
+than one that omits it.
+
+TOKN verifies licenses **fully offline** — no phone-home, ever. Offline
+verification of a self-issued trial requires the verifying key to be present in
+the binary doing the verifying, so the trial HMAC seed is compiled into every
+release. It is not, and cannot be, a secret from someone holding a copy of the
+software. Treat trial signing as protection against accidental and casual
+tampering, not as an anti-piracy mechanism. The trial ledger
+(`~/.tokn/.trial-ledger`) is MAC-authenticated and machine-bound, which
+similarly raises the cost of casual re-rolling without pretending to stop a
+determined user.
+
+What this explicitly does **not** weaken:
+
+- **Tier escalation is blocked.** `License.Verify` refuses to let an
+  `hmac-sha256` signature authorize any tier other than `trial`. Paid tiers
+  require an ed25519 signature from an offline key that is never distributed, so
+  the trial seed cannot be leveraged into a `pro` or `enterprise` license.
+- **Term extension is blocked.** The maximum trial length is enforced when a
+  license is *verified*, not merely when it is issued.
+- **Nothing about your data or the update channel depends on this.** Licensing
+  governs which features are enabled. It is not a boundary protecting user
+  code, credentials, or binary authenticity — those are threats #1, #2, #6 and
+  #7 above.
+
+The honest summary: TOKN's community tier is free forever, the trial is an
+evaluation convenience, and neither is defended as though it were a vault.
+
 ## Residual Risk Summary
 
 | Risk | Severity | Status |
@@ -136,5 +167,6 @@ Source: `environment-manager/internal/agent/plugins/agentplugin.go` (path traver
 | Prompt injection → arbitrary execution | Critical | No mitigation; architectural limitation |
 | Source code sent to third-party providers | Medium | User choice; local models available |
 | Credential exfiltration via agent | Medium | Detection only (sensitive-access guard) |
+| Trial licensing bypass | Accepted | By design — offline verification requires the trial seed to ship. Tier escalation and term extension remain blocked |
 | Safety gate bypass via binary modification | Low | Requires local attacker with write access to the binary |
 | MCP server escape after launch | Low | Subprocess runs as user; pre-launch path validation only |
