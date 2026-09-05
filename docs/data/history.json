@@ -243,6 +243,10 @@
     "2026-09-03": {
       "count": 11,
       "uniques": 8
+    },
+    "2026-09-04": {
+      "count": 9,
+      "uniques": 6
     }
   },
   "downloads_daily": {
@@ -293,7 +297,8 @@
     "2026-09-01": 0,
     "2026-09-02": 0,
     "2026-09-03": 0,
-    "2026-09-04": 7
+    "2026-09-04": 7,
+    "2026-09-05": 15
   },
   "downloads_snapshots": {
     "2026-07-18": {
@@ -863,47 +868,59 @@
         "tokn_windows_amd64.exe": 9
       },
       "total": 35
+    },
+    "2026-09-05": {
+      "assets": {
+        "SHA256SUMS": 13,
+        "SHA256SUMS.sig": 11,
+        "tokn_darwin_amd64": 2,
+        "tokn_darwin_arm64": 2,
+        "tokn_linux_amd64": 7,
+        "tokn_linux_arm64": 2,
+        "tokn_windows_amd64.exe": 13
+      },
+      "total": 50
     }
   },
   "downloads_state": {
     "SHA256SUMS": {
       "carry": 4,
-      "last": 6
+      "last": 9
     },
     "SHA256SUMS.sig": {
       "carry": 3,
-      "last": 5
+      "last": 8
     },
     "tokn_darwin_amd64": {
       "carry": 0,
-      "last": 1
+      "last": 2
     },
     "tokn_darwin_arm64": {
       "carry": 0,
-      "last": 1
+      "last": 2
     },
     "tokn_linux_amd64": {
       "carry": 1,
-      "last": 4
+      "last": 6
     },
     "tokn_linux_arm64": {
       "carry": 0,
-      "last": 1
+      "last": 2
     },
     "tokn_windows_amd64.exe": {
       "carry": 7,
-      "last": 2
+      "last": 6
     }
   },
   "paths": [
     {
-      "count": 11,
+      "count": 10,
       "path": "/bhakthan/tokn-dist",
       "title": "Overview",
       "uniques": 1
     },
     {
-      "count": 4,
+      "count": 3,
       "path": "/bhakthan/tokn-dist/releases",
       "title": "/releases",
       "uniques": 1
@@ -959,13 +976,13 @@
   ],
   "referrers": [
     {
-      "count": 15,
+      "count": 13,
       "referrer": "github.com",
       "uniques": 1
     }
   ],
   "repo": "bhakthan/tokn-dist",
-  "updated_at": "2026-09-04T11:24:19.337435+00:00",
+  "updated_at": "2026-09-05T10:40:46.963985+00:00",
   "views_daily": {
     "2026-07-05": {
       "count": 0,
@@ -1210,6 +1227,10 @@
     "2026-09-03": {
       "count": 1,
       "uniques": 1
+    },
+    "2026-09-04": {
+      "count": 0,
+      "uniques": 0
     }
   }
 }
