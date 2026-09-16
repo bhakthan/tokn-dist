@@ -287,6 +287,10 @@
     "2026-09-14": {
       "count": 8,
       "uniques": 5
+    },
+    "2026-09-15": {
+      "count": 7,
+      "uniques": 4
     }
   },
   "downloads_daily": {
@@ -348,7 +352,8 @@
     "2026-09-12": 5,
     "2026-09-13": 10,
     "2026-09-14": 3,
-    "2026-09-15": 1
+    "2026-09-15": 1,
+    "2026-09-16": 1
   },
   "downloads_snapshots": {
     "2026-07-18": {
@@ -1050,12 +1055,24 @@
         "tokn_windows_amd64.exe": 24
       },
       "total": 113
+    },
+    "2026-09-16": {
+      "assets": {
+        "SHA256SUMS": 23,
+        "SHA256SUMS.sig": 17,
+        "tokn_darwin_amd64": 10,
+        "tokn_darwin_arm64": 11,
+        "tokn_linux_amd64": 18,
+        "tokn_linux_arm64": 11,
+        "tokn_windows_amd64.exe": 24
+      },
+      "total": 114
     }
   },
   "downloads_state": {
     "SHA256SUMS": {
       "carry": 4,
-      "last": 18
+      "last": 19
     },
     "SHA256SUMS.sig": {
       "carry": 3,
@@ -1084,13 +1101,13 @@
   },
   "paths": [
     {
-      "count": 4,
+      "count": 5,
       "path": "/bhakthan/tokn-dist",
       "title": "Overview",
       "uniques": 1
     },
     {
-      "count": 2,
+      "count": 3,
       "path": "/bhakthan/tokn-dist/releases",
       "title": "/releases",
       "uniques": 1
@@ -1115,6 +1132,12 @@
     },
     {
       "count": 1,
+      "path": "/bhakthan/tokn-dist/releases/tag/v0.3.33",
+      "title": "/releases/tag/v0.3.33",
+      "uniques": 1
+    },
+    {
+      "count": 1,
       "path": "/bhakthan/tokn-dist/tree/main/docs",
       "title": "/tree/main/docs",
       "uniques": 1
@@ -1128,13 +1151,13 @@
   ],
   "referrers": [
     {
-      "count": 9,
+      "count": 10,
       "referrer": "github.com",
       "uniques": 1
     }
   ],
   "repo": "bhakthan/tokn-dist",
-  "updated_at": "2026-09-15T11:50:32.908071+00:00",
+  "updated_at": "2026-09-16T11:43:03.431675+00:00",
   "views_daily": {
     "2026-07-05": {
       "count": 0,
@@ -1423,6 +1446,10 @@
     "2026-09-14": {
       "count": 0,
       "uniques": 0
+    },
+    "2026-09-15": {
+      "count": 3,
+      "uniques": 1
     }
   }
 }
