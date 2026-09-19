@@ -299,6 +299,10 @@
     "2026-09-17": {
       "count": 21,
       "uniques": 13
+    },
+    "2026-09-18": {
+      "count": 24,
+      "uniques": 15
     }
   },
   "downloads_daily": {
@@ -363,7 +367,8 @@
     "2026-09-15": 1,
     "2026-09-16": 1,
     "2026-09-17": 1,
-    "2026-09-18": 0
+    "2026-09-18": 0,
+    "2026-09-19": 0
   },
   "downloads_snapshots": {
     "2026-07-18": {
@@ -1101,6 +1106,18 @@
         "tokn_windows_amd64.exe": 24
       },
       "total": 115
+    },
+    "2026-09-19": {
+      "assets": {
+        "SHA256SUMS": 23,
+        "SHA256SUMS.sig": 17,
+        "tokn_darwin_amd64": 11,
+        "tokn_darwin_arm64": 11,
+        "tokn_linux_amd64": 18,
+        "tokn_linux_arm64": 11,
+        "tokn_windows_amd64.exe": 24
+      },
+      "total": 115
     }
   },
   "downloads_state": {
@@ -1191,7 +1208,7 @@
     }
   ],
   "repo": "bhakthan/tokn-dist",
-  "updated_at": "2026-09-18T11:22:35.475400+00:00",
+  "updated_at": "2026-09-19T11:06:27.213269+00:00",
   "views_daily": {
     "2026-07-05": {
       "count": 0,
@@ -1492,6 +1509,10 @@
     "2026-09-17": {
       "count": 1,
       "uniques": 1
+    },
+    "2026-09-18": {
+      "count": 0,
+      "uniques": 0
     }
   }
 }
