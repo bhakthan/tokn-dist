@@ -311,6 +311,10 @@
     "2026-09-20": {
       "count": 14,
       "uniques": 10
+    },
+    "2026-09-21": {
+      "count": 8,
+      "uniques": 5
     }
   },
   "downloads_daily": {
@@ -378,7 +382,8 @@
     "2026-09-18": 0,
     "2026-09-19": 0,
     "2026-09-20": 0,
-    "2026-09-21": 5
+    "2026-09-21": 5,
+    "2026-09-22": 7
   },
   "downloads_snapshots": {
     "2026-07-18": {
@@ -1152,36 +1157,48 @@
         "tokn_windows_amd64.exe": 25
       },
       "total": 120
+    },
+    "2026-09-22": {
+      "assets": {
+        "SHA256SUMS": 26,
+        "SHA256SUMS.sig": 19,
+        "tokn_darwin_amd64": 12,
+        "tokn_darwin_arm64": 12,
+        "tokn_linux_amd64": 20,
+        "tokn_linux_arm64": 12,
+        "tokn_windows_amd64.exe": 26
+      },
+      "total": 127
     }
   },
   "downloads_state": {
     "SHA256SUMS": {
       "carry": 4,
-      "last": 21
+      "last": 22
     },
     "SHA256SUMS.sig": {
       "carry": 3,
-      "last": 15
+      "last": 16
     },
     "tokn_darwin_amd64": {
       "carry": 0,
-      "last": 11
+      "last": 12
     },
     "tokn_darwin_arm64": {
       "carry": 0,
-      "last": 11
+      "last": 12
     },
     "tokn_linux_amd64": {
       "carry": 1,
-      "last": 18
+      "last": 19
     },
     "tokn_linux_arm64": {
       "carry": 0,
-      "last": 11
+      "last": 12
     },
     "tokn_windows_amd64.exe": {
       "carry": 7,
-      "last": 18
+      "last": 19
     }
   },
   "paths": [
@@ -1206,13 +1223,13 @@
   ],
   "referrers": [
     {
-      "count": 4,
+      "count": 3,
       "referrer": "github.com",
       "uniques": 1
     }
   ],
   "repo": "bhakthan/tokn-dist",
-  "updated_at": "2026-09-21T12:55:39.519765+00:00",
+  "updated_at": "2026-09-22T11:45:21.381238+00:00",
   "views_daily": {
     "2026-07-05": {
       "count": 0,
@@ -1525,6 +1542,10 @@
     "2026-09-20": {
       "count": 0,
       "uniques": 0
+    },
+    "2026-09-21": {
+      "count": 2,
+      "uniques": 1
     }
   }
 }
