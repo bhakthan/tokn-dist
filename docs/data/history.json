@@ -315,6 +315,10 @@
     "2026-09-21": {
       "count": 8,
       "uniques": 5
+    },
+    "2026-09-22": {
+      "count": 17,
+      "uniques": 11
     }
   },
   "downloads_daily": {
@@ -383,7 +387,8 @@
     "2026-09-19": 0,
     "2026-09-20": 0,
     "2026-09-21": 5,
-    "2026-09-22": 7
+    "2026-09-22": 7,
+    "2026-09-23": 0
   },
   "downloads_snapshots": {
     "2026-07-18": {
@@ -1169,6 +1174,18 @@
         "tokn_windows_amd64.exe": 26
       },
       "total": 127
+    },
+    "2026-09-23": {
+      "assets": {
+        "SHA256SUMS": 26,
+        "SHA256SUMS.sig": 19,
+        "tokn_darwin_amd64": 12,
+        "tokn_darwin_arm64": 12,
+        "tokn_linux_amd64": 20,
+        "tokn_linux_arm64": 12,
+        "tokn_windows_amd64.exe": 26
+      },
+      "total": 127
     }
   },
   "downloads_state": {
@@ -1203,15 +1220,21 @@
   },
   "paths": [
     {
-      "count": 3,
+      "count": 4,
       "path": "/bhakthan/tokn-dist",
       "title": "Overview",
       "uniques": 1
     },
     {
-      "count": 2,
+      "count": 3,
       "path": "/bhakthan/tokn-dist/releases",
       "title": "/releases",
+      "uniques": 1
+    },
+    {
+      "count": 1,
+      "path": "/bhakthan/tokn-dist/blob/22ee66658745ae6dc12a705b1d49752e65db94ba/SETUP.md",
+      "title": "/blob/22ee66658745ae6dc12a705b1d49752e65db94ba/SETUP.md",
       "uniques": 1
     },
     {
@@ -1219,17 +1242,23 @@
       "path": "/bhakthan/tokn-dist/releases/tag/v0.3.33",
       "title": "/releases/tag/v0.3.33",
       "uniques": 1
+    },
+    {
+      "count": 1,
+      "path": "/bhakthan/tokn-dist/releases/tag/v0.3.39",
+      "title": "/releases/tag/v0.3.39",
+      "uniques": 1
     }
   ],
   "referrers": [
     {
-      "count": 3,
+      "count": 5,
       "referrer": "github.com",
-      "uniques": 1
+      "uniques": 2
     }
   ],
   "repo": "bhakthan/tokn-dist",
-  "updated_at": "2026-09-22T11:45:21.381238+00:00",
+  "updated_at": "2026-09-23T11:44:41.341820+00:00",
   "views_daily": {
     "2026-07-05": {
       "count": 0,
@@ -1546,6 +1575,10 @@
     "2026-09-21": {
       "count": 2,
       "uniques": 1
+    },
+    "2026-09-22": {
+      "count": 4,
+      "uniques": 2
     }
   }
 }
