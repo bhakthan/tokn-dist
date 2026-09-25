@@ -61,7 +61,8 @@ version-accurate catalog.
 ---
 
 > Start here: download for your OS → **verify the signature** → put it on your
-> `PATH` → run `tokn license trial`.
+> `PATH` → try the **[Community quick start](#community-quick-start--no-trial-required)**.
+> A trial is optional for premium features.
 
 > Curious what it does? See **[CAPABILITIES.md](CAPABILITIES.md)** for a quick tour —
 > or just run `tokn --help` after installing.
@@ -298,7 +299,70 @@ Prefer a file? Drop the same keys in a `.env` in your working directory (TOKN
 auto-loads it, non-overriding — just keep it out of git). **Full provider matrix,
 Azure `az login` auth, and local-model setup: [SETUP.md](SETUP.md).**
 
-## 5. Start your 14-day trial
+## Community quick start — no trial required
+
+Available in **v0.3.43 and later**. After installing and verifying TOKN, these
+decision-model features work in the free Community tier. No trial activation or
+embedded wiki is required. Specialized domain features remain separately licensed.
+
+### Start with the offline judgment example
+
+If you already have TOKN installed, `tokn update` downloads the latest release
+(internet access required). The example and help commands below do not require a
+model provider or API key:
+
+```text
+tokn update
+tokn judgments example
+tokn judgments evaluate --help
+```
+
+`judgments example` prints a local rules bundle; it does not run an evaluation or
+write a file. `judgments evaluate` accepts explicit bundle and request files; use
+`--air-gap` with the local rules provider to evaluate without external model calls.
+Governed judgments separate typed model interpretation from deterministic policy.
+They are advisory recommendations, not permission to execute tools or bypass gates.
+
+### Optional: try a Jev decision model
+
+Use your own Jev API key. `status` checks configuration without calling the decision
+API. **Running `triage` sends the supplied task text to Jev and may incur provider
+charges.** Use synthetic or approved text, never secrets or unapproved sensitive data.
+
+**Windows (PowerShell)**
+```powershell
+$env:JEV_API_KEY = "YOUR_KEY"
+tokn system-one status
+tokn system-one triage --text "Add a unit test for trimming spaces"
+```
+
+**macOS / Linux**
+```bash
+export JEV_API_KEY="YOUR_KEY"
+tokn system-one status
+tokn system-one triage --text "Add a unit test for trimming spaces"
+```
+
+Keep keys out of source control. This triage example returns an advisory assessment;
+it does not edit code or run tools. For multiple typed questions over the same state,
+`tokn system-one evaluate` batches those questions into one provider request.
+Use `tokn system-one evaluate --help` for the explicit input-file interface.
+
+### Learn without the wiki
+
+The public download excludes the embedded wiki, **not the built-in lessons or these
+Community features**. Inside a configured `tokn agent-repl` session, run:
+
+```text
+/learn system-one
+/learn judgments
+```
+
+These explain typed decisions, shared-state batching, and governed judgments.
+Configure a generative LLM using [SETUP.md](SETUP.md) for agent sessions;
+the standalone Jev example above needs only Jev credentials, not an LLM key.
+
+## 5. Optional: start your 14-day trial
 
 TOKN runs in a free **community** tier by default. Unlock the full feature
 surface with a **14-day trial** — no account, no phone-home, fully offline:
@@ -330,7 +394,7 @@ Updating **does not** reset or invalidate an active trial.
 
 | Tier | Cost | Features | Expiry |
 |------|------|----------|--------|
-| Community | Free | Capped baseline surface | Perpetual |
+| Community | Free | Core agent loop, built-in lessons, System One decisions and governed judgments; specialized domains remain gated | Perpetual |
 | Trial | Free | Full feature surface | 14 days, one per machine |
 | Pro / Enterprise | Paid | Full surface, production & regulated use | Annual / perpetual |
 
