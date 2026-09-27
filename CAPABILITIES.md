@@ -29,11 +29,9 @@ Inside the interactive session (`tokn` with no args, or `tokn agent-repl`):
 > Counts below are deliberately approximate — run the commands above for the
 > exact surface shipped in your version.
 
-> **You're seeing roughly 5% of TOKN.** This page hand-picks about a dozen
-> headline themes out of a shipped surface of **155 slash commands, 184
-> hands-on `/learn` lessons, 17 regulated-domain harnesses, and ~300 documented
-> capability sections**. Treat everything below as a teaser — `tokn --help`,
-> `/help`, and `/learn` reveal the other 95%.
+> This page introduces headline capabilities and the **32 domain modes**.
+> Use `tokn --help`, `/help`, and `/learn` to discover the commands and lessons
+> shipped in your version.
 
 ---
 
@@ -307,17 +305,90 @@ Run `/learn modes` in a session for the current, complete list.
 
 ## Domain harnesses
 
-TOKN ships **29 regulated-domain plugs** — each adds domain-aware tools,
-validators, and safety gates for a specialized field. A sampling of the sectors
-covered:
+A **domain harness** adds field-specific tools, validators, lifecycle rules and
+gates around specialized work. It is decision support, not a substitute for
+professional judgment or regulatory certification.
 
-- Financial risk & compliance · Legal / regulatory analysis
-- Precision medicine · Oncology · Structural biology · Genomics
-- Quantum science · Atmospheric chemistry · Materials science
-- Geospatial / Earth observation · Power grid & energy · EU Battery Passport
+Thirty-two domain modes are selectable with `--mode <name>` and listed by
+`tokn introspect --section modes`. Use that command to inspect your installed
+version; these notes describe the current release.
 
-Each harness enforces sector-appropriate guardrails — the point of TOKN is
-**trust-first** automation, not just output. Run `/learn domains` to explore.
+| `--mode` | What that domain actually does |
+|---|---|
+| `appsec` | Agentic source-code security review with an introduced-only CI gate and SARIF export |
+| `atmchem` | Air-quality modelling evaluated against NAAQS / EU AQD / WHO thresholds |
+| `batterypass` | EU Battery Passport (DIN DKE SPEC 99100 / EU 2023/1542) authoring and conformance |
+| `climsci` | Climate analysis over CMIP6 and ERA5 with IPCC calibrated-uncertainty language |
+| `clintrial` | Target-trial emulation with confounder adjustment, E-value sensitivity and negative-control calibration |
+| `compbio` | NGS pipelines (DNA/RNA/ATAC/ChIP) with variant normalization and multiple-testing-gated statistics |
+| `cybersec` | Threat modelling, vulnerability analysis and incident response |
+| `drugdisc` | Molecular docking, ADMET prediction and structure–activity reasoning |
+| `edagent` | Emergency-department triage→diagnostics→disposition loop, sandbox-only, coded to ICD-10/LOINC/SNOMED/RxNorm |
+| `energy` | Multi-carrier energy balance, capacity expansion, market/tariff design and GHG-Protocol carbon accounting |
+| `finrisk` | Financial risk and multi-jurisdiction regulatory compliance with calibrated materiality language |
+| `genomics` | Genomic and bioinformatic analysis |
+| `geospatial` | Earth observation with CRS validation, cloud masking and accuracy assessment |
+| `greenenergy` | Solar / wind / hydrogen project development, yield and LCOE, EU Taxonomy DNSH, IEC 61724/61400 |
+| `grideng` | Power-grid engineering — load flow and N-1 contingency against NERC voltage limits |
+| `gridfm` | Independent physical validation of power-grid foundation-model predictions, trust classification and solver warm-start evaluation |
+| `legalai` | Legal analysis with citation verification, authority hierarchy and privilege scanning |
+| `matsci` | Materials science — DFT, phase diagrams and crystal structure |
+| `mobility` | Autonomous vehicles, V2X and eVTOL under ISO 26262 ASIL-D and ISO 21448 SOTIF |
+| `neurosci` | EEG / fMRI analysis and connectome mapping |
+| `nucsci` | Reactor physics and decay-chain analysis |
+| `oilgas` | Upstream, midstream and downstream petroleum engineering with well-control and emissions-honesty gates |
+| `oncology` | Cancer decision-support with PHI scrubbing, human-in-loop gating and paper-calibrated hedging |
+| `physai` | Quantum and statistical mechanics reasoning |
+| `precmed` | Clinical genomics, pharmacogenomics and VUS classification |
+| `quantumsci` | Quantum circuit design and error correction with a fidelity error-budget gate |
+| `robotics` | Motion planning and sensor fusion behind a safety-envelope check |
+| `semicon` | RTL-to-GDSII flow with DRC / LVS / timing signoff gates and export-control handling |
+| `spacemarine` | Orbital mechanics, link budgets, naval architecture and IMO compliance |
+| `structbio` | Cryo-EM and AlphaFold work behind a gold-standard FSC-0.143 resolution gate |
+| `synbio` | Genetic circuit design with biosafety and dual-use screening |
+| `transcriptomics` | Bulk RNA-seq quality assessment with required-evidence, batch-confounding and downstream-analysis gates |
+
+`/learn domains` explains the shared design.
+
+### What full domain access adds
+
+The free tier is not a demo of a crippled product — it is a **real slice** of
+one. Three harnesses ship a read-only preview that runs a fixed synthetic case
+through the *actual* domain validator and prints what it decided, one accepted
+case and one blocked case, with the finding text the validator really produced:
+
+```text
+tokn community guide                       # developer on-ramp: tools, skills, hooks
+tokn community list
+tokn community demo --domain powergrid     # post-contingency bus voltage limits (grideng)
+tokn community demo --domain geospatial    # area computed in the wrong projection
+tokn community demo --domain batterypass   # declared chemistry vs cathode formula
+```
+
+A licence turns that single check into a working practice:
+
+| | Community preview | Licensed domain |
+|---|---|---|
+| **Input** | three fixed synthetic previews compiled into the binary | domain-permitted inputs; some domains remain synthetic/sandbox-only |
+| **Surface** | one validator call, printed | the domain's full tool set, callable by the agent |
+| **Process** | a single verdict | a lifecycle state machine — a study moves through named states |
+| **Gates** | shown, not enforced on anything | enforced on transitions: a study cannot advance on evidence that fails |
+| **Help** | — | domain slash-commands and subagents |
+| **Coverage** | 3 domains | 32 domain modes; availability depends on entitlement |
+
+Two clarifications that matter more than the table:
+
+- **A licence does not bypass a domain's safety gates.** It enables entitled
+  workflows, not blocked transitions or weaker evidence requirements. Domain
+  restrictions, including synthetic-only and sandbox-only inputs, still apply.
+- **Installing instructions is not unlocking a domain.** A skill pack such as
+  `decision-models` is text — it can teach you how a domain thinks, and it needs
+  no licence. It registers no domain tool, no validator and no gate. Running
+  `--mode <domain>` is what engages the runtime harness. (The `decision-models`
+  pack is a skill bundle, not one of the 32 domains.)
+
+Previews compute locally, need no API key or trial, read no file you supply and
+write nothing. Walkthrough: **[GETTING_STARTED.md](GETTING_STARTED.md)**.
 
 ## Customizable per organization — not one-size-fits-all
 
