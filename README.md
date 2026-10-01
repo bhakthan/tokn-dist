@@ -134,6 +134,27 @@ features and remote serving are not.
 See **[TABULAR.md](TABULAR.md)** for offline preparation, model selection and
 agent tools. In the REPL, `/learn tabular` explains the same workflow.
 
+## Compose a solution, not just a chat
+
+**`tokn solution` plans an application around your requirement:** combine a
+configured language model, optional small models, tabular prediction, judgments,
+specialists and tools where they are actually available. Review the graph, then
+run it with measurable acceptance checks and an inspectable result.
+
+```sh
+tokn solution catalog --root .
+tokn solution plan --help
+tokn plugin install hybrid-solutions
+```
+
+In the REPL, `/learn hybrid-solutions` explains planning, generation and execution.
+`run` and `solve` require `--execute`; remote calls separately require
+`--allow-external`. Optional generated-Python execution needs `--allow-code`,
+is off by default, general-domain-only and **is not a sandbox**. Python's own
+file, network and subprocess operations do not inherit TOKN guards; execution
+warnings make this explicit. Plans do not unlock domains or
+turn model predictions into permission to act.
+
 ## Platform support
 
 | OS | Architecture | Asset | Community tier | Developer-license activation |
