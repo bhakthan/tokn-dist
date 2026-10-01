@@ -25,6 +25,10 @@ failure without guessing.
 
 Roughly fifteen minutes, start to finish.
 
+For a separate **local classifier/regressor** walkthrough, see
+[Local tabular prediction](TABULAR.md). That optional workflow additionally
+needs Python 3.11+; its baseline needs no extra packages, API key or trial.
+
 - [0. Before you start](#0-before-you-start)
 - [1. Install and confirm](#1-install-and-confirm)
 - [2. Three domain previews](#2-three-domain-previews)

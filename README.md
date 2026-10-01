@@ -34,15 +34,13 @@ honest about its own quality*. A few concrete ways it adds value, in plain terms
   20+ domain plugs ship these gates and validators, and you can encode your own
   thresholds. → see **Domain harnesses** in [CAPABILITIES.md](CAPABILITIES.md)
 
-- **Air-gapped by default — your code and data never leave your metal.** Your
-  code, prompts, and context call out to nothing unless you enable and explicitly
-  trust it. *Example: external tools and the Microsoft IQ / MCP connectors ship
-  **disabled + trust-gated**, so an offline or regulated shop runs with zero
-  surprise network calls.* → `tokn mcp list`. The **only** built-in network call is
-  a single anonymous install ping (TOKN version + OS/arch + a one-way hashed machine
-  id — never your code, prompts, or data). On an air-gapped box it queues locally and
-  only flushes if that machine is ever online; disable it entirely with
-  `TOKN_NO_TELEMETRY=1` (or `DO_NOT_TRACK=1`).
+- **Local workflows that can be prepared for an air gap.** Tabular prediction
+  uses explicit local data and pre-staged model files, with no runtime model
+  downloads. For agent workflows, select a local model and `--air-gap`; cloud
+  models necessarily send their inputs to the configured provider. Disable
+  unrelated install registration and update checks with `TOKN_NO_REGISTER=1`
+  and `TOKN_NO_UPDATE_CHECK=1`. Enforce network isolation at the host boundary
+  when required; runtime settings are not an OS sandbox.
 
 - **Customize without waiting for a vendor.** Every prompt is a file, not baked-in
   code. *Example: a new model lands that follows instructions differently — you
@@ -106,6 +104,35 @@ version-accurate catalog.
 > please read it.
 
 ---
+
+## Local prediction — models beyond chat
+
+Community users can build classifiers and regressors without a trial or API key:
+
+```sh
+tokn tabular scaffold --dir delivery-demo --example delivery
+tokn tabular inspect --root delivery-demo
+tokn tabular doctor --root delivery-demo
+tokn tabular evaluate --root delivery-demo
+tokn tabular predict --root delivery-demo
+```
+
+The starter is a small **synthetic example**, not a production benchmark.
+Also try `maintenance` or `repair-cost`. Baseline execution needs Python 3.11+
+with no extra packages. Inspection and scaffolding need only TOKN.
+
+Optional **NVIDIA Kumo-Tabular** uses locally staged dependencies and hashed
+classifier/regressor weights. Even the large checkpoints are individually under
+1 GB (~855 MB and ~863 MB); both together, dependencies and RAM/VRAM need more
+capacity. Nothing is installed or downloaded automatically.
+
+The agent can create the workflow and explain evaluation; the predictor computes
+the outputs. Probabilities and regression intervals are not proof of calibration
+or permission to act. Numerical/categorical CSV is supported; automatic text
+features and remote serving are not.
+
+See **[TABULAR.md](TABULAR.md)** for offline preparation, model selection and
+agent tools. In the REPL, `/learn tabular` explains the same workflow.
 
 ## Platform support
 
