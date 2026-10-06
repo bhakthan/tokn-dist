@@ -367,6 +367,10 @@
     "2026-10-04": {
       "count": 10,
       "uniques": 6
+    },
+    "2026-10-05": {
+      "count": 25,
+      "uniques": 14
     }
   },
   "downloads_daily": {
@@ -448,7 +452,8 @@
     "2026-10-02": 0,
     "2026-10-03": 0,
     "2026-10-04": 0,
-    "2026-10-05": 0
+    "2026-10-05": 0,
+    "2026-10-06": 0
   },
   "downloads_snapshots": {
     "2026-07-18": {
@@ -1390,6 +1395,18 @@
         "tokn_windows_amd64.exe": 28
       },
       "total": 138
+    },
+    "2026-10-06": {
+      "assets": {
+        "SHA256SUMS": 30,
+        "SHA256SUMS.sig": 22,
+        "tokn_darwin_amd64": 12,
+        "tokn_darwin_arm64": 12,
+        "tokn_linux_amd64": 22,
+        "tokn_linux_arm64": 12,
+        "tokn_windows_amd64.exe": 28
+      },
+      "total": 138
     }
   },
   "downloads_state": {
@@ -1424,13 +1441,13 @@
   },
   "paths": [
     {
-      "count": 10,
+      "count": 9,
       "path": "/bhakthan/tokn-dist",
       "title": "Overview",
       "uniques": 1
     },
     {
-      "count": 7,
+      "count": 6,
       "path": "/bhakthan/tokn-dist/releases",
       "title": "/releases",
       "uniques": 1
@@ -1461,6 +1478,12 @@
     },
     {
       "count": 2,
+      "path": "/bhakthan/tokn-dist/releases/tag/v0.3.50",
+      "title": "/releases/tag/v0.3.50",
+      "uniques": 1
+    },
+    {
+      "count": 2,
       "path": "/bhakthan/tokn-dist/tree/main/docs",
       "title": "/tree/main/docs",
       "uniques": 1
@@ -1476,23 +1499,17 @@
       "path": "/bhakthan/tokn-dist/blob/main/CAPABILITIES.md",
       "title": "/blob/main/CAPABILITIES.md",
       "uniques": 1
-    },
-    {
-      "count": 1,
-      "path": "/bhakthan/tokn-dist/blob/main/docs/data/history.json",
-      "title": "/blob/main/docs/data/history.json",
-      "uniques": 1
     }
   ],
   "referrers": [
     {
-      "count": 8,
+      "count": 7,
       "referrer": "github.com",
       "uniques": 2
     }
   ],
   "repo": "bhakthan/tokn-dist",
-  "updated_at": "2026-10-05T14:49:41.323265+00:00",
+  "updated_at": "2026-10-06T13:23:16.079693+00:00",
   "views_daily": {
     "2026-07-05": {
       "count": 0,
@@ -1861,6 +1878,10 @@
     "2026-10-04": {
       "count": 0,
       "uniques": 0
+    },
+    "2026-10-05": {
+      "count": 1,
+      "uniques": 1
     }
   }
 }
