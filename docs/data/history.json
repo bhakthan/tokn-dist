@@ -407,6 +407,10 @@
     "2026-10-14": {
       "count": 8,
       "uniques": 4
+    },
+    "2026-10-15": {
+      "count": 19,
+      "uniques": 11
     }
   },
   "downloads_daily": {
@@ -498,7 +502,8 @@
     "2026-10-12": 3,
     "2026-10-13": 1,
     "2026-10-14": 2,
-    "2026-10-15": 3
+    "2026-10-15": 3,
+    "2026-10-16": 0
   },
   "downloads_snapshots": {
     "2026-07-18": {
@@ -1560,6 +1565,18 @@
         "tokn_windows_amd64.exe": 33
       },
       "total": 156
+    },
+    "2026-10-16": {
+      "assets": {
+        "SHA256SUMS": 33,
+        "SHA256SUMS.sig": 22,
+        "tokn_darwin_amd64": 14,
+        "tokn_darwin_arm64": 15,
+        "tokn_linux_amd64": 25,
+        "tokn_linux_arm64": 14,
+        "tokn_windows_amd64.exe": 33
+      },
+      "total": 156
     }
   },
   "downloads_state": {
@@ -1594,21 +1611,15 @@
   },
   "paths": [
     {
-      "count": 6,
+      "count": 4,
       "path": "/bhakthan/tokn-dist",
       "title": "Overview",
       "uniques": 2
     },
     {
-      "count": 4,
+      "count": 3,
       "path": "/bhakthan/tokn-dist/releases",
       "title": "/releases",
-      "uniques": 1
-    },
-    {
-      "count": 3,
-      "path": "/bhakthan/tokn-dist/tree/main",
-      "title": "/tree/main",
       "uniques": 1
     },
     {
@@ -1619,20 +1630,14 @@
     },
     {
       "count": 2,
+      "path": "/bhakthan/tokn-dist/tree/main",
+      "title": "/tree/main",
+      "uniques": 1
+    },
+    {
+      "count": 2,
       "path": "/bhakthan/tokn-dist/tree/main/docs",
       "title": "/tree/main/docs",
-      "uniques": 1
-    },
-    {
-      "count": 1,
-      "path": "/bhakthan/tokn-dist/blob/main/CAPABILITIES.md",
-      "title": "/blob/main/CAPABILITIES.md",
-      "uniques": 1
-    },
-    {
-      "count": 1,
-      "path": "/bhakthan/tokn-dist/blob/main/GETTING_STARTED.md",
-      "title": "/blob/main/GETTING_STARTED.md",
       "uniques": 1
     },
     {
@@ -1652,17 +1657,29 @@
       "path": "/bhakthan/tokn-dist/blob/main/docs/security/supply-chain.md",
       "title": "/blob/main/docs/security/supply-chain.md",
       "uniques": 1
+    },
+    {
+      "count": 1,
+      "path": "/bhakthan/tokn-dist/blob/main/examples/judgments/request-clean.json",
+      "title": "/blob/main/examples/judgments/request-clean.json",
+      "uniques": 1
+    },
+    {
+      "count": 1,
+      "path": "/bhakthan/tokn-dist/blob/main/examples/judgments/request-errors.json",
+      "title": "/blob/main/examples/judgments/request-errors.json",
+      "uniques": 1
     }
   ],
   "referrers": [
     {
-      "count": 4,
+      "count": 2,
       "referrer": "github.com",
       "uniques": 1
     }
   ],
   "repo": "bhakthan/tokn-dist",
-  "updated_at": "2026-10-15T11:37:07.875483+00:00",
+  "updated_at": "2026-10-16T11:31:17.911897+00:00",
   "views_daily": {
     "2026-07-05": {
       "count": 0,
@@ -2069,6 +2086,10 @@
       "uniques": 0
     },
     "2026-10-14": {
+      "count": 0,
+      "uniques": 0
+    },
+    "2026-10-15": {
       "count": 0,
       "uniques": 0
     }
