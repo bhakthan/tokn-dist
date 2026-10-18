@@ -1,0 +1,6 @@
+substation_id,name,peak_mw,power_factor
+S1,Northgate,39,0.95
+S2,Riverside,30,0.90
+S3,Hilltop,19,0.92
+S4,Eastfield,26,0.97
+S5,Harbor,70,0.95

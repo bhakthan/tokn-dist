@@ -1,0 +1,11 @@
+substation_id,unit_id,rating_mva
+S1,S1-T1,25
+S1,S1-T2,25
+S2,S2-T1,40
+S2,S2-T2,40
+S3,S3-T1,20
+S4,S4-T1,30
+S4,S4-T2,20
+S5,S5-T1,50
+S5,S5-T2,50
+S5,S5-T3,50

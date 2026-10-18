@@ -1,0 +1,17 @@
+{
+  "task": "Screen the five substations in data/ for transformer loading and N-1 security, then recommend an action for each.\n\nDefinitions (use exactly these):\n- apparent_mva = peak_mw / power_factor (from data/loads.csv)\n- loading_pct = 100 * apparent_mva / (sum of that substation's unit ratings in data/transformers.csv)\n- n1_loading_pct = 100 * apparent_mva / (sum of ratings minus the single LARGEST unit); null when the substation has only one unit\n- status: \"overloaded\" if loading_pct > 100; otherwise \"n1_violation\" if n1_loading_pct > 100 or is null; otherwise \"ok\"\n- action is one of: no_action, monitor, load_transfer, upgrade\n\nAction policy: use the typed decision-model tools (system_one_batch for several items, or system_one_evaluate) to choose each substation's action from the four options, passing the computed figures as state. A deterministic rule overrides the model: a substation whose status is not \"ok\" must get load_transfer or upgrade. Record the decision model's confidence (0-1) when it gave one, else null.\n\nDeliverables in the repo root:\n1. screening.json: {\"substations\": [{\"id\",\"loading_pct\",\"n1_loading_pct\",\"status\",\"action\",\"action_confidence\"}], \"n1_failures\": [ids whose status is not \"ok\"]}. Percentages rounded to 1 decimal.\n2. report.md: a short planner-facing summary with a table and one sentence of rationale per substation, noting where the deterministic rule overrode the model.\nDo not modify anything under data/.",
+  "domain": "power distribution planning",
+  "rubric": [
+    "screening.json lists all five substations S1-S5 with loading_pct within 0.5 of: S1 82.1, S2 41.7, S3 103.3, S4 53.6, S5 49.1",
+    "n1_loading_pct within 0.5 of: S1 164.2, S2 83.3, S3 null, S4 134.0, S5 73.7",
+    "status is S1 n1_violation, S2 ok, S3 overloaded, S4 n1_violation, S5 ok; n1_failures is exactly S1, S3, S4",
+    "every substation whose status is not ok has action load_transfer or upgrade",
+    "report.md has a table covering all five substations and states that model decisions are advisory"
+  ],
+  "answer_key_globs": [],
+  "inputs": [
+    "data"
+  ],
+  "max_steps": 12,
+  "system_one": true
+}

@@ -1,8 +1,21 @@
 # TOKN examples
 
 Synthetic, non-sensitive input files referenced by
-[GETTING_STARTED.md](../GETTING_STARTED.md). They contain no real data of any
-kind.
+[GETTING_STARTED.md](../GETTING_STARTED.md), plus one end-to-end domain
+walkthrough (`grid-screening/`). None of them contain real data.
+
+## `grid-screening/` — step-by-step domain walkthrough
+
+A complete, hands-on example of a real domain task: screening five
+substations for transformer loading and N-1 security. TOKN improves its own
+harness with `tokn harness evolve` (Propose–Probe–Compose), and a typed
+decision model chooses each substation's action. A deterministic rule
+overrides the model, so its output is advisory only. All data is synthetic.
+
+Unlike the rest of this folder, this example **needs your own LLM key and a
+decision-model backend**, and it makes paid model calls (about US$2–3 per
+run). It runs on both the trial and the Community tier. Start at
+[grid-screening/README.md](grid-screening/README.md).
 
 ## `judgments/`
 

@@ -134,6 +134,18 @@ features and remote serving are not.
 See **[TABULAR.md](TABULAR.md)** for offline preparation, model selection and
 agent tools. In the REPL, `/learn tabular` explains the same workflow.
 
+## Let TOKN improve its own harness — a worked domain example
+
+**`tokn harness evolve`** runs TOKN on a real task and reads the evidence. It
+then proposes harness improvements, tries each one in a throwaway copy, and
+keeps the best. A judge grades each result against a rubric the agent never
+sees. Your source data and guardrails are sealed for the whole run.
+
+**[examples/grid-screening](examples/grid-screening/README.md)** walks through
+this step by step on a substation N-1 screening task, with a decision model in
+the loop. It needs your own LLM key and decision-model backend. In the REPL,
+`/learn harness` explains the concepts.
+
 ## Compose a solution, not just a chat
 
 **`tokn solution` plans an application around your requirement:** combine a
