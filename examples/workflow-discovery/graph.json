@@ -1,0 +1,23 @@
+{
+  "nodes": [
+    {"id": "Start", "type": "STATUS", "description": "Run begins."},
+    {"id": "INTAKE", "type": "STATE", "description": "A synthetic case file is open and unclassified."},
+    {"id": "classify_case", "type": "ACTION", "description": "Classify the synthetic case by its listed findings.", "guidance": "Read the findings table before classifying. Do not infer findings that are not listed.", "pitfalls": "Treat any variant of uncertain significance as unclassified, not actionable."},
+    {"id": "CLASSIFIED", "type": "STATE", "description": "The case has a classification."},
+    {"id": "draft_report", "type": "ACTION", "description": "Draft a research summary for the synthetic case.", "guidance": "Label the draft as research and decision support. It is not clinical advice.", "pitfalls": "Do not include identifiers beyond the synthetic case code."},
+    {"id": "REPORT_DRAFT", "type": "STATE", "description": "A draft summary exists and is unsigned."},
+    {"id": "sign_off", "type": "ACTION", "description": "Record a reviewer sign-off on the draft.", "guidance": "Sign-off requires a named reviewer placeholder.", "pitfalls": "Never sign off a draft that still contains an unclassified finding."},
+    {"id": "SIGNED_OUT", "type": "STATE", "description": "The reviewed summary is recorded."},
+    {"id": "End", "type": "STATUS", "description": "Task complete."}
+  ],
+  "edges": [
+    {"source": "Start", "relation": "LEADS_TO", "target": "INTAKE"},
+    {"source": "INTAKE", "relation": "LEADS_TO", "target": "classify_case"},
+    {"source": "classify_case", "relation": "LEADS_TO", "target": "CLASSIFIED", "attrs": {"guidance": "Only advance once every finding has a label."}},
+    {"source": "CLASSIFIED", "relation": "LEADS_TO", "target": "draft_report"},
+    {"source": "draft_report", "relation": "LEADS_TO", "target": "REPORT_DRAFT"},
+    {"source": "REPORT_DRAFT", "relation": "LEADS_TO", "target": "sign_off"},
+    {"source": "sign_off", "relation": "LEADS_TO", "target": "SIGNED_OUT"},
+    {"source": "SIGNED_OUT", "relation": "LEADS_TO", "target": "End"}
+  ]
+}

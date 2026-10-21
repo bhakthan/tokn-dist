@@ -1,0 +1,23 @@
+{
+  "name": "notes-review",
+  "final_node": "final",
+  "nodes": [
+    {
+      "id": "extract",
+      "title": "Extract facts",
+      "prompt": "Read sample-notes.md in the working folder. List every dated decision as one bullet, with its date and owner. Do not add anything that is not in the file."
+    },
+    {
+      "id": "risks",
+      "title": "Find open risks",
+      "depends_on": ["extract"],
+      "prompt": "Using the bullets from the extract step, list each open risk. For each risk, say which bullet it comes from. If no risk is stated, say so."
+    },
+    {
+      "id": "final",
+      "title": "Write the summary",
+      "depends_on": ["extract", "risks"],
+      "prompt": "Write a short summary with two headings: Decisions and Open risks. Use only the content from the previous steps."
+    }
+  ]
+}

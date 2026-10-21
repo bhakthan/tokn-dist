@@ -160,3 +160,35 @@ rules say should happen. It is **not** a record of a run.
 | Every step falls back, or no tool calls happen | The LLM is not configured. Re-check step 2 |
 | The agent deploys anyway | Check that you ran with `--mode robotics` and not `--mode default`. Report the run if the gates did not fire. |
 | `mission_spec.json` not found | Run step 1 again, and run `tokn agent-run` from inside `tokn-twin` |
+
+## Going further: climb a ladder of checks
+
+Once the basic twin works, you can grow the task one demand at a time. Each rung adds one
+requirement on top of the last, so a failure points at the single thing that changed.
+
+| Rung | What you add | Example check |
+|---|---|---|
+| L0 | Read the mission spec and report it | The reply names the spec's joints |
+| L1 | Produce one file that matches the spec | The file parses and has the expected keys |
+| L2 | Add a constraint from the spec | A joint limit is respected in the output |
+| L3 | Add a second, dependent file | The two files agree with each other |
+| L4 | Handle a change in the spec | Re-run after editing one value and check only that value moved |
+
+Each failed rung is put into one of four classes, so you know where to look:
+
+- **Harness**: the TOKN setup or your check script is wrong.
+- **Model**: the model misread the task or made a mistake.
+- **Ensemble**: several parts disagreed when run together.
+- **Environment**: a missing tool, file, or permission.
+
+A rung that did not run is not a failure. Record it as blocked and say why. Do not count it
+against the model.
+
+Two habits keep the ladder honest:
+
+- Pin your expected output to exact bytes or values, not to what the model happened to
+  produce last time.
+- Check the observed file on disk, not the model's description of it.
+
+For domain runs of this size, set a larger budget, for example `--token-budget 300000`.
+Keep the logs out of the folder the agent searches, so it does not read its own output.

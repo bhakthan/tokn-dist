@@ -171,3 +171,23 @@ The script prints each step as it runs (sample output; the counts and branch nam
 | `git_status` says "not a git repository" | The path is not a repo | Run `git init` in the folder you passed on the command line |
 | The client lists no tools | `--tools` filter matches nothing | Remove `--tools` or check the prefix spelling |
 | Licence message at start | Trial ended, running Community | Informational. Community runs this example. |
+
+## Stateless clients (cold probes)
+
+Some clients do not send `initialize` before they ask for the tool list. They
+probe the server cold, then decide what to do. TOKN answers those probes
+without a session:
+
+| Request sent without `initialize` | What TOKN returns |
+|---|---|
+| `tools/list` | The full tool catalog, non-empty and sorted by name. Each tool has a `ttlMs` value. The catalog is cached per session (`cacheScope: session`). |
+| `server/discover` | The newer protocol version `2026-07-28` and the server info. |
+| `ping` | An empty success reply. |
+
+`initialize` still negotiates the older protocol, `2025-03-26`. The server is
+dual-stack: a client that follows the classic handshake works unchanged, and a
+stateless client gets its answers on the first request.
+
+Expected, not a recorded run. To check this by hand, start `tokn serve` as in
+the steps above and send the three requests over stdin. Read each reply before
+you send the next request.

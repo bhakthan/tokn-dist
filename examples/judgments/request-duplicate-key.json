@@ -1,0 +1,16 @@
+{
+  "state": {
+    "status": "completed",
+    "answer_present": true,
+    "telemetry_complete": true,
+    "tool_calls": 12,
+    "tool_errors": 0,
+    "tool_errors": 3,
+    "tool_blocks": 0,
+    "steps": 7
+  },
+  "context": {
+    "trace_id": "local-demo-dup",
+    "environment": "local"
+  }
+}

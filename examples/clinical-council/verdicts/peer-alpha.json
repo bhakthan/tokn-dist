@@ -1,0 +1,23 @@
+{
+  "schema": "council-verdict/1.1",
+  "question": {
+    "id": "SYN-Q-0001",
+    "text": "For synthetic case SYN-CASE-0001, may the research summary list VUS-1 in GENE-B as actionable?",
+    "domain": "precmed",
+    "archetype": "brownfield",
+    "specRef": "synthetic-spec-0001"
+  },
+  "verdict": {
+    "peer": "reviewer-alpha",
+    "role": "clinical-genomics-reviewer",
+    "lens": "evidence",
+    "domain": "precmed",
+    "disposition": "approve",
+    "buildable": true,
+    "consumesSpec": "synthetic-spec-0001",
+    "convergenceMetric": 0.82,
+    "residualRisk": "low",
+    "rationale": "A variant of uncertain significance is not actionable. The summary should list it under unclassified findings with the reason stated.",
+    "provenance": ["synthetic-record-001"]
+  }
+}

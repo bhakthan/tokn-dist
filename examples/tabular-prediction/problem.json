@@ -1,0 +1,14 @@
+{
+  "schema": "tokn.tabular/1",
+  "task": "classification",
+  "backend": "baseline",
+  "context": "context.csv",
+  "query": "query.csv",
+  "target": "delayed",
+  "features": [
+    { "name": "distance_km", "type": "numerical" },
+    { "name": "service", "type": "categorical" }
+  ],
+  "split": { "strategy": "random", "test_fraction": 0.25, "seed": 42 },
+  "limits": { "max_context_rows": 10000, "max_query_rows": 1000, "timeout_seconds": 120 }
+}

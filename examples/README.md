@@ -48,6 +48,15 @@ New to TOKN? Start with [first-ten-minutes](first-ten-minutes/README.md).
 | [checkpoints](checkpoints/README.md) | Roll back a bad agent edit with checkpoints, `/undo` and `/rewind` | — |
 | [codebase-graph](codebase-graph/README.md) | Blast-radius analysis with `/codebase blast` on a small synthetic Go service | — |
 | [first-ten-minutes](first-ten-minutes/README.md) | Onboarding: version and licence checks, first `agent-run`, the REPL, offline judgments | — |
+| [judgments](judgments/README.md) | Offline governed judgments on recorded runs: no model, no network | — |
+| [full-stack-app](full-stack-app/README.md) | Build a small full-stack task-manager app from a written spec, then check it | — |
+| [flows](flows/README.md) | Multi-step workflows started from the REPL | — |
+| [tabular-prediction](tabular-prediction/README.md) | A local, offline tabular model makes predictions on a synthetic CSV, alongside the LLM | Python + model weights |
+| [web-agent](web-agent/README.md) | The interactive `webagent` mode on a public page (compare with webwright) | Chromium |
+| [peer-collab](peer-collab/README.md) | Two people, two agents, one fictional reactor safety dashboard | — |
+| [self-improvement](self-improvement/README.md) | Improve a prompt bundle within budgets, with a sealed held-out check (`tokn rrsi`) | — |
+| [workflow-discovery](workflow-discovery/README.md) | Write, check and inspect a workflow graph the model follows step by step (`tokn procgraph`) | trial |
+| [clinical-council](clinical-council/README.md) | Several models agree a synthetic precision-medicine case, with optional infographics | trial |
 
 ## `decision-council/` — several decision models, one council
 
@@ -97,6 +106,9 @@ tokn judgments evaluate --bundle bundle.json --file request-errors.json --mode a
 
 Both exit `0`. The difference is in `decision.action` — a `revise` judgment means
 the command worked and is telling you something about the run it was given.
+
+For the full walkthrough, including how a malformed request is rejected, see
+[judgments/README.md](judgments/README.md).
 
 `decision.applied` is always `false`: a judgment is advisory and authorises
 nothing.

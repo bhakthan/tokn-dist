@@ -159,7 +159,9 @@ structural biology, robotics), end-to-end deliverables (a Phase 3 analysis pack
 and a diligence pack), a science reviewer, multi-role critique, autonomous
 design, the quality flywheel, governed loops, skill composition, tool-contract
 repair, custom hooks, session review, memory and checkpoints, codebase blast
-radius, TOKN as an MCP server, and code-first browser automation. All data is
+radius, building a full-stack app, workflows, local tabular prediction, the web
+agent, peer collaboration, guarded self-improvement, multi-model clinical
+councils, TOKN as an MCP server, and code-first browser automation. All data is
 synthetic. New to TOKN? Start with
 [first-ten-minutes](examples/first-ten-minutes/README.md).
 

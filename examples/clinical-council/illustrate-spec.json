@@ -1,0 +1,16 @@
+[
+  {
+    "slug": "synthetic-case-functional",
+    "title": "Synthetic case: functional overview",
+    "prompt": "A clean, flat infographic for a fictional research summary. Show three panels: intake of a synthetic case code, classification of findings with an explicit 'unclassified' label for uncertain variants, and a reviewer sign-off step. Label everything as research and decision support, not clinical advice. Use no real names, no real identifiers, and no patient imagery.",
+    "size": "1024x1024",
+    "page": "synthetic-case-walkthrough"
+  },
+  {
+    "slug": "synthetic-case-technical",
+    "title": "Synthetic case: technical pipeline",
+    "prompt": "A clean, flat technical diagram of a gated review pipeline. Show a state machine with boxes for intake, classification, draft, and sign-off, with gate markers on the transitions labelled as an uncertain-variant gate and a pharmacogenomic critical gate. Use no real names, no real identifiers, and no patient imagery.",
+    "size": "1024x1024",
+    "page": "synthetic-case-walkthrough"
+  }
+]

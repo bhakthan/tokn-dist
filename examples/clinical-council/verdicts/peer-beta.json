@@ -1,0 +1,23 @@
+{
+  "schema": "council-verdict/1.1",
+  "question": {
+    "id": "SYN-Q-0001",
+    "text": "For synthetic case SYN-CASE-0001, may the research summary list VUS-1 in GENE-B as actionable?",
+    "domain": "precmed",
+    "archetype": "brownfield",
+    "specRef": "synthetic-spec-0001"
+  },
+  "verdict": {
+    "peer": "reviewer-beta",
+    "role": "research-methods-reviewer",
+    "lens": "safety",
+    "domain": "precmed",
+    "disposition": "approve_with_notes",
+    "buildable": true,
+    "consumesSpec": "synthetic-spec-0001",
+    "convergenceMetric": 0.78,
+    "residualRisk": "medium",
+    "rationale": "Not actionable. Note that the summary is research and decision support, not clinical advice, and that the variant needs re-classification before any clinical use.",
+    "provenance": ["synthetic-record-001"]
+  }
+}

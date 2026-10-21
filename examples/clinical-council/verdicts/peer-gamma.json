@@ -1,0 +1,23 @@
+{
+  "schema": "council-verdict/1.1",
+  "question": {
+    "id": "SYN-Q-0001",
+    "text": "For synthetic case SYN-CASE-0001, may the research summary list VUS-1 in GENE-B as actionable?",
+    "domain": "precmed",
+    "archetype": "brownfield",
+    "specRef": "synthetic-spec-0001"
+  },
+  "verdict": {
+    "peer": "reviewer-gamma",
+    "role": "data-governance-reviewer",
+    "lens": "privacy",
+    "domain": "precmed",
+    "disposition": "approve_with_notes",
+    "buildable": true,
+    "consumesSpec": "synthetic-spec-0001",
+    "convergenceMetric": 0.7,
+    "residualRisk": "medium",
+    "rationale": "Not actionable. The summary must use only the synthetic case code. Any output that names a person or a real record should be blocked before release.",
+    "provenance": ["synthetic-record-001"]
+  }
+}
