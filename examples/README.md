@@ -6,9 +6,11 @@ that each run one real task end to end. None of them contain real data.
 
 Every walkthrough needs your own LLM key and makes paid model calls. Domain
 modes (compbio, oncology, finrisk, physai, precmed, clintrial, legalai,
-geospatial, cybersec) and the premium critique and autodesign modes need the
-14-day trial (`tokn license trial`); the rest are expected to run on Community
-too.
+geospatial, cybersec, atmchem, quantumsci, structbio, robotics) and the premium
+critique and autodesign modes need the 14-day trial (`tokn license trial`); the
+rest are expected to run on Community too.
+
+New to TOKN? Start with [first-ten-minutes](first-ten-minutes/README.md).
 
 | Walkthrough | What it shows | Extra requirements |
 |---|---|---|
@@ -36,6 +38,16 @@ too.
 | [loop-engineering](loop-engineering/README.md) | `/loop define` with a goal, a check and a stop, over abstract lead-optimisation scores | — |
 | [session-review](session-review/README.md) | `/review` audits what an agent session did to a small repo with a planted bug | — |
 | [custom-hooks](custom-hooks/README.md) | Your own PreToolUse hook blocks writes to a protected path; a PostToolUse hook writes an audit log | — |
+| [air-quality](air-quality/README.md) | Air-quality model evaluation gates (MFB/MFE/NMB/R²) on synthetic modelled vs observed data | trial |
+| [quantum-experiment](quantum-experiment/README.md) | Error-budget, tier-labelling, ZNE and NISQ/FT gates on synthetic device specs | trial |
+| [structural-biology](structural-biology/README.md) | The FSC-0.143 resolution gate and AlphaFold3 governance on a synthetic cryo-EM summary | trial |
+| [robotics-twin](robotics-twin/README.md) | Robotics and digital-twin safety gates on a synthetic mission spec | trial |
+| [pharma-phase3](pharma-phase3/README.md) | An end-to-end Phase 3 analysis package with an endpoint-provenance check, all fictional | — |
+| [diligence-pack](diligence-pack/README.md) | An end-to-end diligence pack on a fictional company, with every figure traced to evidence | — |
+| [memory](memory/README.md) | Teach a preference in one session and have it recalled in the next (`/recall`, write-back) | — |
+| [checkpoints](checkpoints/README.md) | Roll back a bad agent edit with checkpoints, `/undo` and `/rewind` | — |
+| [codebase-graph](codebase-graph/README.md) | Blast-radius analysis with `/codebase blast` on a small synthetic Go service | — |
+| [first-ten-minutes](first-ten-minutes/README.md) | Onboarding: version and licence checks, first `agent-run`, the REPL, offline judgments | — |
 
 ## `decision-council/` — several decision models, one council
 

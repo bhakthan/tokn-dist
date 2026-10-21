@@ -1,0 +1,18 @@
+Customer,Contract ID,Status,ARR (USD),Change-of-control right
+Brackwater Rail,BR-2201,executed,14000000,yes
+Tallow Grid Co,TG-1187,executed,7500000,yes
+Harrowgate Foods,HF-3310,executed,6200000,no
+Pellmere Logistics,PL-0907,executed,5100000,no
+Vantor Mining,VM-4452,executed,4400000,no
+Oakfen Labs,OL-0618,executed,3900000,no
+Silverbeck Hospital,SH-2785,executed,3200000,no
+Northmoor Water,NW-1043,executed,3000000,no
+Corvane Telecom,CT-5520,executed,2800000,no
+Doublerun Ports,DP-7731,executed,2200000,no
+Quarrywell Cement,QC-1609,auto-renewed,3100000,no
+Lanyard Health,LH-2264,auto-renewed,2400000,no
+Fenwick Dairy,FD-0871,auto-renewed,2300000,no
+Ostrava Metals,OM-MOU-01,mou,9400000,no
+Kestrel Airlines,KA-MOU-02,mou,6500000,no
+Pinecrest Utilities,PU-MOU-03,mou,3000000,no
+Greyhaven Retail,GR-VERBAL-01,verbal,5000000,no

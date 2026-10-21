@@ -1,0 +1,30 @@
+{
+  "_note": "Synthetic mission spec for the robotics example. Not a real robot, cell or site.",
+  "mission_id": "demo-cell-07",
+  "robot_model": "demo-arm-6dof",
+  "requested_phase": "DEPLOYMENT",
+  "current_phase": "SIM_VALIDATION",
+  "controller": {
+    "name": "pick-and-place-ctrl",
+    "declared_sil": "SIL2",
+    "wcet_evidence": false,
+    "period_ms": 10,
+    "mean_latency_ms": 11.2,
+    "max_jitter_pct": 4.0
+  },
+  "sim_to_real": {
+    "validated_in_layer": 4,
+    "layer_label": "synthetic",
+    "target_layer": 1,
+    "target_label": "real hardware",
+    "domain_randomization": false,
+    "fidelity": 0.55
+  },
+  "physics": {
+    "torque_limit_nm": 120,
+    "velocity_limit_rad_s": 2.5,
+    "payload_kg": 12,
+    "min_collision_margin_m": 0.02
+  },
+  "task": "Pick a 2 kg synthetic part from a fixture and place it in a bin inside a synthetic cell."
+}

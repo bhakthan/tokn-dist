@@ -1,0 +1,51 @@
+{
+  "_note": "Synthetic experiment plans. Each entry describes a claim the agent should check.",
+  "experiments": [
+    {
+      "id": "exp-1",
+      "device": "DEV-A",
+      "description": "Deep variational circuit, no tier label, Richardson ZNE",
+      "gate_count": 100,
+      "depth": 100,
+      "shots": 500,
+      "tier_label": null,
+      "claim": "expectation value at 1000 shots",
+      "zne": {"scale_factors": [1.0, 2.0, 3.0], "fit": "richardson", "accumulated_error_at_1x": 0.634}
+    },
+    {
+      "id": "exp-2",
+      "device": "DEV-A",
+      "description": "Shallow circuit, noisy simulator run",
+      "gate_count": 20,
+      "depth": 20,
+      "shots": 5000,
+      "tier_label": "[NOISY-SIM]",
+      "claim": "expectation value for a benchmark, not for publication",
+      "zne": null
+    },
+    {
+      "id": "exp-3",
+      "device": "DEV-A",
+      "description": "Same circuit as exp-2, with a fault-tolerant claim",
+      "gate_count": 20,
+      "depth": 20,
+      "shots": 5000,
+      "tier_label": "[NOISY-SIM]",
+      "claim": "fault-tolerant logical qubit",
+      "ft_claim": {"two_qubit_fidelity": 0.998, "physical_qubits": 80, "logical_qubits": 1},
+      "zne": null
+    },
+    {
+      "id": "exp-4",
+      "device": "DEV-B",
+      "description": "Shallow circuit on the lower-error device, with a fault-tolerant claim",
+      "gate_count": 20,
+      "depth": 20,
+      "shots": 10000,
+      "tier_label": "[HARDWARE:synthetic-b:2025-01-15]",
+      "claim": "fault-tolerant logical qubit",
+      "ft_claim": {"two_qubit_fidelity": 0.9992, "physical_qubits": 1000, "logical_qubits": 1},
+      "zne": null
+    }
+  ]
+}

@@ -154,10 +154,14 @@ It needs keys for two or more decision-model backends and one LLM.
 
 **[More walkthroughs](examples/README.md)** cover domain gates (computational
 biology, oncology, precision medicine, clinical trials, financial risk, legal,
-geospatial, cybersecurity, physical AI), a science reviewer, multi-role
-critique, autonomous design, the quality flywheel, governed loops, skill
-composition, tool-contract repair, custom hooks, session review, TOKN as an MCP
-server, and code-first browser automation. All data is synthetic.
+geospatial, cybersecurity, physical AI, air quality, quantum experiments,
+structural biology, robotics), end-to-end deliverables (a Phase 3 analysis pack
+and a diligence pack), a science reviewer, multi-role critique, autonomous
+design, the quality flywheel, governed loops, skill composition, tool-contract
+repair, custom hooks, session review, memory and checkpoints, codebase blast
+radius, TOKN as an MCP server, and code-first browser automation. All data is
+synthetic. New to TOKN? Start with
+[first-ten-minutes](examples/first-ten-minutes/README.md).
 
 ## Compose a solution, not just a chat
 

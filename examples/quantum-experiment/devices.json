@@ -1,0 +1,23 @@
+{
+  "_note": "Synthetic device specs for a public example. Not a real backend.",
+  "devices": [
+    {
+      "id": "DEV-A",
+      "label": "Synthetic NISQ device A",
+      "physical_qubits": 127,
+      "single_qubit_error": 0.001,
+      "two_qubit_error": 0.01,
+      "two_qubit_gate_time_us": 0.6,
+      "t2_us": 100
+    },
+    {
+      "id": "DEV-B",
+      "label": "Synthetic device B (lower error)",
+      "physical_qubits": 1000,
+      "single_qubit_error": 0.0002,
+      "two_qubit_error": 0.0008,
+      "two_qubit_gate_time_us": 0.4,
+      "t2_us": 300
+    }
+  ]
+}
