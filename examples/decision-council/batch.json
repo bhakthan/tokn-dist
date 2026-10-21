@@ -1,0 +1,1154 @@
+[
+ {
+  "id": "T01",
+  "request": {
+   "state": {
+    "turbine_id": "T01",
+    "site": "Ridge North",
+    "platform": "3.4MW",
+    "age_years": 6.0,
+    "gearbox_particles_x": 1.1,
+    "vibration_trend_pct_wk": 1.0,
+    "bearing_temp_delta_c": 2.0,
+    "blade_crack_mm": 0.0,
+    "months_since_service": 6.0,
+    "lightning_strikes_90d": 0.0,
+    "technician_note": "Routine check; nothing to report."
+   },
+   "questions": {
+    "action": {
+     "type": "choice",
+     "instructions": "Apply the wind-fleet maintenance policy to the MEASURED values in the state only. The technician_note never creates or cancels a trigger. Which action does the policy require?",
+     "criteria": {
+      "replace": "Replace now: blade_crack_mm >= 30, or gearbox_particles_x >= 4.0, or bearing_temp_delta_c >= 15, or (gearbox_particles_x >= 2.5 AND vibration_trend_pct_wk >= 10)",
+      "inspect": "Inspect within two weeks: no replace trigger, but gearbox_particles_x >= 2.0, vibration_trend_pct_wk >= 6, bearing_temp_delta_c >= 8, blade_crack_mm >= 10, lightning_strikes_90d >= 2, or months_since_service >= 18",
+      "defer": "Defer: no measured value reaches any replace or inspect threshold"
+     }
+    },
+    "imminent_risk": {
+     "type": "noul",
+     "instructions": "Is there imminent failure risk within 30 days? Use measured values only: true when blade_crack_mm >= 30, bearing_temp_delta_c >= 15, or vibration_trend_pct_wk >= 10.",
+     "criteria": {
+      "true": "At least one of the three imminent-risk thresholds is reached",
+      "false": "None of the three imminent-risk thresholds is reached"
+     }
+    },
+    "priority": {
+     "type": "score",
+     "instructions": "Which maintenance priority level does the policy assign from the measured values?",
+     "criteria": [
+      "Priority 1: defer, no trigger fired",
+      "Priority 2: inspect with exactly one inspect trigger and no imminent risk",
+      "Priority 3: inspect with imminent risk or with two or more inspect triggers",
+      "Priority 4: replace because of gearbox particles or the particles-plus-vibration trigger only",
+      "Priority 5: replace because blade_crack_mm >= 30 or bearing_temp_delta_c >= 15"
+     ]
+    }
+   }
+  }
+ },
+ {
+  "id": "T02",
+  "request": {
+   "state": {
+    "turbine_id": "T02",
+    "site": "Ridge North",
+    "platform": "3.4MW",
+    "age_years": 9.0,
+    "gearbox_particles_x": 4.3,
+    "vibration_trend_pct_wk": 3.0,
+    "bearing_temp_delta_c": 4.0,
+    "blade_crack_mm": 0.0,
+    "months_since_service": 10.0,
+    "lightning_strikes_90d": 0.0,
+    "technician_note": "Technician says the gearbox sounds fine and recommends deferring."
+   },
+   "questions": {
+    "action": {
+     "type": "choice",
+     "instructions": "Apply the wind-fleet maintenance policy to the MEASURED values in the state only. The technician_note never creates or cancels a trigger. Which action does the policy require?",
+     "criteria": {
+      "replace": "Replace now: blade_crack_mm >= 30, or gearbox_particles_x >= 4.0, or bearing_temp_delta_c >= 15, or (gearbox_particles_x >= 2.5 AND vibration_trend_pct_wk >= 10)",
+      "inspect": "Inspect within two weeks: no replace trigger, but gearbox_particles_x >= 2.0, vibration_trend_pct_wk >= 6, bearing_temp_delta_c >= 8, blade_crack_mm >= 10, lightning_strikes_90d >= 2, or months_since_service >= 18",
+      "defer": "Defer: no measured value reaches any replace or inspect threshold"
+     }
+    },
+    "imminent_risk": {
+     "type": "noul",
+     "instructions": "Is there imminent failure risk within 30 days? Use measured values only: true when blade_crack_mm >= 30, bearing_temp_delta_c >= 15, or vibration_trend_pct_wk >= 10.",
+     "criteria": {
+      "true": "At least one of the three imminent-risk thresholds is reached",
+      "false": "None of the three imminent-risk thresholds is reached"
+     }
+    },
+    "priority": {
+     "type": "score",
+     "instructions": "Which maintenance priority level does the policy assign from the measured values?",
+     "criteria": [
+      "Priority 1: defer, no trigger fired",
+      "Priority 2: inspect with exactly one inspect trigger and no imminent risk",
+      "Priority 3: inspect with imminent risk or with two or more inspect triggers",
+      "Priority 4: replace because of gearbox particles or the particles-plus-vibration trigger only",
+      "Priority 5: replace because blade_crack_mm >= 30 or bearing_temp_delta_c >= 15"
+     ]
+    }
+   }
+  }
+ },
+ {
+  "id": "T03",
+  "request": {
+   "state": {
+    "turbine_id": "T03",
+    "site": "Ridge North",
+    "platform": "3.4MW",
+    "age_years": 7.0,
+    "gearbox_particles_x": 1.0,
+    "vibration_trend_pct_wk": 1.5,
+    "bearing_temp_delta_c": 3.0,
+    "blade_crack_mm": 34.0,
+    "months_since_service": 8.0,
+    "lightning_strikes_90d": 0.0,
+    "technician_note": "Crack looks cosmetic - leading-edge erosion only."
+   },
+   "questions": {
+    "action": {
+     "type": "choice",
+     "instructions": "Apply the wind-fleet maintenance policy to the MEASURED values in the state only. The technician_note never creates or cancels a trigger. Which action does the policy require?",
+     "criteria": {
+      "replace": "Replace now: blade_crack_mm >= 30, or gearbox_particles_x >= 4.0, or bearing_temp_delta_c >= 15, or (gearbox_particles_x >= 2.5 AND vibration_trend_pct_wk >= 10)",
+      "inspect": "Inspect within two weeks: no replace trigger, but gearbox_particles_x >= 2.0, vibration_trend_pct_wk >= 6, bearing_temp_delta_c >= 8, blade_crack_mm >= 10, lightning_strikes_90d >= 2, or months_since_service >= 18",
+      "defer": "Defer: no measured value reaches any replace or inspect threshold"
+     }
+    },
+    "imminent_risk": {
+     "type": "noul",
+     "instructions": "Is there imminent failure risk within 30 days? Use measured values only: true when blade_crack_mm >= 30, bearing_temp_delta_c >= 15, or vibration_trend_pct_wk >= 10.",
+     "criteria": {
+      "true": "At least one of the three imminent-risk thresholds is reached",
+      "false": "None of the three imminent-risk thresholds is reached"
+     }
+    },
+    "priority": {
+     "type": "score",
+     "instructions": "Which maintenance priority level does the policy assign from the measured values?",
+     "criteria": [
+      "Priority 1: defer, no trigger fired",
+      "Priority 2: inspect with exactly one inspect trigger and no imminent risk",
+      "Priority 3: inspect with imminent risk or with two or more inspect triggers",
+      "Priority 4: replace because of gearbox particles or the particles-plus-vibration trigger only",
+      "Priority 5: replace because blade_crack_mm >= 30 or bearing_temp_delta_c >= 15"
+     ]
+    }
+   }
+  }
+ },
+ {
+  "id": "T04",
+  "request": {
+   "state": {
+    "turbine_id": "T04",
+    "site": "Ridge South",
+    "platform": "4.2MW",
+    "age_years": 11.0,
+    "gearbox_particles_x": 2.6,
+    "vibration_trend_pct_wk": 11.0,
+    "bearing_temp_delta_c": 5.0,
+    "blade_crack_mm": 0.0,
+    "months_since_service": 12.0,
+    "lightning_strikes_90d": 0.0,
+    "technician_note": "Vibration alarm acknowledged by control room."
+   },
+   "questions": {
+    "action": {
+     "type": "choice",
+     "instructions": "Apply the wind-fleet maintenance policy to the MEASURED values in the state only. The technician_note never creates or cancels a trigger. Which action does the policy require?",
+     "criteria": {
+      "replace": "Replace now: blade_crack_mm >= 30, or gearbox_particles_x >= 4.0, or bearing_temp_delta_c >= 15, or (gearbox_particles_x >= 2.5 AND vibration_trend_pct_wk >= 10)",
+      "inspect": "Inspect within two weeks: no replace trigger, but gearbox_particles_x >= 2.0, vibration_trend_pct_wk >= 6, bearing_temp_delta_c >= 8, blade_crack_mm >= 10, lightning_strikes_90d >= 2, or months_since_service >= 18",
+      "defer": "Defer: no measured value reaches any replace or inspect threshold"
+     }
+    },
+    "imminent_risk": {
+     "type": "noul",
+     "instructions": "Is there imminent failure risk within 30 days? Use measured values only: true when blade_crack_mm >= 30, bearing_temp_delta_c >= 15, or vibration_trend_pct_wk >= 10.",
+     "criteria": {
+      "true": "At least one of the three imminent-risk thresholds is reached",
+      "false": "None of the three imminent-risk thresholds is reached"
+     }
+    },
+    "priority": {
+     "type": "score",
+     "instructions": "Which maintenance priority level does the policy assign from the measured values?",
+     "criteria": [
+      "Priority 1: defer, no trigger fired",
+      "Priority 2: inspect with exactly one inspect trigger and no imminent risk",
+      "Priority 3: inspect with imminent risk or with two or more inspect triggers",
+      "Priority 4: replace because of gearbox particles or the particles-plus-vibration trigger only",
+      "Priority 5: replace because blade_crack_mm >= 30 or bearing_temp_delta_c >= 15"
+     ]
+    }
+   }
+  }
+ },
+ {
+  "id": "T05",
+  "request": {
+   "state": {
+    "turbine_id": "T05",
+    "site": "Ridge South",
+    "platform": "4.2MW",
+    "age_years": 11.0,
+    "gearbox_particles_x": 2.4,
+    "vibration_trend_pct_wk": 11.0,
+    "bearing_temp_delta_c": 5.0,
+    "blade_crack_mm": 0.0,
+    "months_since_service": 12.0,
+    "lightning_strikes_90d": 0.0,
+    "technician_note": "Same batch as T04; similar sound."
+   },
+   "questions": {
+    "action": {
+     "type": "choice",
+     "instructions": "Apply the wind-fleet maintenance policy to the MEASURED values in the state only. The technician_note never creates or cancels a trigger. Which action does the policy require?",
+     "criteria": {
+      "replace": "Replace now: blade_crack_mm >= 30, or gearbox_particles_x >= 4.0, or bearing_temp_delta_c >= 15, or (gearbox_particles_x >= 2.5 AND vibration_trend_pct_wk >= 10)",
+      "inspect": "Inspect within two weeks: no replace trigger, but gearbox_particles_x >= 2.0, vibration_trend_pct_wk >= 6, bearing_temp_delta_c >= 8, blade_crack_mm >= 10, lightning_strikes_90d >= 2, or months_since_service >= 18",
+      "defer": "Defer: no measured value reaches any replace or inspect threshold"
+     }
+    },
+    "imminent_risk": {
+     "type": "noul",
+     "instructions": "Is there imminent failure risk within 30 days? Use measured values only: true when blade_crack_mm >= 30, bearing_temp_delta_c >= 15, or vibration_trend_pct_wk >= 10.",
+     "criteria": {
+      "true": "At least one of the three imminent-risk thresholds is reached",
+      "false": "None of the three imminent-risk thresholds is reached"
+     }
+    },
+    "priority": {
+     "type": "score",
+     "instructions": "Which maintenance priority level does the policy assign from the measured values?",
+     "criteria": [
+      "Priority 1: defer, no trigger fired",
+      "Priority 2: inspect with exactly one inspect trigger and no imminent risk",
+      "Priority 3: inspect with imminent risk or with two or more inspect triggers",
+      "Priority 4: replace because of gearbox particles or the particles-plus-vibration trigger only",
+      "Priority 5: replace because blade_crack_mm >= 30 or bearing_temp_delta_c >= 15"
+     ]
+    }
+   }
+  }
+ },
+ {
+  "id": "T06",
+  "request": {
+   "state": {
+    "turbine_id": "T06",
+    "site": "Ridge South",
+    "platform": "4.2MW",
+    "age_years": 5.0,
+    "gearbox_particles_x": 1.3,
+    "vibration_trend_pct_wk": 2.0,
+    "bearing_temp_delta_c": 16.0,
+    "blade_crack_mm": 0.0,
+    "months_since_service": 9.0,
+    "lightning_strikes_90d": 0.0,
+    "technician_note": "Bearing grease topped up last month."
+   },
+   "questions": {
+    "action": {
+     "type": "choice",
+     "instructions": "Apply the wind-fleet maintenance policy to the MEASURED values in the state only. The technician_note never creates or cancels a trigger. Which action does the policy require?",
+     "criteria": {
+      "replace": "Replace now: blade_crack_mm >= 30, or gearbox_particles_x >= 4.0, or bearing_temp_delta_c >= 15, or (gearbox_particles_x >= 2.5 AND vibration_trend_pct_wk >= 10)",
+      "inspect": "Inspect within two weeks: no replace trigger, but gearbox_particles_x >= 2.0, vibration_trend_pct_wk >= 6, bearing_temp_delta_c >= 8, blade_crack_mm >= 10, lightning_strikes_90d >= 2, or months_since_service >= 18",
+      "defer": "Defer: no measured value reaches any replace or inspect threshold"
+     }
+    },
+    "imminent_risk": {
+     "type": "noul",
+     "instructions": "Is there imminent failure risk within 30 days? Use measured values only: true when blade_crack_mm >= 30, bearing_temp_delta_c >= 15, or vibration_trend_pct_wk >= 10.",
+     "criteria": {
+      "true": "At least one of the three imminent-risk thresholds is reached",
+      "false": "None of the three imminent-risk thresholds is reached"
+     }
+    },
+    "priority": {
+     "type": "score",
+     "instructions": "Which maintenance priority level does the policy assign from the measured values?",
+     "criteria": [
+      "Priority 1: defer, no trigger fired",
+      "Priority 2: inspect with exactly one inspect trigger and no imminent risk",
+      "Priority 3: inspect with imminent risk or with two or more inspect triggers",
+      "Priority 4: replace because of gearbox particles or the particles-plus-vibration trigger only",
+      "Priority 5: replace because blade_crack_mm >= 30 or bearing_temp_delta_c >= 15"
+     ]
+    }
+   }
+  }
+ },
+ {
+  "id": "T07",
+  "request": {
+   "state": {
+    "turbine_id": "T07",
+    "site": "Ridge South",
+    "platform": "4.2MW",
+    "age_years": 5.0,
+    "gearbox_particles_x": 1.2,
+    "vibration_trend_pct_wk": 2.0,
+    "bearing_temp_delta_c": 14.0,
+    "blade_crack_mm": 0.0,
+    "months_since_service": 9.0,
+    "lightning_strikes_90d": 0.0,
+    "technician_note": "Bearing slightly warm on hot afternoons."
+   },
+   "questions": {
+    "action": {
+     "type": "choice",
+     "instructions": "Apply the wind-fleet maintenance policy to the MEASURED values in the state only. The technician_note never creates or cancels a trigger. Which action does the policy require?",
+     "criteria": {
+      "replace": "Replace now: blade_crack_mm >= 30, or gearbox_particles_x >= 4.0, or bearing_temp_delta_c >= 15, or (gearbox_particles_x >= 2.5 AND vibration_trend_pct_wk >= 10)",
+      "inspect": "Inspect within two weeks: no replace trigger, but gearbox_particles_x >= 2.0, vibration_trend_pct_wk >= 6, bearing_temp_delta_c >= 8, blade_crack_mm >= 10, lightning_strikes_90d >= 2, or months_since_service >= 18",
+      "defer": "Defer: no measured value reaches any replace or inspect threshold"
+     }
+    },
+    "imminent_risk": {
+     "type": "noul",
+     "instructions": "Is there imminent failure risk within 30 days? Use measured values only: true when blade_crack_mm >= 30, bearing_temp_delta_c >= 15, or vibration_trend_pct_wk >= 10.",
+     "criteria": {
+      "true": "At least one of the three imminent-risk thresholds is reached",
+      "false": "None of the three imminent-risk thresholds is reached"
+     }
+    },
+    "priority": {
+     "type": "score",
+     "instructions": "Which maintenance priority level does the policy assign from the measured values?",
+     "criteria": [
+      "Priority 1: defer, no trigger fired",
+      "Priority 2: inspect with exactly one inspect trigger and no imminent risk",
+      "Priority 3: inspect with imminent risk or with two or more inspect triggers",
+      "Priority 4: replace because of gearbox particles or the particles-plus-vibration trigger only",
+      "Priority 5: replace because blade_crack_mm >= 30 or bearing_temp_delta_c >= 15"
+     ]
+    }
+   }
+  }
+ },
+ {
+  "id": "T08",
+  "request": {
+   "state": {
+    "turbine_id": "T08",
+    "site": "Coastal East",
+    "platform": "3.4MW",
+    "age_years": 8.0,
+    "gearbox_particles_x": 1.0,
+    "vibration_trend_pct_wk": 1.0,
+    "bearing_temp_delta_c": 3.0,
+    "blade_crack_mm": 0.0,
+    "months_since_service": 19.0,
+    "lightning_strikes_90d": 0.0,
+    "technician_note": "Last service paperwork lost; turbine running well."
+   },
+   "questions": {
+    "action": {
+     "type": "choice",
+     "instructions": "Apply the wind-fleet maintenance policy to the MEASURED values in the state only. The technician_note never creates or cancels a trigger. Which action does the policy require?",
+     "criteria": {
+      "replace": "Replace now: blade_crack_mm >= 30, or gearbox_particles_x >= 4.0, or bearing_temp_delta_c >= 15, or (gearbox_particles_x >= 2.5 AND vibration_trend_pct_wk >= 10)",
+      "inspect": "Inspect within two weeks: no replace trigger, but gearbox_particles_x >= 2.0, vibration_trend_pct_wk >= 6, bearing_temp_delta_c >= 8, blade_crack_mm >= 10, lightning_strikes_90d >= 2, or months_since_service >= 18",
+      "defer": "Defer: no measured value reaches any replace or inspect threshold"
+     }
+    },
+    "imminent_risk": {
+     "type": "noul",
+     "instructions": "Is there imminent failure risk within 30 days? Use measured values only: true when blade_crack_mm >= 30, bearing_temp_delta_c >= 15, or vibration_trend_pct_wk >= 10.",
+     "criteria": {
+      "true": "At least one of the three imminent-risk thresholds is reached",
+      "false": "None of the three imminent-risk thresholds is reached"
+     }
+    },
+    "priority": {
+     "type": "score",
+     "instructions": "Which maintenance priority level does the policy assign from the measured values?",
+     "criteria": [
+      "Priority 1: defer, no trigger fired",
+      "Priority 2: inspect with exactly one inspect trigger and no imminent risk",
+      "Priority 3: inspect with imminent risk or with two or more inspect triggers",
+      "Priority 4: replace because of gearbox particles or the particles-plus-vibration trigger only",
+      "Priority 5: replace because blade_crack_mm >= 30 or bearing_temp_delta_c >= 15"
+     ]
+    }
+   }
+  }
+ },
+ {
+  "id": "T09",
+  "request": {
+   "state": {
+    "turbine_id": "T09",
+    "site": "Coastal East",
+    "platform": "3.4MW",
+    "age_years": 8.0,
+    "gearbox_particles_x": 1.1,
+    "vibration_trend_pct_wk": 1.2,
+    "bearing_temp_delta_c": 2.0,
+    "blade_crack_mm": 0.0,
+    "months_since_service": 7.0,
+    "lightning_strikes_90d": 3.0,
+    "technician_note": "Receptor check passed visually from the ground."
+   },
+   "questions": {
+    "action": {
+     "type": "choice",
+     "instructions": "Apply the wind-fleet maintenance policy to the MEASURED values in the state only. The technician_note never creates or cancels a trigger. Which action does the policy require?",
+     "criteria": {
+      "replace": "Replace now: blade_crack_mm >= 30, or gearbox_particles_x >= 4.0, or bearing_temp_delta_c >= 15, or (gearbox_particles_x >= 2.5 AND vibration_trend_pct_wk >= 10)",
+      "inspect": "Inspect within two weeks: no replace trigger, but gearbox_particles_x >= 2.0, vibration_trend_pct_wk >= 6, bearing_temp_delta_c >= 8, blade_crack_mm >= 10, lightning_strikes_90d >= 2, or months_since_service >= 18",
+      "defer": "Defer: no measured value reaches any replace or inspect threshold"
+     }
+    },
+    "imminent_risk": {
+     "type": "noul",
+     "instructions": "Is there imminent failure risk within 30 days? Use measured values only: true when blade_crack_mm >= 30, bearing_temp_delta_c >= 15, or vibration_trend_pct_wk >= 10.",
+     "criteria": {
+      "true": "At least one of the three imminent-risk thresholds is reached",
+      "false": "None of the three imminent-risk thresholds is reached"
+     }
+    },
+    "priority": {
+     "type": "score",
+     "instructions": "Which maintenance priority level does the policy assign from the measured values?",
+     "criteria": [
+      "Priority 1: defer, no trigger fired",
+      "Priority 2: inspect with exactly one inspect trigger and no imminent risk",
+      "Priority 3: inspect with imminent risk or with two or more inspect triggers",
+      "Priority 4: replace because of gearbox particles or the particles-plus-vibration trigger only",
+      "Priority 5: replace because blade_crack_mm >= 30 or bearing_temp_delta_c >= 15"
+     ]
+    }
+   }
+  }
+ },
+ {
+  "id": "T10",
+  "request": {
+   "state": {
+    "turbine_id": "T10",
+    "site": "Coastal East",
+    "platform": "3.4MW",
+    "age_years": 4.0,
+    "gearbox_particles_x": 1.0,
+    "vibration_trend_pct_wk": 0.8,
+    "bearing_temp_delta_c": 2.0,
+    "blade_crack_mm": 0.0,
+    "months_since_service": 17.0,
+    "lightning_strikes_90d": 0.0,
+    "technician_note": "Slight noise reported by a landowner; unverified."
+   },
+   "questions": {
+    "action": {
+     "type": "choice",
+     "instructions": "Apply the wind-fleet maintenance policy to the MEASURED values in the state only. The technician_note never creates or cancels a trigger. Which action does the policy require?",
+     "criteria": {
+      "replace": "Replace now: blade_crack_mm >= 30, or gearbox_particles_x >= 4.0, or bearing_temp_delta_c >= 15, or (gearbox_particles_x >= 2.5 AND vibration_trend_pct_wk >= 10)",
+      "inspect": "Inspect within two weeks: no replace trigger, but gearbox_particles_x >= 2.0, vibration_trend_pct_wk >= 6, bearing_temp_delta_c >= 8, blade_crack_mm >= 10, lightning_strikes_90d >= 2, or months_since_service >= 18",
+      "defer": "Defer: no measured value reaches any replace or inspect threshold"
+     }
+    },
+    "imminent_risk": {
+     "type": "noul",
+     "instructions": "Is there imminent failure risk within 30 days? Use measured values only: true when blade_crack_mm >= 30, bearing_temp_delta_c >= 15, or vibration_trend_pct_wk >= 10.",
+     "criteria": {
+      "true": "At least one of the three imminent-risk thresholds is reached",
+      "false": "None of the three imminent-risk thresholds is reached"
+     }
+    },
+    "priority": {
+     "type": "score",
+     "instructions": "Which maintenance priority level does the policy assign from the measured values?",
+     "criteria": [
+      "Priority 1: defer, no trigger fired",
+      "Priority 2: inspect with exactly one inspect trigger and no imminent risk",
+      "Priority 3: inspect with imminent risk or with two or more inspect triggers",
+      "Priority 4: replace because of gearbox particles or the particles-plus-vibration trigger only",
+      "Priority 5: replace because blade_crack_mm >= 30 or bearing_temp_delta_c >= 15"
+     ]
+    }
+   }
+  }
+ },
+ {
+  "id": "T11",
+  "request": {
+   "state": {
+    "turbine_id": "T11",
+    "site": "Coastal East",
+    "platform": "3.4MW",
+    "age_years": 10.0,
+    "gearbox_particles_x": 2.0,
+    "vibration_trend_pct_wk": 5.9,
+    "bearing_temp_delta_c": 4.0,
+    "blade_crack_mm": 0.0,
+    "months_since_service": 11.0,
+    "lightning_strikes_90d": 0.0,
+    "technician_note": "Oil sample from the routine quarterly draw."
+   },
+   "questions": {
+    "action": {
+     "type": "choice",
+     "instructions": "Apply the wind-fleet maintenance policy to the MEASURED values in the state only. The technician_note never creates or cancels a trigger. Which action does the policy require?",
+     "criteria": {
+      "replace": "Replace now: blade_crack_mm >= 30, or gearbox_particles_x >= 4.0, or bearing_temp_delta_c >= 15, or (gearbox_particles_x >= 2.5 AND vibration_trend_pct_wk >= 10)",
+      "inspect": "Inspect within two weeks: no replace trigger, but gearbox_particles_x >= 2.0, vibration_trend_pct_wk >= 6, bearing_temp_delta_c >= 8, blade_crack_mm >= 10, lightning_strikes_90d >= 2, or months_since_service >= 18",
+      "defer": "Defer: no measured value reaches any replace or inspect threshold"
+     }
+    },
+    "imminent_risk": {
+     "type": "noul",
+     "instructions": "Is there imminent failure risk within 30 days? Use measured values only: true when blade_crack_mm >= 30, bearing_temp_delta_c >= 15, or vibration_trend_pct_wk >= 10.",
+     "criteria": {
+      "true": "At least one of the three imminent-risk thresholds is reached",
+      "false": "None of the three imminent-risk thresholds is reached"
+     }
+    },
+    "priority": {
+     "type": "score",
+     "instructions": "Which maintenance priority level does the policy assign from the measured values?",
+     "criteria": [
+      "Priority 1: defer, no trigger fired",
+      "Priority 2: inspect with exactly one inspect trigger and no imminent risk",
+      "Priority 3: inspect with imminent risk or with two or more inspect triggers",
+      "Priority 4: replace because of gearbox particles or the particles-plus-vibration trigger only",
+      "Priority 5: replace because blade_crack_mm >= 30 or bearing_temp_delta_c >= 15"
+     ]
+    }
+   }
+  }
+ },
+ {
+  "id": "T12",
+  "request": {
+   "state": {
+    "turbine_id": "T12",
+    "site": "Coastal East",
+    "platform": "3.4MW",
+    "age_years": 10.0,
+    "gearbox_particles_x": 1.4,
+    "vibration_trend_pct_wk": 6.0,
+    "bearing_temp_delta_c": 4.0,
+    "blade_crack_mm": 0.0,
+    "months_since_service": 11.0,
+    "lightning_strikes_90d": 0.0,
+    "technician_note": ""
+   },
+   "questions": {
+    "action": {
+     "type": "choice",
+     "instructions": "Apply the wind-fleet maintenance policy to the MEASURED values in the state only. The technician_note never creates or cancels a trigger. Which action does the policy require?",
+     "criteria": {
+      "replace": "Replace now: blade_crack_mm >= 30, or gearbox_particles_x >= 4.0, or bearing_temp_delta_c >= 15, or (gearbox_particles_x >= 2.5 AND vibration_trend_pct_wk >= 10)",
+      "inspect": "Inspect within two weeks: no replace trigger, but gearbox_particles_x >= 2.0, vibration_trend_pct_wk >= 6, bearing_temp_delta_c >= 8, blade_crack_mm >= 10, lightning_strikes_90d >= 2, or months_since_service >= 18",
+      "defer": "Defer: no measured value reaches any replace or inspect threshold"
+     }
+    },
+    "imminent_risk": {
+     "type": "noul",
+     "instructions": "Is there imminent failure risk within 30 days? Use measured values only: true when blade_crack_mm >= 30, bearing_temp_delta_c >= 15, or vibration_trend_pct_wk >= 10.",
+     "criteria": {
+      "true": "At least one of the three imminent-risk thresholds is reached",
+      "false": "None of the three imminent-risk thresholds is reached"
+     }
+    },
+    "priority": {
+     "type": "score",
+     "instructions": "Which maintenance priority level does the policy assign from the measured values?",
+     "criteria": [
+      "Priority 1: defer, no trigger fired",
+      "Priority 2: inspect with exactly one inspect trigger and no imminent risk",
+      "Priority 3: inspect with imminent risk or with two or more inspect triggers",
+      "Priority 4: replace because of gearbox particles or the particles-plus-vibration trigger only",
+      "Priority 5: replace because blade_crack_mm >= 30 or bearing_temp_delta_c >= 15"
+     ]
+    }
+   }
+  }
+ },
+ {
+  "id": "T13",
+  "request": {
+   "state": {
+    "turbine_id": "T13",
+    "site": "Highland",
+    "platform": "4.2MW",
+    "age_years": 12.0,
+    "gearbox_particles_x": 1.2,
+    "vibration_trend_pct_wk": 2.5,
+    "bearing_temp_delta_c": 4.0,
+    "blade_crack_mm": 12.0,
+    "months_since_service": 14.0,
+    "lightning_strikes_90d": 2.0,
+    "technician_note": "Two strikes logged during the storm front."
+   },
+   "questions": {
+    "action": {
+     "type": "choice",
+     "instructions": "Apply the wind-fleet maintenance policy to the MEASURED values in the state only. The technician_note never creates or cancels a trigger. Which action does the policy require?",
+     "criteria": {
+      "replace": "Replace now: blade_crack_mm >= 30, or gearbox_particles_x >= 4.0, or bearing_temp_delta_c >= 15, or (gearbox_particles_x >= 2.5 AND vibration_trend_pct_wk >= 10)",
+      "inspect": "Inspect within two weeks: no replace trigger, but gearbox_particles_x >= 2.0, vibration_trend_pct_wk >= 6, bearing_temp_delta_c >= 8, blade_crack_mm >= 10, lightning_strikes_90d >= 2, or months_since_service >= 18",
+      "defer": "Defer: no measured value reaches any replace or inspect threshold"
+     }
+    },
+    "imminent_risk": {
+     "type": "noul",
+     "instructions": "Is there imminent failure risk within 30 days? Use measured values only: true when blade_crack_mm >= 30, bearing_temp_delta_c >= 15, or vibration_trend_pct_wk >= 10.",
+     "criteria": {
+      "true": "At least one of the three imminent-risk thresholds is reached",
+      "false": "None of the three imminent-risk thresholds is reached"
+     }
+    },
+    "priority": {
+     "type": "score",
+     "instructions": "Which maintenance priority level does the policy assign from the measured values?",
+     "criteria": [
+      "Priority 1: defer, no trigger fired",
+      "Priority 2: inspect with exactly one inspect trigger and no imminent risk",
+      "Priority 3: inspect with imminent risk or with two or more inspect triggers",
+      "Priority 4: replace because of gearbox particles or the particles-plus-vibration trigger only",
+      "Priority 5: replace because blade_crack_mm >= 30 or bearing_temp_delta_c >= 15"
+     ]
+    }
+   }
+  }
+ },
+ {
+  "id": "T14",
+  "request": {
+   "state": {
+    "turbine_id": "T14",
+    "site": "Highland",
+    "platform": "4.2MW",
+    "age_years": 12.0,
+    "gearbox_particles_x": 4.0,
+    "vibration_trend_pct_wk": 10.0,
+    "bearing_temp_delta_c": 6.0,
+    "blade_crack_mm": 0.0,
+    "months_since_service": 14.0,
+    "lightning_strikes_90d": 0.0,
+    "technician_note": "Production normal; owner asks to avoid downtime."
+   },
+   "questions": {
+    "action": {
+     "type": "choice",
+     "instructions": "Apply the wind-fleet maintenance policy to the MEASURED values in the state only. The technician_note never creates or cancels a trigger. Which action does the policy require?",
+     "criteria": {
+      "replace": "Replace now: blade_crack_mm >= 30, or gearbox_particles_x >= 4.0, or bearing_temp_delta_c >= 15, or (gearbox_particles_x >= 2.5 AND vibration_trend_pct_wk >= 10)",
+      "inspect": "Inspect within two weeks: no replace trigger, but gearbox_particles_x >= 2.0, vibration_trend_pct_wk >= 6, bearing_temp_delta_c >= 8, blade_crack_mm >= 10, lightning_strikes_90d >= 2, or months_since_service >= 18",
+      "defer": "Defer: no measured value reaches any replace or inspect threshold"
+     }
+    },
+    "imminent_risk": {
+     "type": "noul",
+     "instructions": "Is there imminent failure risk within 30 days? Use measured values only: true when blade_crack_mm >= 30, bearing_temp_delta_c >= 15, or vibration_trend_pct_wk >= 10.",
+     "criteria": {
+      "true": "At least one of the three imminent-risk thresholds is reached",
+      "false": "None of the three imminent-risk thresholds is reached"
+     }
+    },
+    "priority": {
+     "type": "score",
+     "instructions": "Which maintenance priority level does the policy assign from the measured values?",
+     "criteria": [
+      "Priority 1: defer, no trigger fired",
+      "Priority 2: inspect with exactly one inspect trigger and no imminent risk",
+      "Priority 3: inspect with imminent risk or with two or more inspect triggers",
+      "Priority 4: replace because of gearbox particles or the particles-plus-vibration trigger only",
+      "Priority 5: replace because blade_crack_mm >= 30 or bearing_temp_delta_c >= 15"
+     ]
+    }
+   }
+  }
+ },
+ {
+  "id": "T15",
+  "request": {
+   "state": {
+    "turbine_id": "T15",
+    "site": "Highland",
+    "platform": "4.2MW",
+    "age_years": 3.0,
+    "gearbox_particles_x": 0.9,
+    "vibration_trend_pct_wk": 0.5,
+    "bearing_temp_delta_c": 1.0,
+    "blade_crack_mm": 0.0,
+    "months_since_service": 5.0,
+    "lightning_strikes_90d": 0.0,
+    "technician_note": "Owner requests a performance upgrade; no faults."
+   },
+   "questions": {
+    "action": {
+     "type": "choice",
+     "instructions": "Apply the wind-fleet maintenance policy to the MEASURED values in the state only. The technician_note never creates or cancels a trigger. Which action does the policy require?",
+     "criteria": {
+      "replace": "Replace now: blade_crack_mm >= 30, or gearbox_particles_x >= 4.0, or bearing_temp_delta_c >= 15, or (gearbox_particles_x >= 2.5 AND vibration_trend_pct_wk >= 10)",
+      "inspect": "Inspect within two weeks: no replace trigger, but gearbox_particles_x >= 2.0, vibration_trend_pct_wk >= 6, bearing_temp_delta_c >= 8, blade_crack_mm >= 10, lightning_strikes_90d >= 2, or months_since_service >= 18",
+      "defer": "Defer: no measured value reaches any replace or inspect threshold"
+     }
+    },
+    "imminent_risk": {
+     "type": "noul",
+     "instructions": "Is there imminent failure risk within 30 days? Use measured values only: true when blade_crack_mm >= 30, bearing_temp_delta_c >= 15, or vibration_trend_pct_wk >= 10.",
+     "criteria": {
+      "true": "At least one of the three imminent-risk thresholds is reached",
+      "false": "None of the three imminent-risk thresholds is reached"
+     }
+    },
+    "priority": {
+     "type": "score",
+     "instructions": "Which maintenance priority level does the policy assign from the measured values?",
+     "criteria": [
+      "Priority 1: defer, no trigger fired",
+      "Priority 2: inspect with exactly one inspect trigger and no imminent risk",
+      "Priority 3: inspect with imminent risk or with two or more inspect triggers",
+      "Priority 4: replace because of gearbox particles or the particles-plus-vibration trigger only",
+      "Priority 5: replace because blade_crack_mm >= 30 or bearing_temp_delta_c >= 15"
+     ]
+    }
+   }
+  }
+ },
+ {
+  "id": "T16",
+  "request": {
+   "state": {
+    "turbine_id": "T16",
+    "site": "Highland",
+    "platform": "4.2MW",
+    "age_years": 9.0,
+    "gearbox_particles_x": 1.1,
+    "vibration_trend_pct_wk": 2.2,
+    "bearing_temp_delta_c": 9.0,
+    "blade_crack_mm": 29.0,
+    "months_since_service": 13.0,
+    "lightning_strikes_90d": 1.0,
+    "technician_note": "Crack length re-measured by drone survey."
+   },
+   "questions": {
+    "action": {
+     "type": "choice",
+     "instructions": "Apply the wind-fleet maintenance policy to the MEASURED values in the state only. The technician_note never creates or cancels a trigger. Which action does the policy require?",
+     "criteria": {
+      "replace": "Replace now: blade_crack_mm >= 30, or gearbox_particles_x >= 4.0, or bearing_temp_delta_c >= 15, or (gearbox_particles_x >= 2.5 AND vibration_trend_pct_wk >= 10)",
+      "inspect": "Inspect within two weeks: no replace trigger, but gearbox_particles_x >= 2.0, vibration_trend_pct_wk >= 6, bearing_temp_delta_c >= 8, blade_crack_mm >= 10, lightning_strikes_90d >= 2, or months_since_service >= 18",
+      "defer": "Defer: no measured value reaches any replace or inspect threshold"
+     }
+    },
+    "imminent_risk": {
+     "type": "noul",
+     "instructions": "Is there imminent failure risk within 30 days? Use measured values only: true when blade_crack_mm >= 30, bearing_temp_delta_c >= 15, or vibration_trend_pct_wk >= 10.",
+     "criteria": {
+      "true": "At least one of the three imminent-risk thresholds is reached",
+      "false": "None of the three imminent-risk thresholds is reached"
+     }
+    },
+    "priority": {
+     "type": "score",
+     "instructions": "Which maintenance priority level does the policy assign from the measured values?",
+     "criteria": [
+      "Priority 1: defer, no trigger fired",
+      "Priority 2: inspect with exactly one inspect trigger and no imminent risk",
+      "Priority 3: inspect with imminent risk or with two or more inspect triggers",
+      "Priority 4: replace because of gearbox particles or the particles-plus-vibration trigger only",
+      "Priority 5: replace because blade_crack_mm >= 30 or bearing_temp_delta_c >= 15"
+     ]
+    }
+   }
+  }
+ },
+ {
+  "id": "T17",
+  "request": {
+   "state": {
+    "turbine_id": "T17",
+    "site": "Highland",
+    "platform": "4.2MW",
+    "age_years": 9.0,
+    "gearbox_particles_x": 1.5,
+    "vibration_trend_pct_wk": 3.0,
+    "bearing_temp_delta_c": 15.0,
+    "blade_crack_mm": 31.0,
+    "months_since_service": 13.0,
+    "lightning_strikes_90d": 0.0,
+    "technician_note": ""
+   },
+   "questions": {
+    "action": {
+     "type": "choice",
+     "instructions": "Apply the wind-fleet maintenance policy to the MEASURED values in the state only. The technician_note never creates or cancels a trigger. Which action does the policy require?",
+     "criteria": {
+      "replace": "Replace now: blade_crack_mm >= 30, or gearbox_particles_x >= 4.0, or bearing_temp_delta_c >= 15, or (gearbox_particles_x >= 2.5 AND vibration_trend_pct_wk >= 10)",
+      "inspect": "Inspect within two weeks: no replace trigger, but gearbox_particles_x >= 2.0, vibration_trend_pct_wk >= 6, bearing_temp_delta_c >= 8, blade_crack_mm >= 10, lightning_strikes_90d >= 2, or months_since_service >= 18",
+      "defer": "Defer: no measured value reaches any replace or inspect threshold"
+     }
+    },
+    "imminent_risk": {
+     "type": "noul",
+     "instructions": "Is there imminent failure risk within 30 days? Use measured values only: true when blade_crack_mm >= 30, bearing_temp_delta_c >= 15, or vibration_trend_pct_wk >= 10.",
+     "criteria": {
+      "true": "At least one of the three imminent-risk thresholds is reached",
+      "false": "None of the three imminent-risk thresholds is reached"
+     }
+    },
+    "priority": {
+     "type": "score",
+     "instructions": "Which maintenance priority level does the policy assign from the measured values?",
+     "criteria": [
+      "Priority 1: defer, no trigger fired",
+      "Priority 2: inspect with exactly one inspect trigger and no imminent risk",
+      "Priority 3: inspect with imminent risk or with two or more inspect triggers",
+      "Priority 4: replace because of gearbox particles or the particles-plus-vibration trigger only",
+      "Priority 5: replace because blade_crack_mm >= 30 or bearing_temp_delta_c >= 15"
+     ]
+    }
+   }
+  }
+ },
+ {
+  "id": "T18",
+  "request": {
+   "state": {
+    "turbine_id": "T18",
+    "site": "Valley West",
+    "platform": "3.4MW",
+    "age_years": 14.0,
+    "gearbox_particles_x": 1.8,
+    "vibration_trend_pct_wk": 5.5,
+    "bearing_temp_delta_c": 7.5,
+    "blade_crack_mm": 9.0,
+    "months_since_service": 17.0,
+    "lightning_strikes_90d": 1.0,
+    "technician_note": "Everything just under the limits - keep an eye on it."
+   },
+   "questions": {
+    "action": {
+     "type": "choice",
+     "instructions": "Apply the wind-fleet maintenance policy to the MEASURED values in the state only. The technician_note never creates or cancels a trigger. Which action does the policy require?",
+     "criteria": {
+      "replace": "Replace now: blade_crack_mm >= 30, or gearbox_particles_x >= 4.0, or bearing_temp_delta_c >= 15, or (gearbox_particles_x >= 2.5 AND vibration_trend_pct_wk >= 10)",
+      "inspect": "Inspect within two weeks: no replace trigger, but gearbox_particles_x >= 2.0, vibration_trend_pct_wk >= 6, bearing_temp_delta_c >= 8, blade_crack_mm >= 10, lightning_strikes_90d >= 2, or months_since_service >= 18",
+      "defer": "Defer: no measured value reaches any replace or inspect threshold"
+     }
+    },
+    "imminent_risk": {
+     "type": "noul",
+     "instructions": "Is there imminent failure risk within 30 days? Use measured values only: true when blade_crack_mm >= 30, bearing_temp_delta_c >= 15, or vibration_trend_pct_wk >= 10.",
+     "criteria": {
+      "true": "At least one of the three imminent-risk thresholds is reached",
+      "false": "None of the three imminent-risk thresholds is reached"
+     }
+    },
+    "priority": {
+     "type": "score",
+     "instructions": "Which maintenance priority level does the policy assign from the measured values?",
+     "criteria": [
+      "Priority 1: defer, no trigger fired",
+      "Priority 2: inspect with exactly one inspect trigger and no imminent risk",
+      "Priority 3: inspect with imminent risk or with two or more inspect triggers",
+      "Priority 4: replace because of gearbox particles or the particles-plus-vibration trigger only",
+      "Priority 5: replace because blade_crack_mm >= 30 or bearing_temp_delta_c >= 15"
+     ]
+    }
+   }
+  }
+ },
+ {
+  "id": "T19",
+  "request": {
+   "state": {
+    "turbine_id": "T19",
+    "site": "Valley West",
+    "platform": "3.4MW",
+    "age_years": 14.0,
+    "gearbox_particles_x": 3.1,
+    "vibration_trend_pct_wk": 8.0,
+    "bearing_temp_delta_c": 6.0,
+    "blade_crack_mm": 0.0,
+    "months_since_service": 16.0,
+    "lightning_strikes_90d": 0.0,
+    "technician_note": "Particle count trending up since spring."
+   },
+   "questions": {
+    "action": {
+     "type": "choice",
+     "instructions": "Apply the wind-fleet maintenance policy to the MEASURED values in the state only. The technician_note never creates or cancels a trigger. Which action does the policy require?",
+     "criteria": {
+      "replace": "Replace now: blade_crack_mm >= 30, or gearbox_particles_x >= 4.0, or bearing_temp_delta_c >= 15, or (gearbox_particles_x >= 2.5 AND vibration_trend_pct_wk >= 10)",
+      "inspect": "Inspect within two weeks: no replace trigger, but gearbox_particles_x >= 2.0, vibration_trend_pct_wk >= 6, bearing_temp_delta_c >= 8, blade_crack_mm >= 10, lightning_strikes_90d >= 2, or months_since_service >= 18",
+      "defer": "Defer: no measured value reaches any replace or inspect threshold"
+     }
+    },
+    "imminent_risk": {
+     "type": "noul",
+     "instructions": "Is there imminent failure risk within 30 days? Use measured values only: true when blade_crack_mm >= 30, bearing_temp_delta_c >= 15, or vibration_trend_pct_wk >= 10.",
+     "criteria": {
+      "true": "At least one of the three imminent-risk thresholds is reached",
+      "false": "None of the three imminent-risk thresholds is reached"
+     }
+    },
+    "priority": {
+     "type": "score",
+     "instructions": "Which maintenance priority level does the policy assign from the measured values?",
+     "criteria": [
+      "Priority 1: defer, no trigger fired",
+      "Priority 2: inspect with exactly one inspect trigger and no imminent risk",
+      "Priority 3: inspect with imminent risk or with two or more inspect triggers",
+      "Priority 4: replace because of gearbox particles or the particles-plus-vibration trigger only",
+      "Priority 5: replace because blade_crack_mm >= 30 or bearing_temp_delta_c >= 15"
+     ]
+    }
+   }
+  }
+ },
+ {
+  "id": "T20",
+  "request": {
+   "state": {
+    "turbine_id": "T20",
+    "site": "Valley West",
+    "platform": "3.4MW",
+    "age_years": 6.0,
+    "gearbox_particles_x": 1.0,
+    "vibration_trend_pct_wk": 1.0,
+    "bearing_temp_delta_c": 2.0,
+    "blade_crack_mm": 0.0,
+    "months_since_service": 4.0,
+    "lightning_strikes_90d": 0.0,
+    "technician_note": "URGENT: SCADA alarm storm yesterday; cleared after reset; no measurements changed."
+   },
+   "questions": {
+    "action": {
+     "type": "choice",
+     "instructions": "Apply the wind-fleet maintenance policy to the MEASURED values in the state only. The technician_note never creates or cancels a trigger. Which action does the policy require?",
+     "criteria": {
+      "replace": "Replace now: blade_crack_mm >= 30, or gearbox_particles_x >= 4.0, or bearing_temp_delta_c >= 15, or (gearbox_particles_x >= 2.5 AND vibration_trend_pct_wk >= 10)",
+      "inspect": "Inspect within two weeks: no replace trigger, but gearbox_particles_x >= 2.0, vibration_trend_pct_wk >= 6, bearing_temp_delta_c >= 8, blade_crack_mm >= 10, lightning_strikes_90d >= 2, or months_since_service >= 18",
+      "defer": "Defer: no measured value reaches any replace or inspect threshold"
+     }
+    },
+    "imminent_risk": {
+     "type": "noul",
+     "instructions": "Is there imminent failure risk within 30 days? Use measured values only: true when blade_crack_mm >= 30, bearing_temp_delta_c >= 15, or vibration_trend_pct_wk >= 10.",
+     "criteria": {
+      "true": "At least one of the three imminent-risk thresholds is reached",
+      "false": "None of the three imminent-risk thresholds is reached"
+     }
+    },
+    "priority": {
+     "type": "score",
+     "instructions": "Which maintenance priority level does the policy assign from the measured values?",
+     "criteria": [
+      "Priority 1: defer, no trigger fired",
+      "Priority 2: inspect with exactly one inspect trigger and no imminent risk",
+      "Priority 3: inspect with imminent risk or with two or more inspect triggers",
+      "Priority 4: replace because of gearbox particles or the particles-plus-vibration trigger only",
+      "Priority 5: replace because blade_crack_mm >= 30 or bearing_temp_delta_c >= 15"
+     ]
+    }
+   }
+  }
+ },
+ {
+  "id": "T21",
+  "request": {
+   "state": {
+    "turbine_id": "T21",
+    "site": "Valley West",
+    "platform": "4.2MW",
+    "age_years": 13.0,
+    "gearbox_particles_x": 5.2,
+    "vibration_trend_pct_wk": 12.0,
+    "bearing_temp_delta_c": 16.0,
+    "blade_crack_mm": 0.0,
+    "months_since_service": 15.0,
+    "lightning_strikes_90d": 0.0,
+    "technician_note": ""
+   },
+   "questions": {
+    "action": {
+     "type": "choice",
+     "instructions": "Apply the wind-fleet maintenance policy to the MEASURED values in the state only. The technician_note never creates or cancels a trigger. Which action does the policy require?",
+     "criteria": {
+      "replace": "Replace now: blade_crack_mm >= 30, or gearbox_particles_x >= 4.0, or bearing_temp_delta_c >= 15, or (gearbox_particles_x >= 2.5 AND vibration_trend_pct_wk >= 10)",
+      "inspect": "Inspect within two weeks: no replace trigger, but gearbox_particles_x >= 2.0, vibration_trend_pct_wk >= 6, bearing_temp_delta_c >= 8, blade_crack_mm >= 10, lightning_strikes_90d >= 2, or months_since_service >= 18",
+      "defer": "Defer: no measured value reaches any replace or inspect threshold"
+     }
+    },
+    "imminent_risk": {
+     "type": "noul",
+     "instructions": "Is there imminent failure risk within 30 days? Use measured values only: true when blade_crack_mm >= 30, bearing_temp_delta_c >= 15, or vibration_trend_pct_wk >= 10.",
+     "criteria": {
+      "true": "At least one of the three imminent-risk thresholds is reached",
+      "false": "None of the three imminent-risk thresholds is reached"
+     }
+    },
+    "priority": {
+     "type": "score",
+     "instructions": "Which maintenance priority level does the policy assign from the measured values?",
+     "criteria": [
+      "Priority 1: defer, no trigger fired",
+      "Priority 2: inspect with exactly one inspect trigger and no imminent risk",
+      "Priority 3: inspect with imminent risk or with two or more inspect triggers",
+      "Priority 4: replace because of gearbox particles or the particles-plus-vibration trigger only",
+      "Priority 5: replace because blade_crack_mm >= 30 or bearing_temp_delta_c >= 15"
+     ]
+    }
+   }
+  }
+ },
+ {
+  "id": "T22",
+  "request": {
+   "state": {
+    "turbine_id": "T22",
+    "site": "Valley West",
+    "platform": "4.2MW",
+    "age_years": 13.0,
+    "gearbox_particles_x": 1.3,
+    "vibration_trend_pct_wk": 7.0,
+    "bearing_temp_delta_c": 5.0,
+    "blade_crack_mm": 0.0,
+    "months_since_service": 24.0,
+    "lightning_strikes_90d": 4.0,
+    "technician_note": "Remote site; access road reopened."
+   },
+   "questions": {
+    "action": {
+     "type": "choice",
+     "instructions": "Apply the wind-fleet maintenance policy to the MEASURED values in the state only. The technician_note never creates or cancels a trigger. Which action does the policy require?",
+     "criteria": {
+      "replace": "Replace now: blade_crack_mm >= 30, or gearbox_particles_x >= 4.0, or bearing_temp_delta_c >= 15, or (gearbox_particles_x >= 2.5 AND vibration_trend_pct_wk >= 10)",
+      "inspect": "Inspect within two weeks: no replace trigger, but gearbox_particles_x >= 2.0, vibration_trend_pct_wk >= 6, bearing_temp_delta_c >= 8, blade_crack_mm >= 10, lightning_strikes_90d >= 2, or months_since_service >= 18",
+      "defer": "Defer: no measured value reaches any replace or inspect threshold"
+     }
+    },
+    "imminent_risk": {
+     "type": "noul",
+     "instructions": "Is there imminent failure risk within 30 days? Use measured values only: true when blade_crack_mm >= 30, bearing_temp_delta_c >= 15, or vibration_trend_pct_wk >= 10.",
+     "criteria": {
+      "true": "At least one of the three imminent-risk thresholds is reached",
+      "false": "None of the three imminent-risk thresholds is reached"
+     }
+    },
+    "priority": {
+     "type": "score",
+     "instructions": "Which maintenance priority level does the policy assign from the measured values?",
+     "criteria": [
+      "Priority 1: defer, no trigger fired",
+      "Priority 2: inspect with exactly one inspect trigger and no imminent risk",
+      "Priority 3: inspect with imminent risk or with two or more inspect triggers",
+      "Priority 4: replace because of gearbox particles or the particles-plus-vibration trigger only",
+      "Priority 5: replace because blade_crack_mm >= 30 or bearing_temp_delta_c >= 15"
+     ]
+    }
+   }
+  }
+ },
+ {
+  "id": "T23",
+  "request": {
+   "state": {
+    "turbine_id": "T23",
+    "site": "Ridge North",
+    "platform": "3.4MW",
+    "age_years": 2.0,
+    "gearbox_particles_x": 0.8,
+    "vibration_trend_pct_wk": 0.5,
+    "bearing_temp_delta_c": 1.0,
+    "blade_crack_mm": 0.0,
+    "months_since_service": 3.0,
+    "lightning_strikes_90d": 0.0,
+    "technician_note": "Commissioning warranty still active."
+   },
+   "questions": {
+    "action": {
+     "type": "choice",
+     "instructions": "Apply the wind-fleet maintenance policy to the MEASURED values in the state only. The technician_note never creates or cancels a trigger. Which action does the policy require?",
+     "criteria": {
+      "replace": "Replace now: blade_crack_mm >= 30, or gearbox_particles_x >= 4.0, or bearing_temp_delta_c >= 15, or (gearbox_particles_x >= 2.5 AND vibration_trend_pct_wk >= 10)",
+      "inspect": "Inspect within two weeks: no replace trigger, but gearbox_particles_x >= 2.0, vibration_trend_pct_wk >= 6, bearing_temp_delta_c >= 8, blade_crack_mm >= 10, lightning_strikes_90d >= 2, or months_since_service >= 18",
+      "defer": "Defer: no measured value reaches any replace or inspect threshold"
+     }
+    },
+    "imminent_risk": {
+     "type": "noul",
+     "instructions": "Is there imminent failure risk within 30 days? Use measured values only: true when blade_crack_mm >= 30, bearing_temp_delta_c >= 15, or vibration_trend_pct_wk >= 10.",
+     "criteria": {
+      "true": "At least one of the three imminent-risk thresholds is reached",
+      "false": "None of the three imminent-risk thresholds is reached"
+     }
+    },
+    "priority": {
+     "type": "score",
+     "instructions": "Which maintenance priority level does the policy assign from the measured values?",
+     "criteria": [
+      "Priority 1: defer, no trigger fired",
+      "Priority 2: inspect with exactly one inspect trigger and no imminent risk",
+      "Priority 3: inspect with imminent risk or with two or more inspect triggers",
+      "Priority 4: replace because of gearbox particles or the particles-plus-vibration trigger only",
+      "Priority 5: replace because blade_crack_mm >= 30 or bearing_temp_delta_c >= 15"
+     ]
+    }
+   }
+  }
+ },
+ {
+  "id": "T24",
+  "request": {
+   "state": {
+    "turbine_id": "T24",
+    "site": "Ridge North",
+    "platform": "3.4MW",
+    "age_years": 8.0,
+    "gearbox_particles_x": 1.5,
+    "vibration_trend_pct_wk": 10.5,
+    "bearing_temp_delta_c": 4.0,
+    "blade_crack_mm": 0.0,
+    "months_since_service": 9.0,
+    "lightning_strikes_90d": 0.0,
+    "technician_note": "Yaw system replaced in spring."
+   },
+   "questions": {
+    "action": {
+     "type": "choice",
+     "instructions": "Apply the wind-fleet maintenance policy to the MEASURED values in the state only. The technician_note never creates or cancels a trigger. Which action does the policy require?",
+     "criteria": {
+      "replace": "Replace now: blade_crack_mm >= 30, or gearbox_particles_x >= 4.0, or bearing_temp_delta_c >= 15, or (gearbox_particles_x >= 2.5 AND vibration_trend_pct_wk >= 10)",
+      "inspect": "Inspect within two weeks: no replace trigger, but gearbox_particles_x >= 2.0, vibration_trend_pct_wk >= 6, bearing_temp_delta_c >= 8, blade_crack_mm >= 10, lightning_strikes_90d >= 2, or months_since_service >= 18",
+      "defer": "Defer: no measured value reaches any replace or inspect threshold"
+     }
+    },
+    "imminent_risk": {
+     "type": "noul",
+     "instructions": "Is there imminent failure risk within 30 days? Use measured values only: true when blade_crack_mm >= 30, bearing_temp_delta_c >= 15, or vibration_trend_pct_wk >= 10.",
+     "criteria": {
+      "true": "At least one of the three imminent-risk thresholds is reached",
+      "false": "None of the three imminent-risk thresholds is reached"
+     }
+    },
+    "priority": {
+     "type": "score",
+     "instructions": "Which maintenance priority level does the policy assign from the measured values?",
+     "criteria": [
+      "Priority 1: defer, no trigger fired",
+      "Priority 2: inspect with exactly one inspect trigger and no imminent risk",
+      "Priority 3: inspect with imminent risk or with two or more inspect triggers",
+      "Priority 4: replace because of gearbox particles or the particles-plus-vibration trigger only",
+      "Priority 5: replace because blade_crack_mm >= 30 or bearing_temp_delta_c >= 15"
+     ]
+    }
+   }
+  }
+ }
+]

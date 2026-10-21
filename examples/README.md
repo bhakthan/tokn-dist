@@ -1,8 +1,21 @@
 # TOKN examples
 
 Synthetic, non-sensitive input files referenced by
-[GETTING_STARTED.md](../GETTING_STARTED.md), plus one end-to-end domain
-walkthrough (`grid-screening/`). None of them contain real data.
+[GETTING_STARTED.md](../GETTING_STARTED.md), plus two end-to-end domain
+walkthroughs (`grid-screening/` and `decision-council/`). None of them contain real data.
+
+## `decision-council/` — several decision models, one council
+
+A wind-fleet maintenance triage of 24 turbines. Several typed decision models
+(for example TypeSafe Jev, Bespoke Labs Nimble and Microsoft decision-1) answer
+the same questions in parallel with `tokn system-one batch`. A deterministic
+council merges their votes and escalates only the rows they disagree on. A
+reasoning LLM then settles those rows with `tokn agent-run` and builds the crew
+plan. A grader checks the result against the written policy, offline.
+
+It **needs keys for two or more decision-model backends and one LLM**, and makes
+paid model calls. It runs on both the trial and the Community tier. Start at
+[decision-council/README.md](decision-council/README.md).
 
 ## `grid-screening/` — step-by-step domain walkthrough
 

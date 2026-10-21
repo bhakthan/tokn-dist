@@ -146,6 +146,12 @@ this step by step on a substation N-1 screening task, with a decision model in
 the loop. It needs your own LLM key and decision-model backend. In the REPL,
 `/learn harness` explains the concepts.
 
+**[examples/decision-council](examples/decision-council/README.md)** runs several
+decision models from different vendors in parallel on a 24-turbine maintenance
+table. A council vote escalates only the rows they disagree on, and a reasoning
+LLM settles those rows. An offline grader checks the result against the policy.
+It needs keys for two or more decision-model backends and one LLM.
+
 ## Compose a solution, not just a chat
 
 **`tokn solution` plans an application around your requirement:** combine a
