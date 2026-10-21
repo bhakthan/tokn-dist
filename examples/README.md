@@ -5,8 +5,10 @@ Synthetic, non-sensitive input files referenced by
 that each run one real task end to end. None of them contain real data.
 
 Every walkthrough needs your own LLM key and makes paid model calls. Domain
-modes (compbio, oncology, finrisk, physai) need the 14-day trial
-(`tokn license trial`); the rest are expected to run on Community too.
+modes (compbio, oncology, finrisk, physai, precmed, clintrial, legalai,
+geospatial, cybersec) and the premium critique and autodesign modes need the
+14-day trial (`tokn license trial`); the rest are expected to run on Community
+too.
 
 | Walkthrough | What it shows | Extra requirements |
 |---|---|---|
@@ -24,6 +26,16 @@ modes (compbio, oncology, finrisk, physai) need the 14-day trial
 | [tool-contract](tool-contract/README.md) | An off-contract tool call is repaired instead of failing | — |
 | [mcp-server](mcp-server/README.md) | `tokn serve` as an MCP server for Claude Desktop, VS Code or any MCP client | — |
 | [webwright](webwright/README.md) | Code-first browser automation: the agent writes one re-runnable Playwright script | Python + Playwright |
+| [precmed-variant](precmed-variant/README.md) | Precision-medicine safety gates on a synthetic tumour-board variant case (VUS, PGx, somatic–germline) | trial |
+| [clintrial](clintrial/README.md) | AI-in-clinical-trials gates on a synthetic cohort and target-trial spec | trial |
+| [legal-analysis](legal-analysis/README.md) | Citation checks, jurisdiction lock, counter-argument and disclaimer gates on a fictional matter | trial |
+| [geospatial](geospatial/README.md) | CRS, cloud-masking, resolution and time-window gates on a synthetic Earth-observation study | trial |
+| [cybersec](cybersec/README.md) | Defensive triage of a synthetic SSH config and auth log, inside scope gates | trial |
+| [critique](critique/README.md) | Multi-role adversarial critique of a design proposal, with recorded dissent | trial |
+| [autodesign](autodesign/README.md) | Autonomous design experiments on a landing page: weighted dimensions, binary gates, Pareto frontier | trial |
+| [loop-engineering](loop-engineering/README.md) | `/loop define` with a goal, a check and a stop, over abstract lead-optimisation scores | — |
+| [session-review](session-review/README.md) | `/review` audits what an agent session did to a small repo with a planted bug | — |
+| [custom-hooks](custom-hooks/README.md) | Your own PreToolUse hook blocks writes to a protected path; a PostToolUse hook writes an audit log | — |
 
 ## `decision-council/` — several decision models, one council
 

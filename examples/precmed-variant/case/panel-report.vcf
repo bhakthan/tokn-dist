@@ -1,0 +1,6 @@
+##fileformat=VCFv4.2
+##source=synthetic-walkthrough
+##comment=FULLY SYNTHETIC. Invented positions and gene names. Not from any patient or sequencing run.
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	TUMOUR
+chr1	1000001	.	A	G	100	PASS	GENE=SYNGENE1;HGVSC=c.1234A>G;HGVSP=p.Lys412Glu;VAF=0.48;ZYG=ambiguous	GT:AD:VAF	0/1:52,48:0.48
+chr2	2000002	.	CT	C	90	PASS	GENE=SYNGENE2;HGVSC=c.7001del;HGVSP=p.Gln2334fs;VAF=0.09;ZYG=ambiguous	GT:AD:VAF	0/1:91,9:0.09

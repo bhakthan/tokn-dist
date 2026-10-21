@@ -1,0 +1,33 @@
+{
+  "$comment": "FULLY SYNTHETIC target-trial specification. No real patient data. Two-arm design modelled on a generic advanced-NSCLC EGFR-TKI comparison. Used to show how an emulation is specified before any estimate is computed.",
+  "trial_id": "SYNTH-CT-EGFR-001",
+  "title": "Synthetic target trial: third-generation vs first-generation EGFR-TKI in EGFR-mutant advanced NSCLC",
+  "thesis_note": "Decision support only. An emulation from synthetic data does not replace a randomised trial.",
+  "estimand": {
+    "population": "Adults with stage IV EGFR-mutant (exon 19 deletion or L858R) non-small-cell lung adenocarcinoma, treatment-naive, ECOG 0-1.",
+    "intervention": "Third-generation EGFR tyrosine kinase inhibitor, first line.",
+    "comparator": "First-generation EGFR tyrosine kinase inhibitor, first line.",
+    "outcome": "Progression-free survival (time to progression or death).",
+    "time_zero": "First dose of first-line EGFR-TKI.",
+    "summary_measure": "Hazard ratio (Cox proportional hazards)."
+  },
+  "published_reference": {
+    "source": "Synthetic stand-in. Not a citation to a real trial.",
+    "hazard_ratio": 0.70,
+    "hr_95ci": [0.57, 0.87],
+    "equivalence_margin_log_hr": 0.223
+  },
+  "confounders": [
+    "frailty_comorbidity_burden",
+    "age",
+    "smoking_history",
+    "brain_metastasis_at_baseline"
+  ],
+  "validation_suite": {
+    "negative_control_outcomes": ["unrelated_fracture_event"],
+    "evalue_threshold": 1.5,
+    "placebo_null_required": true
+  },
+  "data_tier": "T3_EMULATION_RAW",
+  "synthetic": true
+}

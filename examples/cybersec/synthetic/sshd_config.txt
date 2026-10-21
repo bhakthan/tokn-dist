@@ -1,0 +1,11 @@
+# Synthetic host configuration for a TOKN example.
+# Host name and addresses are fictional. Nothing here refers to a real system.
+# host: demo-host-01
+Port 22
+PermitRootLogin yes
+PasswordAuthentication yes
+PermitEmptyPasswords no
+X11Forwarding yes
+MaxAuthTries 20
+LoginGraceTime 0
+ClientAliveInterval 0

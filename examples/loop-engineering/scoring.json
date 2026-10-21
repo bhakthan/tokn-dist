@@ -1,0 +1,14 @@
+{
+  "description": "Synthetic scoring rules for the loop-engineering example. All property names and values are invented.",
+  "weights": {
+    "activity_index": 0.6,
+    "stability_index": 0.4
+  },
+  "criteria": {
+    "activity_index_min": 7.0,
+    "stability_index_min": 6.0,
+    "liability_flag_max": 0
+  },
+  "shortlist_size": 5,
+  "composite_tolerance": 0.05
+}

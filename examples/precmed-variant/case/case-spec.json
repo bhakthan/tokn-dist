@@ -1,0 +1,20 @@
+{
+  "$comment": "FULLY SYNTHETIC case. Not a real patient, sample, or report. Gene 'SYNGENE1' and the variant names are invented for this walkthrough.",
+  "case_id": "MTB-SYNTH-0001",
+  "patient_id": "SYNTH-PT-0001",
+  "setting": "tumour board (decision support)",
+  "tumour_type": "synthetic solid tumour",
+  "sample": {
+    "type": "tumour-only",
+    "matched_normal_available": false,
+    "germline_evidence": "uncertain; no matched normal and no family history recorded"
+  },
+  "pgx": {
+    "note": "Synthetic pharmacogenomic result, not a real genotype.",
+    "gene": "DPYD",
+    "diplotype": "*2A/*2A",
+    "phenotype": "poor metaboliser (synthetic)",
+    "planned_drug": "capecitabine"
+  },
+  "synthetic": true
+}

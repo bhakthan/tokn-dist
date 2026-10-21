@@ -1,0 +1,18 @@
+{
+  "$comment": "FULLY SYNTHETIC patient cohort. No real PHI. Treatment assignment is deliberately confounded by frailty (confounding by indication), so a naive comparison is biased and the analysis must adjust for frailty to get closer to the true effect.",
+  "cohort_id": "SYNTH-COHORT-NSCLC-001",
+  "synthetic": true,
+  "generator_true_log_hr": -0.357,
+  "$note": "generator_true_log_hr is the ground truth used to build this synthetic file. The agent must not be shown it; the checker uses it only to say how far an estimate is from truth.",
+  "patients": [
+    {"id": "S-0001", "age": 61, "frailty": -0.8, "treat": 1, "time_months": 18.4, "event": 1, "biomarker": "EGFR_ex19del", "note": "SYNTHETIC RECORD. Third-gen TKI, ECOG 1."},
+    {"id": "S-0002", "age": 70, "frailty": 1.2, "treat": 0, "time_months": 6.1, "event": 1, "biomarker": "EGFR_L858R", "note": "SYNTHETIC RECORD. First-gen TKI, several comorbidities."},
+    {"id": "S-0003", "age": 55, "frailty": -1.4, "treat": 1, "time_months": 27.9, "event": 0, "biomarker": "EGFR_ex19del", "note": "SYNTHETIC RECORD. Third-gen TKI, ECOG 0, censored at study end."},
+    {"id": "S-0004", "age": 74, "frailty": 1.9, "treat": 0, "time_months": 3.5, "event": 1, "biomarker": "EGFR_L858R", "note": "SYNTHETIC RECORD. First-gen TKI, brain metastasis at baseline."},
+    {"id": "S-0005", "age": 63, "frailty": -0.3, "treat": 1, "time_months": 15.2, "event": 1, "biomarker": "EGFR_ex19del", "note": "SYNTHETIC RECORD. Third-gen TKI, ECOG 1."},
+    {"id": "S-0006", "age": 68, "frailty": 0.6, "treat": 0, "time_months": 9.0, "event": 1, "biomarker": "EGFR_L858R", "note": "SYNTHETIC RECORD. First-gen TKI, ECOG 1."},
+    {"id": "S-0007", "age": 59, "frailty": -1.0, "treat": 1, "time_months": 22.7, "event": 0, "biomarker": "EGFR_ex19del", "note": "SYNTHETIC RECORD. Third-gen TKI, ECOG 0, censored."},
+    {"id": "S-0008", "age": 72, "frailty": 1.5, "treat": 0, "time_months": 5.2, "event": 1, "biomarker": "EGFR_L858R", "note": "SYNTHETIC RECORD. First-gen TKI, prior comorbidities."}
+  ],
+  "$sample_note": "This 8-patient cohort is illustrative only. Eight records cannot give a statistically stable hazard ratio. Use a larger synthetic cohort generated from the same design for any real exercise."
+}

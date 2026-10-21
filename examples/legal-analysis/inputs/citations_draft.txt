@@ -1,0 +1,14 @@
+# Draft citations for the synthetic memo. Each line is one citation to verify.
+# These are deliberately imperfect or fictional. None is an authority to rely on.
+
+# 1. Malformed: no volume, no reporter. Expected to fail format checks.
+Harbor Lane Supplies v. Northfield Logistics, (2019)
+
+# 2. Unknown reporter abbreviation. Expected to fail the reporter table.
+Harbor Lane Supplies v. Northfield Logistics, 512 Zz 77 (2019)
+
+# 3. Federal statute line. Format check only; not a case.
+15 U.S.C. § 1 (fictional placeholder for the federal framework)
+
+# 4. State-court case. Its jurisdiction is CA, which is not active by default.
+Coastal Freight Ltd. v. Bayview Dock Co., 88 Cal. App. 4th 1001 (fictional)

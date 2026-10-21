@@ -1,0 +1,17 @@
+candidate_id,activity_index,stability_index,liability_flag
+CAND-001,8.2,6.5,0
+CAND-002,6.9,7.8,0
+CAND-003,7.4,5.9,0
+CAND-004,8.8,7.1,1
+CAND-005,7.6,6.2,0
+CAND-006,9.1,6.0,0
+CAND-007,7.0,6.0,0
+CAND-008,6.4,8.5,0
+CAND-009,8.0,5.5,0
+CAND-010,7.8,7.4,0
+CAND-011,9.4,6.8,1
+CAND-012,7.2,6.9,0
+CAND-013,5.8,6.6,0
+CAND-014,8.4,6.3,0
+CAND-015,7.9,4.9,0
+CAND-016,7.5,6.1,0

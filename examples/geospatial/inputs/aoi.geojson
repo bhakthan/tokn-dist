@@ -1,0 +1,27 @@
+{
+  "type": "FeatureCollection",
+  "name": "maple_hollow_aoi",
+  "crs": { "type": "name", "properties": { "name": "EPSG:4326" } },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "site": "Maple Hollow Reserve (fictional)",
+        "data_layer": "L1-in-situ",
+        "note": "Synthetic boundary. Stated CRS is EPSG:4326 (geographic, degrees)."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-95.10, 38.20],
+            [-95.05, 38.20],
+            [-95.05, 38.25],
+            [-95.10, 38.25],
+            [-95.10, 38.20]
+          ]
+        ]
+      }
+    }
+  ]
+}

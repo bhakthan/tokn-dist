@@ -1,0 +1,14 @@
+# Synthetic auth log for a TOKN example (host demo-host-01).
+# Addresses are from documentation ranges (192.0.2.0/24, 198.51.100.0/24).
+# Users and events are invented.
+Jan 14 08:12:01 demo-host-01 sshd[2101]: Failed password for root from 192.0.2.44 port 51322 ssh2
+Jan 14 08:12:04 demo-host-01 sshd[2102]: Failed password for root from 192.0.2.44 port 51324 ssh2
+Jan 14 08:12:09 demo-host-01 sshd[2103]: Failed password for admin from 192.0.2.44 port 51330 ssh2
+Jan 14 08:12:15 demo-host-01 sshd[2104]: Failed password for root from 192.0.2.44 port 51336 ssh2
+Jan 14 08:12:21 demo-host-01 sshd[2105]: Failed password for test from 192.0.2.44 port 51342 ssh2
+Jan 14 08:12:27 demo-host-01 sshd[2106]: Failed password for root from 192.0.2.44 port 51348 ssh2
+Jan 14 08:14:37 demo-host-01 sshd[2188]: Accepted password for deploy from 198.51.100.23 port 40112 ssh2
+Jan 14 08:15:02 demo-host-01 sudo: deploy : TTY=pts/0 ; PWD=/home/deploy ; USER=root ; COMMAND=/usr/bin/cat /etc/shadow
+Jan 14 08:16:40 demo-host-01 sshd[2231]: Failed password for deploy from 198.51.100.23 port 40190 ssh2
+Jan 14 09:03:19 demo-host-01 sshd[2290]: Accepted publickey for deploy from 198.51.100.23 port 40300 ssh2
+# ticket note INC-SYN-001: vendor bulletin cites CVE-24-0017 (malformed ID, used to test the CVE format gate)

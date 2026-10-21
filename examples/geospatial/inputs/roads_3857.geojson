@@ -1,0 +1,23 @@
+{
+  "type": "FeatureCollection",
+  "name": "maple_hollow_access_road",
+  "crs": { "type": "name", "properties": { "name": "EPSG:3857" } },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "road": "Fictional Access Road 7",
+        "data_layer": "L1-in-situ",
+        "note": "Synthetic line. Stated CRS is EPSG:3857 (Web Mercator). Do not measure distance here."
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-10584000.0, 4649000.0],
+          [-10578000.0, 4652000.0],
+          [-10572000.0, 4655000.0]
+        ]
+      }
+    }
+  ]
+}

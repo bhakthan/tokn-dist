@@ -1,0 +1,5 @@
+scene_id,role,sensor,acquired,crs,native_resolution_m,cloud_cover_pct,cloud_mask_applied,cirrus_mask,shadow_mask,opaque_mask,notes
+S2-CUR-0612,current,sentinel-2,2024-06-12,EPSG:32615,10,8,true,true,true,true,Clean scene; full mask set present
+L8-CUR-0620,current_alt,landsat-8,2024-06-20,EPSG:32615,30,34,false,false,false,false,Cloudy scene; no cloud mask applied
+MOD-CTX-0615,context,modis,2024-06-15,EPSG:4326,250,5,true,true,true,true,Coarse context layer; 250 m against 10 m is a 25x ratio
+L7-BASE-0501,baseline,landsat-7,2014-05-01,EPSG:32615,30,6,true,true,true,true,Baseline scene; 10 years before current
