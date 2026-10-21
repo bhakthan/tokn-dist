@@ -1,0 +1,30 @@
+{
+  "name": "quality-flywheel-instruction-following",
+  "cases": [
+    {
+      "name": "ping-pong",
+      "input": "Reply with exactly one word and nothing else: PONG",
+      "expect_contains": ["pong"]
+    },
+    {
+      "name": "arithmetic",
+      "input": "What is 17 + 25? Reply with only the number, no words.",
+      "expect_contains": ["42"]
+    },
+    {
+      "name": "capital-japan",
+      "input": "What is the capital of Japan? Reply with only the city name, one word.",
+      "expect_contains": ["tokyo"]
+    },
+    {
+      "name": "color-echo",
+      "input": "Reply with only this word in all capital letters: BLUE",
+      "expect_contains": ["blue"]
+    },
+    {
+      "name": "revision-honored",
+      "input": "Write the word 'cat'. Correction: ignore that — instead write only the word 'dog'. Reply with just the final word.",
+      "expect_contains": ["dog"]
+    }
+  ]
+}

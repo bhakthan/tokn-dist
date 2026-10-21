@@ -1,0 +1,18 @@
+##fileformat=VCFv4.2
+##fileDate=20260503
+##source=demo
+##reference=GRCh38
+##contig=<ID=chr1,length=248956422>
+##contig=<ID=chr2,length=242193529>
+##bcftools_normVersion=1.17
+##bcftools_normCommand=norm -f hg38.fa
+##INFO=<ID=AF,Number=A,Type=Float,Description="Allele frequency">
+##INFO=<ID=DP,Number=1,Type=Integer,Description="Approximate read depth">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Read depth">
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	S13	S14	S15
+chr2	1100456	rs200	G	A	101.2	PASS	AF=0.18;DP=44	GT:DP	0/1:22	0/0:19	1/1:23
+chr2	1600789	rs201	T	C	84.5	PASS	AF=0.09;DP=37	GT:DP	0/0:18	0/1:21	0/0:19
+chr2	2100111	rs202	A	G	77.8	PASS	AF=0.27;DP=48	GT:DP	0/1:24	1/1:26	0/1:22
+chr2	2600222	rs203	C	T	68.4	PASS	AF=0.05;DP=31	GT:DP	0/0:16	0/0:14	0/1:17
+chr2	3100333	rs204	G	C	115.7	PASS	AF=0.42;DP=58	GT:DP	1/1:28	0/1:30	0/0:29

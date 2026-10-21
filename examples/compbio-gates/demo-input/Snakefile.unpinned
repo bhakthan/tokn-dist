@@ -1,0 +1,28 @@
+# Snakemake workflow stub — DELIBERATELY UNPINNED.
+# A correct compbio run will flag the missing `conda:` and container
+# digests, then propose a hardened version.
+
+rule all:
+    input:
+        "results/de_results.csv",
+        "results/merged.vcf"
+
+rule merge_vcfs:
+    input:
+        "demo-input/cohort_chr1.vcf",
+        "demo-input/cohort_chr2.vcf"
+    output:
+        "results/merged.vcf"
+    shell:
+        "bcftools merge {input} > {output}"
+
+rule differential_expression:
+    input:
+        "demo-input/counts.csv"
+    output:
+        "results/de_results.csv"
+    shell:
+        "Rscript de.R {input} {output}"
+
+# No `conda:` directive, no `container:` digest, no version pinning.
+# No `validate:` block. No `report:` for publication packaging.

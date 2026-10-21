@@ -1,8 +1,29 @@
 # TOKN examples
 
 Synthetic, non-sensitive input files referenced by
-[GETTING_STARTED.md](../GETTING_STARTED.md), plus two end-to-end domain
-walkthroughs (`grid-screening/` and `decision-council/`). None of them contain real data.
+[GETTING_STARTED.md](../GETTING_STARTED.md), plus step-by-step walkthroughs
+that each run one real task end to end. None of them contain real data.
+
+Every walkthrough needs your own LLM key and makes paid model calls. Domain
+modes (compbio, oncology, finrisk, physai) need the 14-day trial
+(`tokn license trial`); the rest are expected to run on Community too.
+
+| Walkthrough | What it shows | Extra requirements |
+|---|---|---|
+| [decision-council](decision-council/README.md) | Several decision models vote in parallel; a council escalates disagreements to an LLM | 2+ decision-model keys |
+| [grid-screening](grid-screening/README.md) | `tokn harness evolve` improves its own harness on a substation N-1 screen | a decision-model key |
+| [finrisk-system-one](finrisk-system-one/README.md) | A deterministic finrisk tool plus one typed decision request, graded from the run log | trial, a decision-model key |
+| [compbio-gates](compbio-gates/README.md) | Computational-biology gates catch genome-build mixing and unpinned pipelines | trial |
+| [oncology-governance](oncology-governance/README.md) | Six oncology scenarios check PHI, human-in-the-loop and decision-support framing | trial |
+| [physai-fleet](physai-fleet/README.md) | `physai` mode generates a 14-agent warehouse robot fleet | trial |
+| [science-review](science-review/README.md) | A reviewer finds three planted defects in a figure caption with `review_artifact` | — |
+| [quality-flywheel](quality-flywheel/README.md) | `tokn flywheel run` grades a dataset over two cycles against a baseline | — |
+| [loop-graph](loop-graph/README.md) | A governed graph of loops refuses a metric that is fooling itself; a held-out check confirms it | — |
+| [skill-compose](skill-compose/README.md) | TOKN picks which skills, how many and in what order from a small library | — |
+| [dataflow](dataflow/README.md) | Skills are ordered by what they consume and produce; a broken chain is flagged | — |
+| [tool-contract](tool-contract/README.md) | An off-contract tool call is repaired instead of failing | — |
+| [mcp-server](mcp-server/README.md) | `tokn serve` as an MCP server for Claude Desktop, VS Code or any MCP client | — |
+| [webwright](webwright/README.md) | Code-first browser automation: the agent writes one re-runnable Playwright script | Python + Playwright |
 
 ## `decision-council/` — several decision models, one council
 

@@ -152,6 +152,11 @@ table. A council vote escalates only the rows they disagree on, and a reasoning
 LLM settles those rows. An offline grader checks the result against the policy.
 It needs keys for two or more decision-model backends and one LLM.
 
+**[More walkthroughs](examples/README.md)** cover domain gates (computational
+biology, oncology, financial risk, physical AI), a science reviewer, the quality
+flywheel, governed loops, skill composition, tool-contract repair, TOKN as an
+MCP server, and code-first browser automation. All data is synthetic.
+
 ## Compose a solution, not just a chat
 
 **`tokn solution` plans an application around your requirement:** combine a

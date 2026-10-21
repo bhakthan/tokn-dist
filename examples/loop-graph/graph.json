@@ -1,0 +1,50 @@
+{
+  "name": "polyfit-goodhart-graph",
+  "nodes": [
+    {
+      "id": "optimize-fit",
+      "role": "optimizing",
+      "metrics": ["train_mse"],
+      "spec": {
+        "goal": "Minimize training MSE (the primary, gameable metric)",
+        "check": {
+          "kind": "command",
+          "command": "python oracle.py --model model.json --train data/train.csv --eval data/train.csv --max-mse 0.05 --emit exit"
+        },
+        "stop": { "max_iterations": 1 }
+      }
+    },
+    {
+      "id": "guard-generalization",
+      "role": "counter_metric",
+      "metrics": ["heldout_mse"],
+      "spec": {
+        "goal": "Held-out generalization must not degrade (Goodhart guard)",
+        "check": {
+          "kind": "command",
+          "command": "python oracle.py --model model.json --train data/train.csv --eval custodian/heldout.csv --max-mse 0.10 --emit exit"
+        },
+        "stop": { "max_iterations": 1 }
+      }
+    }
+  ],
+  "edges": [
+    { "from": "guard-generalization", "to": "optimize-fit", "type": "guards" }
+  ],
+  "anchors": [
+    {
+      "id": "heldout-frozen",
+      "kind": "frozen_rule",
+      "held_out": true,
+      "description": "held-out generalization the optimizer never sees",
+      "harness_command": "python oracle.py --model model.json --train data/train.csv --eval custodian/heldout.csv --max-mse 0.10 --gate generalizes --emit json"
+    },
+    {
+      "id": "heldout-outcome",
+      "kind": "real_outcome",
+      "description": "real-world outcome: does the fit actually generalize",
+      "harness_command": "python oracle.py --model model.json --train data/train.csv --eval custodian/heldout.csv --max-mse 0.10 --gate generalizes --emit json"
+    }
+  ],
+  "stop": { "max_cycles": 1 }
+}

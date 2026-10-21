@@ -1,0 +1,5 @@
+station,timestamp,expected
+RIV-01,2026-03-01T02:00Z,breach
+RIV-02,2026-03-01T01:00Z,breach
+RIV-03,2026-03-01T01:00Z,ok
+RIV-03,2026-03-01T02:00Z,breach

@@ -1,0 +1,13 @@
+Open https://example.com in a browser.
+
+Write ONE re-runnable Playwright script (Python, sync API) that:
+1. Navigates to https://example.com and waits for the main heading to render.
+2. Reads the text of the main <h1> and of the first <a> link on the page.
+3. Writes those two values to result.json in the run folder.
+4. Saves a full-page screenshot as page.png in the run folder.
+5. Logs each step to run.log.
+
+Run the script once to confirm it works. If a step fails, read the log, fix the
+script, and rerun the whole script. Do not click around interactively.
+
+When finished, report the path of the final script and the rerun command.
