@@ -1,0 +1,1 @@
+PREFIX : <http://example.org/plant#> SELECT ?turbine ?kw WHERE { ?turbine a :Turbine ; :ratedPowerKW ?kw . FILTER(?kw > 2000) } ORDER BY ?turbine

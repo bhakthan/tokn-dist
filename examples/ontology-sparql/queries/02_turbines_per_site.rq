@@ -1,0 +1,1 @@
+PREFIX : <http://example.org/plant#> SELECT ?site (COUNT(?turbine) AS ?turbines) WHERE { ?turbine a :Turbine ; :locatedIn ?site } GROUP BY ?site ORDER BY ?site

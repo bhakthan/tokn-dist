@@ -1,0 +1,57 @@
+@prefix :     <http://example.org/plant#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+
+# ---- Ontology (TBox): synthetic, fictional wind and pump plant ----
+
+:Asset     a owl:Class .
+:Turbine   a owl:Class ; rdfs:subClassOf :Asset .
+:Pump      a owl:Class ; rdfs:subClassOf :Asset .
+:Component a owl:Class ; rdfs:subClassOf :Asset .
+:Gearbox   a owl:Class ; rdfs:subClassOf :Component .
+:Generator a owl:Class ; rdfs:subClassOf :Component .
+:Motor     a owl:Class ; rdfs:subClassOf :Component .
+
+:Location  a owl:Class .
+:Site      a owl:Class ; rdfs:subClassOf :Location .
+:Hall      a owl:Class ; rdfs:subClassOf :Location .
+
+:hasPart      a owl:ObjectProperty ; rdfs:domain :Asset ; rdfs:range :Asset .
+:hasComponent a owl:ObjectProperty ; rdfs:subPropertyOf :hasPart .
+:partOf       a owl:ObjectProperty ; owl:inverseOf :hasPart .
+:locatedIn    a owl:ObjectProperty , owl:TransitiveProperty ;
+              rdfs:domain :Asset ; rdfs:range :Location .
+:ratedPowerKW a owl:DatatypeProperty .
+
+# ---- Instances (ABox) ----
+
+:SiteNorth a :Site .
+:SiteSouth a :Site .
+:Hall-N1   a :Hall ; :locatedIn :SiteNorth .
+:Hall-S1   a :Hall ; :locatedIn :SiteSouth .
+
+:WT-01 a :Turbine ; :ratedPowerKW 2500 ; :locatedIn :SiteNorth ;
+       :hasComponent :GB-01, :GEN-01 .
+:WT-02 a :Turbine ; :ratedPowerKW 3200 ; :locatedIn :SiteNorth ;
+       :hasComponent :GB-02, :GEN-02 .
+:WT-03 a :Turbine ; :ratedPowerKW 1800 ; :locatedIn :SiteSouth ;
+       :hasComponent :GB-03, :GEN-03 .
+:WT-04 a :Turbine ; :ratedPowerKW 2750 ; :locatedIn :SiteSouth ;
+       :hasComponent :GB-04, :GEN-04 .
+
+:PU-01 a :Pump ; :ratedPowerKW 45  ; :locatedIn :Hall-N1 ; :hasComponent :MO-01 .
+:PU-02 a :Pump ; :ratedPowerKW 110 ; :locatedIn :Hall-S1 ; :hasComponent :MO-02 .
+:PU-03 a :Pump ; :ratedPowerKW 60  ; :locatedIn :Hall-S1 ; :hasComponent :MO-03 .
+
+:GB-01 a :Gearbox .
+:GB-02 a :Gearbox .
+:GB-03 a :Gearbox .
+:GB-04 a :Gearbox .
+:GEN-01 a :Generator .
+:GEN-02 a :Generator .
+:GEN-03 a :Generator .
+:GEN-04 a :Generator .
+:MO-01 a :Motor .
+:MO-02 a :Motor .
+:MO-03 a :Motor .

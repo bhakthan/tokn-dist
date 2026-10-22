@@ -1,0 +1,1 @@
+PREFIX : <http://example.org/plant#> SELECT ?part WHERE { :WT-01 :hasPart ?part } ORDER BY ?part

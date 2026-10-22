@@ -1,0 +1,1 @@
+PREFIX : <http://example.org/plant#> SELECT ?asset WHERE { ?asset a :Asset ; :locatedIn :SiteNorth } ORDER BY ?asset

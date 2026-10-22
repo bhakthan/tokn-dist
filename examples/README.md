@@ -68,6 +68,8 @@ New to TOKN? Start with [first-ten-minutes](first-ten-minutes/README.md).
 | [credit-underwriting](credit-underwriting/README.md) | Financial-risk gates on a synthetic small-business loan file | trial |
 | [meeting-to-poc](meeting-to-poc/README.md) | Meeting minutes to a design plan to a proof-of-concept scaffold; optionally pulls minutes from your own Microsoft 365 via WorkIQ | your own M365 tenant (optional) |
 | [computer-use-models](computer-use-models/README.md) | Drive a browser with self-hosted computer-use models (Fara, MagenticBrain) on your own GPU endpoints | your own GPU endpoints |
+| [ontology-sparql](ontology-sparql/README.md) | Load a synthetic Turtle ontology, query it with SPARQL, and watch the reasoner infer new facts; Fabric/Snowflake connectors optional | none (warehouse optional) |
+| [knowledge-bundles](knowledge-bundles/README.md) | Validate, migrate, export and import portable knowledge bundles through the agent's OKF tools | none |
 
 ## `decision-council/` — several decision models, one council
 

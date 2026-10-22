@@ -1,0 +1,43 @@
+{
+  "_status": "expected, not a recorded run. Computed by hand from data/plant.ttl under the RDFS/OWL-lite rules listed in the README. Re-derive if you change the data.",
+  "data_statement_count_hand_count": 79,
+  "queries": {
+    "01_turbines_over_2000kw.rq": {
+      "before_reasoning": [
+        { "turbine": "http://example.org/plant#WT-01", "kw": 2500 },
+        { "turbine": "http://example.org/plant#WT-02", "kw": 3200 },
+        { "turbine": "http://example.org/plant#WT-04", "kw": 2750 }
+      ],
+      "after_reasoning": "same as before_reasoning"
+    },
+    "02_turbines_per_site.rq": {
+      "before_reasoning": [
+        { "site": "http://example.org/plant#SiteNorth", "turbines": 2 },
+        { "site": "http://example.org/plant#SiteSouth", "turbines": 2 }
+      ],
+      "after_reasoning": "same as before_reasoning"
+    },
+    "03_pu02_has_motor.rq": {
+      "before_reasoning": { "boolean": true },
+      "after_reasoning": { "boolean": true }
+    },
+    "04_assets_in_site_north.rq": {
+      "before_reasoning": [],
+      "after_reasoning": [
+        { "asset": "http://example.org/plant#Hall-N1" },
+        { "asset": "http://example.org/plant#PU-01" },
+        { "asset": "http://example.org/plant#WT-01" },
+        { "asset": "http://example.org/plant#WT-02" }
+      ],
+      "notes": "Hall-N1 and PU-01 appear only after reasoning. Hall-N1 is typed Asset by the rdfs:domain of locatedIn. PU-01 is located in SiteNorth via transitive locatedIn (PU-01 -> Hall-N1 -> SiteNorth) and is typed Asset via Pump subClassOf Asset. WT-01 and WT-02 are typed Asset via Turbine subClassOf Asset."
+    },
+    "05_parts_of_wt01.rq": {
+      "before_reasoning": [],
+      "after_reasoning": [
+        { "part": "http://example.org/plant#GB-01" },
+        { "part": "http://example.org/plant#GEN-01" }
+      ],
+      "notes": "hasPart is inferred from the hasComponent subPropertyOf axiom."
+    }
+  }
+}

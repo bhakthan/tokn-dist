@@ -1,0 +1,1 @@
+PREFIX : <http://example.org/plant#> ASK { :PU-02 :hasComponent ?m . ?m a :Motor }
