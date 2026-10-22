@@ -162,7 +162,9 @@ repair, custom hooks, session review, memory and checkpoints, codebase blast
 radius, building a full-stack app, workflows, local tabular prediction, the web
 agent, peer collaboration, guarded self-improvement, multi-model clinical
 councils, SDK generation, your own domain plugins, event-triggered runs,
-federated workers, declarative agent teams, long hands-off runs, TOKN as an MCP
+federated workers, declarative agent teams, long hands-off runs, meeting
+minutes to a proof of concept (optionally via WorkIQ), self-hosted computer-use
+models, TOKN as an MCP
 server, and code-first browser automation. All data is
 synthetic. New to TOKN? Start with
 [first-ten-minutes](examples/first-ten-minutes/README.md).

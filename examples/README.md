@@ -66,6 +66,8 @@ New to TOKN? Start with [first-ten-minutes](first-ten-minutes/README.md).
 | [authority-frames](authority-frames/README.md) | When the agent acts, asks or stops: permission, ask-or-act and stuck signals | — |
 | [hands-off-run](hands-off-run/README.md) | A long autonomous run with budgets, checkpoints and a verified finish | — |
 | [credit-underwriting](credit-underwriting/README.md) | Financial-risk gates on a synthetic small-business loan file | trial |
+| [meeting-to-poc](meeting-to-poc/README.md) | Meeting minutes to a design plan to a proof-of-concept scaffold; optionally pulls minutes from your own Microsoft 365 via WorkIQ | your own M365 tenant (optional) |
+| [computer-use-models](computer-use-models/README.md) | Drive a browser with self-hosted computer-use models (Fara, MagenticBrain) on your own GPU endpoints | your own GPU endpoints |
 
 ## `decision-council/` — several decision models, one council
 
