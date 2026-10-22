@@ -1,0 +1,31 @@
+{
+  "max_parallel": 2,
+  "tasks": [
+    {
+      "id": "convert-core",
+      "title": "Conversion function",
+      "prompt": "Create convert.py with convert(value, from_unit, to_unit) for the length units m, cm and km.",
+      "tier": "standard"
+    },
+    {
+      "id": "cli-parse",
+      "title": "Argument parsing",
+      "prompt": "Create cli.py with an argparse entry point that takes a number and --from and --to unit options.",
+      "tier": "standard"
+    },
+    {
+      "id": "tests",
+      "title": "Unit tests",
+      "prompt": "Create test_convert.py with pytest tests for convert().",
+      "deps": ["convert-core"],
+      "tier": "standard"
+    },
+    {
+      "id": "integrate",
+      "title": "Wire CLI to converter",
+      "prompt": "Make cli.py call convert() and print the result.",
+      "deps": ["convert-core", "cli-parse"],
+      "tier": "standard"
+    }
+  ]
+}

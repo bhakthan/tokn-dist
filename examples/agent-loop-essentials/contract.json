@@ -1,0 +1,6 @@
+{
+  "acceptance": ["--shout"],
+  "expect_files_changed": ["app/cli.py", "tests/test_greet.py"],
+  "expect_status": "completed",
+  "max_steps": 12
+}

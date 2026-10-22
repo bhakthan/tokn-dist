@@ -1,0 +1,31 @@
+{
+  "name": "unit-cli-team",
+  "charter": "Build a small Python command-line unit converter with tests. Synthetic example; no external services.",
+  "budget": {
+    "max_tokens": 200000,
+    "max_cost_usd": 2.0
+  },
+  "roles": [
+    {
+      "id": "planner",
+      "kind": "planner",
+      "objective": "Break the converter into small steps and hand them to the implementer.",
+      "tier": "standard"
+    },
+    {
+      "id": "implementer",
+      "kind": "worker",
+      "objective": "Write convert.py (length conversion) and a cli.py entry point that uses it.",
+      "tier": "standard",
+      "reports_to": ["planner"],
+      "gates": ["reviewer"]
+    },
+    {
+      "id": "reviewer",
+      "kind": "verifier",
+      "objective": "Check the implementation against the charter and report PASS or FAIL with reasons.",
+      "tier": "standard",
+      "reports_to": ["planner"]
+    }
+  ]
+}

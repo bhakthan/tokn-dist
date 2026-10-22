@@ -57,6 +57,15 @@ New to TOKN? Start with [first-ten-minutes](first-ten-minutes/README.md).
 | [self-improvement](self-improvement/README.md) | Improve a prompt bundle within budgets, with a sealed held-out check (`tokn rrsi`) | — |
 | [workflow-discovery](workflow-discovery/README.md) | Write, check and inspect a workflow graph the model follows step by step (`tokn procgraph`) | trial |
 | [clinical-council](clinical-council/README.md) | Several models agree a synthetic precision-medicine case, with optional infographics | trial |
+| [agent-loop-essentials](agent-loop-essentials/README.md) | Task anchor, repo map, a predictability report checked against an outcome contract | — |
+| [sdk-generation](sdk-generation/README.md) | Ingest a small OpenAPI spec, generate client SDKs, validate them | language toolchains |
+| [domain-plugin](domain-plugin/README.md) | Scaffold, validate and install your own small domain plugin | — |
+| [event-trigger](event-trigger/README.md) | Start agent runs from events: a local folder queue first, Azure Service Bus optional | your own broker (optional) |
+| [federation](federation/README.md) | A leader fans a task out to two local workers and applies the results back | — |
+| [agent-team](agent-team/README.md) | A declarative team (planner, implementer, reviewer) builds a small app | — |
+| [authority-frames](authority-frames/README.md) | When the agent acts, asks or stops: permission, ask-or-act and stuck signals | — |
+| [hands-off-run](hands-off-run/README.md) | A long autonomous run with budgets, checkpoints and a verified finish | — |
+| [credit-underwriting](credit-underwriting/README.md) | Financial-risk gates on a synthetic small-business loan file | trial |
 
 ## `decision-council/` — several decision models, one council
 
