@@ -70,6 +70,7 @@ New to TOKN? Start with [first-ten-minutes](first-ten-minutes/README.md).
 | [computer-use-models](computer-use-models/README.md) | Drive a browser with self-hosted computer-use models (Fara, MagenticBrain) on your own GPU endpoints | your own GPU endpoints |
 | [ontology-sparql](ontology-sparql/README.md) | Load a synthetic Turtle ontology, query it with SPARQL, and watch the reasoner infer new facts; Fabric/Snowflake connectors optional | none (warehouse optional) |
 | [knowledge-bundles](knowledge-bundles/README.md) | Validate, migrate, export and import portable knowledge bundles through the agent's OKF tools | none |
+| [openshell](openshell/README.md) | Run TOKN in an NVIDIA OpenShell sandbox: generated profile, enforcing egress policy, non-root image; keys never enter the sandbox | Linux or WSL 2, OpenShell, Docker or Podman |
 
 ## `decision-council/` — several decision models, one council
 

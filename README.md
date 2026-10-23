@@ -152,6 +152,12 @@ table. A council vote escalates only the rows they disagree on, and a reasoning
 LLM settles those rows. An offline grader checks the result against the policy.
 It needs keys for two or more decision-model backends and one LLM.
 
+**[examples/openshell](examples/openshell/README.md)** runs TOKN inside an
+[NVIDIA OpenShell](https://github.com/NVIDIA/OpenShell) sandbox. One command
+generates a provider profile, an enforcing egress policy and a non-root image,
+then launches it. Your API key stays on the host and never enters the sandbox.
+It needs Linux or WSL 2, OpenShell and Docker or Podman.
+
 **[More walkthroughs](examples/README.md)** cover domain gates (computational
 biology, oncology, precision medicine, clinical trials, financial risk, legal,
 geospatial, cybersecurity, physical AI, air quality, quantum experiments,
