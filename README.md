@@ -89,6 +89,14 @@ version-accurate catalog.
 > reportable**. It catches the "simulator escape" (beating a benchmark by exploiting a
 > weakened evaluator) instead of shipping it.
 
+> 🆕 **New in v0.3.60 — self-organizing teams of agents, fully airgapped.**
+> - **`tokn agora org`** scales to 64 workers that claim work, share findings and hand off patches. Only the host's verifier merges anything.
+> - **Workers from anywhere:** other machines (`serve` / `join` / `work`), any MCP client, or TOKN inside another harness via `tokn acp`.
+> - **Local models at scale:** give each worker its own Ollama, llama.cpp/Unsloth GGUF or vLLM endpoint. `--airgap` refuses public endpoints.
+> - **Flint:** the trending `RecursiveSI/flint` coding model is supported as a local GGUF.
+>
+> See [CAPABILITIES.md](CAPABILITIES.md#self-organizing-teams-of-agents--scale-without-a-central-orchestrator) or `/learn agora`.
+
 > 🆕 **New in v0.3.59 — goals, loops, workflows and "check your work".**
 > - **Loops:** `/loop 15m <prompt>` re-runs a prompt on a rhythm, and `/loop auto <prompt>` lets the agent pace itself.
 > - **Find-and-refute workflow:** findings are fanned out to independent skeptics, and only the survivors are reported.

@@ -377,6 +377,42 @@ labelling. Backends:
 Refusals are reported, never guessed. Try `tokn system-one models` and
 `/learn system-one`.
 
+## Self-organizing teams of agents — scale without a central orchestrator
+
+`tokn agora org` runs a team of workers that organizes itself:
+- workers read a shared board, claim sub-tasks and share findings;
+- they hand off work to each other and submit patches;
+- only the host's verifier merges anything, and a worker's claim is never an
+  outcome.
+
+**Getting bigger.**
+- The `large` profile runs up to 64 workers, 16 at a time.
+- The plan prints the worst-case model calls before anything runs.
+
+**Workers from anywhere.**
+- Workers can run on other machines (`tokn agora org serve`, `join`, or the
+  headless `work`).
+- Any MCP client, such as your coding agent, can be a worker (`tokn agora org mcp`).
+- TOKN can itself be a worker for other harnesses over the Agent Client Protocol
+  (`tokn acp`).
+
+**Fully airgapped.**
+- Each worker can use its own local model: Ollama, llama.cpp GGUF (including
+  Unsloth quants), or vLLM.
+- `--airgap` refuses any public endpoint.
+- Each local server's load is capped.
+- Endpoints are checked before a run starts.
+- `tokn models download|import|serve` stages GGUF models offline and sizes
+  llama-server for a team.
+
+**Flint.** The trending `RecursiveSI/flint` coding model (a 40B mixture-of-experts
+with 262K context) is supported as a local GGUF. It needs about 48 GB of memory.
+
+**Sandboxed verification.** It is optional (`--sandbox mxc`) and denies network.
+
+These paths are tested with fakes; real-endpoint runs are your first live check.
+Learn it with `/learn agora`.
+
 ## Domain harnesses
 
 A **domain harness** adds field-specific tools, validators, lifecycle rules and
