@@ -1,0 +1,18 @@
+{
+  "state": {
+    "channel": "support-email",
+    "order_total": 42.50,
+    "charges_on_card": 2,
+    "message": "I was charged twice for my order. Please return the extra charge."
+  },
+  "questions": {
+    "refund_requested": {
+      "type": "noul",
+      "instructions": "Does the customer ask for a refund? Use the message only."
+    },
+    "duplicate_charge": {
+      "type": "noul",
+      "instructions": "Is there evidence of a duplicate charge? Use charges_on_card and the message."
+    }
+  }
+}

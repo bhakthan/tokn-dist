@@ -71,7 +71,9 @@ New to TOKN? Start with [first-ten-minutes](first-ten-minutes/README.md).
 | [ontology-sparql](ontology-sparql/README.md) | Load a synthetic Turtle ontology, query it with SPARQL, and watch the reasoner infer new facts; Fabric/Snowflake connectors optional | none (warehouse optional) |
 | [knowledge-bundles](knowledge-bundles/README.md) | Validate, migrate, export and import portable knowledge bundles through the agent's OKF tools | none |
 | [openshell](openshell/README.md) | Run TOKN in an NVIDIA OpenShell sandbox: generated profile, enforcing egress policy, non-root image; keys never enter the sandbox | Linux or WSL 2, OpenShell, Docker or Podman |
-
+| [agent-organization](agent-organization/README.md) | Agensh-style self-organizing organization: workers claim tasks on a shared board, a supervisor feeds failed checks back, local GGUF models for air gap, scale-out and upstream Agensh | Git, Python; local models optional |
+| [decisions-api](decisions-api/README.md) | OpenAI / Azure OpenAI Decisions API (`/v1/decisions`) from the OpenAI SDK and through `tokn system-one` | OpenAI or Azure OpenAI key, Python |
+| [loops-and-ship-ready](loops-and-ship-ready/README.md) | `/loop define`, prompt loops, find-and-refute, `tokn ship-ready`, `/rewind` and REPL keys on a small buggy repo | Git, Python |
 ## `decision-council/` — several decision models, one council
 
 A wind-fleet maintenance triage of 24 turbines. Several typed decision models
