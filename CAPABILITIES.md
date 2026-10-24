@@ -97,6 +97,12 @@ and cryptographic proof-of-work):
 - **Federation (agent-to-agent)** — TOKN instances discover and delegate to one
   another over a peer mesh, so work flows to wherever capacity lives.
 
+- **NVIDIA OpenShell sandboxes** — `tokn openshell up` runs TOKN inside an
+  [OpenShell](https://github.com/NVIDIA/OpenShell) sandbox with an enforcing
+  egress policy and a non-root image. Your API keys stay on the host.
+  `--dry-run` previews the plan. Walkthrough:
+  [examples/openshell](examples/openshell/README.md).
+
 The *body* may be spun up, torn down, or moved between clouds — the *soul*
 carries on, verifiable and continuous.
 
@@ -302,6 +308,74 @@ change how it plans, builds, and checks its own work, including:
   a long-running task.
 
 Run `/learn modes` in a session for the current, complete list.
+
+## Goals, loops and workflows — the right size for the job
+
+Pick the smallest tool that fits the job:
+
+- **Neither** more time nor more eyes? **Just ask.**
+- Need **more time**? Use a **loop**.
+- Need **more eyes**? Use a **workflow**.
+
+| You want… | Use |
+| --- | --- |
+| A standing objective with a definition of done | `/loop define <goal> --check-cmd "<test>" --max-iter N`, then `/loop run`. The agent acts, checks, and keeps going until the check passes or the budget runs out. |
+| A prompt re-run on a rhythm | `/loop 15m <prompt>` runs on a fixed interval. `/loop auto <prompt>` lets the agent pace itself and stop when it's done. Manage loops with `/loop list` and `/loop stop`. |
+| Findings you can trust | The **find-and-refute** workflow has four parallel hunters (correctness, edge cases, security, evidence) raise findings. A fresh skeptic is then sent to disprove each finding, and only the survivors are reported, with a tally. If nothing was actually challenged, the result is labelled **UNVERIFIED**. |
+
+Loops never interleave with what you're typing. Scheduled runs never stop to ask
+you a question: approvals are declined automatically.
+
+## Check your work — and take it back
+
+- **`/ship-ready`** (or `tokn ship-ready` in CI) gives a **READY / NOT READY**
+  verdict on your current change.
+  - It checks the working tree, scans the diff for secrets and looks for stray
+    runtime artifacts.
+  - In Go repositories it also runs format, vet and tests on the changed
+    packages.
+  - Checks that don't apply, or whose tool is missing, are reported as
+    **skipped** (with install guidance), never as passed.
+  - Options: `--quick` skips the slow checks, `--only <ids>` runs only the
+    named checks, and `--json` gives machine-readable output.
+  - In the REPL, `--deep` adds a find-and-refute review of the diff.
+- **`/rewind`** restores your **files**, and the conversation where it was
+  recorded, to a checkpoint.
+  - A snapshot is taken before every prompt. It includes untracked files, never
+    touches ignored files or nested repositories, and never reaches outside your
+    session directory.
+  - The undo point is saved first, so `/rewind undo` reverses any rewind, even
+    one that failed partway.
+  - `--chat-only` or `--code-only` restores just one side.
+  - Press **Esc Esc** on an empty prompt to pick a checkpoint.
+
+**Keyboard shortcuts in the interactive session:**
+
+| Key | Effect |
+| --- | --- |
+| Ctrl+T | Show or hide the task checklist |
+| Shift+Tab | Cycle permission mode: default → accept edits → **plan** → autopilot. Plan mode blocks every file-changing tool, and only you can leave it. |
+| Ctrl+V (macOS/Linux) · Alt+V (Windows/WSL) | Paste a screenshot into your next prompt |
+| Esc | Stop the current run immediately |
+| Ctrl+B | Send the current run to the background (watch with `/tasks`) |
+
+Run `/learn check-your-work` or `/learn loop` for a guided tour.
+
+## Typed decisions — fast, cheap judgments beside the LLM
+
+Not every step needs a reasoning model. **System One** asks a small decision
+model typed questions (yes/no probability, multiple choice, or a graded score)
+and validates every answer strictly. It suits triage, routing, gating and bulk
+labelling. Backends:
+
+- Jev;
+- the OpenAI and **Azure OpenAI Decisions API** (`gpt-6-luna`);
+- Microsoft-Decision-1;
+- Bespoke Labs Nimble;
+- open-weight Cloudflare Clef and Clef Flash.
+
+Refusals are reported, never guessed. Try `tokn system-one models` and
+`/learn system-one`.
 
 ## Domain harnesses
 

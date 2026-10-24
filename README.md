@@ -89,6 +89,25 @@ version-accurate catalog.
 > reportable**. It catches the "simulator escape" (beating a benchmark by exploiting a
 > weakened evaluator) instead of shipping it.
 
+> 🆕 **New in v0.3.59 — goals, loops, workflows and "check your work".**
+> - **Loops:** `/loop 15m <prompt>` re-runs a prompt on a rhythm, and `/loop auto <prompt>` lets the agent pace itself.
+> - **Find-and-refute workflow:** findings are fanned out to independent skeptics, and only the survivors are reported.
+> - **`/ship-ready`** (or `tokn ship-ready`) checks your change and returns READY or NOT READY.
+> - **`/rewind`** restores your files, and the conversation where it was recorded; press Esc twice on an empty prompt to pick a checkpoint.
+> - **Keyboard shortcuts:**
+>
+>   | Key | Action |
+>   | --- | --- |
+>   | Ctrl+T | Task checklist |
+>   | Shift+Tab | Cycle permission modes, including plan |
+>   | Ctrl+V (Alt+V on Windows/WSL) | Paste a screenshot |
+>   | Esc | Stop a run |
+>   | Ctrl+B | Background a run |
+>
+> - **Decisions API:** typed decisions now work with Azure OpenAI's Decisions API (`gpt-6-luna`), which is generally available.
+>
+> See [CAPABILITIES.md](CAPABILITIES.md#goals-loops-and-workflows--the-right-size-for-the-job) or `/learn check-your-work`.
+
 > 🔑 **Bring your own model.** TOKN needs an LLM provider (OpenAI, Azure OpenAI,
 > Anthropic/Claude, Gemini, or a local runtime). See **[SETUP.md](SETUP.md)** to
 > configure your provider and API key in under a minute.
@@ -525,6 +544,20 @@ it does not edit code or run tools. For multiple typed questions over the same s
 state. (That is not the same as `tokn system-one batch`, which runs *independent*
 states with bounded parallel calls.) Use `tokn system-one evaluate --help` for
 the explicit input-file interface.
+
+Jev is not the only option. Choose another backend with `SYSTEMONE_BACKEND`, and
+list the known models with `tokn system-one models`:
+
+| Backend | Model | Configure |
+| --- | --- | --- |
+| `openai` | OpenAI Decisions API (`gpt-6-luna`) | `OPENAI_API_KEY` |
+| `azure` | Azure OpenAI Decisions API (`gpt-6-luna`, generally available; not in East US 2) | `AZURE_OPENAI_ENDPOINT` + `SYSTEMONE_MODEL` (your deployment name); `AZURE_OPENAI_API_KEY` or Microsoft Entra ID |
+| `microsoft` | Microsoft-Decision-1 (Microsoft Foundry) | `DECISION_API_ENDPOINT`, `DECISION_API_KEY`, `DECISION_API_MODEL` |
+| `compatible` | Bespoke Labs Nimble (hosted) | `SYSTEMONE_BASE_URL`, `SYSTEMONE_API_KEY`, `SYSTEMONE_MODEL` |
+| `compatible` | Cloudflare Clef and Clef Flash (open weights) | self-hosted endpoint: `SYSTEMONE_BASE_URL`, `SYSTEMONE_MODEL` |
+
+A question the model declines to answer is reported as refused, never guessed.
+The same provider-charge and data cautions apply to every hosted backend.
 
 ### Optional: the bundled `decision-models` skill pack
 
