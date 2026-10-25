@@ -74,6 +74,7 @@ New to TOKN? Start with [first-ten-minutes](first-ten-minutes/README.md).
 | [agent-organization](agent-organization/README.md) | Agensh-style self-organizing organization: workers claim tasks on a shared board, a supervisor feeds failed checks back, local GGUF models for air gap, scale-out and upstream Agensh | Git, Python; local models optional |
 | [decisions-api](decisions-api/README.md) | OpenAI / Azure OpenAI Decisions API (`/v1/decisions`) from the OpenAI SDK and through `tokn system-one` | OpenAI or Azure OpenAI key, Python |
 | [loops-and-ship-ready](loops-and-ship-ready/README.md) | `/loop define`, prompt loops, find-and-refute, `tokn ship-ready`, `/rewind` and REPL keys on a small buggy repo | Git, Python |
+| [t3code](t3code/README.md) | Drive TOKN from T3 Code's web, desktop or mobile app as a Local ACP command: modes, model picker, inline diffs, resume | T3 Code |
 ## `decision-council/` — several decision models, one council
 
 A wind-fleet maintenance triage of 24 turbines. Several typed decision models
