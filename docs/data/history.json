@@ -443,6 +443,10 @@
     "2026-10-23": {
       "count": 47,
       "uniques": 21
+    },
+    "2026-10-24": {
+      "count": 37,
+      "uniques": 17
     }
   },
   "downloads_daily": {
@@ -543,7 +547,8 @@
     "2026-10-21": 1,
     "2026-10-22": 5,
     "2026-10-23": 0,
-    "2026-10-24": 0
+    "2026-10-24": 0,
+    "2026-10-25": 0
   },
   "downloads_snapshots": {
     "2026-07-18": {
@@ -1713,6 +1718,18 @@
         "tokn_windows_amd64.exe": 34
       },
       "total": 171
+    },
+    "2026-10-25": {
+      "assets": {
+        "SHA256SUMS": 36,
+        "SHA256SUMS.sig": 23,
+        "tokn_darwin_amd64": 17,
+        "tokn_darwin_arm64": 17,
+        "tokn_linux_amd64": 27,
+        "tokn_linux_arm64": 17,
+        "tokn_windows_amd64.exe": 34
+      },
+      "total": 171
     }
   },
   "downloads_state": {
@@ -1747,9 +1764,21 @@
   },
   "paths": [
     {
-      "count": 3,
+      "count": 5,
       "path": "/bhakthan/tokn-dist/releases",
       "title": "/releases",
+      "uniques": 1
+    },
+    {
+      "count": 5,
+      "path": "/bhakthan/tokn-dist/tree/main",
+      "title": "/tree/main",
+      "uniques": 1
+    },
+    {
+      "count": 4,
+      "path": "/bhakthan/tokn-dist/tree/main/examples",
+      "title": "/tree/main/examples",
       "uniques": 1
     },
     {
@@ -1765,15 +1794,27 @@
       "uniques": 1
     },
     {
-      "count": 1,
-      "path": "/bhakthan/tokn-dist/blob/main/TABULAR.md",
-      "title": "/blob/main/TABULAR.md",
+      "count": 2,
+      "path": "/bhakthan/tokn-dist/releases/tag/v0.3.60",
+      "title": "/releases/tag/v0.3.60",
       "uniques": 1
     },
     {
       "count": 1,
-      "path": "/bhakthan/tokn-dist/releases/tag/v0.3.53",
-      "title": "/releases/tag/v0.3.53",
+      "path": "/bhakthan/tokn-dist/blob/main/GETTING_STARTED.md",
+      "title": "/blob/main/GETTING_STARTED.md",
+      "uniques": 1
+    },
+    {
+      "count": 1,
+      "path": "/bhakthan/tokn-dist/blob/main/examples/agent-team/README.md",
+      "title": "/blob/main/examples/agent-team/README.md",
+      "uniques": 1
+    },
+    {
+      "count": 1,
+      "path": "/bhakthan/tokn-dist/blob/main/examples/autodesign/eval/score_landing.py",
+      "title": "/blob/main/examples/autodesign/eval/score_landing.py",
       "uniques": 1
     },
     {
@@ -1781,23 +1822,17 @@
       "path": "/bhakthan/tokn-dist/releases/tag/v0.3.55",
       "title": "/releases/tag/v0.3.55",
       "uniques": 1
-    },
-    {
-      "count": 1,
-      "path": "/bhakthan/tokn-dist/releases/tag/v0.3.57",
-      "title": "/releases/tag/v0.3.57",
-      "uniques": 1
     }
   ],
   "referrers": [
     {
-      "count": 2,
+      "count": 1,
       "referrer": "github.com",
       "uniques": 1
     }
   ],
   "repo": "bhakthan/tokn-dist",
-  "updated_at": "2026-10-24T11:09:50.448747+00:00",
+  "updated_at": "2026-10-25T11:39:59.791528+00:00",
   "views_daily": {
     "2026-07-05": {
       "count": 0,
@@ -2242,6 +2277,10 @@
     "2026-10-23": {
       "count": 0,
       "uniques": 0
+    },
+    "2026-10-24": {
+      "count": 29,
+      "uniques": 1
     }
   }
 }
