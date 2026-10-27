@@ -1,0 +1,7 @@
+{
+  "adapter": "chrombpnet",
+  "model": "chrombpnet_gm12878_fold0",
+  "kind": "upstream_check",
+  "task": "check",
+  "mode": "exact"
+}

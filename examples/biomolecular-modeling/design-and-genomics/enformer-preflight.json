@@ -1,0 +1,7 @@
+{
+  "adapter": "enformer",
+  "model": "enformer_pytorch",
+  "kind": "upstream_check",
+  "task": "check",
+  "mode": "exact"
+}

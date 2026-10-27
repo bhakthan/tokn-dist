@@ -8,6 +8,10 @@ This is a protein-only extension of `structbio`, not the existing cryo-EM/FSC
 walkthrough. It supports one-chain prediction and two-to-four-protein cofolding,
 not ligands, affinity, design or genomics. See
 [structural-biology](../structural-biology/README.md) for experimental priors.
+For Chai-1, ESM C embeddings and OpenBind-0, see
+[additional adapters](additional-adapters/README.md).
+ProteinMPNN, RFdiffusion and the seven genomic kits have separate CLI-only
+[design and genomics examples](design-and-genomics/README.md), not Boltz permissions.
 
 ## 1. Inspect the real catalog
 

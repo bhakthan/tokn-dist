@@ -1,0 +1,5 @@
+{
+  "adapter": "evo2",
+  "enabled": false,
+  "policy_version": "external-review-genomic-v1"
+}

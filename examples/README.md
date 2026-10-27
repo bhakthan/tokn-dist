@@ -4,7 +4,8 @@ Synthetic, non-sensitive input files referenced by
 [GETTING_STARTED.md](../GETTING_STARTED.md), plus step-by-step walkthroughs
 that each run one real task end to end. None of them contain real data.
 
-Every walkthrough needs your own LLM key and makes paid model calls. Domain
+Walkthroughs that call an LLM need your own key and make paid model calls;
+offline/catalog examples explicitly say otherwise. Domain
 modes (compbio, oncology, finrisk, physai, precmed, clintrial, legalai,
 geospatial, cybersec, atmchem, quantumsci, structbio, robotics) and the premium
 critique and autodesign modes need the 14-day trial (`tokn license trial`); the
@@ -85,6 +86,9 @@ New to TOKN? Start with [first-ten-minutes](first-ten-minutes/README.md).
 | [solution-graphs](solution-graphs/README.md) | Hand-write, validate, generate and run a guarded solution graph with measured checks; see --execute, --allow-external, --air-gap and --allow-code refuse | Python 3.11+; model provider for optional steps 9–10 |
 | [ax-runner](ax-runner/README.md) | Run TOKN as a runner for Google's AX control plane (pre-stable): generate manifests, test the runner locally, and track spend against a ceiling | TOKN, git; Docker and an AX cluster optional |
 | [biomolecular-modeling](biomolecular-modeling/README.md) | Inspect the experimental Boltz-2 catalog, reproduce a refused preflight without a GPU, then prepare a future externally reviewed protein-only container run | none for catalog/diagnostics; Linux GPU/Docker and reviewed staged artifacts for execution |
+| [protein prediction and embeddings](biomolecular-modeling/additional-adapters/README.md) | Separate Chai-1, ESM C and OpenBind-0 selectors; GPU-free refused preflights, not fabricated inference | none for diagnostics; separately staged and reviewed GPU execution |
+| [design and genomic models](biomolecular-modeling/design-and-genomics/README.md) | ProteinMPNN, RFdiffusion and seven CLI-only genomic profiles; target-free refused preflights and private-evidence boundaries | none for diagnostics; RFdiffusion3 execution remains held |
+
 ## `decision-council/` — several decision models, one council
 
 A wind-fleet maintenance triage of 24 turbines. Several typed decision models

@@ -1,0 +1,7 @@
+{
+  "adapter": "flashzoi",
+  "model": "flashzoi_four_replicates",
+  "kind": "upstream_check",
+  "task": "check",
+  "mode": "exact"
+}

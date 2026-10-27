@@ -1,0 +1,7 @@
+{
+  "adapter": "evo2",
+  "model": "evo2_7b",
+  "kind": "upstream_check",
+  "task": "check",
+  "mode": "exact"
+}
