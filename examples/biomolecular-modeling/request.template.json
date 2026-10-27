@@ -1,0 +1,19 @@
+{
+  "kind": "predict",
+  "task": "prediction",
+  "mode": "off",
+  "chains": [{"id":"A","sequence":"<externally reviewed benign canonical protein>"}],
+  "seed": 0,
+  "samples": 1,
+  "recycles": 3,
+  "request_id": "<unique 32 lower-case hex characters>",
+  "expires_at": "<UTC RFC3339 timestamp within 24 hours>",
+  "review": {
+    "operator_assertion": "<opaque external assertion reference>",
+    "operator_evidence": "<SHA256 of privately retained operator evidence>",
+    "target_evidence": "<SHA256 of privately retained target evidence>",
+    "purpose": "<explicit reviewed intended use>",
+    "no_hard_exclusion": true,
+    "uncertainty": "none"
+  }
+}

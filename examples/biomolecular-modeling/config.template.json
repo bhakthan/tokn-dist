@@ -1,0 +1,18 @@
+{
+  "enabled": true,
+  "source_root": "/srv/biomol/source",
+  "weights_root": "/srv/biomol/weights",
+  "output_root": "/var/lib/tokn-biomol",
+  "scratch_root": "/run/tokn-biomol-scratch",
+  "docker_socket": "/var/run/docker.sock",
+  "image_id": "sha256:<reviewed image content ID>",
+  "reviewer_key": "<base64 external reviewer Ed25519 PUBLIC key>",
+  "policy_version": "external-review-v1",
+  "source_manifest": {"<every relative regular source file except .git/>": "<SHA256>"},
+  "weights_manifest": {"<every relative regular cache/data file including unpacked mols/>": "<SHA256>"},
+  "data_terms_sha256": "<SHA256 of reviewed ancillary-data terms evidence>",
+  "revoked_ids": [],
+  "timeout_seconds": 3600,
+  "memory_mib": 65536,
+  "cpus": 8
+}
