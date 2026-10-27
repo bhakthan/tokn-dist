@@ -77,6 +77,8 @@ New to TOKN? Start with [first-ten-minutes](first-ten-minutes/README.md).
 | [t3code](t3code/README.md) | Drive TOKN from T3 Code's web, desktop or mobile app as a Local ACP command: modes, model picker, inline diffs, resume | T3 Code |
 | [coding-clis](coding-clis/README.md) | Use TOKN with Claude Code, Codex, Copilot CLI, Gemini CLI and Antigravity: MCP tools, `/conduct` peers, config import | Any of those CLIs |
 | [gemini-api](gemini-api/README.md) | Let the agent use Google's Gemini API CLI through a safe `gemini_api` tool: analyze files, images, speech, deep-research agents | `gemini-api`, a Gemini API key |
+| [single-agent-loop](single-agent-loop/README.md) | Fold a router and its subagents into one agent loop with skills and tools, proving each step with evals (`tokn single-loop`); offline demo built in | none |
+| [dynamic-workflows](dynamic-workflows/README.md) | Background agent fleets from one prompt: bundled workflows, the `iterative-refine` controller, the `ultrawork` keyword, save/resume, domain capsules | — |
 ## `decision-council/` — several decision models, one council
 
 A wind-fleet maintenance triage of 24 turbines. Several typed decision models
