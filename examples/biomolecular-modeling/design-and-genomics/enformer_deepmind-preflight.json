@@ -1,0 +1,7 @@
+{
+  "adapter": "enformer_deepmind",
+  "model": "enformer_official_tf",
+  "kind": "upstream_check",
+  "task": "check",
+  "mode": "exact"
+}

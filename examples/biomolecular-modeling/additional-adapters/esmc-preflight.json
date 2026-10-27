@@ -1,0 +1,11 @@
+{
+  "adapter": "esmc",
+  "model": "esmc_300m",
+  "kind": "upstream_check",
+  "task": "check",
+  "mode": "exact",
+  "chains": [],
+  "seed": 0,
+  "samples": 0,
+  "recycles": 0
+}

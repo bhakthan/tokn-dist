@@ -1,0 +1,7 @@
+{
+  "adapter": "gpnstar",
+  "model": "gpnstar_hg38_v100_200m",
+  "kind": "upstream_check",
+  "task": "check",
+  "mode": "exact"
+}

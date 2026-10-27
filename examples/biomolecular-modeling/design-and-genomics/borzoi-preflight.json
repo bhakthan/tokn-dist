@@ -1,0 +1,7 @@
+{
+  "adapter": "borzoi",
+  "model": "borzoi_fold0",
+  "kind": "upstream_check",
+  "task": "check",
+  "mode": "exact"
+}

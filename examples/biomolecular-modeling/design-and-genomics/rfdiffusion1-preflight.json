@@ -1,0 +1,7 @@
+{
+  "adapter": "rfdiffusion1",
+  "model": "Base_ckpt",
+  "kind": "upstream_check",
+  "task": "check",
+  "mode": "exact"
+}

@@ -1,0 +1,5 @@
+{
+  "adapter": "rfdiffusion1",
+  "enabled": false,
+  "policy_version": "external-review-design-v1"
+}

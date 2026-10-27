@@ -1,0 +1,7 @@
+{
+  "adapter": "proteinmpnn",
+  "model": "v_48_020",
+  "kind": "upstream_check",
+  "task": "check",
+  "mode": "exact"
+}

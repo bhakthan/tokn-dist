@@ -1,0 +1,7 @@
+{
+  "adapter": "rfdiffusion3",
+  "model": "rfd3_latest",
+  "kind": "upstream_check",
+  "task": "check",
+  "mode": "exact"
+}
