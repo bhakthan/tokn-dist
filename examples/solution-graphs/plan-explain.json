@@ -1,0 +1,44 @@
+{
+  "schema": "tokn.solution/1",
+  "requirement": "Measure the delivery baseline, have a text model explain the metrics, and save the explanation.",
+  "domain": "general",
+  "nodes": [
+    {
+      "id": "scaffold",
+      "kind": "tabular",
+      "target": "tabular_scaffold",
+      "input": { "directory": "delivery-explained", "example": "delivery" }
+    },
+    {
+      "id": "evaluate",
+      "kind": "tabular",
+      "target": "tabular_evaluate",
+      "input": { "spec": "delivery-explained/problem.json" },
+      "depends_on": ["scaffold"]
+    },
+    {
+      "id": "explain",
+      "kind": "llm",
+      "target": "llm",
+      "input": {
+        "prompt": "Explain these holdout metrics in three short sentences for a delivery manager.",
+        "data": { "$ref": "evaluate#/metrics" }
+      },
+      "depends_on": ["evaluate"]
+    },
+    {
+      "id": "save",
+      "kind": "tool",
+      "target": "write_file",
+      "input": {
+        "path": "delivery-explained/EXPLANATION.md",
+        "content": { "$ref": "explain#/text" }
+      },
+      "depends_on": ["explain"]
+    }
+  ],
+  "checks": [
+    { "ref": "evaluate#/metrics/accuracy", "operator": "gte", "expected": 0.8 },
+    { "ref": "save#/status", "operator": "eq", "expected": "ok" }
+  ]
+}

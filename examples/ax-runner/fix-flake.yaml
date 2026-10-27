@@ -1,0 +1,63 @@
+apiVersion: ax.io/v1alpha1
+kind: Workspace
+metadata:
+    name: fix-flake-workspace
+    atespace: default
+spec:
+    git:
+        - name: app
+          repo: https://github.com/me/app.git
+          branch: main
+---
+apiVersion: ax.io/v1alpha1
+kind: Gateway
+metadata:
+    name: fix-flake-gateway
+    atespace: default
+spec:
+    listeners:
+        - name: grpc
+          port: 8494
+          protocol: gRPC
+        - name: http
+          port: 8080
+          protocol: HTTP
+    egress:
+        allowlist:
+            hosts:
+                - host: api.anthropic.com
+                  port: 443
+                - host: github.com
+                  port: 443
+---
+apiVersion: ax.io/v1alpha1
+kind: Model
+metadata:
+    name: fix-flake-model
+    atespace: default
+spec:
+    provider: anthropic
+    model: claude-opus-5
+    secretKey:
+        name: llm-keys
+        key: ANTHROPIC_API_KEY
+---
+apiVersion: ax.io/v1alpha1
+kind: Task
+metadata:
+    name: fix-flake
+    atespace: default
+spec:
+    image: ghcr.io/me/tokn-runner:latest
+    env:
+        - name: TOKN_AX_BUDGET_USD
+          value: "5"
+        - name: TOKN_AX_PROVIDER
+          value: anthropic
+        - name: TOKN_AX_MODEL
+          value: claude-opus-5
+    workspaces:
+        - name: fix-flake-workspace
+          path: /workspace
+    gateway:
+        name: fix-flake-gateway

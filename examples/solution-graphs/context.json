@@ -1,0 +1,5 @@
+{
+  "data": "delivery/context.csv holds past deliveries; delivery/query.csv holds open ones.",
+  "target": "late (yes or no)",
+  "acceptance": "Holdout accuracy of at least 0.8."
+}

@@ -1,0 +1,9 @@
+{"id":"a-01","generation":1,"candidate":"add-test: parser empty input","fitness":{"mutationScore":0.6,"testsPass":true,"apiLost":0,"detail":"synthetic fixture"},"survived":true}
+{"id":"a-02","parentIds":["a-01"],"generation":2,"candidate":"add-test: parser unicode","fitness":{"mutationScore":0.55,"testsPass":true,"apiLost":0,"detail":"synthetic fixture"},"survived":true}
+{"id":"a-03","parentIds":["a-01"],"generation":2,"candidate":"add-test: parser nested lists","fitness":{"mutationScore":0.7,"testsPass":true,"apiLost":0,"detail":"synthetic fixture"},"survived":true}
+{"id":"a-04","parentIds":["a-03"],"generation":3,"candidate":"add-test: nested list depth limit","fitness":{"mutationScore":0.78,"testsPass":true,"apiLost":0,"detail":"synthetic fixture"},"survived":true}
+{"id":"a-05","parentIds":["a-03"],"generation":3,"candidate":"add-test: nested list trailing comma","fitness":{"mutationScore":0.72,"testsPass":true,"apiLost":0,"detail":"synthetic fixture"},"survived":true}
+{"id":"a-06","generation":1,"candidate":"refactor: split lexer","fitness":{"mutationScore":0.5,"testsPass":true,"apiLost":0,"detail":"synthetic fixture"},"survived":true}
+{"id":"a-07","parentIds":["a-06"],"generation":2,"candidate":"add-test: lexer escapes","fitness":{"mutationScore":0.58,"testsPass":true,"apiLost":0,"detail":"synthetic fixture"},"survived":true}
+{"id":"a-08","parentIds":["a-01"],"generation":2,"candidate":"add-test: parser huge input","fitness":{"mutationScore":0.95,"testsPass":false,"apiLost":0,"detail":"synthetic fixture"},"survived":false}
+{"id":"a-09","parentIds":["a-04"],"generation":4,"candidate":"add-test: depth limit off-by-one","fitness":{"mutationScore":0.74,"testsPass":true,"apiLost":0,"detail":"synthetic fixture"},"survived":true}

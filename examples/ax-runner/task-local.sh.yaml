@@ -1,0 +1,18 @@
+# A Task for a local `tokn ax runner` test (bash, macOS, Linux).
+# The command stands in for an agent: it reports one model call per loop
+# and stops when the runner says the spend ceiling is passed.
+# The workspace path is relative so a local test writes under the current
+# directory. In a real AX Task it is /workspace.
+apiVersion: ax.io/v1alpha1
+kind: Task
+metadata:
+  name: spend-demo
+spec:
+  image: tokn-runner:local
+  command:
+    - sh
+    - -c
+    - 'for i in 1 2 3 4 5 6 7 8 9 10; do tokn ax report-usage --prompt 20000 --completion 2000 || { echo "ceiling reached on call $i"; break; }; done'
+  workspaces:
+    - name: spend-demo-workspace
+      path: ./workspace

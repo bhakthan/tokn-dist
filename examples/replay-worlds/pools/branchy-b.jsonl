@@ -1,0 +1,8 @@
+{"id":"b-01","generation":1,"candidate":"add-test: config defaults","fitness":{"mutationScore":0.4,"testsPass":true,"apiLost":0,"detail":"synthetic fixture"},"survived":true}
+{"id":"b-02","parentIds":["b-01"],"generation":2,"candidate":"add-test: config env override","fitness":{"mutationScore":0.52,"testsPass":true,"apiLost":0,"detail":"synthetic fixture"},"survived":true}
+{"id":"b-03","generation":1,"candidate":"add-test: cli flags","fitness":{"mutationScore":0.45,"testsPass":true,"apiLost":0,"detail":"synthetic fixture"},"survived":true}
+{"id":"b-04","parentIds":["b-03"],"generation":2,"candidate":"add-test: cli unknown flag","fitness":{"mutationScore":0.66,"testsPass":true,"apiLost":0,"detail":"synthetic fixture"},"survived":true}
+{"id":"b-05","parentIds":["b-04"],"generation":3,"candidate":"add-test: cli flag aliases","fitness":{"mutationScore":0.8,"testsPass":true,"apiLost":0,"detail":"synthetic fixture"},"survived":true}
+{"id":"b-06","parentIds":["b-02"],"generation":3,"candidate":"add-test: config file missing","fitness":{"mutationScore":0.57,"testsPass":true,"apiLost":0,"detail":"synthetic fixture"},"survived":true}
+{"id":"b-07","parentIds":["b-04"],"generation":3,"candidate":"add-test: cli help text","fitness":{"mutationScore":0.61,"testsPass":true,"apiLost":0,"detail":"synthetic fixture"},"survived":true}
+{"id":"b-08","parentIds":["b-01"],"generation":2,"candidate":"add-test: config race","fitness":{"mutationScore":0.9,"testsPass":false,"apiLost":0,"detail":"synthetic fixture"},"survived":false}

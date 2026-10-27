@@ -1,0 +1,23 @@
+{
+  "schema": "tokn.solution/1",
+  "requirement": "Create a second copy of the delivery example and demand a log loss the baseline cannot reach.",
+  "domain": "general",
+  "nodes": [
+    {
+      "id": "scaffold",
+      "kind": "tabular",
+      "target": "tabular_scaffold",
+      "input": { "directory": "delivery-strict", "example": "delivery" }
+    },
+    {
+      "id": "evaluate",
+      "kind": "tabular",
+      "target": "tabular_evaluate",
+      "input": { "spec": "delivery-strict/problem.json" },
+      "depends_on": ["scaffold"]
+    }
+  ],
+  "checks": [
+    { "ref": "evaluate#/metrics/log_loss", "operator": "lte", "expected": 0.01 }
+  ]
+}

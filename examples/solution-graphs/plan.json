@@ -1,0 +1,27 @@
+{
+  "schema": "tokn.solution/1",
+  "requirement": "Create the synthetic delivery example and measure how well the baseline model predicts late deliveries.",
+  "domain": "general",
+  "nodes": [
+    {
+      "id": "scaffold",
+      "kind": "tabular",
+      "target": "tabular_scaffold",
+      "input": { "directory": "delivery", "example": "delivery" }
+    },
+    {
+      "id": "evaluate",
+      "kind": "tabular",
+      "target": "tabular_evaluate",
+      "input": { "spec": "delivery/problem.json" },
+      "depends_on": ["scaffold"],
+      "checks": [
+        { "ref": "evaluate#/backend", "operator": "eq", "expected": "baseline" }
+      ]
+    }
+  ],
+  "checks": [
+    { "ref": "evaluate#/metrics/accuracy", "operator": "gte", "expected": 0.8 },
+    { "ref": "evaluate#/metrics/log_loss", "operator": "lte", "expected": 0.2 }
+  ]
+}

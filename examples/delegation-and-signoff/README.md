@@ -24,7 +24,7 @@ advisor only prints a recommendation. It does not turn any control on.
 
 | Requirement | Why | Check |
 |---|---|---|
-| TOKN v0.3.67 or later | Ships `tokn delegate` and `tokn sign-off` | `tokn delegate --help` |
+| TOKN v0.3.68 or later | Ships `tokn delegate` and `tokn sign-off` | `tokn delegate --help` |
 | git 2.28 or later (steps 7–10) | `sign-off` hashes a `git diff`; the setup uses `git init -b` | `git --version` |
 | A git identity (steps 7–10) | The demo repo makes two commits | `git config user.name` |
 | This example folder (steps 7–10) | Two small fixture files in [`fixtures/`](fixtures/) | — |
@@ -272,7 +272,8 @@ ratings
   frequency      occasional  (inferred: default)
 ```
 
-Write `--reversible=false` with the `=`. See [Troubleshooting](#troubleshooting).
+Write `--reversible=false` with the `=`. With a space, `false` would be read as
+a second task argument, so TOKN stops with an error that says so.
 
 ## 6. JSON for scripts
 
@@ -608,15 +609,15 @@ When you are done, delete the demo folder (`$DEMO`).
 
 | Symptom | Fix |
 |---|---|
-| `Error: accepts 1 arg(s), received 2` | You wrote `--reversible false`. A boolean flag takes no separate value; write `--reversible=false`. Also quote the task as one argument. |
+| `Error: write --reversible=false with '=': …` | You wrote `--reversible false`. Write `--reversible=false`. |
+| `Error: accepts 1 arg(s), received 2` | Quote the task as one argument. |
 | `Error: --reversibility=reversible conflicts with --reversible=false` | Use one of `--reversible` or `--reversibility`, not both. |
 | `Error: invalid stakes "extreme" (want low\|moderate\|high)` | Use one of the listed values. Each rating flag says which values it accepts. |
 | `refusing to sign off: stdin is not an interactive terminal` | Run in a terminal and type `yes`, or pass `--yes` if you are the signer. Piped input is refused on purpose. |
 | `--signer "<your name>" is required` | Add `--signer "Your Name"`. Quote names with spaces. |
 | `not inside a git repository` | `cd` into a git repo, or pass `--repo <dir>`. |
 | `verify` reports diff drift right after you commit | You signed against the default `HEAD`. Sign with `--base <branch>` (step 10). |
-| Each error message prints twice | Both copies are the same error. Nothing else went wrong. |
 | `--json` output is mixed with the trial notice | The notice goes to stderr. Add `2>/dev/null` (bash) or `2>$null` (PowerShell). In PowerShell, do not use `2>&1` before `ConvertFrom-Json`. |
-| `sign-off --json` output does not parse as JSON | In v0.3.67 the human summary (`Sign-off for …`) is printed before the JSON on stdout. Read the written `.json` record instead, or use `verify --json`, which is pure JSON. |
+| `sign-off --json` output does not parse as JSON | Upgrade to v0.3.68 or later. There, stdout is pure JSON and the human summary (`Sign-off for …`) goes to stderr. |
 | A task with `$` in it changes in PowerShell | Double quotes expand `$name` (`"reset $HOME/cache"` becomes `reset C:\Users\…/cache`). Use single quotes: `'reset $HOME/cache'`. |
 | `/delegate` in a REPL session does something else | That slash command hands a task to a peer agent. The advisor is the `tokn delegate assess` CLI command. |

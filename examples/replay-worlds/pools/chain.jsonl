@@ -1,0 +1,4 @@
+{"id":"c-01","generation":1,"candidate":"add-test: retry once","fitness":{"mutationScore":0.5,"testsPass":true,"apiLost":0,"detail":"synthetic fixture"},"survived":true}
+{"id":"c-02","parentIds":["c-01"],"generation":2,"candidate":"add-test: retry backoff","fitness":{"mutationScore":0.62,"testsPass":true,"apiLost":0,"detail":"synthetic fixture"},"survived":true}
+{"id":"c-03","parentIds":["c-02"],"generation":3,"candidate":"add-test: retry jitter","fitness":{"mutationScore":0.71,"testsPass":true,"apiLost":0,"detail":"synthetic fixture"},"survived":true}
+{"id":"c-04","parentIds":["c-03"],"generation":4,"candidate":"add-test: retry give-up","fitness":{"mutationScore":0.69,"testsPass":true,"apiLost":0,"detail":"synthetic fixture"},"survived":true}

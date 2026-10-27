@@ -1,0 +1,19 @@
+# A Task for a local `tokn ax runner` test (Windows PowerShell).
+# The command stands in for an agent: it reports one model call per loop
+# and stops when the runner says the spend ceiling is passed.
+# The workspace path is relative so a local test writes under the current
+# directory. In a real AX Task it is /workspace.
+apiVersion: ax.io/v1alpha1
+kind: Task
+metadata:
+  name: spend-demo
+spec:
+  image: tokn-runner:local
+  command:
+    - powershell
+    - -NoProfile
+    - -Command
+    - 'foreach ($i in 1..10) { tokn ax report-usage --prompt 20000 --completion 2000; if ($LASTEXITCODE -ne 0) { "ceiling reached on call $i"; break } }'
+  workspaces:
+    - name: spend-demo-workspace
+      path: ./workspace

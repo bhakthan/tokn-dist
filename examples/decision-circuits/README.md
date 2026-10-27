@@ -33,7 +33,7 @@ This walkthrough uses only the offline subcommands of `tokn circuit`:
 
 | Requirement | Why | Check |
 |---|---|---|
-| TOKN v0.3.67 or later | Ships `tokn circuit` | `tokn circuit --help` |
+| TOKN v0.3.68 or later | Ships `tokn circuit` | `tokn circuit --help` |
 | This folder | Fixture circuit, vectors, code, table, trace and ledger | — |
 | Python 3.9 or later (step 7 only) | Runs the generated module's tests | `python --version` (or `python3 --version`) |
 
@@ -154,7 +154,7 @@ reachable outputs:
   priority_servicing               yes
   standard_servicing               yes
 findings:
-  info  ABSTAIN_REACHABLE  switch.on_unknown  circuit abstains to "human_review" in 46.3% of any abstract state
+  info  ABSTAIN_REACHABLE  switch.on_unknown  circuit abstains to "human_review" in 46.3% of all 11664 abstract states
   info  NO_GOVERNANCE      governance         circuit declares no governance (owner, risk tier, safe default); outcomes have no accountable owner on record
 ```
 
@@ -213,7 +213,7 @@ findings:
   warning  NO_NOISE_MARGIN        gates.threat                   noul gate has no noise band (false_at == true_at == 0.5): borderline answers flip between true and false instead of reading unknown
   warning  OUTPUT_NEVER_PRODUCED  switch.outputs.partial_refund  output is never produced in any abstract state
   warning  UNREACHABLE_ARM        switch.arms.late_only          arm never fires in any abstract state; an earlier arm always decides first or its condition is never true
-  info     ABSTAIN_REACHABLE      switch.on_unknown              circuit abstains to "human_review" in 40.0% of any abstract state
+  info     ABSTAIN_REACHABLE      switch.on_unknown              circuit abstains to "human_review" in 40.0% of all 15 abstract states
   info     NO_GOVERNANCE          governance                     circuit declares no governance (owner, risk tier, safe default); outcomes have no accountable owner on record
 ```
 
@@ -249,11 +249,12 @@ reachable outputs:
   manager_review                   yes
   store_credit                     yes
 findings:
-  info  ABSTAIN_REACHABLE  switch.on_unknown  circuit abstains to "human_review" in 40.0% of any abstract state
+  info  ABSTAIN_REACHABLE  switch.on_unknown  circuit abstains to "human_review" in 40.0% of all 15 abstract states
 ```
 
-`analyze` exits 0 even with warnings. Read the findings; do not rely on the
-exit code.
+`analyze` exits 0 even with warnings. In CI, add `--fail-on-warn` to exit 1
+when any warning is reported; the draft above would fail, the fixed circuit
+passes.
 
 ## 6. Test both versions with the same vectors
 
@@ -431,19 +432,15 @@ tokn circuit draft app --id refund-draft > refund-draft.circuit.json
 tokn circuit validate refund-draft.circuit.json
 ```
 
-PowerShell 7:
+PowerShell:
 
 ```powershell
 tokn circuit draft app --id refund-draft > refund-draft.circuit.json
 tokn circuit validate refund-draft.circuit.json
 ```
 
-Windows PowerShell 5.1 writes `>` as UTF-16, which the strict parser rejects
-(`JSON is not valid UTF-8`). There, use:
-
-```powershell
-[IO.File]::WriteAllLines("$PWD\refund-draft.circuit.json", (tokn circuit draft app --id refund-draft))
-```
+Windows PowerShell 5.1 writes `>` as UTF-16, and `Out-File -Encoding utf8`
+adds a BOM. Circuit commands accept both, so no workaround is needed.
 
 Expected from `validate`:
 
@@ -452,7 +449,7 @@ valid tokn.decision-circuit/1 refund-draft@0.1.0
   hash: sha256:3a1f24b00773d3e57d0438202088d0eb58b68fd4def9b0532d3670f24cf4eaa1
   gates: 4 in 1 stage(s)  signals: 0  arms: 4
   outputs: refund_handler_keyword_list_15, refund_handler_regex_on_text_17, refund_handler_llm_output_parse_20, refund_handler_score_threshold_23, no_match, human_review
-  default: human_review  on_unknown: human_review
+  default: no_match  on_unknown: human_review
 ```
 
 The draft is valid but generic. Its description starts with `DRAFT: edit
@@ -476,28 +473,29 @@ Expected:
 ```text
 Decision Map  tickets.csv  (12 rows, 7 columns)
 
-COLUMN         SEMANTIC         PRIMITIVE      FITNESS  BAND     PAIRED TEXT  SENSITIVITY
-ticket_id      identifier       deterministic  0.00     exclude  -            none
-created_at     timestamp        deterministic  0.00     exclude  -            none
-order_total    numeric_measure  deterministic  0.00     exclude  -            none
-channel        category         route          0.74     propose  message      none
-refund_reason  category         route          0.74     propose  message      none
-is_escalated   boolean_flag     deterministic  0.00     exclude  -            none
-message        free_text        none           0.00     exclude  -            none
+COLUMN         SEMANTIC          PRIMITIVE      FITNESS  BAND     PAIRED TEXT  SENSITIVITY
+ticket_id      identifier        deterministic  0.00     exclude  -            none
+created_at     timestamp         deterministic  0.00     exclude  -            none
+order_total    numeric_measure   deterministic  0.00     exclude  -            none
+channel        system_attribute  deterministic  0.00     exclude  -            none
+refund_reason  category          route          0.74     propose  message      none
+is_escalated   boolean_flag      gate           0.89     propose  message      none
+message        free_text         none           0.00     exclude  -            none
 
-Candidates: channel, refund_reason
-Next: tokn circuit profile tickets.csv --draft channel > circuit.json
+Candidates: is_escalated, refund_reason
+Next: tokn circuit profile tickets.csv --draft is_escalated > circuit.json
 ```
 
 This is a heuristic, and a person reviews it. `refund_reason` is a real
-judgment over `message`. `channel` is not: it is recorded when the ticket
-arrives, so you would drop it.
+judgment over `message`. `is_escalated` is a yes/no flag a person set, so it
+is a `gate` candidate: a model could learn to make that call from `message`.
+`channel` is a `system_attribute`: it is recorded when the ticket arrives, so it
+stays deterministic.
 
 `--draft refund_reason` prints a one-gate starter circuit with placeholder
 text (`DRAFT: define evidence for this option`) and an added `cannot_tell`
 option. `--template refund_reason` prints a state template, which `batch` uses
-to turn rows into model input. The same PowerShell 5.1 redirect rule from
-step 8 applies.
+to turn rows into model input.
 
 ## 10. Pick a threshold from the cost of mistakes
 
@@ -565,7 +563,7 @@ bash:
 
 ```bash
 tokn circuit ledger feedback dl_0003 --ledger sample-ledger.jsonl \
-  --reviewer alice --reason "Late parcel, no threat: seller fault" \
+  --circuit refund-triage.circuit.json --reviewer alice --reason "Late parcel, no threat: seller fault" \
   --correct-output auto_refund
 tokn circuit ledger show dl_0003 --ledger sample-ledger.jsonl
 ```
@@ -574,7 +572,7 @@ PowerShell:
 
 ```powershell
 tokn circuit ledger feedback dl_0003 --ledger sample-ledger.jsonl `
-  --reviewer alice --reason "Late parcel, no threat: seller fault" `
+  --circuit refund-triage.circuit.json --reviewer alice --reason "Late parcel, no threat: seller fault" `
   --correct-output auto_refund
 tokn circuit ledger show dl_0003 --ledger sample-ledger.jsonl
 ```
@@ -606,8 +604,10 @@ recorded override on dl_0003
 
 `ledger stats` now shows `OVERRIDES 1`. Feedback is appended as a new line,
 and earlier lines are never rewritten. These overrides become labels for
-`circuit eval`. `feedback` does not check `--correct-output` against the
-circuit's outputs, so check the label yourself.
+`circuit eval`. `--circuit` checks that `--correct-output` is one of the circuit's
+outputs and that the circuit's hash matches the decision; a typo such as
+`partial_refund` is refused. Without `--circuit`, `feedback` records the label
+unchecked and prints a `note: … was not checked` line to stderr.
 
 ## 12. Going live: `run`, `batch` and `eval`
 
@@ -649,10 +649,11 @@ To set up a backend and see live decisions, continue with
 
 | Symptom | Fix |
 |---|---|
-| `JSON is not valid UTF-8` or `malformed JSON` on a file you saved in PowerShell | Windows PowerShell 5.1 `>` writes UTF-16, and `Set-Content -Encoding utf8` adds a BOM. Use PowerShell 7, or `[IO.File]::WriteAllLines("$PWD\file.json", (tokn …))`. |
+| `JSON is not valid UTF-8` or `malformed JSON` on a file you saved in PowerShell | UTF-16 and UTF-8-with-BOM files are accepted since v0.3.68, so upgrade. If it persists, the file is not valid JSON. |
 | `circuitgen: destination already exists; choose a new directory` | `gen --out` needs a folder that does not exist yet. Delete it or pick another name. |
 | `test` reports `FAIL` with an unexpected `human_review` | A gate read `unknown`. Check thresholds, and that `choice` answers include `probabilities` for every option. |
 | `run` says `backend not configured: no API key` | Expected offline. Use `test` with vectors, or configure a backend (step 12). |
 | `… is disabled by --air-gap` | `run`, `batch` and `eval` make external calls. Remove `--air-gap`, or stay with the offline commands. |
+| `--correct-output … is not an output of …` or `--circuit is not the circuit that made decision …` | Check the label against `outputs` in the circuit, and pass the circuit version that made the decision. |
 | `ledger: unknown decision "dl_…"` | The ID is not in that ledger file. Run `ledger stats` and check `--ledger`. |
 | A "trial has ended — running the free community tier" banner | Printed to stderr; every command here works on the Community tier. |

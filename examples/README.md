@@ -81,6 +81,9 @@ New to TOKN? Start with [first-ten-minutes](first-ten-minutes/README.md).
 | [dynamic-workflows](dynamic-workflows/README.md) | Background agent fleets from one prompt: bundled workflows, the `iterative-refine` controller, the `ultrawork` keyword, save/resume, domain capsules | — |
 | [decision-circuits](decision-circuits/README.md) | Turn keyword/regex decisions into typed, testable decision circuits: starter packs, static analysis, test vectors, generated Python, detect/draft, profile, ledger — all offline (`tokn circuit`) | Python 3.9+ (optional) |
 | [delegation-and-signoff](delegation-and-signoff/README.md) | Rate a task on stakes, reversibility, ambiguity and frequency to get an automation level and the controls it needs (`tokn delegate`), then sign off a change and catch drift (`tokn sign-off`) | Git |
+| [replay-worlds](replay-worlds/README.md) | Record evolve pools as replay worlds, then replay, rank and explain exploration policies offline — degenerate worlds, off-record counts and honest UNDECIDED verdicts | Nothing (a model provider only for the optional real evolve run) |
+| [solution-graphs](solution-graphs/README.md) | Hand-write, validate, generate and run a guarded solution graph with measured checks; see --execute, --allow-external, --air-gap and --allow-code refuse | Python 3.11+; model provider for optional steps 9–10 |
+| [ax-runner](ax-runner/README.md) | Run TOKN as a runner for Google's AX control plane (pre-stable): generate manifests, test the runner locally, and track spend against a ceiling | TOKN, git; Docker and an AX cluster optional |
 ## `decision-council/` — several decision models, one council
 
 A wind-fleet maintenance triage of 24 turbines. Several typed decision models

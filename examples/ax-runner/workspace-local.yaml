@@ -1,0 +1,11 @@
+# A Workspace for a local `tokn ax runner` test.
+# It clones one small public repository into the workspace.
+apiVersion: ax.io/v1alpha1
+kind: Workspace
+metadata:
+  name: spend-demo-workspace
+spec:
+  git:
+    - name: hello
+      repo: https://github.com/octocat/Hello-World.git
+      depth: 1
