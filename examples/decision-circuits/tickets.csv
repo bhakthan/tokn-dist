@@ -1,0 +1,13 @@
+ticket_id,created_at,order_total,channel,refund_reason,is_escalated,message
+T-1001,2026-09-01T09:12:00Z,42.50,email,damaged,false,"The mug arrived cracked in two places."
+T-1002,2026-09-01T10:03:00Z,18.00,chat,changed_mind,false,"I ordered the wrong colour, can I swap it?"
+T-1003,2026-09-02T11:47:00Z,640.00,email,late,true,"Three weeks late. I will file a chargeback if this is not fixed."
+T-1004,2026-09-02T14:20:00Z,25.99,web,damaged,false,"Lid is broken and the box was crushed."
+T-1005,2026-09-03T08:05:00Z,73.10,chat,late,false,"Tracking has not moved for ten days."
+T-1006,2026-09-03T16:30:00Z,12.00,web,other,false,"Do you ship to Canada?"
+T-1007,2026-09-04T12:10:00Z,99.00,email,changed_mind,false,"Found it cheaper elsewhere, please refund."
+T-1008,2026-09-04T13:55:00Z,310.00,chat,damaged,true,"Second faulty unit in a row. Terrible. Talking to my lawyer."
+T-1009,2026-09-05T09:40:00Z,54.25,web,late,false,"Arrived after the birthday it was for."
+T-1010,2026-09-05T15:15:00Z,8.75,email,other,false,"Can I add gift wrap to my order?"
+T-1011,2026-09-06T10:00:00Z,145.00,chat,damaged,false,"Screen has a dead pixel line."
+T-1012,2026-09-06T17:45:00Z,61.00,web,changed_mind,false,"No longer need it."

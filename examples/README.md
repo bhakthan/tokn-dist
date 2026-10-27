@@ -79,6 +79,8 @@ New to TOKN? Start with [first-ten-minutes](first-ten-minutes/README.md).
 | [gemini-api](gemini-api/README.md) | Let the agent use Google's Gemini API CLI through a safe `gemini_api` tool: analyze files, images, speech, deep-research agents | `gemini-api`, a Gemini API key |
 | [single-agent-loop](single-agent-loop/README.md) | Fold a router and its subagents into one agent loop with skills and tools, proving each step with evals (`tokn single-loop`); offline demo built in | none |
 | [dynamic-workflows](dynamic-workflows/README.md) | Background agent fleets from one prompt: bundled workflows, the `iterative-refine` controller, the `ultrawork` keyword, save/resume, domain capsules | — |
+| [decision-circuits](decision-circuits/README.md) | Turn keyword/regex decisions into typed, testable decision circuits: starter packs, static analysis, test vectors, generated Python, detect/draft, profile, ledger — all offline (`tokn circuit`) | Python 3.9+ (optional) |
+| [delegation-and-signoff](delegation-and-signoff/README.md) | Rate a task on stakes, reversibility, ambiguity and frequency to get an automation level and the controls it needs (`tokn delegate`), then sign off a change and catch drift (`tokn sign-off`) | Git |
 ## `decision-council/` — several decision models, one council
 
 A wind-fleet maintenance triage of 24 turbines. Several typed decision models

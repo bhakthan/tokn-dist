@@ -1,0 +1,49 @@
+{
+  "schema": "tokn.decision-circuit/1",
+  "id": "refund-triage",
+  "version": "1.0.0",
+  "description": "Routes a customer refund request to an advisory label. Threats go to a human, damaged or late orders get an automatic refund, changed-mind requests get store credit, and anything unclear goes to a human.",
+  "intended_uses": ["Suggest a queue label for a refund request that the caller's code acts on"],
+  "excluded_uses": ["Issuing refunds or credits without the caller's own checks"],
+  "governance": {
+    "owner": "support-ops",
+    "risk_tier": 2,
+    "safe_default": "human_review"
+  },
+  "pre_guards": [
+    {"id": "large_order", "output": "manager_review", "reason_code": "LARGE_ORDER",
+     "when": {"field": "order_total", "gte": 500}}
+  ],
+  "gates": {
+    "reason": {
+      "type": "choice",
+      "instructions": "Why does the customer want a refund?",
+      "criteria": {
+        "damaged": "The item arrived broken, faulty or not as described.",
+        "late": "The order arrived late or never arrived.",
+        "changed_mind": "The customer no longer wants the item.",
+        "other": "Any other reason."
+      }
+    },
+    "threat": {
+      "type": "noul",
+      "instructions": "Does the customer threaten a chargeback, legal action or public complaint?",
+      "criteria": {"true": "Such a threat is made.", "false": "No such threat is made."},
+      "true_at": 0.6,
+      "false_at": 0.3
+    }
+  },
+  "switch": {
+    "outputs": ["auto_refund", "store_credit", "human_review", "manager_review"],
+    "arms": [
+      {"id": "threat", "when": {"gate": "threat"}, "output": "human_review", "reason_code": "THREAT"},
+      {"id": "damaged_or_late",
+       "when": {"all": [{"not": {"gate": "threat"}}, {"gate": "reason", "in": ["damaged", "late"]}]},
+       "output": "auto_refund", "reason_code": "SELLER_FAULT"},
+      {"id": "changed_mind", "when": {"gate": "reason", "is": "changed_mind"},
+       "output": "store_credit", "reason_code": "CHANGED_MIND"}
+    ],
+    "default": "human_review",
+    "on_unknown": "human_review"
+  }
+}

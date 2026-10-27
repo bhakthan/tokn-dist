@@ -1,0 +1,7 @@
+{
+  "verdict": "approve-with-conditions",
+  "reviewer": "independent-reviewer",
+  "conditions": [
+    "Archive logs older than 7 days before the first cleanup run."
+  ]
+}

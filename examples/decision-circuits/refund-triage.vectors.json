@@ -1,0 +1,66 @@
+[
+  {
+    "name": "damaged_item_auto_refund",
+    "answers": {
+      "reason": {"type": "choice", "choice": "damaged", "confidence": 0.9,
+                 "probabilities": {"damaged": 0.85, "late": 0.05, "changed_mind": 0.05, "other": 0.05}},
+      "threat": {"type": "noul", "noul": 0.05}
+    },
+    "expect": "auto_refund",
+    "expect_arm": "damaged_or_late"
+  },
+  {
+    "name": "changed_mind_store_credit",
+    "answers": {
+      "reason": {"type": "choice", "choice": "changed_mind", "confidence": 0.9,
+                 "probabilities": {"damaged": 0.05, "late": 0.05, "changed_mind": 0.85, "other": 0.05}},
+      "threat": {"type": "noul", "noul": 0.1}
+    },
+    "expect": "store_credit",
+    "expect_arm": "changed_mind"
+  },
+  {
+    "name": "chargeback_threat_to_human",
+    "answers": {
+      "reason": {"type": "choice", "choice": "late", "confidence": 0.9,
+                 "probabilities": {"damaged": 0.05, "late": 0.85, "changed_mind": 0.05, "other": 0.05}},
+      "threat": {"type": "noul", "noul": 0.95}
+    },
+    "expect": "human_review",
+    "expect_arm": "threat"
+  },
+  {
+    "name": "borderline_threat_abstains",
+    "answers": {
+      "reason": {"type": "choice", "choice": "damaged", "confidence": 0.9,
+                 "probabilities": {"damaged": 0.85, "late": 0.05, "changed_mind": 0.05, "other": 0.05}},
+      "threat": {"type": "noul", "noul": 0.45}
+    },
+    "expect": "human_review"
+  },
+  {
+    "name": "unclear_reason_abstains",
+    "answers": {
+      "reason": {"type": "choice", "choice": "damaged", "confidence": 0.9,
+                 "probabilities": {"damaged": 0.45, "late": 0.40, "changed_mind": 0.10, "other": 0.05}},
+      "threat": {"type": "noul", "noul": 0.05}
+    },
+    "expect": "human_review"
+  },
+  {
+    "name": "other_reason_defaults_to_human",
+    "answers": {
+      "reason": {"type": "choice", "choice": "other", "confidence": 0.9,
+                 "probabilities": {"damaged": 0.05, "late": 0.05, "changed_mind": 0.05, "other": 0.85}},
+      "threat": {"type": "noul", "noul": 0.05}
+    },
+    "expect": "human_review"
+  },
+  {
+    "name": "large_order_forced_to_manager",
+    "state": {"order_total": 900, "message": "The blender arrived cracked."},
+    "answers": {},
+    "expect": "manager_review",
+    "expect_pre_guard": "large_order"
+  }
+]

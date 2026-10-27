@@ -1,0 +1,41 @@
+{
+  "schema": "tokn.decision-circuit/1",
+  "id": "refund-triage",
+  "version": "0.1.0",
+  "description": "First draft of the refund triage circuit. It has three mistakes for tokn circuit analyze to find.",
+  "gates": {
+    "reason": {
+      "type": "choice",
+      "instructions": "Why does the customer want a refund?",
+      "criteria": {
+        "damaged": "The item arrived broken, faulty or not as described.",
+        "late": "The order arrived late or never arrived.",
+        "changed_mind": "The customer no longer wants the item.",
+        "other": "Any other reason."
+      },
+      "min_confidence": 0.6
+    },
+    "threat": {
+      "type": "noul",
+      "instructions": "Does the customer threaten a chargeback, legal action or public complaint?",
+      "criteria": {"true": "Such a threat is made.", "false": "No such threat is made."},
+      "true_at": 0.5,
+      "false_at": 0.5
+    }
+  },
+  "switch": {
+    "outputs": ["auto_refund", "store_credit", "partial_refund", "human_review"],
+    "arms": [
+      {"id": "threat", "when": {"gate": "threat"}, "output": "human_review", "reason_code": "THREAT"},
+      {"id": "damaged_or_late",
+       "when": {"all": [{"not": {"gate": "threat"}}, {"gate": "reason", "in": ["damaged", "late"]}]},
+       "output": "auto_refund", "reason_code": "SELLER_FAULT"},
+      {"id": "late_only", "when": {"gate": "reason", "is": "late"},
+       "output": "partial_refund", "reason_code": "LATE"},
+      {"id": "changed_mind", "when": {"gate": "reason", "is": "changed_mind"},
+       "output": "store_credit", "reason_code": "CHANGED_MIND"}
+    ],
+    "default": "human_review",
+    "on_unknown": "human_review"
+  }
+}

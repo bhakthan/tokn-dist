@@ -1,0 +1,21 @@
+{
+  "circuit_id": "refund-triage",
+  "circuit_version": "1.0.0",
+  "circuit_hash": "sha256:cf84e8598d5ffbbd3d8121f4a53f2ff8470bcdb8aa0f3f7facc733196885aeed",
+  "gates": {
+    "reason": {"level": "true", "stage": 0,
+               "answer": {"type": "choice", "choice": "damaged", "confidence": 0.9,
+                          "probabilities": {"damaged": 0.85, "late": 0.05, "changed_mind": 0.05, "other": 0.05}}},
+    "threat": {"level": "unknown", "stage": 0, "reason": "noise_band",
+               "answer": {"type": "noul", "noul": 0.45}}
+  },
+  "arms": [{"id": "threat", "level": "unknown"}],
+  "output": "human_review",
+  "reason_code": "UNKNOWN_ABSTAIN",
+  "abstained": true,
+  "requests": 1,
+  "usage": {},
+  "latency_ms": 0,
+  "advisory": true,
+  "status": "ABSTAIN"
+}
