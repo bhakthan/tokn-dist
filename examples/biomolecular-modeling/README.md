@@ -12,6 +12,9 @@ For Chai-1, ESM C embeddings and OpenBind-0, see
 [additional adapters](additional-adapters/README.md).
 ProteinMPNN, RFdiffusion and the seven genomic kits have separate CLI-only
 [design and genomics examples](design-and-genomics/README.md), not Boltz permissions.
+For GPU-free next-action recommendations and offline action-label benchmarks,
+see [shadow routing](shadow-routing/README.md) (v0.3.71+); it never runs or
+approves a scientific job.
 
 ## 1. Inspect the real catalog
 

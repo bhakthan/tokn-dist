@@ -1,0 +1,33 @@
+{
+  "schema": "tokn.biomol-next-action/1",
+  "policy": "recorded_replay",
+  "allowed": ["boltz2", "chai1", "openfold3"],
+  "cases": [
+    {
+      "task": "prediction", "chain_count": 1, "length_band": "le256",
+      "predictors": [
+        {"adapter": "boltz2", "mode": "off", "outcome": "completed", "acceptance": "held_unvalidated", "parity": "not_verified", "provenance": "synthetic", "metrics_present": true}
+      ]
+    },
+    {
+      "task": "prediction", "chain_count": 1, "length_band": "le256",
+      "predictors": [
+        {"adapter": "boltz2", "mode": "off", "outcome": "completed", "acceptance": "held_unvalidated", "parity": "not_verified", "provenance": "synthetic", "metrics_present": true}
+      ]
+    }
+  ],
+  "recorded": [
+    {
+      "case_index": 0,
+      "answers": {
+        "next_step": {
+          "type": "choice",
+          "choice": "human_review",
+          "confidence": 0.99,
+          "probabilities": {"human_review": 0.99, "consider_predictor": 0.01}
+        }
+      }
+    },
+    {"case_index": 1, "refused": ["next_step"]}
+  ]
+}

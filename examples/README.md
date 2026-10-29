@@ -88,6 +88,7 @@ New to TOKN? Start with [first-ten-minutes](first-ten-minutes/README.md).
 | [biomolecular-modeling](biomolecular-modeling/README.md) | Inspect the experimental Boltz-2 catalog, reproduce a refused preflight without a GPU, then prepare a future externally reviewed protein-only container run | none for catalog/diagnostics; Linux GPU/Docker and reviewed staged artifacts for execution |
 | [protein prediction and embeddings](biomolecular-modeling/additional-adapters/README.md) | Separate Chai-1, ESM C and OpenBind-0 selectors; GPU-free refused preflights, not fabricated inference | none for diagnostics; separately staged and reviewed GPU execution |
 | [design and genomic models](biomolecular-modeling/design-and-genomics/README.md) | ProteinMPNN, RFdiffusion and seven CLI-only genomic profiles; target-free refused preflights and private-evidence boundaries | none for diagnostics; RFdiffusion3 execution remains held |
+| [biomolecular shadow routing](biomolecular-modeling/shadow-routing/README.md) | Synthetic offline next-action advice, typed decision replay and holdout routing benchmarks; no model execution or scientific acceptance | none |
 
 ## `decision-council/` — several decision models, one council
 

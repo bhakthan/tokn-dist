@@ -1,0 +1,16 @@
+{
+  "schema": "tokn.biomol-next-action/1",
+  "policy": "rules",
+  "allowed": ["boltz2", "chai1", "openfold3"],
+  "cases": [
+    {"task": "prediction", "chain_count": 1, "length_band": "le256", "predictors": []},
+    {
+      "task": "prediction",
+      "chain_count": 1,
+      "length_band": "le256",
+      "predictors": [
+        {"adapter": "boltz2", "mode": "off", "outcome": "completed", "acceptance": "held_unvalidated", "parity": "not_verified", "provenance": "synthetic", "metrics_present": true}
+      ]
+    }
+  ]
+}
