@@ -459,6 +459,10 @@
     "2026-10-27": {
       "count": 38,
       "uniques": 16
+    },
+    "2026-10-28": {
+      "count": 58,
+      "uniques": 23
     }
   },
   "downloads_daily": {
@@ -563,7 +567,8 @@
     "2026-10-25": 0,
     "2026-10-26": 0,
     "2026-10-27": 0,
-    "2026-10-28": 0
+    "2026-10-28": 0,
+    "2026-10-29": 0
   },
   "downloads_snapshots": {
     "2026-07-18": {
@@ -1781,6 +1786,18 @@
         "tokn_windows_amd64.exe": 34
       },
       "total": 171
+    },
+    "2026-10-29": {
+      "assets": {
+        "SHA256SUMS": 36,
+        "SHA256SUMS.sig": 23,
+        "tokn_darwin_amd64": 17,
+        "tokn_darwin_arm64": 17,
+        "tokn_linux_amd64": 27,
+        "tokn_linux_arm64": 17,
+        "tokn_windows_amd64.exe": 34
+      },
+      "total": 171
     }
   },
   "downloads_state": {
@@ -1815,6 +1832,18 @@
   },
   "paths": [
     {
+      "count": 10,
+      "path": "/bhakthan/tokn-dist/tree/main",
+      "title": "/tree/main",
+      "uniques": 1
+    },
+    {
+      "count": 10,
+      "path": "/bhakthan/tokn-dist/tree/main/examples",
+      "title": "/tree/main/examples",
+      "uniques": 1
+    },
+    {
       "count": 8,
       "path": "/bhakthan/tokn-dist/releases",
       "title": "/releases",
@@ -1822,32 +1851,20 @@
     },
     {
       "count": 7,
-      "path": "/bhakthan/tokn-dist/tree/main",
-      "title": "/tree/main",
-      "uniques": 1
-    },
-    {
-      "count": 7,
-      "path": "/bhakthan/tokn-dist/tree/main/examples",
-      "title": "/tree/main/examples",
-      "uniques": 1
-    },
-    {
-      "count": 6,
       "path": "/bhakthan/tokn-dist",
       "title": "Overview",
+      "uniques": 1
+    },
+    {
+      "count": 5,
+      "path": "/bhakthan/tokn-dist/tree/main/examples/biomolecular-modeling",
+      "title": "/tree/main/examples/biomolecular-modeling",
       "uniques": 1
     },
     {
       "count": 3,
       "path": "/bhakthan/tokn-dist/releases/tag/v0.3.69",
       "title": "/releases/tag/v0.3.69",
-      "uniques": 1
-    },
-    {
-      "count": 3,
-      "path": "/bhakthan/tokn-dist/tree/main/examples/biomolecular-modeling",
-      "title": "/tree/main/examples/biomolecular-modeling",
       "uniques": 1
     },
     {
@@ -1863,27 +1880,27 @@
       "uniques": 1
     },
     {
-      "count": 1,
-      "path": "/bhakthan/tokn-dist/blob/main/GETTING_STARTED.md",
-      "title": "/blob/main/GETTING_STARTED.md",
+      "count": 2,
+      "path": "/bhakthan/tokn-dist/releases/tag/v0.3.70",
+      "title": "/releases/tag/v0.3.70",
       "uniques": 1
     },
     {
       "count": 1,
-      "path": "/bhakthan/tokn-dist/blob/main/examples/README.md",
-      "title": "/blob/main/examples/README.md",
+      "path": "/bhakthan/tokn-dist/blob/main/GETTING_STARTED.md",
+      "title": "/blob/main/GETTING_STARTED.md",
       "uniques": 1
     }
   ],
   "referrers": [
     {
-      "count": 2,
+      "count": 6,
       "referrer": "github.com",
       "uniques": 1
     }
   ],
   "repo": "bhakthan/tokn-dist",
-  "updated_at": "2026-10-28T13:04:22.694438+00:00",
+  "updated_at": "2026-10-29T13:10:51.384349+00:00",
   "views_daily": {
     "2026-07-05": {
       "count": 0,
@@ -2343,6 +2360,10 @@
     },
     "2026-10-27": {
       "count": 28,
+      "uniques": 1
+    },
+    "2026-10-28": {
+      "count": 12,
       "uniques": 1
     }
   }
