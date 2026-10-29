@@ -1,6 +1,6 @@
 # Protein-prediction decisions without a GPU
 
-Requires **TOKN v0.3.71 or newer**. These examples use synthetic operational
+Requires **TOKN v0.3.72 or newer**. These examples use synthetic operational
 metadata, not protein sequences, scientific outputs or measured GPU performance.
 No GPU, Docker, Python, weights, credentials, trial or network is needed.
 Only the installed TOKN executable is required: check `Get-Command tokn` in
