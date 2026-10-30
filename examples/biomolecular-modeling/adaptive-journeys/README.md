@@ -5,6 +5,9 @@ protein-prediction workflow exercises**. They use no sequences, structures,
 biological scores or real measured GPU results. The goal is to make defensible
 next-action decisions, not to establish that a protein has folded correctly.
 
+The native Windows federation discovery and diagnostic instructions below
+require **v0.3.74+**; the offline journeys still work with v0.3.73.
+
 The beginner, intermediate and research journeys differ in their starting
 support, response patterns, remediation and evaluation work. They are not
 three versions of the same explanation. **All three retain exactly the same
@@ -252,9 +255,21 @@ and costs no model call:
 tokn biomol journey peers
 ```
 
-The report names `claude-code`, `codex` and `copilot-cli`, installation status
-and install guidance. `authentication: not_probed` is deliberate: an executable
-on PATH does not prove a working login, compatible version or model access.
+The report names `claude-code`, `codex` and `copilot-cli`, installation status,
+launcher kind, eligibility, full requirements and failure remedies.
+`eligibility: launcher_resolved` means a supported executable was found, **not**
+that its version, restriction flags, credentials or model access were validated.
+`authentication: not_probed` remains deliberate. Discovery starts no processes.
+
+On Windows, TOKN resolves the official Copilot package registration and its
+declared alias to a regular native executable instead of executing the alias.
+It can also locate the verified npm package's native binary. Earlier unsafe
+PATH matches do not hide a supported later installation.
+The package's registered version is **not** treated as the executable version:
+the real version/flag check occurs only during consented preflight.
+Package metadata is installation information, not an executable-signature
+attestation. A resolved executable can be in a user-writable directory; use
+only trusted installations, as with any CLI on PATH.
 
 External calls are optional and **not part of offline demo/replay**. They need
 all of: a compatible trusted CLI; its runtime (Node/npm if installed through
@@ -309,10 +324,12 @@ Copilot's OS credential store may be used; file-based login configurations
 are not imported into its empty home. Authentication compatibility varies.
 Metadata-only help/version checks admit Claude 2.1.248+ and Copilot 1.0.105+
 within those major/minor series when the required restriction flags exist.
-Windows `.cmd`/script shims and non-regular executable aliases are refused.
-This includes the Windows winget/MSIX Copilot app-execution alias and VS Code
-shim directories: use a trusted regular executable, not those wrappers.
+Windows `.cmd`/script shims and VS Code shim directories are never executed.
+Official winget/MSIX Copilot aliases may resolve to their registered native
+executable; unsupported or unverifiable launchers remain held.
 Unix symlinked installations are resolved before regular-file admission.
+Unix npm/script launchers also require their detected interpreter, including
+Node.js, before a metadata process can start.
 New major/minor versions remain held until their restriction profile is
 reviewed; installing an update does not silently relax tool restrictions.
 **Codex is discovered but execution is held:** a universal tool-free profile
@@ -338,6 +355,43 @@ acceptance. Automatic selection with no eligible peers produces
 absent or ineligible peer fails. `credential_required` means Claude needs its
 API key; `restriction_unverified` means the executable/profile was not admitted.
 `--air-gap` refuses external calls before any peer launch.
+
+### Diagnose the hold before changing anything
+
+```powershell
+$peers = @(tokn biomol journey peers | ConvertFrom-Json)
+if ($LASTEXITCODE -ne 0) { throw "Peer discovery failed" }
+$peers | Select-Object name, installed, launcher, eligibility, authentication, reason, remedy
+foreach ($peer in $peers) {
+    "Requirements for $($peer.name):"
+    $peer.requirements
+}
+```
+
+```sh
+tokn biomol journey peers
+```
+
+**Interpret the result before consenting.** With no supported CLI installed,
+`not_installed` is a useful diagnostic, not a failed protein-prediction run.
+With a supported Windows Copilot package, expect `installed: true`,
+`launcher: windows_package` and `eligibility: launcher_resolved`, while
+`authentication` remains `not_probed`. An npm-native or other supported
+installation can report a different launcher kind. None of these results
+requires a GPU or authorizes a vendor call. Complete the reported prerequisites
+before the separate, explicitly consented `federate` command above.
+
+| Status | Meaning and next step |
+|---|---|
+| `not_installed` | The peer was not found; use its reported OS-specific native-install guidance. |
+| `unsupported_launcher` | A script/shim or unverifiable target was found; use a supported native installation, not a permission bypass. |
+| `runtime_missing` | The script's interpreter is missing; the remedy names the runtime and installation commands. |
+| `package_metadata_unavailable` | Windows could not provide the required official package metadata; repair/update the native installation. TOKN does not execute the alias as a fallback. |
+| `version_unverified` | The real executable is outside the verified profile or could not be checked; follow the remedy. A future major/minor release remains held pending profile review. |
+
+The reported `requirements` list CLI/runtime, verified version, credentials and
+network/TLS prerequisites together. Discovery checks no login, performs no
+install/update and sends no target-free round to a model.
 
 This example's live vendor calls are optional, not a prerequisite for learning.
 The shipped mechanism has fake-runner regression coverage; GPU or biological

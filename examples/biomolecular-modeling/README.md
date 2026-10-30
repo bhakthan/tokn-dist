@@ -19,6 +19,12 @@ For separate beginner, intermediate and research-level evidence/learning loops,
 see [adaptive journeys](adaptive-journeys/README.md) (v0.3.73+), including
 transfer-based support, independent policy challenges and optional
 consent-gated Claude/Copilot opinions; Codex is discovered but execution is held.
+For **v0.3.74+**, the journey's
+[federation walkthrough](adaptive-journeys/README.md#7-federated-claude-code-codex-and-copilot-second-opinions)
+also covers native Windows Copilot discovery and actionable launcher/runtime
+diagnostics. Start with `tokn biomol journey peers`: it launches no peer,
+checks no login and makes no model call. A resolved launcher is not permission
+to run a scientific job or proof that external authentication will work.
 For objective-first evidence plans and GPU-free reasoning checks, see the
 [uncertainty compiler](uncertainty-compiler/README.md) (v0.3.73+).
 

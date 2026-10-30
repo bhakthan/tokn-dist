@@ -9,6 +9,9 @@ PowerShell or `command -v tokn` in a POSIX shell.
 For different beginner/intermediate/research learning paths, bounded replay
 loops and optional installed-harness federation, continue with
 [adaptive journeys](../adaptive-journeys/README.md) (v0.3.73+).
+Its [federation diagnostics](../adaptive-journeys/README.md#diagnose-the-hold-before-changing-anything)
+require v0.3.74+ and inspect local launchers without a GPU, peer process,
+credential probe or model call.
 
 ## 1. Run the complete worked example
 
