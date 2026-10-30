@@ -1,0 +1,8 @@
+{
+  "schema": "tokn.biomol-uncertainty/1",
+  "objective": "structure_necessity",
+  "decision_requires_structure": false,
+  "allowed": ["boltz2", "chai1", "openfold3"],
+  "max_checks": 32,
+  "evidence": {"task":"prediction","chain_count":1,"length_band":"le256","predictors":[]}
+}

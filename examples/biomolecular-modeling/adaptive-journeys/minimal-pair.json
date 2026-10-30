@@ -1,0 +1,8 @@
+{
+  "schema":"tokn.biomol-journey/1","track":"intermediate","reference_basis":"rules_fixture",
+  "allowed":["boltz2","chai1","openfold3"],"limits":{"max_steps":6,"no_progress":3},
+  "rounds":[
+    {"family":101,"evidence":{"task":"prediction","chain_count":1,"length_band":"le256","predictors":[{"adapter":"boltz2","mode":"off","outcome":"completed","acceptance":"held_unvalidated","parity":"not_verified","provenance":"synthetic","metrics_present":false}]},"response":{"answer":{"action":"consider_predictor","adapter":"chai1"},"confidence_bps":9000,"revealed":false}},
+    {"family":101,"evidence":{"task":"prediction","chain_count":1,"length_band":"le256","predictors":[{"adapter":"boltz2","mode":"off","outcome":"completed","acceptance":"held_unvalidated","parity":"not_verified","provenance":"synthetic","metrics_present":true}]},"response":{"answer":{"action":"consider_predictor","adapter":"chai1"},"confidence_bps":6500,"revealed":false}}
+  ]
+}

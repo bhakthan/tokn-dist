@@ -1,0 +1,15 @@
+{
+  "schema": "tokn.biomol-uncertainty/1",
+  "objective": "audit_prediction_evidence",
+  "allowed": ["boltz2", "chai1", "openfold3"],
+  "max_checks": 32,
+  "evidence": {
+    "task": "prediction",
+    "chain_count": 1,
+    "length_band": "le256",
+    "predictors": [
+      {"adapter":"boltz2","mode":"off","outcome":"completed","acceptance":"held_unvalidated","parity":"not_verified","provenance":"synthetic","metrics_present":true},
+      {"adapter":"chai1","mode":"exact","outcome":"completed","acceptance":"held_unvalidated","parity":"not_verified","provenance":"synthetic","metrics_present":true}
+    ]
+  }
+}

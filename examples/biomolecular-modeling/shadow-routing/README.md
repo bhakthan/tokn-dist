@@ -6,6 +6,10 @@ No GPU, Docker, Python, weights, credentials, trial or network is needed.
 Only the installed TOKN executable is required: check `Get-Command tokn` in
 PowerShell or `command -v tokn` in a POSIX shell.
 
+For different beginner/intermediate/research learning paths, bounded replay
+loops and optional installed-harness federation, continue with
+[adaptive journeys](../adaptive-journeys/README.md) (v0.3.73+).
+
 ## 1. Run the complete worked example
 
 ```text

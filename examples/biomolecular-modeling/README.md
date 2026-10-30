@@ -15,6 +15,12 @@ ProteinMPNN, RFdiffusion and the seven genomic kits have separate CLI-only
 For GPU-free next-action recommendations and offline action-label benchmarks,
 see [shadow routing](shadow-routing/README.md) (v0.3.72+); it never runs or
 approves a scientific job.
+For separate beginner, intermediate and research-level evidence/learning loops,
+see [adaptive journeys](adaptive-journeys/README.md) (v0.3.73+), including
+transfer-based support, independent policy challenges and optional
+consent-gated Claude/Copilot opinions; Codex is discovered but execution is held.
+For objective-first evidence plans and GPU-free reasoning checks, see the
+[uncertainty compiler](uncertainty-compiler/README.md) (v0.3.73+).
 
 ## 1. Inspect the real catalog
 

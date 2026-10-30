@@ -1,0 +1,15 @@
+{
+  "schema": "tokn.biomol-journey/1",
+  "track": "beginner",
+  "reference_basis": "rules_fixture",
+  "allowed": ["boltz2", "chai1", "openfold3"],
+  "limits": {"max_steps": 20, "no_progress": 3},
+  "rounds": [
+    {"family": 1, "evidence": {"task":"prediction","chain_count":1,"length_band":"le256","predictors":[{"adapter":"boltz2","mode":"off","outcome":"completed","acceptance":"held_unvalidated","parity":"not_verified","provenance":"synthetic","metrics_present":false}]}, "response":{"answer":{"action":"collect_evidence"},"confidence_bps":5000,"revealed":true}},
+    {"family": 2, "evidence": {"task":"prediction","chain_count":1,"length_band":"le512","predictors":[{"adapter":"chai1","mode":"exact","outcome":"completed","acceptance":"held_unvalidated","parity":"not_verified","provenance":"synthetic","metrics_present":false}]}, "response":{"answer":{"action":"collect_evidence"},"confidence_bps":6000,"revealed":false}},
+    {"family": 3, "evidence": {"task":"prediction","chain_count":1,"length_band":"le256","predictors":[{"adapter":"openfold3","mode":"off","outcome":"completed","acceptance":"held_unvalidated","parity":"not_verified","provenance":"synthetic","metrics_present":false}]}, "response":{"answer":{"action":"collect_evidence"},"confidence_bps":6500,"revealed":false}},
+    {"family": 3, "evidence": {"task":"prediction","chain_count":1,"length_band":"le256","predictors":[{"adapter":"openfold3","mode":"off","outcome":"completed","acceptance":"held_unvalidated","parity":"not_verified","provenance":"synthetic","metrics_present":false}]}, "response":{"answer":{"action":"collect_evidence"},"confidence_bps":9000,"revealed":false}},
+    {"family": 4, "evidence": {"task":"cofolding","chain_count":2,"length_band":"le256","predictors":[{"adapter":"chai1","mode":"off","outcome":"completed","acceptance":"held_unvalidated","parity":"not_verified","provenance":"synthetic","metrics_present":false}]}, "response":{"answer":{"action":"collect_evidence"},"confidence_bps":7000,"revealed":false}},
+    {"family": 5, "evidence": {"task":"prediction","chain_count":1,"length_band":"le1024","predictors":[{"adapter":"boltz2","mode":"exact","outcome":"completed","acceptance":"held_unvalidated","parity":"not_verified","provenance":"synthetic","metrics_present":false}]}, "response":{"answer":{"action":"collect_evidence"},"confidence_bps":7500,"revealed":false}}
+  ]
+}

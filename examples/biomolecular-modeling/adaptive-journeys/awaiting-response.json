@@ -1,0 +1,7 @@
+{
+  "schema":"tokn.biomol-journey/1","track":"beginner","reference_basis":"rules_fixture",
+  "allowed":["boltz2","chai1","openfold3"],"limits":{"max_steps":4,"no_progress":3},
+  "rounds":[
+    {"family":301,"evidence":{"task":"prediction","chain_count":1,"length_band":"le256","predictors":[]}}
+  ]
+}

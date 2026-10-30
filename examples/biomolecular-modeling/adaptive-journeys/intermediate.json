@@ -1,0 +1,13 @@
+{
+  "schema": "tokn.biomol-journey/1",
+  "track": "intermediate",
+  "reference_basis": "rules_fixture",
+  "allowed": ["boltz2", "chai1", "openfold3"],
+  "limits": {"max_steps": 20, "no_progress": 3},
+  "rounds": [
+    {"family":11,"evidence":{"task":"prediction","chain_count":1,"length_band":"le256","predictors":[{"adapter":"boltz2","mode":"off","outcome":"completed","acceptance":"held_unvalidated","parity":"not_verified","provenance":"synthetic","metrics_present":true},{"adapter":"chai1","mode":"exact","outcome":"completed","acceptance":"held_unvalidated","parity":"not_verified","provenance":"synthetic","metrics_present":true}]},"response":{"answer":{"action":"consider_predictor","adapter":"openfold3"},"confidence_bps":9000,"revealed":false}},
+    {"family":12,"evidence":{"task":"prediction","chain_count":1,"length_band":"le512","predictors":[{"adapter":"boltz2","mode":"off","outcome":"completed","acceptance":"held_unvalidated","parity":"not_verified","provenance":"synthetic","metrics_present":true},{"adapter":"openfold3","mode":"exact","outcome":"completed","acceptance":"held_unvalidated","parity":"not_verified","provenance":"synthetic","metrics_present":true}]},"response":{"answer":{"action":"consider_predictor","adapter":"chai1"},"confidence_bps":8500,"revealed":false}},
+    {"family":13,"evidence":{"task":"cofolding","chain_count":2,"length_band":"le256","predictors":[{"adapter":"chai1","mode":"off","outcome":"completed","acceptance":"held_unvalidated","parity":"not_verified","provenance":"synthetic","metrics_present":true},{"adapter":"openfold3","mode":"exact","outcome":"completed","acceptance":"held_unvalidated","parity":"not_verified","provenance":"synthetic","metrics_present":true}]},"response":{"answer":{"action":"compare_existing"},"confidence_bps":6000,"revealed":false}},
+    {"family":14,"evidence":{"task":"prediction","chain_count":1,"length_band":"le256","predictors":[{"adapter":"boltz2","mode":"exact","outcome":"completed","acceptance":"held_unvalidated","parity":"not_verified","provenance":"synthetic","metrics_present":true},{"adapter":"chai1","mode":"off","outcome":"completed","acceptance":"held_unvalidated","parity":"not_verified","provenance":"synthetic","metrics_present":true}]},"response":{"answer":{"action":"compare_existing"},"confidence_bps":7000,"revealed":false}}
+  ]
+}

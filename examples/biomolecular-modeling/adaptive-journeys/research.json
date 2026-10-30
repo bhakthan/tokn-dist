@@ -1,0 +1,21 @@
+{
+  "schema": "tokn.biomol-journey/1",
+  "track": "research",
+  "reference_basis": "synthetic_independent_fixture",
+  "allowed": ["boltz2", "chai1", "openfold3"],
+  "limits": {"max_steps": 20, "no_progress": 3},
+  "rounds": [
+    {"family":21,"evidence":{"task":"prediction","chain_count":1,"length_band":"le256","predictors":[]},"reference":{"action":"human_review"},"response":{"answer":{"action":"human_review"},"confidence_bps":7000,"revealed":false}},
+    {"family":22,"evidence":{"task":"prediction","chain_count":1,"length_band":"le256","predictors":[{"adapter":"boltz2","mode":"off","outcome":"failed","acceptance":"held_unvalidated","parity":"not_verified","provenance":"synthetic","metrics_present":false}]},"reference":{"action":"human_review"},"response":{"answer":{"action":"human_review"},"confidence_bps":7500,"revealed":false}},
+    {"family":23,"evidence":{"task":"prediction","chain_count":1,"length_band":"le2048","predictors":[]},"reference":{"action":"abstain"},"response":{"answer":{"action":"abstain"},"confidence_bps":7500,"revealed":false}}
+  ],
+  "policy_dataset":{
+    "schema":"tokn.biomol-evidence/1","provenance":"synthetic","reference_basis":"synthetic_fixture",
+    "split":{"strategy":"family_time","cutoff_bucket":1},"allowed":["boltz2","chai1","openfold3"],
+    "cases":[
+      {"id":1,"family":1,"time_bucket":1,"partition":"development","evidence":{"task":"prediction","chain_count":1,"length_band":"le256","predictors":[{"adapter":"boltz2","mode":"off","outcome":"completed","acceptance":"held_unvalidated","parity":"not_verified","provenance":"synthetic","metrics_present":true,"gpu_seconds":10},{"adapter":"chai1","mode":"off","outcome":"completed","acceptance":"held_unvalidated","parity":"not_verified","provenance":"synthetic","metrics_present":true,"gpu_seconds":20},{"adapter":"openfold3","mode":"off","outcome":"completed","acceptance":"held_unvalidated","parity":"not_verified","provenance":"synthetic","metrics_present":true,"gpu_seconds":30}]},"reference":{"action":"compare_existing"}},
+      {"id":2,"family":2,"time_bucket":2,"partition":"holdout","evidence":{"task":"prediction","chain_count":1,"length_band":"le256","predictors":[]},"reference":{"action":"human_review"},"recorded":{"action":"human_review","decision_cost_usd":0}},
+      {"id":3,"family":3,"time_bucket":2,"partition":"holdout","evidence":{"task":"prediction","chain_count":1,"length_band":"le2048","predictors":[]},"reference":{"action":"abstain"},"recorded":{"action":"abstain"}}
+    ]
+  }
+}
