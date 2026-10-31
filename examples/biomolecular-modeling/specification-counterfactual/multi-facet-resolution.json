@@ -1,0 +1,358 @@
+{
+  "schema": "tokn.biomol-research/1",
+  "basis": "synthetic",
+  "facets": [
+    "stoichiometry",
+    "ligand_context",
+    "state_context"
+  ],
+  "specifications": [
+    {
+      "id": 1,
+      "values": [
+        {
+          "facet": "stoichiometry",
+          "alternative": "a"
+        },
+        {
+          "facet": "ligand_context",
+          "alternative": "a"
+        },
+        {
+          "facet": "state_context",
+          "alternative": "a"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "values": [
+        {
+          "facet": "stoichiometry",
+          "alternative": "a"
+        },
+        {
+          "facet": "ligand_context",
+          "alternative": "a"
+        },
+        {
+          "facet": "state_context",
+          "alternative": "b"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "values": [
+        {
+          "facet": "stoichiometry",
+          "alternative": "a"
+        },
+        {
+          "facet": "ligand_context",
+          "alternative": "b"
+        },
+        {
+          "facet": "state_context",
+          "alternative": "a"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "values": [
+        {
+          "facet": "stoichiometry",
+          "alternative": "a"
+        },
+        {
+          "facet": "ligand_context",
+          "alternative": "b"
+        },
+        {
+          "facet": "state_context",
+          "alternative": "b"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "values": [
+        {
+          "facet": "stoichiometry",
+          "alternative": "b"
+        },
+        {
+          "facet": "ligand_context",
+          "alternative": "a"
+        },
+        {
+          "facet": "state_context",
+          "alternative": "a"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "values": [
+        {
+          "facet": "stoichiometry",
+          "alternative": "b"
+        },
+        {
+          "facet": "ligand_context",
+          "alternative": "a"
+        },
+        {
+          "facet": "state_context",
+          "alternative": "b"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "values": [
+        {
+          "facet": "stoichiometry",
+          "alternative": "b"
+        },
+        {
+          "facet": "ligand_context",
+          "alternative": "b"
+        },
+        {
+          "facet": "state_context",
+          "alternative": "a"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "values": [
+        {
+          "facet": "stoichiometry",
+          "alternative": "b"
+        },
+        {
+          "facet": "ligand_context",
+          "alternative": "b"
+        },
+        {
+          "facet": "state_context",
+          "alternative": "b"
+        }
+      ]
+    }
+  ],
+  "predictors": [
+    1,
+    2
+  ],
+  "blocks": [
+    {
+      "family": 1,
+      "lineage": 1,
+      "observations": [
+        {
+          "specification": 1,
+          "predictor": 1,
+          "predicate": "absent",
+          "global_class": 1
+        },
+        {
+          "specification": 1,
+          "predictor": 2,
+          "predicate": "absent",
+          "global_class": 1
+        },
+        {
+          "specification": 2,
+          "predictor": 1,
+          "predicate": "absent",
+          "global_class": 2
+        },
+        {
+          "specification": 2,
+          "predictor": 2,
+          "predicate": "absent",
+          "global_class": 2
+        },
+        {
+          "specification": 3,
+          "predictor": 1,
+          "predicate": "present",
+          "global_class": 1
+        },
+        {
+          "specification": 3,
+          "predictor": 2,
+          "predicate": "present",
+          "global_class": 1
+        },
+        {
+          "specification": 4,
+          "predictor": 1,
+          "predicate": "present",
+          "global_class": 2
+        },
+        {
+          "specification": 4,
+          "predictor": 2,
+          "predicate": "present",
+          "global_class": 2
+        },
+        {
+          "specification": 5,
+          "predictor": 1,
+          "predicate": "absent",
+          "global_class": 1
+        },
+        {
+          "specification": 5,
+          "predictor": 2,
+          "predicate": "absent",
+          "global_class": 1
+        },
+        {
+          "specification": 6,
+          "predictor": 1,
+          "predicate": "absent",
+          "global_class": 2
+        },
+        {
+          "specification": 6,
+          "predictor": 2,
+          "predicate": "absent",
+          "global_class": 2
+        },
+        {
+          "specification": 7,
+          "predictor": 1,
+          "predicate": "present",
+          "global_class": 1
+        },
+        {
+          "specification": 7,
+          "predictor": 2,
+          "predicate": "present",
+          "global_class": 1
+        },
+        {
+          "specification": 8,
+          "predictor": 1,
+          "predicate": "present",
+          "global_class": 2
+        },
+        {
+          "specification": 8,
+          "predictor": 2,
+          "predicate": "present",
+          "global_class": 2
+        }
+      ]
+    },
+    {
+      "family": 2,
+      "lineage": 2,
+      "observations": [
+        {
+          "specification": 1,
+          "predictor": 1,
+          "predicate": "absent",
+          "global_class": 1
+        },
+        {
+          "specification": 1,
+          "predictor": 2,
+          "predicate": "absent",
+          "global_class": 1
+        },
+        {
+          "specification": 2,
+          "predictor": 1,
+          "predicate": "absent",
+          "global_class": 2
+        },
+        {
+          "specification": 2,
+          "predictor": 2,
+          "predicate": "absent",
+          "global_class": 2
+        },
+        {
+          "specification": 3,
+          "predictor": 1,
+          "predicate": "present",
+          "global_class": 1
+        },
+        {
+          "specification": 3,
+          "predictor": 2,
+          "predicate": "present",
+          "global_class": 1
+        },
+        {
+          "specification": 4,
+          "predictor": 1,
+          "predicate": "present",
+          "global_class": 2
+        },
+        {
+          "specification": 4,
+          "predictor": 2,
+          "predicate": "present",
+          "global_class": 2
+        },
+        {
+          "specification": 5,
+          "predictor": 1,
+          "predicate": "absent",
+          "global_class": 1
+        },
+        {
+          "specification": 5,
+          "predictor": 2,
+          "predicate": "absent",
+          "global_class": 1
+        },
+        {
+          "specification": 6,
+          "predictor": 1,
+          "predicate": "absent",
+          "global_class": 2
+        },
+        {
+          "specification": 6,
+          "predictor": 2,
+          "predicate": "absent",
+          "global_class": 2
+        },
+        {
+          "specification": 7,
+          "predictor": 1,
+          "predicate": "present",
+          "global_class": 1
+        },
+        {
+          "specification": 7,
+          "predictor": 2,
+          "predicate": "present",
+          "global_class": 1
+        },
+        {
+          "specification": 8,
+          "predictor": 1,
+          "predicate": "present",
+          "global_class": 2
+        },
+        {
+          "specification": 8,
+          "predictor": 2,
+          "predicate": "present",
+          "global_class": 2
+        }
+      ]
+    }
+  ],
+  "max_comparisons": 200000
+}

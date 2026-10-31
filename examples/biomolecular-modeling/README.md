@@ -27,6 +27,10 @@ checks no login and makes no model call. A resolved launcher is not permission
 to run a scientific job or proof that external authentication will work.
 For objective-first evidence plans and GPU-free reasoning checks, see the
 [uncertainty compiler](uncertainty-compiler/README.md) (v0.3.73+).
+To test whether an underdetermined folding *question* — rather than the
+predictor — flips the decision you care about, see the
+[specification-counterfactual assay](specification-counterfactual/README.md)
+(v0.3.75+). It is GPU-free and descriptive, not biological validation.
 
 ## 1. Inspect the real catalog
 

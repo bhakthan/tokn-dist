@@ -1,0 +1,88 @@
+{
+  "schema": "tokn.biomol-research/1",
+  "basis": "synthetic",
+  "facets": [
+    "stoichiometry"
+  ],
+  "specifications": [
+    {
+      "id": 1,
+      "values": [
+        {
+          "facet": "stoichiometry",
+          "alternative": "a"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "values": [
+        {
+          "facet": "stoichiometry",
+          "alternative": "b"
+        }
+      ]
+    }
+  ],
+  "predictors": [
+    1,
+    2
+  ],
+  "blocks": [
+    {
+      "family": 1,
+      "lineage": 1,
+      "observations": [
+        {
+          "specification": 1,
+          "predictor": 1,
+          "predicate": "absent",
+          "global_class": 1
+        },
+        {
+          "specification": 1,
+          "predictor": 2,
+          "predicate": "absent",
+          "global_class": 2
+        },
+        {
+          "specification": 2,
+          "predictor": 1,
+          "predicate": "present",
+          "global_class": 1
+        },
+        {
+          "specification": 2,
+          "predictor": 2,
+          "predicate": "present",
+          "global_class": 2
+        }
+      ]
+    },
+    {
+      "family": 2,
+      "lineage": 1,
+      "observations": [
+        {
+          "specification": 1,
+          "predictor": 1,
+          "predicate": "absent",
+          "global_class": 1
+        },
+        {
+          "specification": 1,
+          "predictor": 2,
+          "predicate": "absent",
+          "global_class": 2
+        },
+        {
+          "specification": 2,
+          "predictor": 1,
+          "predicate": "present",
+          "global_class": 1
+        }
+      ]
+    }
+  ],
+  "max_comparisons": 200000
+}

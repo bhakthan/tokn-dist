@@ -178,6 +178,9 @@ Do not turn the compiler's own recommendation into an “independent” scientif
 reference. Combine these exercises with the
 [adaptive journeys](../adaptive-journeys/README.md) for skill-specific support,
 confidence-error remediation and independent-fixture disagreements.
+Before planning evidence for disagreeing predictors, the
+[specification-counterfactual assay](../specification-counterfactual/README.md)
+(v0.3.75+) checks whether the question itself is underdetermined.
 
 The schema is `tokn.biomol-uncertainty/1`. Objectives are closed:
 `next_action`, `structure_necessity`, `audit_prediction_evidence`.

@@ -409,3 +409,6 @@ reviewed real labels, appropriate family/time separation, matched hardware,
 preregistered comparisons, drift/rollback controls and human interpretation.
 Real model execution still follows the separate
 [guarded staging and review procedure](../README.md#3-stage-an-actual-future-linux-gpu-environment).
+Research-track learners can test question underdetermination on their own
+declared records with the
+[specification-counterfactual assay](../specification-counterfactual/README.md) (v0.3.75+).
