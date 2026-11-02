@@ -475,6 +475,10 @@
     "2026-10-31": {
       "count": 31,
       "uniques": 16
+    },
+    "2026-11-01": {
+      "count": 28,
+      "uniques": 11
     }
   },
   "downloads_daily": {
@@ -583,7 +587,8 @@
     "2026-10-29": 0,
     "2026-10-30": 543,
     "2026-10-31": 27,
-    "2026-11-01": 7
+    "2026-11-01": 7,
+    "2026-11-02": 0
   },
   "downloads_snapshots": {
     "2026-07-18": {
@@ -1849,6 +1854,18 @@
         "tokn_windows_amd64.exe": 119
       },
       "total": 748
+    },
+    "2026-11-02": {
+      "assets": {
+        "SHA256SUMS": 118,
+        "SHA256SUMS.sig": 103,
+        "tokn_darwin_amd64": 98,
+        "tokn_darwin_arm64": 99,
+        "tokn_linux_amd64": 115,
+        "tokn_linux_arm64": 96,
+        "tokn_windows_amd64.exe": 119
+      },
+      "total": 748
     }
   },
   "downloads_state": {
@@ -1895,22 +1912,22 @@
       "uniques": 1
     },
     {
-      "count": 15,
+      "count": 17,
       "path": "/bhakthan/tokn-dist",
       "title": "Overview",
       "uniques": 3
     },
     {
       "count": 10,
-      "path": "/bhakthan/tokn-dist/releases",
-      "title": "/releases",
-      "uniques": 2
-    },
-    {
-      "count": 10,
       "path": "/bhakthan/tokn-dist/tree/main",
       "title": "/tree/main",
       "uniques": 1
+    },
+    {
+      "count": 7,
+      "path": "/bhakthan/tokn-dist/releases",
+      "title": "/releases",
+      "uniques": 2
     },
     {
       "count": 5,
@@ -1926,6 +1943,12 @@
     },
     {
       "count": 3,
+      "path": "/bhakthan/tokn-dist/graphs/traffic",
+      "title": "/graphs/traffic",
+      "uniques": 1
+    },
+    {
+      "count": 3,
       "path": "/bhakthan/tokn-dist/releases/tag/v0.3.69",
       "title": "/releases/tag/v0.3.69",
       "uniques": 1
@@ -1935,17 +1958,11 @@
       "path": "/bhakthan/tokn-dist/releases/tag/v0.3.72",
       "title": "/releases/tag/v0.3.72",
       "uniques": 1
-    },
-    {
-      "count": 2,
-      "path": "/bhakthan/tokn-dist/graphs/traffic",
-      "title": "/graphs/traffic",
-      "uniques": 1
     }
   ],
   "referrers": [
     {
-      "count": 10,
+      "count": 11,
       "referrer": "github.com",
       "uniques": 1
     },
@@ -1956,7 +1973,7 @@
     }
   ],
   "repo": "bhakthan/tokn-dist",
-  "updated_at": "2026-11-01T13:32:17.131939+00:00",
+  "updated_at": "2026-11-02T16:06:26.991467+00:00",
   "views_daily": {
     "2026-07-05": {
       "count": 0,
@@ -2432,6 +2449,10 @@
     },
     "2026-10-31": {
       "count": 7,
+      "uniques": 1
+    },
+    "2026-11-01": {
+      "count": 5,
       "uniques": 1
     }
   }
