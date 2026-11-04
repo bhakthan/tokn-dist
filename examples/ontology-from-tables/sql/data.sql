@@ -1,0 +1,201 @@
+-- Same rows as data/*.csv, in foreign-key order. Portable INSERTs.
+
+-- customers
+INSERT INTO customers (customer_id, full_name, email, city) VALUES (1, 'Ava Quinn', 'ava.quinn@example.com', 'Eastvale');
+INSERT INTO customers (customer_id, full_name, email, city) VALUES (2, 'Ben Reyes', 'ben.reyes@example.com', 'Northbridge');
+INSERT INTO customers (customer_id, full_name, email, city) VALUES (3, 'Cleo Ito', 'cleo.ito@example.com', 'Northbridge');
+INSERT INTO customers (customer_id, full_name, email, city) VALUES (4, 'Dev Quinn', 'dev.quinn@example.com', 'Northbridge');
+INSERT INTO customers (customer_id, full_name, email, city) VALUES (5, 'Eli Varga', 'eli.varga@example.com', 'Eastvale');
+INSERT INTO customers (customer_id, full_name, email, city) VALUES (6, 'Fay Hart', 'fay.hart@example.com', 'Northbridge');
+INSERT INTO customers (customer_id, full_name, email, city) VALUES (7, 'Gus Reyes', 'gus.reyes@example.com', 'Westmoor');
+INSERT INTO customers (customer_id, full_name, email, city) VALUES (8, 'Hana Ito', 'hana.ito@example.com', 'Eastvale');
+INSERT INTO customers (customer_id, full_name, email, city) VALUES (9, 'Ivo Ito', 'ivo.ito@example.com', 'Westmoor');
+INSERT INTO customers (customer_id, full_name, email, city) VALUES (10, 'Jun Hart', 'jun.hart@example.com', 'Northbridge');
+INSERT INTO customers (customer_id, full_name, email, city) VALUES (11, 'Kai Okafor', 'kai.okafor@example.com', 'Northbridge');
+INSERT INTO customers (customer_id, full_name, email, city) VALUES (12, 'Lena West', 'lena.west@example.com', 'Westmoor');
+INSERT INTO customers (customer_id, full_name, email, city) VALUES (13, 'Milo Hart', 'milo.hart@example.com', 'Eastvale');
+INSERT INTO customers (customer_id, full_name, email, city) VALUES (14, 'Nia Hart', 'nia.hart@example.com', 'Eastvale');
+
+-- vehicles
+INSERT INTO vehicles (vehicle_id, customer_id, make, model, model_year, plate) VALUES (101, 7, 'Halden', 'V2', 2016, 'WK-1007');
+INSERT INTO vehicles (vehicle_id, customer_id, make, model, model_year, plate) VALUES (102, 2, 'Mira', 'City', 2023, 'WK-1014');
+INSERT INTO vehicles (vehicle_id, customer_id, make, model, model_year, plate) VALUES (103, 9, 'Halden', 'V2', 2024, 'WK-1021');
+INSERT INTO vehicles (vehicle_id, customer_id, make, model, model_year, plate) VALUES (104, 2, 'Corvo', 'Atlas', 2023, 'WK-1028');
+INSERT INTO vehicles (vehicle_id, customer_id, make, model, model_year, plate) VALUES (105, 11, 'Mira', 'City', 2017, 'WK-1035');
+INSERT INTO vehicles (vehicle_id, customer_id, make, model, model_year, plate) VALUES (106, 2, 'Halden', 'V2', 2022, 'WK-1042');
+INSERT INTO vehicles (vehicle_id, customer_id, make, model, model_year, plate) VALUES (107, 10, 'Corvo', 'Sprint', 2014, 'WK-1049');
+INSERT INTO vehicles (vehicle_id, customer_id, make, model, model_year, plate) VALUES (108, 4, 'Mira', 'City', 2021, 'WK-1056');
+INSERT INTO vehicles (vehicle_id, customer_id, make, model, model_year, plate) VALUES (109, 7, 'Mira', 'City', 2019, 'WK-1063');
+INSERT INTO vehicles (vehicle_id, customer_id, make, model, model_year, plate) VALUES (110, 10, 'Halden', 'Terra', 2021, 'WK-1070');
+INSERT INTO vehicles (vehicle_id, customer_id, make, model, model_year, plate) VALUES (111, 5, 'Halden', 'V2', 2017, 'WK-1077');
+INSERT INTO vehicles (vehicle_id, customer_id, make, model, model_year, plate) VALUES (112, 12, 'Corvo', 'Atlas', 2017, 'WK-1084');
+INSERT INTO vehicles (vehicle_id, customer_id, make, model, model_year, plate) VALUES (113, 10, 'Corvo', 'Sprint', 2018, 'WK-1091');
+INSERT INTO vehicles (vehicle_id, customer_id, make, model, model_year, plate) VALUES (114, 8, 'Mira', 'City', 2019, 'WK-1098');
+INSERT INTO vehicles (vehicle_id, customer_id, make, model, model_year, plate) VALUES (115, 5, 'Halden', 'Terra', 2023, 'WK-1105');
+INSERT INTO vehicles (vehicle_id, customer_id, make, model, model_year, plate) VALUES (116, 2, 'Corvo', 'Sprint', 2022, 'WK-1112');
+INSERT INTO vehicles (vehicle_id, customer_id, make, model, model_year, plate) VALUES (117, 3, 'Halden', 'Terra', 2019, 'WK-1119');
+INSERT INTO vehicles (vehicle_id, customer_id, make, model, model_year, plate) VALUES (118, 8, 'Corvo', 'Atlas', 2020, 'WK-1126');
+INSERT INTO vehicles (vehicle_id, customer_id, make, model, model_year, plate) VALUES (119, 11, 'Corvo', 'Sprint', 2015, 'WK-1133');
+INSERT INTO vehicles (vehicle_id, customer_id, make, model, model_year, plate) VALUES (120, 10, 'Mira', 'City', 2019, 'WK-1140');
+
+-- technicians
+INSERT INTO technicians (technician_id, full_name, grade) VALUES (1, 'Fay Quinn', 'senior');
+INSERT INTO technicians (technician_id, full_name, grade) VALUES (2, 'Jun Sato', 'senior');
+INSERT INTO technicians (technician_id, full_name, grade) VALUES (3, 'Jun Sato', 'junior');
+INSERT INTO technicians (technician_id, full_name, grade) VALUES (4, 'Ben Ito', 'junior');
+INSERT INTO technicians (technician_id, full_name, grade) VALUES (5, 'Eli Sato', 'lead');
+INSERT INTO technicians (technician_id, full_name, grade) VALUES (6, 'Lena Ito', 'junior');
+INSERT INTO technicians (technician_id, full_name, grade) VALUES (7, 'Ava Patel', 'senior');
+
+-- work_order_status
+INSERT INTO work_order_status (status_code, label) VALUES ('OPEN', 'Open');
+INSERT INTO work_order_status (status_code, label) VALUES ('WAIT', 'Waiting for parts');
+INSERT INTO work_order_status (status_code, label) VALUES ('DONE', 'Completed');
+INSERT INTO work_order_status (status_code, label) VALUES ('CANC', 'Cancelled');
+
+-- suppliers
+INSERT INTO suppliers (supplier_id, supplier_name, contact_email, country_code) VALUES (1, 'Brightline Parts', 'orders@brightline.example', 'DE');
+INSERT INTO suppliers (supplier_id, supplier_name, contact_email, country_code) VALUES (2, 'Northwind Motors Supply', 'sales@northwind-supply.example', 'US');
+INSERT INTO suppliers (supplier_id, supplier_name, contact_email, country_code) VALUES (3, 'Kestrel Components', 'trade@kestrel.example', 'JP');
+INSERT INTO suppliers (supplier_id, supplier_name, contact_email, country_code) VALUES (4, 'Ridgeway Spares', 'hello@ridgeway.example', 'GB');
+
+-- parts
+INSERT INTO parts (part_id, part_name, unit_price, supplier_id) VALUES (201, 'Brake pad set', 118.60, 4);
+INSERT INTO parts (part_id, part_name, unit_price, supplier_id) VALUES (202, 'Oil filter', 55.52, 4);
+INSERT INTO parts (part_id, part_name, unit_price, supplier_id) VALUES (203, 'Air filter', 160.35, 3);
+INSERT INTO parts (part_id, part_name, unit_price, supplier_id) VALUES (204, 'Spark plug', 9.93, 4);
+INSERT INTO parts (part_id, part_name, unit_price, supplier_id) VALUES (205, 'Wiper blade', 67.85, 1);
+INSERT INTO parts (part_id, part_name, unit_price, supplier_id) VALUES (206, 'Battery 60Ah', 91.90, 2);
+INSERT INTO parts (part_id, part_name, unit_price, supplier_id) VALUES (207, 'Timing belt', 139.67, 2);
+INSERT INTO parts (part_id, part_name, unit_price, supplier_id) VALUES (208, 'Coolant 5L', 134.48, 4);
+INSERT INTO parts (part_id, part_name, unit_price, supplier_id) VALUES (209, 'Headlamp bulb', 74.03, 4);
+INSERT INTO parts (part_id, part_name, unit_price, supplier_id) VALUES (210, 'Cabin filter', 20.02, 4);
+INSERT INTO parts (part_id, part_name, unit_price, supplier_id) VALUES (211, 'Brake disc', 75.89, 3);
+INSERT INTO parts (part_id, part_name, unit_price, supplier_id) VALUES (212, 'Fan belt', 159.71, 4);
+
+-- work_orders
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5001, 112, 'WAIT', '2026-07-20', NULL, 4, NULL);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5002, 103, 'CANC', '2026-06-07', NULL, 2, NULL);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5003, 108, 'OPEN', '2026-04-16', NULL, 6, NULL);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5004, 110, 'DONE', '2026-03-05', '2026-03-09', 2, 5);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5005, 112, 'OPEN', '2026-03-03', NULL, 5, NULL);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5006, 117, 'WAIT', '2026-07-24', NULL, 2, NULL);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5007, 118, 'DONE', '2026-03-15', '2026-03-21', 7, 5);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5008, 113, 'DONE', '2026-06-10', '2026-06-13', 1, 5);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5009, 115, 'OPEN', '2026-03-17', NULL, 2, NULL);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5010, 102, 'OPEN', '2026-04-12', NULL, 5, NULL);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5011, 118, 'OPEN', '2026-03-28', NULL, 2, NULL);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5012, 101, 'CANC', '2026-03-27', NULL, 5, NULL);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5013, 109, 'DONE', '2026-03-20', '2026-03-24', 4, 2);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5014, 116, 'DONE', '2026-05-29', '2026-06-01', 1, 2);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5015, 104, 'DONE', '2026-06-29', '2026-07-01', 1, 2);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5016, 106, 'DONE', '2026-05-28', '2026-05-31', 7, 5);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5017, 112, 'OPEN', '2026-07-12', NULL, 5, NULL);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5018, 110, 'DONE', '2026-04-08', '2026-04-08', 7, 5);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5019, 106, 'DONE', '2026-03-25', '2026-03-27', 5, 2);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5020, 111, 'DONE', '2026-06-01', '2026-06-05', 5, 7);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5021, 108, 'DONE', '2026-04-28', '2026-05-04', 7, 1);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5022, 116, 'DONE', '2026-06-12', '2026-06-13', 2, 7);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5023, 116, 'DONE', '2026-06-01', '2026-06-01', 7, 2);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5024, 112, 'OPEN', '2026-05-07', NULL, 5, NULL);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5025, 103, 'DONE', '2026-06-24', '2026-06-29', 3, 5);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5026, 107, 'OPEN', '2026-04-27', NULL, 4, NULL);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5027, 120, 'WAIT', '2026-05-27', NULL, 5, NULL);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5028, 104, 'DONE', '2026-03-02', '2026-03-07', 3, 1);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5029, 106, 'DONE', '2026-06-09', '2026-06-15', 2, 5);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5030, 113, 'DONE', '2026-06-21', '2026-06-23', 1, 7);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5031, 106, 'DONE', '2026-06-28', '2026-06-28', 6, 2);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5032, 115, 'OPEN', '2026-04-03', NULL, 5, NULL);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5033, 105, 'DONE', '2026-04-08', '2026-04-12', 4, 5);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5034, 104, 'DONE', '2026-07-20', '2026-07-20', 1, 7);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5035, 107, 'DONE', '2026-07-14', '2026-07-15', 4, 2);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5036, 117, 'WAIT', '2026-03-09', NULL, 3, NULL);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5037, 105, 'DONE', '2026-05-02', '2026-05-04', 3, 7);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5038, 117, 'DONE', '2026-03-17', '2026-03-19', 4, 7);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5039, 115, 'DONE', '2026-04-04', '2026-04-08', 5, 1);
+INSERT INTO work_orders (work_order_id, vehicle_id, status_code, opened_on, closed_on, assigned_technician_id, inspected_by_technician_id) VALUES (5040, 106, 'DONE', '2026-04-17', '2026-04-23', 7, 1);
+
+-- work_order_parts
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5001, 208);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5002, 202);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5002, 209);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5002, 212);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5003, 206);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5004, 209);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5004, 211);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5004, 212);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5005, 202);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5005, 209);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5006, 204);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5007, 205);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5008, 202);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5009, 201);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5009, 208);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5009, 209);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5010, 208);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5011, 209);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5011, 210);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5012, 204);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5012, 205);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5012, 209);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5013, 209);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5013, 212);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5014, 204);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5014, 209);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5015, 205);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5015, 209);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5015, 212);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5016, 208);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5017, 207);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5018, 207);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5019, 202);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5019, 206);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5020, 202);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5020, 204);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5020, 207);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5021, 211);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5022, 202);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5022, 203);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5023, 206);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5023, 211);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5023, 212);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5024, 205);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5025, 208);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5026, 212);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5027, 207);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5028, 203);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5028, 211);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5029, 203);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5030, 207);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5030, 209);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5030, 212);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5031, 204);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5031, 207);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5032, 202);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5032, 206);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5033, 201);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5033, 206);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5033, 212);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5034, 201);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5034, 208);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5034, 212);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5035, 206);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5035, 209);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5036, 202);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5036, 205);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5036, 209);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5037, 204);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5038, 202);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5039, 201);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5039, 205);
+INSERT INTO work_order_parts (work_order_id, part_id) VALUES (5040, 205);
+
+-- stg_work_orders
+INSERT INTO stg_work_orders (work_order_id, vehicle_id, status_code, opened_on) VALUES (5033, 105, 'DONE', '2026-04-08');
+INSERT INTO stg_work_orders (work_order_id, vehicle_id, status_code, opened_on) VALUES (5034, 104, 'DONE', '2026-07-20');
+INSERT INTO stg_work_orders (work_order_id, vehicle_id, status_code, opened_on) VALUES (5035, 107, 'DONE', '2026-07-14');
+INSERT INTO stg_work_orders (work_order_id, vehicle_id, status_code, opened_on) VALUES (5036, 117, 'WAIT', '2026-03-09');
+INSERT INTO stg_work_orders (work_order_id, vehicle_id, status_code, opened_on) VALUES (5037, 105, 'DONE', '2026-05-02');
+INSERT INTO stg_work_orders (work_order_id, vehicle_id, status_code, opened_on) VALUES (5038, 117, 'DONE', '2026-03-17');
+INSERT INTO stg_work_orders (work_order_id, vehicle_id, status_code, opened_on) VALUES (5039, 115, 'DONE', '2026-04-04');
+INSERT INTO stg_work_orders (work_order_id, vehicle_id, status_code, opened_on) VALUES (5040, 106, 'DONE', '2026-04-17');

@@ -1,0 +1,15 @@
+customer_id,full_name,email,city
+1,Ava Quinn,ava.quinn@example.com,Eastvale
+2,Ben Reyes,ben.reyes@example.com,Northbridge
+3,Cleo Ito,cleo.ito@example.com,Northbridge
+4,Dev Quinn,dev.quinn@example.com,Northbridge
+5,Eli Varga,eli.varga@example.com,Eastvale
+6,Fay Hart,fay.hart@example.com,Northbridge
+7,Gus Reyes,gus.reyes@example.com,Westmoor
+8,Hana Ito,hana.ito@example.com,Eastvale
+9,Ivo Ito,ivo.ito@example.com,Westmoor
+10,Jun Hart,jun.hart@example.com,Northbridge
+11,Kai Okafor,kai.okafor@example.com,Northbridge
+12,Lena West,lena.west@example.com,Westmoor
+13,Milo Hart,milo.hart@example.com,Eastvale
+14,Nia Hart,nia.hart@example.com,Eastvale

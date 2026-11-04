@@ -1,0 +1,5 @@
+supplier_id,supplier_name,contact_email,country_code
+1,Brightline Parts,orders@brightline.example,DE
+2,Northwind Motors Supply,sales@northwind-supply.example,US
+3,Kestrel Components,trade@kestrel.example,JP
+4,Ridgeway Spares,hello@ridgeway.example,GB

@@ -1,0 +1,14 @@
+[
+  {
+    "name": "work_orders",
+    "comment": "One visit of a vehicle to the workshop",
+    "columns": [],
+    "primary_key": ["work_order_id"],
+    "foreign_keys": [
+      {"name": "fk_wo_vehicle", "columns": ["vehicle_id"], "ref_table": "vehicles", "ref_columns": ["vehicle_id"], "enforced": true},
+      {"name": "fk_wo_status", "columns": ["status_code"], "ref_table": "work_order_status", "ref_columns": ["status_code"], "enforced": true},
+      {"name": "fk_wo_assigned", "columns": ["assigned_technician_id"], "ref_table": "technicians", "ref_columns": ["technician_id"], "enforced": true},
+      {"name": "fk_wo_inspector", "columns": ["inspected_by_technician_id"], "ref_table": "technicians", "ref_columns": ["technician_id"], "enforced": true}
+    ]
+  }
+]

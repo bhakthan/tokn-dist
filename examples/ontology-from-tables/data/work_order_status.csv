@@ -1,0 +1,5 @@
+status_code,label
+OPEN,Open
+WAIT,Waiting for parts
+DONE,Completed
+CANC,Cancelled
