@@ -1,7 +1,7 @@
 # TOKN — download & try
 
 **TOKN** is a trust-first agentic coding and reasoning harness: a single static
-binary with 20+ regulated-domain plugs, offline licensing, and in-place
+binary with 32+ regulated-domain plugs, offline licensing, and in-place
 self-update. This repo hosts **the binaries only** so you can try TOKN — the
 source lives in a private repository.
 
