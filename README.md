@@ -31,7 +31,7 @@ honest about its own quality*. A few concrete ways it adds value, in plain terms
   "usually right" isn't good enough. *Example: a precision-medicine gate blocks a
   high-risk drug–gene recommendation from ever being emitted; a finance gate
   enforces the required disclaimer language before an answer leaves the agent.*
-  20+ domain plugs ship these gates and validators, and you can encode your own
+  32+ domain plugs ship these gates and validators, and you can encode your own
   thresholds. → see **Domain harnesses** in [CAPABILITIES.md](CAPABILITIES.md)
 
 - **Local workflows that can be prepared for an air gap.** Tabular prediction
