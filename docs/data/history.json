@@ -487,6 +487,10 @@
     "2026-11-03": {
       "count": 11,
       "uniques": 5
+    },
+    "2026-11-04": {
+      "count": 10,
+      "uniques": 4
     }
   },
   "downloads_daily": {
@@ -598,7 +602,8 @@
     "2026-11-01": 7,
     "2026-11-02": 0,
     "2026-11-03": 6,
-    "2026-11-04": 9
+    "2026-11-04": 9,
+    "2026-11-05": 13
   },
   "downloads_snapshots": {
     "2026-07-18": {
@@ -1900,44 +1905,62 @@
         "tokn_windows_amd64.exe": 119
       },
       "total": 763
+    },
+    "2026-11-05": {
+      "assets": {
+        "SHA256SUMS": 119,
+        "SHA256SUMS.sig": 104,
+        "tokn_darwin_amd64": 100,
+        "tokn_darwin_arm64": 101,
+        "tokn_linux_amd64": 133,
+        "tokn_linux_arm64": 98,
+        "tokn_windows_amd64.exe": 121
+      },
+      "total": 776
     }
   },
   "downloads_state": {
     "SHA256SUMS": {
       "carry": 4,
-      "last": 114
+      "last": 115
     },
     "SHA256SUMS.sig": {
       "carry": 3,
-      "last": 100
+      "last": 101
     },
     "tokn_darwin_amd64": {
       "carry": 0,
-      "last": 98
+      "last": 100
     },
     "tokn_darwin_arm64": {
       "carry": 0,
-      "last": 99
+      "last": 101
     },
     "tokn_linux_amd64": {
       "carry": 1,
-      "last": 129
+      "last": 132
     },
     "tokn_linux_arm64": {
       "carry": 0,
-      "last": 96
+      "last": 98
     },
     "tokn_windows_amd64.exe": {
       "carry": 7,
-      "last": 112
+      "last": 114
     }
   },
   "paths": [
     {
-      "count": 18,
+      "count": 20,
       "path": "/bhakthan/tokn-dist/tree/main/examples",
       "title": "/tree/main/examples",
       "uniques": 1
+    },
+    {
+      "count": 19,
+      "path": "/bhakthan/tokn-dist",
+      "title": "Overview",
+      "uniques": 3
     },
     {
       "count": 18,
@@ -1946,13 +1969,7 @@
       "uniques": 1
     },
     {
-      "count": 17,
-      "path": "/bhakthan/tokn-dist",
-      "title": "Overview",
-      "uniques": 3
-    },
-    {
-      "count": 10,
+      "count": 11,
       "path": "/bhakthan/tokn-dist/tree/main",
       "title": "/tree/main",
       "uniques": 1
@@ -1996,7 +2013,7 @@
   ],
   "referrers": [
     {
-      "count": 11,
+      "count": 13,
       "referrer": "github.com",
       "uniques": 1
     },
@@ -2007,7 +2024,7 @@
     }
   ],
   "repo": "bhakthan/tokn-dist",
-  "updated_at": "2026-11-04T14:39:16.719520+00:00",
+  "updated_at": "2026-11-05T14:43:53.931043+00:00",
   "views_daily": {
     "2026-07-05": {
       "count": 0,
@@ -2496,6 +2513,10 @@
     "2026-11-03": {
       "count": 0,
       "uniques": 0
+    },
+    "2026-11-04": {
+      "count": 16,
+      "uniques": 1
     }
   }
 }
