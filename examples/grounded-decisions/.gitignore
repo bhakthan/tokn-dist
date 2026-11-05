@@ -1,0 +1,4 @@
+# Evidence packs can quote internal documents.
+pack.json
+*.pack.json
+.tokn/

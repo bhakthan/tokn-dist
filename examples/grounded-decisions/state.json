@@ -1,0 +1,12 @@
+{
+  "request_id": "TR-1042",
+  "traveller_role": "Solutions engineer",
+  "home_country": "United States",
+  "destination_country": "Portugal",
+  "destination_city": "Lisbon",
+  "purpose": "Present at a customer architecture workshop",
+  "requested_on": "2026-10-01",
+  "departure": "2026-10-09",
+  "return": "2026-10-13",
+  "overland_night_travel": false
+}

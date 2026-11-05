@@ -1,0 +1,47 @@
+{
+  "schema": "tokn.decision-circuit/1",
+  "id": "travel-approval",
+  "version": "1.0.0",
+  "description": "Suggests an approval route for a business trip from the destination's current travel advisory level and the company booking window. Any gate the evidence cannot support routes to the Travel Desk.",
+  "intended_uses": ["Suggest an approval route that the travel system's own workflow acts on"],
+  "excluded_uses": ["Approving or booking travel without a human in the approval chain"],
+  "governance": {
+    "owner": "travel-desk",
+    "risk_tier": 2,
+    "safe_default": "travel_desk_review"
+  },
+  "gates": {
+    "advisory_level": {
+      "type": "choice",
+      "instructions": "What is the current US government travel advisory level for the destination country?",
+      "criteria": {
+        "level_1": "Level 1: exercise normal precautions.",
+        "level_2": "Level 2: exercise increased caution.",
+        "level_3": "Level 3: reconsider travel.",
+        "level_4": "Level 4: do not travel."
+      },
+      "min_confidence": 0.6
+    },
+    "booking_window_ok": {
+      "type": "noul",
+      "instructions": "Was the trip requested at least as many days before departure as the company booking window requires?",
+      "criteria": {"true": "The request meets the booking window.", "false": "The request is inside the booking window."}
+    }
+  },
+  "switch": {
+    "outputs": ["auto_approve", "manager_approval", "vp_approval_and_briefing", "prohibited", "travel_desk_review"],
+    "arms": [
+      {"id": "do_not_travel", "when": {"gate": "advisory_level", "is": "level_4"},
+       "output": "prohibited", "reason_code": "ADVISORY_L4"},
+      {"id": "reconsider", "when": {"gate": "advisory_level", "is": "level_3"},
+       "output": "vp_approval_and_briefing", "reason_code": "ADVISORY_L3"},
+      {"id": "normal_and_on_time",
+       "when": {"all": [{"gate": "advisory_level", "is": "level_1"}, {"gate": "booking_window_ok"}]},
+       "output": "auto_approve", "reason_code": "L1_ON_TIME"},
+      {"id": "manager", "when": {"gate": "advisory_level", "in": ["level_1", "level_2"]},
+       "output": "manager_approval", "reason_code": "MANAGER"}
+    ],
+    "default": "travel_desk_review",
+    "on_unknown": "travel_desk_review"
+  }
+}

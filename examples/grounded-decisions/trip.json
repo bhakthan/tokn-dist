@@ -1,0 +1,47 @@
+{
+  "state": {
+    "request_id": "TR-1042",
+    "traveller_role": "Solutions engineer",
+    "home_country": "United States",
+    "destination_country": "Portugal",
+    "destination_city": "Lisbon",
+    "purpose": "Present at a customer architecture workshop",
+    "requested_on": "2026-10-01",
+    "departure": "2026-10-09",
+    "return": "2026-10-13",
+    "overland_night_travel": false
+  },
+  "questions": {
+    "advisory_level": {
+      "type": "choice",
+      "instructions": "What is the current US government travel advisory level for the destination country?",
+      "criteria": {
+        "level_1": "Level 1: exercise normal precautions.",
+        "level_2": "Level 2: exercise increased caution.",
+        "level_3": "Level 3: reconsider travel.",
+        "level_4": "Level 4: do not travel."
+      }
+    },
+    "insurance_registration": {
+      "type": "noul",
+      "instructions": "Under company policy, must this trip be registered with the travel insurance provider before tickets are issued?",
+      "criteria": {"true": "Registration is required.", "false": "Registration is not required."}
+    },
+    "booking_window_ok": {
+      "type": "noul",
+      "instructions": "Was the trip requested at least as many days before departure as the company booking window requires?",
+      "criteria": {"true": "The request meets the booking window.", "false": "The request is inside the booking window."}
+    },
+    "security_briefing": {
+      "type": "noul",
+      "instructions": "Under company policy and the destination's current advisory level, is a pre-departure security briefing mandatory for this trip?",
+      "criteria": {"true": "A briefing is mandatory.", "false": "No briefing is required."}
+    }
+  },
+  "queries": [
+    "Portugal travel advisory level",
+    "travel policy approval by advisory level booking window",
+    "duty of care travel insurance registration security briefing"
+  ],
+  "allow_domains": ["travel.state.gov"]
+}

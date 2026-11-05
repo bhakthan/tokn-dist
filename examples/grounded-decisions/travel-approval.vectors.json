@@ -1,0 +1,58 @@
+[
+  {
+    "name": "level_1_booked_early_auto_approves",
+    "answers": {
+      "advisory_level": {"type": "choice", "choice": "level_1", "confidence": 0.9,
+        "probabilities": {"level_1": 0.9, "level_2": 0.06, "level_3": 0.03, "level_4": 0.01}},
+      "booking_window_ok": {"type": "noul", "noul": 0.95}
+    },
+    "expect": "auto_approve",
+    "expect_arm": "normal_and_on_time"
+  },
+  {
+    "name": "level_1_short_notice_needs_manager",
+    "answers": {
+      "advisory_level": {"type": "choice", "choice": "level_1", "confidence": 0.9,
+        "probabilities": {"level_1": 0.9, "level_2": 0.06, "level_3": 0.03, "level_4": 0.01}},
+      "booking_window_ok": {"type": "noul", "noul": 0.05}
+    },
+    "expect": "manager_approval",
+    "expect_arm": "manager"
+  },
+  {
+    "name": "level_3_needs_vp_and_briefing",
+    "answers": {
+      "advisory_level": {"type": "choice", "choice": "level_3", "confidence": 0.85,
+        "probabilities": {"level_1": 0.02, "level_2": 0.08, "level_3": 0.85, "level_4": 0.05}},
+      "booking_window_ok": {"type": "noul", "noul": 0.95}
+    },
+    "expect": "vp_approval_and_briefing",
+    "expect_arm": "reconsider"
+  },
+  {
+    "name": "level_4_is_prohibited",
+    "answers": {
+      "advisory_level": {"type": "choice", "choice": "level_4", "confidence": 0.95,
+        "probabilities": {"level_1": 0.01, "level_2": 0.01, "level_3": 0.03, "level_4": 0.95}},
+      "booking_window_ok": {"type": "noul", "noul": 0.95}
+    },
+    "expect": "prohibited",
+    "expect_arm": "do_not_travel"
+  },
+  {
+    "name": "advisory_not_found_goes_to_travel_desk",
+    "answers": {
+      "booking_window_ok": {"type": "noul", "noul": 0.95}
+    },
+    "expect": "travel_desk_review"
+  },
+  {
+    "name": "low_confidence_advisory_goes_to_travel_desk",
+    "answers": {
+      "advisory_level": {"type": "choice", "choice": "level_2", "confidence": 0.4,
+        "probabilities": {"level_1": 0.35, "level_2": 0.4, "level_3": 0.2, "level_4": 0.05}},
+      "booking_window_ok": {"type": "noul", "noul": 0.95}
+    },
+    "expect": "travel_desk_review"
+  }
+]
