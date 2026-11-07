@@ -1,0 +1,33 @@
+{
+  "model": "Microsoft-Decision-1",
+  "questions": {
+    "needs_revision": "Do the critique findings show at least one item whose status is wrong or unsupported, so the result must be revised before it is used?",
+    "positive_despite_rejected_decomposition": "Does any function whose ASIL decomposition asil_decompose_verify rejected still receive release_candidate?",
+    "spfm_rounded_up": "Does the result report FN-TJA's SPFM of 98.9% as meeting the 99% SPFM target?"
+  },
+  "response": {
+    "model": "microsoft-decision-1",
+    "answers": {
+      "needs_revision": {
+        "type": "noul",
+        "noul": 0.9971990726271679
+      },
+      "positive_despite_rejected_decomposition": {
+        "type": "noul",
+        "noul": 0.03308628828073936
+      },
+      "spfm_rounded_up": {
+        "type": "noul",
+        "noul": 0.005220153152402657
+      }
+    },
+    "usage": {
+      "input_tokens": 3926,
+      "output_tokens": 3
+    },
+    "latency_ms": 946.06,
+    "attempts": 1
+  },
+  "exit_code": 0,
+  "routing": "full-revision"
+}

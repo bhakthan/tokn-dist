@@ -1,0 +1,78 @@
+{
+  "verdict": "PASS",
+  "checks": [
+    {
+      "name": "artifacts_present",
+      "ok": true,
+      "detail": "all 10 present"
+    },
+    {
+      "name": "result_json_valid",
+      "ok": true,
+      "detail": "final result.json parses with an items list"
+    },
+    {
+      "name": "status_vocabulary",
+      "ok": true,
+      "detail": "all statuses in vocabulary"
+    },
+    {
+      "name": "all_items_assessed",
+      "ok": true,
+      "detail": "5 items"
+    },
+    {
+      "name": "ground_truth",
+      "ok": true,
+      "detail": "final 1.0 (v1 0.2)"
+    },
+    {
+      "name": "must_mention",
+      "ok": true,
+      "detail": "all present"
+    },
+    {
+      "name": "forbidden_phrases",
+      "ok": true,
+      "detail": "none found"
+    },
+    {
+      "name": "critique_has_findings",
+      "ok": true,
+      "detail": "11 findings"
+    },
+    {
+      "name": "every_finding_answered",
+      "ok": true,
+      "detail": "11 responses"
+    },
+    {
+      "name": "decision_answered",
+      "ok": true,
+      "detail": "3/3 typed answers"
+    },
+    {
+      "name": "execute_used_domain_tools",
+      "ok": true,
+      "detail": "used ['asil_decompose_verify', 'fmea_fta_engine', 'safety_validation_report'] of expected ['asil_decompose_verify', 'fmea_fta_engine', 'safety_validation_report']"
+    },
+    {
+      "name": "critic_reran_tools",
+      "ok": true,
+      "detail": "critic used ['asil_decompose_verify', 'fmea_fta_engine', 'safety_validation_report']"
+    },
+    {
+      "name": "reflection_grounded",
+      "ok": true,
+      "detail": "names traced tools ['asil_decompose_verify', 'fmea_fta_engine', 'safety_validation_report']; has /teach rule: True"
+    }
+  ],
+  "metrics": {
+    "accuracy_v1": 0.2,
+    "accuracy_final": 1.0,
+    "findings": 11,
+    "findings_answered": 11,
+    "routing": "full-revision",
+    "execute_domain_tools": 3
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "domain": "mobility",
+  "objective": "Apply the ordered ISO 26262 decomposition, hardware-metric and V&V completion review to the five supplied ADAS function records.",
+  "items": [
+    {
+      "id": "FN-AEB",
+      "status": "decomposition_invalid",
+      "rationale": "PLAN R1 rejects this decomposition evidence for lack of an explicit positive verdict, not as an affirmative ISO 26262 coverage violation; the complete asil_decompose_verify call for parent D and children [B,C] returned error=null with only action/instruction fields, not an explicit valid/passed/accepted verdict. PLAN R1 requires an explicit positive verdict and treats a missing or ambiguous verdict as FAIL, so the first check determines decomposition_invalid even though the instruction includes D -> (B,C) and the call returned no error. The supplied FMEDA values meet the returned hardware targets, but the later hardware and V&V evidence cannot upgrade this first-check outcome.",
+      "evidence": [
+        "asil_decompose_verify: raw result={action:'asil_decompose_verify', instruction:'Verify ASIL decomposition rules: D->(B,C), D->(C,B), D->(D,QM), C->(B,B), C->(C,QM), B->(B,QM), B->(A,A). Check independence: no common-cause failures, no cascading, freedom from interference.'}; error=null; no explicit positive verdict field was returned",
+        "fmea_fta_engine: pmhf_target=10 FIT; spfm_target=99%; lfm_target=90%; raw result contains only these targets plus action/instruction and no tool-computed PMHF/SPFM/LFM fields",
+        "input fmeda_metrics.json: PMHF=6.2 FIT <=10 (pass), SPFM=99.4% >=99 (pass), LFM=92.1% >=90 (pass)",
+        "safety_validation_report: requirements_covered_pct=97.4, defects_open=0, open_goals=0 with 3 supplied evidence entries; raw result contains action/instruction only and no explicit accepted verdict; non-status-setting after R1 FAIL"
+      ],
+      "tools_used": ["asil_decompose_verify", "fmea_fta_engine", "safety_validation_report"]
+    },
+    {
+      "id": "FN-LKA",
+      "status": "decomposition_invalid",
+      "rationale": "asil_decompose_verify explicitly rejected the supplied parent-D / child-[B,A] decomposition because child ASILs [B A] (sum 3) do not cover parent D (4) per ISO 26262-9 section 5. The identical-input retry produced the same explicit error, establishing a direct R1 failure independently of the missing-verdict issue in non-error responses. The numerical hardware comparisons meet the returned targets and the V&V call returned without error, but neither later result can change the first failing check.",
+      "evidence": [
+        "asil_decompose_verify: ERROR 'asil_decompose_verify: ASIL decomposition invalid - child ASILs [B A] (sum 3) do not cover parent D (4) per ISO 26262-9 §5'; result=null; identical rejection on retry",
+        "fmea_fta_engine: pmhf_target=10 FIT; spfm_target=99%; lfm_target=90%; raw result contains only these targets plus action/instruction and no tool-computed PMHF/SPFM/LFM fields",
+        "input fmeda_metrics.json: PMHF=3.1 FIT <=10 (pass), SPFM=99.7% >=99 (pass), LFM=96.0% >=90 (pass)",
+        "safety_validation_report: requirements_covered_pct=99.1, defects_open=0, open_goals=0 with 3 supplied evidence entries; raw result contains action/instruction only and no explicit accepted verdict; non-status-setting after explicit R1 rejection"
+      ],
+      "tools_used": ["asil_decompose_verify", "fmea_fta_engine", "safety_validation_report"]
+    },
+    {
+      "id": "FN-ACC",
+      "status": "decomposition_invalid",
+      "rationale": "PLAN R1 rejects this decomposition evidence for lack of an explicit positive verdict, not as an affirmative ISO 26262 coverage violation; the complete asil_decompose_verify call for parent C and children [B,A] returned error=null, but exposed only action/instruction fields and no explicit positive decomposition verdict. PLAN R1 fail-closed semantics therefore assign decomposition FAIL, even though the supplied FMEDA values meet every returned target and the V&V input has exactly 95.0% coverage with zero defects. In addition, the returned instruction enumerates C -> (B,B) and C -> (C,QM) and not the supplied C -> (B,A), so the non-error response is not treated as explicit approval.",
+      "evidence": [
+        "asil_decompose_verify: raw result contains only action/instruction with error=null; no explicit positive verdict field; instruction enumerates C->(B,B) and C->(C,QM), not supplied C->(B,A)",
+        "fmea_fta_engine: pmhf_target=10 FIT; spfm_target=99%; lfm_target=90%; raw result contains only these targets plus action/instruction and no tool-computed PMHF/SPFM/LFM fields",
+        "input fmeda_metrics.json: PMHF=8.0 FIT <=10 (pass), SPFM=99.0% >=99 (pass at inclusive equality), LFM=90.4% >=90 (pass)",
+        "safety_validation_report: requirements_covered_pct=95.0, defects_open=0, open_goals=0 with 2 supplied evidence entries; raw result contains action/instruction only and no explicit accepted verdict; non-status-setting after R1 FAIL"
+      ],
+      "tools_used": ["asil_decompose_verify", "fmea_fta_engine", "safety_validation_report"]
+    },
+    {
+      "id": "FN-TJA",
+      "status": "decomposition_invalid",
+      "rationale": "PLAN R1 rejects this decomposition evidence for lack of an explicit positive verdict, not as an affirmative ISO 26262 coverage violation; the complete asil_decompose_verify call for D -> (C,B) returned error=null and its instruction enumerates that pair, but no explicit positive verdict field was exposed. PLAN R1 treats that missing verdict as decomposition FAIL, so decomposition rather than the later hardware failure sets the status under first-failure precedence. Independently, the supplied SPFM of 98.9% is below the returned 99% target, and would yield hw_metrics_fail if decomposition had received an explicit positive verdict.",
+      "evidence": [
+        "asil_decompose_verify: raw result contains action/instruction only; instruction includes D->(C,B) but no explicit positive verdict field was returned; error=null",
+        "fmea_fta_engine: pmhf_target=10 FIT; spfm_target=99%; lfm_target=90%; raw result contains only these targets plus action/instruction and no tool-computed PMHF/SPFM/LFM fields",
+        "input fmeda_metrics.json: PMHF=7.5 FIT <=10 (pass), SPFM=98.9% >=99 is FALSE (FAIL), LFM=91.0% >=90 (pass)",
+        "safety_validation_report: requirements_covered_pct=96.8, defects_open=0, open_goals=0 with 2 supplied evidence entries; raw result contains action/instruction only and no explicit accepted verdict; non-status-setting after R1 FAIL"
+      ],
+      "tools_used": ["asil_decompose_verify", "fmea_fta_engine", "safety_validation_report"]
+    },
+    {
+      "id": "FN-APA",
+      "status": "decomposition_invalid",
+      "rationale": "PLAN R1 rejects this decomposition evidence for lack of an explicit positive verdict, not as an affirmative ISO 26262 coverage violation; the complete asil_decompose_verify call for B -> (A,A) returned error=null and its instruction enumerates that pair, but it exposed no explicit positive verdict field. Under PLAN R1's mandatory fail-closed rule, the missing verdict is decomposition FAIL, which precedes the hardware and V&V checks. The supplied hardware values meet all returned targets, but safety_validation_report explicitly rejected V&V because one open defect remains; that later rejection does not replace the first-check status.",
+      "evidence": [
+        "asil_decompose_verify: raw result contains action/instruction only; instruction includes B->(A,A) but no explicit positive verdict field was returned; error=null",
+        "fmea_fta_engine: pmhf_target=10 FIT; spfm_target=99%; lfm_target=90%; raw result contains only these targets plus action/instruction and no tool-computed PMHF/SPFM/LFM fields",
+        "input fmeda_metrics.json: PMHF=4.0 FIT <=10 (pass), SPFM=99.2% >=99 (pass), LFM=93.5% >=90 (pass)",
+        "safety_validation_report: ERROR '1 open defects remain - all safety-critical defects must be resolved before V&V completion'; result=null; requirements_covered_pct=98.0, defects_open=1, open_goals=1 with 2 supplied evidence entries; non-status-setting after R1 FAIL"
+      ],
+      "tools_used": ["asil_decompose_verify", "fmea_fta_engine", "safety_validation_report"]
+    }
+  ],
+  "gates": [
+    {
+      "name": "ASIL Decomposition (G1)",
+      "status": "fail",
+      "detail": "No function satisfies PLAN R1's explicit-positive-verdict requirement. FN-LKA has a direct coverage rejection; the other four fail closed because raw results contain action/instruction but no valid/passed/accepted verdict. A no-error response alone is not R1 PASS."
+    },
+    {
+      "name": "PMHF / Hardware Metrics (G2)",
+      "status": "fail",
+      "detail": "All five calls returned pmhf_target=10 FIT, spfm_target=99 and lfm_target=90. FN-TJA fails because supplied SPFM 98.9% <99%; the other four supplied FMEDA records pass all three comparisons. No item can become release_candidate after its earlier R1 decomposition FAIL."
+    },
+    {
+      "name": "V&V Completion (G3)",
+      "status": "fail",
+      "detail": "FN-APA is explicitly rejected for one open defect. FN-AEB, FN-LKA, FN-ACC and FN-TJA returned action/instruction with no explicit acceptance field, which R3 does not accept as PASS. Additionally, an earlier R1 FAIL already prevents release_candidate status for all items."
+    },
+    {
+      "name": "Evidence Integrity (G4)",
+      "status": "warn",
+      "detail": "All three required domain tools were called for every item, including an identical retry for FN-LKA. Raw observations and reported numbers are preserved in the evidence text below; successful responses expose action/instruction or targets rather than the structured verdict fields anticipated by PLAN. FMEDA did not return recomputed metric values."
+    },
+    {
+      "name": "Release (G5, human)",
+      "status": "warn",
+      "detail": "No item qualifies as release_candidate under the explicit gate rules. Any upgrade would still require safety-manager review; this run grants no release approval and provides no proof of safety."
+    },
+    {
+      "name": "HARA",
+      "status": "n/a",
+      "detail": "Not assessed: no HARA input or check is in scope. Not passed."
+    },
+    {
+      "name": "Safety Concept",
+      "status": "n/a",
+      "detail": "Not independently assessed outside the supplied decomposition records. Not passed."
+    }
+  ],
+  "overall_verdict": "Under PLAN R1's explicit fail-closed verdict requirement, all five functions are decomposition_invalid: FN-LKA is directly rejected and the other four lack an explicit positive decomposition verdict, so no function advances to release_candidate regardless of later evidence.",
+  "confidence": 0.93,
+  "limitations": [
+    "The decisive limitation is the tool-output contract: non-error asil_decompose_verify responses expose action/instruction rather than an explicit valid/passed/accepted verdict. R1 mandates FAIL for a missing or ambiguous verdict; this review does not reinterpret no error as explicit acceptance.",
+    "For FN-AEB, FN-TJA and FN-APA, the non-error response and enumerated parent/child pairs may support a human engineer's interpretation of coverage, but that is not the explicit positive verdict R1 requires. Their statuses are fail-closed outcomes of available evidence, not proof of an ISO 26262 architectural violation.",
+    "FN-ACC's non-error response returns instructional examples C -> (B,B) and C -> (C,QM), not supplied C -> (B,A); it lacks explicit approval and the discrepancy is retained for review.",
+    "Successful safety_validation_report calls likewise return action/instruction instead of explicit acceptance. They do not establish R3 PASS, and no later V&V result can override an earlier decomposition FAIL.",
+    "fmea_fta_engine returned pmhf_target=10 FIT, spfm_target=99% and lfm_target=90%, but no computed PMHF/SPFM/LFM values or detailed FMEA/FTA. Comparisons use the supplied FMEDA values exactly as PLAN R2 directs, not a recomputation.",
+    "Programme-wide returned targets were applied to all functions, including asil_req C or B records, as directed by BRIEF and PLAN; no target was inferred from memory.",
+    "The secondary CAPABILITIES summary says DOMAIN-README describes PMHF <10 FIT, while BRIEF uses PMHF <= tool target. No supplied PMHF equals 10 FIT, so this wording difference changes none of the comparisons.",
+    "Independence and DFA completion claims were supplied as assertions and were not independently substantiated by DFA artefacts; FN-APA also retains open_goals=1 in addition to the explicitly blocking open defect.",
+    "Initial calls routed without every required input field produced V&V gate errors; corrected complete-record calls supply the substantive evidence above. The routing difficulty, not an independent engineering finding, explains those transient errors.",
+    "HARA, Safety Concept, SOTIF/ODD coverage, cybersecurity, underlying evidence-document quality and the human safety-manager Release decision are not assessed.",
+    "The data is synthetic for a teaching scenario. This is a DRAFT mechanical gate review, not proof of functional safety or approval to release."
+  ],
+  "critique_response": []
+}

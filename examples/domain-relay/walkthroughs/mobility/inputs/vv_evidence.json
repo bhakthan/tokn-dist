@@ -1,0 +1,10 @@
+{
+  "note": "Synthetic V&V evidence for a teaching scenario. Paths are illustrative only.",
+  "vv": [
+    {"function": "FN-AEB", "all_evidence": ["HIL campaign HIL-AEB-12", "track test TT-AEB-07", "SIL regression SIL-AEB-31"], "safety_case": {"top_goal": "FN-AEB is acceptably safe within its ODD", "open_goals": 0}, "vv_report_path": "evidence/vv/FN-AEB-vv-report.pdf", "requirements_covered_pct": 97.4, "defects_open": 0},
+    {"function": "FN-LKA", "all_evidence": ["HIL campaign HIL-LKA-09", "proving-ground test PG-LKA-04", "SIL regression SIL-LKA-22"], "safety_case": {"top_goal": "FN-LKA is acceptably safe within its ODD", "open_goals": 0}, "vv_report_path": "evidence/vv/FN-LKA-vv-report.pdf", "requirements_covered_pct": 99.1, "defects_open": 0},
+    {"function": "FN-ACC", "all_evidence": ["HIL campaign HIL-ACC-15", "road test RT-ACC-11"], "safety_case": {"top_goal": "FN-ACC is acceptably safe within its ODD", "open_goals": 0}, "vv_report_path": "evidence/vv/FN-ACC-vv-report.pdf", "requirements_covered_pct": 95.0, "defects_open": 0},
+    {"function": "FN-TJA", "all_evidence": ["HIL campaign HIL-TJA-06", "scenario catalogue run SC-TJA-03"], "safety_case": {"top_goal": "FN-TJA is acceptably safe within its ODD", "open_goals": 0}, "vv_report_path": "evidence/vv/FN-TJA-vv-report.pdf", "requirements_covered_pct": 96.8, "defects_open": 0},
+    {"function": "FN-APA", "all_evidence": ["HIL campaign HIL-APA-05", "parking-lot test PL-APA-02"], "safety_case": {"top_goal": "FN-APA is acceptably safe within its ODD", "open_goals": 1}, "vv_report_path": "evidence/vv/FN-APA-vv-report.pdf", "requirements_covered_pct": 98.0, "defects_open": 1}
+  ]
+}

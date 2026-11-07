@@ -1,0 +1,81 @@
+{
+  "findings": [
+    {
+      "id": "C1",
+      "item": "overall",
+      "severity": "blocking",
+      "issue": "Four of the five statuses contradict the tool outputs and the BRIEF's status definitions. I re-ran all 15 calls and every raw output the executor quoted reproduces exactly, so the raw record is honest — but the interpretation drawn from it is wrong. The BRIEF defines `decomposition_invalid` as '`asil_decompose_verify` rejects the ASIL decomposition', and rule 2 says 'A tool error is a rejection'. The tool rejected only FN-LKA. My control probes prove the verdict channel is the error field: asil_decompose_verify with parent C and children [A,A] returns the explicit error 'child ASILs [A A] (sum 2) do not cover parent C (3) per ISO 26262-9 §5' (so the tool actively validates non-D parents), and safety_validation_report returns 'requirements_covered_pct 94.0% is below the 95% threshold required for V&V completion' at 94% but no error at exactly 95.0%. The tool's own FN-LKA rejection message states the operative coverage rule (child ASIL sum vs parent), under which FN-AEB (B+C=5 >= D=4), FN-ACC (B+A=3 >= C=3), FN-TJA (C+B=5 >= D=4) and FN-APA (A+A=2 >= B=2) all cover and were all returned without error — i.e. accepted. Applying PLAN R4 with those verdicts: FN-AEB = release_candidate (DRAFT) (D PASS, H PASS 6.2<=10 / 99.4>=99 / 92.1>=90, V PASS 97.4>=95 with defects_open=0 and no error); FN-LKA = decomposition_invalid (correct as reported); FN-ACC = release_candidate (DRAFT) (D PASS, H PASS with equality 99.0>=99 and 8.0<=10 and 90.4>=90, V PASS at the 95.0 boundary with defects_open=0 and no error); FN-TJA = hw_metrics_fail (D PASS, H FAIL on SPFM 98.9 < 99); FN-APA = vv_incomplete (D PASS, H PASS 4.0 / 99.2 / 93.5, V FAIL on the explicit rejection '1 open defects remain'). The reported uniform `decomposition_invalid` for all five, the G1/G2/G3 gate rows built on it, and the overall_verdict ('no function advances to release_candidate regardless of later evidence') are all wrong. The executor's own 'material counterfactuals' for FN-TJA and FN-APA already state the correct statuses, which shows the error is interpretive, not arithmetic.",
+      "fix": "Reassign statuses: FN-AEB release_candidate (draft), FN-LKA decomposition_invalid (unchanged), FN-ACC release_candidate (draft), FN-TJA hw_metrics_fail, FN-APA vv_incomplete. Update the G1 row (fail only for FN-LKA), G2 row (fail only for FN-TJA), G3 row (fail only for FN-APA) and the overall_verdict accordingly. If the safety manager instead endorses the strict 'explicit verdict field' reading, the result must record that interpretation question as a blocking discrepancy requiring clarification — but the verified tool behaviour (explicit rejections for invalid inputs, silent acceptance for valid ones) supports the differentiated statuses."
+    },
+    {
+      "id": "C2",
+      "item": "overall",
+      "severity": "blocking",
+      "issue": "result.json fails the PLAN's acceptance criteria for structure and completeness. PLAN says 'result.json is complete only if it is valid JSON containing' seven elements. Missing entirely: `tool_log` (criterion 3 — 15 entries with call_id, tool, input, raw_output, error, retried), `targets` with provenance (criterion 2), `discrepancies` (criterion 4), `not_assessed` (criterion 5), `summary` with per-status counts summing to 5 (criterion 6), and `disclaimer` (criterion 7). Per item, the required `first_failing_check`, `draft`, `decomposition`, `hw_metrics` (with pmhf_pass/spfm_pass/lfm_pass and verdict), `vv` and `observations` blocks (criterion 1) are absent — items carry only free-text `rationale`/`evidence`/`tools_used`. The plan's own completeness check ('there are 5 items, 15 tool_log entries, every status ... agrees with R4 ... no target value appears that is not in a tool_log raw_output') cannot be executed against this file.",
+      "fix": "Restructure result.json to the plan's schema: add the six per-item fields, the `targets` block citing the fmea_fta_engine calls it came from, a 15-entry `tool_log` with the exact inputs and raw outputs, a `discrepancies` list (see C7), `not_assessed` (HARA, Safety Concept, DFA/independence evidence, SOTIF, cybersecurity, human Release gate), a `summary` whose counts sum to 5, and the `disclaimer`."
+    },
+    {
+      "id": "C3",
+      "item": "overall",
+      "severity": "major",
+      "issue": "The controlling interpretation — 'no explicit positive verdict field, therefore FAIL' — was adopted without any discriminating test, and it is internally inconsistent. The plan's Step-3 instruction says 'Inspect the output fields on the first call to each tool ... Record the exact field names that carry (a) the verdict and (b) the targets.' The verdict-carrying mechanism was never identified or recorded; only the absence of a `valid`/`passed`/`accepted` field was noted. A single control call would have identified it: the tools reject invalid inputs with explicit errors (asil_decompose_verify: C→(A,A) rejected; safety_validation_report: 94% coverage rejected, and 'safety_validation_report requires all_evidence' when a field is missing) and return no error for valid ones. The executor treats the FN-LKA error as 'a direct R1 failure' — accepting the error field as a verdict channel — while refusing to treat non-errors from the same tool as verdicts. R1's own PASS condition is 'returns without error ... and no field that indicates rejection', which the four non-error responses satisfy. The retries performed were identical-input retries, not controls, so the semantics question was never probed.",
+      "fix": "Record the verdict channel on the first call of each tool (rejection = explicit error; acceptance = no error, for these tool contracts), then re-derive D(F), H(F) and V(F) under R1–R3. If any doubt remains, run a known-bad control input to demonstrate the channel before assigning FAIL to a no-error response."
+    },
+    {
+      "id": "C4",
+      "item": "overall",
+      "severity": "major",
+      "issue": "Gate G4 (Evidence integrity) is marked 'warn' on a claim the artifact does not support. The G4 detail says 'Raw observations and reported numbers are preserved in the evidence text below', and RESULT.md says 'All required domain calls were made and relevant raw errors/fields are reported.' The raw outputs are quoted selectively (instruction strings and error messages), not preserved in full: there is no tool_log, so no recorded inputs, no call_ids, no full raw JSON per call, and no retried flags. PLAN G4 requires 'all three raw tool responses for F ... stored in tool_log'; that condition is not met, so G4 is not satisfied — it is marked warn without the required evidence. The claim that all 15 calls were made is unverifiable from the deliverable (my re-runs show the quoted outputs are what the recorded inputs would produce, which supports but does not prove it).",
+      "fix": "Either add the 15-entry tool_log (which satisfies G4 and lets a reviewer verify the calls) or mark G4 'not satisfied' and state plainly that raw outputs are quoted, not preserved. Do not claim preservation that the file does not contain."
+    },
+    {
+      "id": "C5",
+      "item": "overall",
+      "severity": "major",
+      "issue": "The confidence and validation language is stronger than the evidence. result.json reports confidence 0.93, and RESULT.md claims 'High confidence comes from direct input-file reads, repeated tool calls, explicit error messages, identical numeric targets across calls, and a JSON/decision-comparison validation.' No validation artifact exists anywhere in the repository, so the 'JSON/decision-comparison validation' is unverifiable. 'Repeated tool calls' were identical-input retries of FN-LKA, not independent checks. Most importantly, the single decision that determines every status — the verdict-semantics reading — was untested (C3) and contradicts the BRIEF's status definitions (C1); 0.93 confidence in an outcome resting on that reading is not calibrated. RESULT.md's controlling-interpretation block presents a contestable reading of R1 as settled ('R1 is explicit that a missing/ambiguous verdict is FAIL, including when a call does not error') without flagging that it nullifies the BRIEF's definition of decomposition_invalid for four items.",
+      "fix": "Lower the stated confidence to reflect the interpretive dependence, remove or produce the validation artifact, and present the verdict-contract question explicitly as an open item for the safety manager rather than as a settled rule."
+    },
+    {
+      "id": "C6",
+      "item": "FN-ACC",
+      "severity": "minor",
+      "issue": "The FN-ACC 'instruction discrepancy' is given more evidentiary weight than it can carry. The instruction string ('Verify ASIL decomposition rules: D→(B,C), D→(C,B), D→(D,QM), C→(B,B), C→(C,QM), B→(B,QM), B→(A,A)...') is static and input-independent — I received the identical string on every call, including calls that errored. It is an example list, not the operative check: the tool accepted the supplied C→(B,A) even though it is not enumerated, and rejected D→(B,A) and C→(A,A) which are also not enumerated. The executor cites non-enumeration of C→(B,A) as 'another reason no explicit positive verdict is inferred' (limitation 3), while for FN-TJA the same string's inclusion of D→(C,B) is not treated as approval — the same static string is used as evidence in one direction only.",
+      "fix": "Drop the enumeration argument, or state it as an observation about a static help string with no verdict value. The FN-ACC decomposition outcome rests on the tool's no-error response, not on the instruction text."
+    },
+    {
+      "id": "C7",
+      "item": "FN-ACC",
+      "severity": "minor",
+      "issue": "Input values that the plan makes load-bearing are not reported. `asil_req` is never stated per function (FN-ACC is ASIL C, FN-APA is ASIL B), and PLAN R2's mandated cross-check — 'If calls 2c (asil_req C) or 2e (asil_req B) return targets that differ from those returned by ASIL-D calls 2a, 2b and 2d, use the ASIL-D-call targets ... and record the difference in discrepancies' — is asserted only in aggregate ('All five calls returned pmhf_target=10 FIT, spfm_target=99 and lfm_target=90'). I verified the aggregate claim is true (all five of my calls returned 10/99/90, including the ASIL-C and ASIL-B records), so no number is wrong; what is missing is the recorded per-function comparison and the `discrepancies` entry the plan requires for the README-vs-tool threshold wording (README 'PMHF <10 FIT' strict vs tool target 10 with <= semantics), which is discussed only in limitations.",
+      "fix": "Record asil_req per function in the hw_metrics block, state the 2c/2e vs 2a/2b/2d target comparison explicitly, and move the README-vs-tool threshold wording difference into the `discrepancies` list as the plan directs."
+    },
+    {
+      "id": "C8",
+      "item": "overall",
+      "severity": "minor",
+      "issue": "Content the plan requires in structured fields exists only scattered in free text. `not_assessed` (at minimum HARA gate, Safety Concept gate, DFA/independence evidence, SOTIF, cybersecurity, human Release gate) appears partly as 'n/a' rows in the `gates` array and partly in limitations item 11. The FN-APA `open_goals: 1` observation, which PLAN R3 explicitly says to 'report as an observation', is buried inside an evidence string and limitations item 8 rather than a per-item `observations` field. A downstream reader filtering on the plan's schema will find neither.",
+      "fix": "Add the `not_assessed` list and per-item `observations` fields (including FN-APA open_goals: 1 and that independence/DFA claims were taken as stated) in result.json."
+    },
+    {
+      "id": "C9",
+      "item": "overall",
+      "severity": "minor",
+      "issue": "The G2 and G3 gate rows are labelled 'fail' while the executor's own numbers show most items passing. G2's detail concedes 'FN-TJA fails because supplied SPFM 98.9% <99%; the other four supplied FMEDA records pass all three comparisons', yet the gate row reads 'fail'. G3's detail concedes only FN-APA is rejected ('FN-APA is explicitly rejected for one open defect'), yet the row reads 'fail'. The rows conflate 'any item fails' with the gate outcome and will mislead a release board scanning the table; the fail label for G3 additionally rests on the same unsupported no-verdict-field reading as C1/C3.",
+      "fix": "Express G2 and G3 per function (or as pass/fail counts, e.g. G2: 4 pass / 1 fail — FN-TJA; G3: 4 pass / 1 fail — FN-APA) consistent with the recorded comparisons."
+    },
+    {
+      "id": "C10",
+      "item": "FN-APA",
+      "severity": "minor",
+      "issue": "A mandated retry is missing from the record. PLAN says 'If a call errors or times out, retry it once with identical input. If it fails a second time, record the error.' The FN-LKA decomposition error is reported with its identical-input retry ('identical rejection on retry'), but the FN-APA safety_validation_report error ('1 open defects remain') is reported with no retry at all. Either the retry was not performed — a skipped plan step — or it was performed and not recorded; the deliverable does not distinguish the two. (My re-run confirms the tool is deterministic here, so the outcome is unaffected, which is why this is minor.)",
+      "fix": "Perform and record the identical-input retry for FN-APA's safety_validation_report error, or record explicitly why no retry was made."
+    },
+    {
+      "id": "C11",
+      "item": "overall",
+      "severity": "minor",
+      "issue": "Schema drift: result.json carries a `critique_response: []` field that no stage instruction defines, and its `gates` array uses status strings ('fail', 'warn', 'n/a') that appear in no plan vocabulary for gates. Harmless to a human reader, but a downstream validator applying the plan's acceptance criteria will flag both, and the empty critique_response field invites confusion about whether a critique stage already ran.",
+      "fix": "Remove `critique_response` (or define it in the schema), and either define the gate-status vocabulary or express gate outcomes in the plan's terms (satisfied / not satisfied / not assessed)."
+    }
+  ]
+}
