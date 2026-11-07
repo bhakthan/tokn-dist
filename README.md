@@ -89,6 +89,18 @@ version-accurate catalog.
 > reportable**. It catches the "simulator escape" (beating a benchmark by exploiting a
 > weakened evaluator) instead of shipping it.
 
+> 🆕 **New since v0.3.60 — what has landed through v0.3.80.**
+> - **Auto-ontology from tables.** `tokn ontology build|review|certify|export` proposes an evidence-scored ontology from CSV, Parquet, SQLite, PostgreSQL, MySQL, warehouse or Fabric TMDL sources and exports OWL/SKOS, R2RML, JSON-LD, Mermaid and TMDL. → [ontology-from-tables](examples/ontology-from-tables/README.md)
+> - **Grounded decisions.** `tokn system-one ground` answers typed questions against retrieved evidence (web, a local folder or TOKN memory), withholds answers it cannot support, and can save evidence packs for offline replay. → [grounded-decisions](examples/grounded-decisions/README.md)
+> - **Domain tools models call correctly.** Domain tools now advertise the arguments they read, model refusals end a run as halted instead of "success", and more domain safety gates are wired in. A seven-stage, multi-model relay shows this per domain. → [domain-relay](examples/domain-relay/README.md)
+> - **Single agent loop.** `tokn single-loop` audits a router-plus-subagents design, finds untested paths, forecasts tokens and drafts skills, all offline. → [single-agent-loop](examples/single-agent-loop/README.md)
+> - **Use TOKN from your coding CLI or editor.** Verified setup for Claude Code, Codex CLI, Copilot CLI, Gemini CLI and Antigravity (`tokn serve --mode=mcp`), and T3 Code via `tokn acp`. → [coding-clis](examples/coding-clis/README.md) · [t3code](examples/t3code/README.md)
+> - **Gemini API CLI tool.** With `gemini-api` installed, the agent can generate and analyze media and run Gemini managed agents. → [gemini-api](examples/gemini-api/README.md)
+> - **Cache-aware compaction.** `/compact --strategy=cache-policy` keeps your provider's prompt cache warm, and auto-compaction skips compactions that cost more than they save.
+> - **Docker-free containers.** Preview environments and containerised tools run on Podman or on Docker/Podman inside WSL2 (`TOKN_CONTAINER_RUNTIME`).
+> - **Guarded biomolecular modeling (experimental).** `tokn biomol` adds preflight-first protein-prediction profiles with per-job review; nothing is downloaded or run without explicit approval. → [biomolecular-modeling](examples/biomolecular-modeling/README.md)
+> - **Security:** only MCP config files in your home folder are auto-trusted; copies inside a repo need `tokn mcp trust add`.
+
 > 🆕 **New in v0.3.60 — self-organizing teams of agents, fully airgapped.**
 > - **`tokn agora org`** scales to 64 workers that claim work, share findings and hand off patches. Only the host's verifier merges anything.
 > - **Workers from anywhere:** other machines (`serve` / `join` / `work`), any MCP client, or TOKN inside another harness via `tokn acp`.
@@ -198,7 +210,9 @@ councils, SDK generation, your own domain plugins, event-triggered runs,
 federated workers, declarative agent teams, long hands-off runs, meeting
 minutes to a proof of concept (optionally via WorkIQ), self-hosted computer-use
 models, RDF ontologies queried with SPARQL and reasoning, portable knowledge
-bundles, TOKN as an MCP server, and code-first browser automation. All data is
+bundles, TOKN as an MCP server, code-first browser automation, auto-ontology
+from tables, grounded decisions, and seven-stage multi-model domain relays
+graded by code. All data is
 synthetic. New to TOKN? Start with
 [first-ten-minutes](examples/first-ten-minutes/README.md).
 
