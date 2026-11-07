@@ -1,0 +1,33 @@
+{
+  "model": "Microsoft-Decision-1",
+  "questions": {
+    "needs_revision": "Do the critique findings show at least one item whose status is wrong or unsupported, so the result must be revised before it is used?",
+    "positive_despite_gate": "Does any sample that is missing a required metric or fails a hard gate receive include or flag_for_review?",
+    "confounded_contrast_trusted": "Does the result claim the retained design supports an interpretable treated-versus-control differential-expression contrast?"
+  },
+  "response": {
+    "model": "microsoft-decision-1",
+    "answers": {
+      "confounded_contrast_trusted": {
+        "type": "noul",
+        "noul": 0.02297750171993649
+      },
+      "needs_revision": {
+        "type": "noul",
+        "noul": 0.7310613877385979
+      },
+      "positive_despite_gate": {
+        "type": "noul",
+        "noul": 0.0059110932538266655
+      }
+    },
+    "usage": {
+      "input_tokens": 2604,
+      "output_tokens": 3
+    },
+    "latency_ms": 979.742,
+    "attempts": 1
+  },
+  "exit_code": 0,
+  "routing": "full-revision"
+}

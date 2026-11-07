@@ -1,0 +1,363 @@
+{
+  "domain": "transcriptomics",
+  "objective": "Assign a mechanical RNA-seq QC status to each of S01–S06 and determine whether the retained treated-versus-control design remains interpretable for differential expression.",
+  "items": [
+    {
+      "id": "S01",
+      "status": "include",
+      "rationale": "assess_rnaseq_quality returned verdict PASS, phase ANALYSIS_READY, analyzable=true, and blockers=null; all seven supplied metrics returned PASS. Both sample-level gates returned pass. This include status denotes fitness for analysis under the local QC policy, not evidence of biological signal.",
+      "evidence": [
+        "assess_rnaseq_quality: verdict=PASS; phase=ANALYSIS_READY; analyzable=true; blockers=null",
+        "assess_rnaseq_quality: rin=8.4 PASS; unique_mapping_rate=88.2% PASS; all seven per-metric verdicts=PASS",
+        "assess_rnaseq_quality gates: data_completeness=pass; protocol_consistency=pass"
+      ],
+      "tools_used": ["assess_rnaseq_quality"],
+      "overall": "PASS",
+      "phase": "ANALYSIS_READY",
+      "blockers": null,
+      "analyzable": true,
+      "missing": null,
+      "confidence": 1,
+      "gates": [
+        {"gate": "data_completeness", "status": "pass", "detail": "all required metrics supplied"},
+        {"gate": "protocol_consistency", "status": "pass", "detail": "metrics are consistent with the declared protocol"}
+      ],
+      "summary": "GOOD QUALITY: all assessed metrics pass; data is suitable for downstream expression analysis.",
+      "per_metric": [
+        {"key": "rin", "label": "RNA Integrity Number", "value": 8.4, "unit": "1-10", "verdict": "PASS", "hardGate": true, "threshold": "pass>=7, warn>=6 (1-10)", "rationale": "RNA degradation biases expression quantification; RIN<6 is a hard gate (ENCODE/GTEx)."},
+        {"key": "unique_mapping_rate", "label": "Unique mapping rate", "value": 88.2, "unit": "%", "verdict": "PASS", "hardGate": true, "threshold": "pass>=80, warn>=60 (%)", "rationale": "Low unique mapping signals contamination or wrong reference; <60% is a hard gate."},
+        {"key": "rrna_rate", "label": "rRNA contamination", "value": 3.1, "unit": "%", "verdict": "PASS", "hardGate": false, "threshold": "pass<=10, warn<=15 (%)", "rationale": "High rRNA wastes depth and skews counts; >15% is a strong warning (rRNA-depleted/polyA libs)."},
+        {"key": "duplication_rate", "label": "Duplication rate", "value": 14, "unit": "%", "verdict": "PASS", "hardGate": false, "threshold": "pass<=20, warn<=50 (%)", "rationale": "PCR/optical duplication reduces effective complexity; >50% is concerning."},
+        {"key": "nrf", "label": "Non-redundant fraction (library complexity)", "value": 0.86, "unit": "0-1", "verdict": "PASS", "hardGate": false, "threshold": "pass>=0.8, warn>=0.5 (0-1)", "rationale": "Low complexity (NRF<0.5) indicates over-amplification/low input."},
+        {"key": "exonic_rate", "label": "Exonic read fraction", "value": 71, "unit": "%", "verdict": "PASS", "hardGate": false, "threshold": "pass>=60, warn>=50 (%)", "rationale": "Low exonic fraction (high intronic/intergenic) suggests gDNA contamination or degradation."},
+        {"key": "genes_detected", "label": "Genes detected", "value": 16850, "unit": "count", "verdict": "PASS", "hardGate": false, "threshold": "pass>=15000, warn>=10000 (count)", "rationale": "Too few detected genes signals shallow depth or poor capture for a typical human bulk library."}
+      ],
+      "input_metrics": {"rin": 8.4, "unique_mapping_rate": 88.2, "rrna_rate": 3.1, "duplication_rate": 14.0, "nrf": 0.86, "exonic_rate": 71.0, "genes_detected": 16850}
+    },
+    {
+      "id": "S02",
+      "status": "include",
+      "rationale": "assess_rnaseq_quality returned verdict PASS, phase ANALYSIS_READY, analyzable=true, and blockers=null. RIN 7.0 and unique mapping 80.0% were each returned PASS at the inclusive hard-gate boundaries, and every other metric also returned PASS. Both sample-level gates returned pass.",
+      "evidence": [
+        "assess_rnaseq_quality: verdict=PASS; phase=ANALYSIS_READY; analyzable=true; blockers=null",
+        "assess_rnaseq_quality: rin=7.0 PASS (hardGate=true); unique_mapping_rate=80.0% PASS (hardGate=true)",
+        "assess_rnaseq_quality gates: data_completeness=pass; protocol_consistency=pass; all seven per-metric verdicts=PASS"
+      ],
+      "tools_used": ["assess_rnaseq_quality"],
+      "overall": "PASS",
+      "phase": "ANALYSIS_READY",
+      "blockers": null,
+      "analyzable": true,
+      "missing": null,
+      "confidence": 1,
+      "gates": [
+        {"gate": "data_completeness", "status": "pass", "detail": "all required metrics supplied"},
+        {"gate": "protocol_consistency", "status": "pass", "detail": "metrics are consistent with the declared protocol"}
+      ],
+      "summary": "GOOD QUALITY: all assessed metrics pass; data is suitable for downstream expression analysis.",
+      "per_metric": [
+        {"key": "rin", "label": "RNA Integrity Number", "value": 7, "unit": "1-10", "verdict": "PASS", "hardGate": true, "threshold": "pass>=7, warn>=6 (1-10)", "rationale": "RNA degradation biases expression quantification; RIN<6 is a hard gate (ENCODE/GTEx)."},
+        {"key": "unique_mapping_rate", "label": "Unique mapping rate", "value": 80, "unit": "%", "verdict": "PASS", "hardGate": true, "threshold": "pass>=80, warn>=60 (%)", "rationale": "Low unique mapping signals contamination or wrong reference; <60% is a hard gate."},
+        {"key": "rrna_rate", "label": "rRNA contamination", "value": 4.8, "unit": "%", "verdict": "PASS", "hardGate": false, "threshold": "pass<=10, warn<=15 (%)", "rationale": "High rRNA wastes depth and skews counts; >15% is a strong warning (rRNA-depleted/polyA libs)."},
+        {"key": "duplication_rate", "label": "Duplication rate", "value": 18.5, "unit": "%", "verdict": "PASS", "hardGate": false, "threshold": "pass<=20, warn<=50 (%)", "rationale": "PCR/optical duplication reduces effective complexity; >50% is concerning."},
+        {"key": "nrf", "label": "Non-redundant fraction (library complexity)", "value": 0.83, "unit": "0-1", "verdict": "PASS", "hardGate": false, "threshold": "pass>=0.8, warn>=0.5 (0-1)", "rationale": "Low complexity (NRF<0.5) indicates over-amplification/low input."},
+        {"key": "exonic_rate", "label": "Exonic read fraction", "value": 68.2, "unit": "%", "verdict": "PASS", "hardGate": false, "threshold": "pass>=60, warn>=50 (%)", "rationale": "Low exonic fraction (high intronic/intergenic) suggests gDNA contamination or degradation."},
+        {"key": "genes_detected", "label": "Genes detected", "value": 16120, "unit": "count", "verdict": "PASS", "hardGate": false, "threshold": "pass>=15000, warn>=10000 (count)", "rationale": "Too few detected genes signals shallow depth or poor capture for a typical human bulk library."}
+      ],
+      "input_metrics": {"rin": 7.0, "unique_mapping_rate": 80.0, "rrna_rate": 4.8, "duplication_rate": 18.5, "nrf": 0.83, "exonic_rate": 68.2, "genes_detected": 16120}
+    },
+    {
+      "id": "S03",
+      "status": "exclude",
+      "rationale": "assess_rnaseq_quality returned verdict FAIL and phase QUARANTINED because RIN 5.9 failed a hard gate. The blocker explicitly identifies RNA Integrity Number=5.9 as a HARD-GATE failure; the other six metrics returned PASS but do not override that failure. Both data completeness and protocol consistency returned pass.",
+      "evidence": [
+        "assess_rnaseq_quality: verdict=FAIL; phase=QUARANTINED; analyzable=false",
+        "assess_rnaseq_quality: rin=5.9 FAIL; hardGate=true; hard_gate_failure=true",
+        "assess_rnaseq_quality blocker: RNA Integrity Number = 5.9 1-10 is a HARD-GATE failure: RNA degradation biases expression quantification; RIN<6 is a hard gate (ENCODE/GTEx).",
+        "assess_rnaseq_quality gates: data_completeness=pass; protocol_consistency=pass"
+      ],
+      "tools_used": ["assess_rnaseq_quality"],
+      "overall": "FAIL",
+      "phase": "QUARANTINED",
+      "blockers": ["RNA Integrity Number = 5.9 1-10 is a HARD-GATE failure: RNA degradation biases expression quantification; RIN<6 is a hard gate (ENCODE/GTEx)."],
+      "analyzable": false,
+      "missing": null,
+      "confidence": 1,
+      "gates": [
+        {"gate": "data_completeness", "status": "pass", "detail": "all required metrics supplied"},
+        {"gate": "protocol_consistency", "status": "pass", "detail": "metrics are consistent with the declared protocol"}
+      ],
+      "summary": "POOR QUALITY: one or more metrics failed. A hard quality gate failed — downstream expression analysis is not valid until resolved.",
+      "fail_metrics": ["rin"],
+      "hard_gate_failure": true,
+      "per_metric": [
+        {"key": "rin", "label": "RNA Integrity Number", "value": 5.9, "unit": "1-10", "verdict": "FAIL", "hardGate": true, "threshold": "pass>=7, warn>=6 (1-10)", "rationale": "RNA degradation biases expression quantification; RIN<6 is a hard gate (ENCODE/GTEx)."},
+        {"key": "unique_mapping_rate", "label": "Unique mapping rate", "value": 91.5, "unit": "%", "verdict": "PASS", "hardGate": true, "threshold": "pass>=80, warn>=60 (%)", "rationale": "Low unique mapping signals contamination or wrong reference; <60% is a hard gate."},
+        {"key": "rrna_rate", "label": "rRNA contamination", "value": 2.4, "unit": "%", "verdict": "PASS", "hardGate": false, "threshold": "pass<=10, warn<=15 (%)", "rationale": "High rRNA wastes depth and skews counts; >15% is a strong warning (rRNA-depleted/polyA libs)."},
+        {"key": "duplication_rate", "label": "Duplication rate", "value": 12, "unit": "%", "verdict": "PASS", "hardGate": false, "threshold": "pass<=20, warn<=50 (%)", "rationale": "PCR/optical duplication reduces effective complexity; >50% is concerning."},
+        {"key": "nrf", "label": "Non-redundant fraction (library complexity)", "value": 0.9, "unit": "0-1", "verdict": "PASS", "hardGate": false, "threshold": "pass>=0.8, warn>=0.5 (0-1)", "rationale": "Low complexity (NRF<0.5) indicates over-amplification/low input."},
+        {"key": "exonic_rate", "label": "Exonic read fraction", "value": 74.1, "unit": "%", "verdict": "PASS", "hardGate": false, "threshold": "pass>=60, warn>=50 (%)", "rationale": "Low exonic fraction (high intronic/intergenic) suggests gDNA contamination or degradation."},
+        {"key": "genes_detected", "label": "Genes detected", "value": 18900, "unit": "count", "verdict": "PASS", "hardGate": false, "threshold": "pass>=15000, warn>=10000 (count)", "rationale": "Too few detected genes signals shallow depth or poor capture for a typical human bulk library."}
+      ],
+      "input_metrics": {"rin": 5.9, "unique_mapping_rate": 91.5, "rrna_rate": 2.4, "duplication_rate": 12.0, "nrf": 0.90, "exonic_rate": 74.1, "genes_detected": 18900}
+    },
+    {
+      "id": "S04",
+      "status": "flag_for_review",
+      "rationale": "assess_rnaseq_quality returned verdict WARN, phase FLAGGED, analyzable=true, and blockers=null. Duplication rate 34.0% and NRF 0.71 are the two WARN metrics; RIN, unique mapping, rRNA, exonic rate, and genes detected returned PASS. Both sample-level gates returned pass, so this sample is retained for review rather than excluded.",
+      "evidence": [
+        "assess_rnaseq_quality: verdict=WARN; phase=FLAGGED; analyzable=true; blockers=null",
+        "assess_rnaseq_quality WARN metrics: duplication_rate=34.0% WARN; nrf=0.71 WARN",
+        "assess_rnaseq_quality gates: data_completeness=pass; protocol_consistency=pass"
+      ],
+      "tools_used": ["assess_rnaseq_quality"],
+      "overall": "WARN",
+      "phase": "FLAGGED",
+      "blockers": null,
+      "analyzable": true,
+      "missing": null,
+      "confidence": 1,
+      "gates": [
+        {"gate": "data_completeness", "status": "pass", "detail": "all required metrics supplied"},
+        {"gate": "protocol_consistency", "status": "pass", "detail": "metrics are consistent with the declared protocol"}
+      ],
+      "summary": "USABLE WITH CAUTION: one or more metrics are borderline; review flagged metrics before relying on results.",
+      "warn_metrics": ["duplication_rate", "nrf"],
+      "per_metric": [
+        {"key": "rin", "label": "RNA Integrity Number", "value": 7.6, "unit": "1-10", "verdict": "PASS", "hardGate": true, "threshold": "pass>=7, warn>=6 (1-10)", "rationale": "RNA degradation biases expression quantification; RIN<6 is a hard gate (ENCODE/GTEx)."},
+        {"key": "unique_mapping_rate", "label": "Unique mapping rate", "value": 84, "unit": "%", "verdict": "PASS", "hardGate": true, "threshold": "pass>=80, warn>=60 (%)", "rationale": "Low unique mapping signals contamination or wrong reference; <60% is a hard gate."},
+        {"key": "rrna_rate", "label": "rRNA contamination", "value": 6.2, "unit": "%", "verdict": "PASS", "hardGate": false, "threshold": "pass<=10, warn<=15 (%)", "rationale": "High rRNA wastes depth and skews counts; >15% is a strong warning (rRNA-depleted/polyA libs)."},
+        {"key": "duplication_rate", "label": "Duplication rate", "value": 34, "unit": "%", "verdict": "WARN", "hardGate": false, "threshold": "pass<=20, warn<=50 (%)", "rationale": "PCR/optical duplication reduces effective complexity; >50% is concerning."},
+        {"key": "nrf", "label": "Non-redundant fraction (library complexity)", "value": 0.71, "unit": "0-1", "verdict": "WARN", "hardGate": false, "threshold": "pass>=0.8, warn>=0.5 (0-1)", "rationale": "Low complexity (NRF<0.5) indicates over-amplification/low input."},
+        {"key": "exonic_rate", "label": "Exonic read fraction", "value": 66, "unit": "%", "verdict": "PASS", "hardGate": false, "threshold": "pass>=60, warn>=50 (%)", "rationale": "Low exonic fraction (high intronic/intergenic) suggests gDNA contamination or degradation."},
+        {"key": "genes_detected", "label": "Genes detected", "value": 15800, "unit": "count", "verdict": "PASS", "hardGate": false, "threshold": "pass>=15000, warn>=10000 (count)", "rationale": "Too few detected genes signals shallow depth or poor capture for a typical human bulk library."}
+      ],
+      "input_metrics": {"rin": 7.6, "unique_mapping_rate": 84.0, "rrna_rate": 6.2, "duplication_rate": 34.0, "nrf": 0.71, "exonic_rate": 66.0, "genes_detected": 15800}
+    },
+    {
+      "id": "S05",
+      "status": "cannot_certify",
+      "rationale": "assess_rnaseq_quality returned verdict INCOMPLETE and phase QUARANTINED because the required RIN metric was not supplied; missing=[rin]. Its data_completeness gate returned hard_block, and the six supplied metrics returning PASS cannot replace the missing required measurement. No RIN value was imputed or inferred.",
+      "evidence": [
+        "assess_rnaseq_quality: verdict=INCOMPLETE; phase=QUARANTINED; analyzable=false; blockers=null",
+        "assess_rnaseq_quality: missing=[rin]; missing_required=[rin]",
+        "assess_rnaseq_quality gate: data_completeness=hard_block — required metric(s) missing: [rin] — cannot certify quality on unmeasured evidence",
+        "assess_rnaseq_quality gate: protocol_consistency=pass"
+      ],
+      "tools_used": ["assess_rnaseq_quality"],
+      "overall": "INCOMPLETE",
+      "phase": "QUARANTINED",
+      "blockers": null,
+      "analyzable": false,
+      "missing": ["rin"],
+      "missing_required": ["rin"],
+      "confidence": 1,
+      "gates": [
+        {"gate": "data_completeness", "status": "hard_block", "detail": "required metric(s) missing: [rin] — cannot certify quality on unmeasured evidence", "remediation": "Re-run the QC pipeline with all required metrics populated. Check that FASTQ/BAM inputs are not truncated and that the aligner produced the expected metric outputs."},
+        {"gate": "protocol_consistency", "status": "pass", "detail": "metrics are consistent with the declared protocol"}
+      ],
+      "summary": "CANNOT CERTIFY: required metric(s) [rin] were not supplied — quality cannot be claimed on missing evidence.",
+      "per_metric": [
+        {"key": "unique_mapping_rate", "label": "Unique mapping rate", "value": 89.7, "unit": "%", "verdict": "PASS", "hardGate": true, "threshold": "pass>=80, warn>=60 (%)", "rationale": "Low unique mapping signals contamination or wrong reference; <60% is a hard gate."},
+        {"key": "rrna_rate", "label": "rRNA contamination", "value": 3, "unit": "%", "verdict": "PASS", "hardGate": false, "threshold": "pass<=10, warn<=15 (%)", "rationale": "High rRNA wastes depth and skews counts; >15% is a strong warning (rRNA-depleted/polyA libs)."},
+        {"key": "duplication_rate", "label": "Duplication rate", "value": 11.2, "unit": "%", "verdict": "PASS", "hardGate": false, "threshold": "pass<=20, warn<=50 (%)", "rationale": "PCR/optical duplication reduces effective complexity; >50% is concerning."},
+        {"key": "nrf", "label": "Non-redundant fraction (library complexity)", "value": 0.91, "unit": "0-1", "verdict": "PASS", "hardGate": false, "threshold": "pass>=0.8, warn>=0.5 (0-1)", "rationale": "Low complexity (NRF<0.5) indicates over-amplification/low input."},
+        {"key": "exonic_rate", "label": "Exonic read fraction", "value": 72.5, "unit": "%", "verdict": "PASS", "hardGate": false, "threshold": "pass>=60, warn>=50 (%)", "rationale": "Low exonic fraction (high intronic/intergenic) suggests gDNA contamination or degradation."},
+        {"key": "genes_detected", "label": "Genes detected", "value": 17640, "unit": "count", "verdict": "PASS", "hardGate": false, "threshold": "pass>=15000, warn>=10000 (count)", "rationale": "Too few detected genes signals shallow depth or poor capture for a typical human bulk library."}
+      ],
+      "input_metrics": {"unique_mapping_rate": 89.7, "rrna_rate": 3.0, "duplication_rate": 11.2, "nrf": 0.91, "exonic_rate": 72.5, "genes_detected": 17640}
+    },
+    {
+      "id": "S06",
+      "status": "exclude",
+      "rationale": "assess_rnaseq_quality returned verdict FAIL and phase QUARANTINED because rRNA rate 22.4% was the sole per-metric FAIL; it is not a hard-gate metric, so hard_gate_failure=false. The protocol_consistency gate also returned fail: polyA library has 22.4% rRNA (>20%), indicating likely failed polyA selection and suspect library identity. RIN and unique mapping returned PASS but do not override the fail band.",
+      "evidence": [
+        "assess_rnaseq_quality: verdict=FAIL; phase=QUARANTINED; analyzable=false; blockers=null",
+        "assess_rnaseq_quality: rrna_rate=22.4% FAIL; hardGate=false; fail_metrics=[rrna_rate]; hard_gate_failure=false",
+        "assess_rnaseq_quality gate: data_completeness=pass",
+        "assess_rnaseq_quality gate: protocol_consistency=fail — polyA library has 22.4% rRNA (>20%): polyA selection likely failed; library identity is suspect"
+      ],
+      "tools_used": ["assess_rnaseq_quality"],
+      "overall": "FAIL",
+      "phase": "QUARANTINED",
+      "blockers": null,
+      "analyzable": false,
+      "missing": null,
+      "confidence": 1,
+      "gates": [
+        {"gate": "data_completeness", "status": "pass", "detail": "all required metrics supplied"},
+        {"gate": "protocol_consistency", "status": "fail", "detail": "polyA library has 22.4% rRNA (>20%): polyA selection likely failed; library identity is suspect", "remediation": "Repeat polyA selection or switch to ribo-depletion. If the library was intentionally total-RNA, re-declare the protocol as 'total' and re-run QC."}
+      ],
+      "summary": "POOR QUALITY: one or more metrics failed.",
+      "fail_metrics": ["rrna_rate"],
+      "hard_gate_failure": false,
+      "per_metric": [
+        {"key": "rin", "label": "RNA Integrity Number", "value": 8.1, "unit": "1-10", "verdict": "PASS", "hardGate": true, "threshold": "pass>=7, warn>=6 (1-10)", "rationale": "RNA degradation biases expression quantification; RIN<6 is a hard gate (ENCODE/GTEx)."},
+        {"key": "unique_mapping_rate", "label": "Unique mapping rate", "value": 86.3, "unit": "%", "verdict": "PASS", "hardGate": true, "threshold": "pass>=80, warn>=60 (%)", "rationale": "Low unique mapping signals contamination or wrong reference; <60% is a hard gate."},
+        {"key": "rrna_rate", "label": "rRNA contamination", "value": 22.4, "unit": "%", "verdict": "FAIL", "hardGate": false, "threshold": "pass<=10, warn<=15 (%)", "rationale": "High rRNA wastes depth and skews counts; >15% is a strong warning (rRNA-depleted/polyA libs)."},
+        {"key": "duplication_rate", "label": "Duplication rate", "value": 16, "unit": "%", "verdict": "PASS", "hardGate": false, "threshold": "pass<=20, warn<=50 (%)", "rationale": "PCR/optical duplication reduces effective complexity; >50% is concerning."},
+        {"key": "nrf", "label": "Non-redundant fraction (library complexity)", "value": 0.84, "unit": "0-1", "verdict": "PASS", "hardGate": false, "threshold": "pass>=0.8, warn>=0.5 (0-1)", "rationale": "Low complexity (NRF<0.5) indicates over-amplification/low input."},
+        {"key": "exonic_rate", "label": "Exonic read fraction", "value": 63, "unit": "%", "verdict": "PASS", "hardGate": false, "threshold": "pass>=60, warn>=50 (%)", "rationale": "Low exonic fraction (high intronic/intergenic) suggests gDNA contamination or degradation."},
+        {"key": "genes_detected", "label": "Genes detected", "value": 15400, "unit": "count", "verdict": "PASS", "hardGate": false, "threshold": "pass>=15000, warn>=10000 (count)", "rationale": "Too few detected genes signals shallow depth or poor capture for a typical human bulk library."}
+      ],
+      "input_metrics": {"rin": 8.1, "unique_mapping_rate": 86.3, "rrna_rate": 22.4, "duplication_rate": 16.0, "nrf": 0.84, "exonic_rate": 63.0, "genes_detected": 15400}
+    }
+  ],
+  "gates": [
+    {"name": "protocol_context", "status": "pass", "detail": "recommend_qc_thresholds(polyA) and list_qc_metrics returned the same metric grammar; statuses nevertheless follow only assess_rnaseq_quality."},
+    {"name": "required_metric_gate_DataCompleteness", "status": "pass", "detail": "Derived compliance rollup, not a separate tool verdict: held for all positive statuses, S01/S02/S04 data_completeness=pass. S05 returned hard_block and received cannot_certify, not a positive status."},
+    {"name": "hard_gate_QC", "status": "fail", "detail": "S03 returned rin=5.9 FAIL with hardGate=true and phase QUARANTINED; no other supplied per-metric RIN or unique-mapping result was FAIL."},
+    {"name": "no_metric_in_fail_band", "status": "fail", "detail": "S03 rin and S06 rrna_rate returned FAIL; all other returned per-metric results were PASS or WARN."},
+    {"name": "tool_provenance", "status": "pass", "detail": "Every sample status has a corresponding assess_rnaseq_quality response for the exact sample and input map, including S05 without rin."},
+    {"name": "protocol_consistency", "status": "fail", "detail": "S06 returned protocol_consistency=fail for 22.4% rRNA in a polyA library; the other five returned protocol_consistency=pass."},
+    {"name": "batch_confound_full", "status": "pass", "detail": "check_batch_confound returned pass: batch and condition are not perfectly confounded on the full six-sample design."},
+    {"name": "batch_confound_retained", "status": "hard_block", "detail": "check_batch_confound returned hard_block for retained samples S01, S02, S04: batch effect and biology are inseparable."},
+    {"name": "downstream_layout_multiplicity_and_confidence_caps", "status": "n/a", "detail": "DownstreamGate/PreToolUse DE blocking, multiple-testing correction, paired-end layout validation, and formal confidence-tier caps were not exercisable and are not claimed as passed."}
+  ],
+  "overall_verdict": "S01 and S02 pass local QC, S04 is flagged for duplication and complexity warnings, S03 and S06 are excluded, S05 cannot be certified without RIN, and the retained design cannot support an interpretable treated-versus-control DE contrast as-is because batch and condition are perfectly confounded.",
+  "confidence": 0.9,
+  "limitations": [
+    "The inputs are explicitly synthetic teaching data; these are mechanical local-policy QC classifications, not new laboratory measurements or evidence of biological signal.",
+    "The retained set is limited to S01, S02, and S04, with control samples only in B1 and the treated sample only in B2; the retained-design hard_block prevents interpreting treatment effects separately from batch as-is.",
+    "S05 has no measured RIN in the input; no imputation was performed, so its quality remains uncertified rather than passing or failing on RIN.",
+    "S04 remains analyzable according to the assessor but requires review of duplication_rate=34.0% and nrf=0.71 before reliance on downstream results.",
+    "No DE model, raw-count/normalization checks, biological-replicate validation, statistical power analysis, effect-size estimation, multiple-testing correction, or paired-end layout validation was performed.",
+    "The overall confidence value follows the derived tier documented in CAPABILITIES.md and is not a calibrated probability of biological validity."
+  ],
+  "critique_response": [
+    {"id":"C1","action":"fixed","detail":"Compared input notes with BRIEF.md independently; corrected assay-context attribution in RESULT.md."},
+    {"id":"C2","action":"fixed","detail":"Retained-design check_batch_confound re-run returned hard_block; summary fields now preserve it."},
+    {"id":"C3","action":"fixed","detail":"QC re-runs confirmed completeness pass for S01/S02/S04 and hard_block for S05. Clarified positive-status compliance rollup."},
+    {"id":"C4","action":"fixed","detail":"S06 QC and threshold-tool re-runs confirmed 22.4% FAIL, >15% warning rationale and separate >20% protocol cut. Recorded both observations without status change."},
+    {"id":"C5","action":"fixed","detail":"Verified explanation step is optional; documented skip and attribution to assessor rationale strings."},
+    {"id":"C6","action":"fixed","detail":"Inspected six unique IDs and complete required fields; documented deliberate array-with-id equivalent while preserving requested shape."},
+    {"id":"C7","action":"fixed","detail":"S06 re-run confirmed QUARANTINED with sole FAIL rrna_rate hardGate=false. Documented returned-phase preservation and distinct derived hard_gate_failure=false."},
+    {"id":"C8","action":"fixed","detail":"Inspected both gate levels; documented raw gate versus synthesized name convention while preserving requested shape."}
+  ],
+  "compare_samples": {
+    "input": {
+      "samples": {
+        "S01": {"rin": 8.4, "unique_mapping_rate": 88.2, "rrna_rate": 3.1, "duplication_rate": 14.0, "nrf": 0.86, "exonic_rate": 71.0, "genes_detected": 16850},
+        "S02": {"rin": 7.0, "unique_mapping_rate": 80.0, "rrna_rate": 4.8, "duplication_rate": 18.5, "nrf": 0.83, "exonic_rate": 68.2, "genes_detected": 16120},
+        "S03": {"rin": 5.9, "unique_mapping_rate": 91.5, "rrna_rate": 2.4, "duplication_rate": 12.0, "nrf": 0.90, "exonic_rate": 74.1, "genes_detected": 18900},
+        "S04": {"rin": 7.6, "unique_mapping_rate": 84.0, "rrna_rate": 6.2, "duplication_rate": 34.0, "nrf": 0.71, "exonic_rate": 66.0, "genes_detected": 15800},
+        "S05": {"unique_mapping_rate": 89.7, "rrna_rate": 3.0, "duplication_rate": 11.2, "nrf": 0.91, "exonic_rate": 72.5, "genes_detected": 17640},
+        "S06": {"rin": 8.1, "unique_mapping_rate": 86.3, "rrna_rate": 22.4, "duplication_rate": 16.0, "nrf": 0.84, "exonic_rate": 63.0, "genes_detected": 15400}
+      }
+    },
+    "response": {
+      "ranking_worst_first": [
+        {"sample": "S05", "verdict": "INCOMPLETE", "analyzable": false},
+        {"sample": "S03", "verdict": "FAIL", "analyzable": false},
+        {"sample": "S06", "verdict": "FAIL", "analyzable": false},
+        {"sample": "S04", "verdict": "WARN", "analyzable": true},
+        {"sample": "S01", "verdict": "PASS", "analyzable": true},
+        {"sample": "S02", "verdict": "PASS", "analyzable": true}
+      ]
+    }
+  },
+  "batch_confound_full": {
+    "input": {
+      "batches": {"S01": "B1", "S02": "B2", "S03": "B2", "S04": "B1", "S05": "B1", "S06": "B2"},
+      "conditions": {"S01": "ctrl", "S02": "treated", "S03": "ctrl", "S04": "ctrl", "S05": "treated", "S06": "treated"}
+    },
+    "response": {"gate": "batch_confound", "status": "pass", "detail": "batch and condition are not perfectly confounded"}
+  },
+  "batch_confound_retained": {
+    "retained_samples": ["S01", "S02", "S04"],
+    "input": {
+      "batches": {"S01": "B1", "S02": "B2", "S04": "B1"},
+      "conditions": {"S01": "ctrl", "S02": "treated", "S04": "ctrl"}
+    },
+    "response": {
+      "gate": "batch_confound",
+      "status": "hard_block",
+      "detail": "batch is perfectly confounded with condition: batch effect and biology are inseparable — differential expression would be uninterpretable",
+      "remediation": "Re-design the experiment so that each batch contains samples from multiple conditions, or add biological replicates across batches before re-analysis."
+    }
+  },
+  "de_interpretable_as_is": false,
+  "replicate_counts": {
+    "source": "derived from design.json",
+    "retained_samples": ["S01", "S02", "S04"],
+    "per_condition": {"ctrl": 2, "treated": 1},
+    "per_batch_condition": {
+      "B1": {"ctrl": 2, "treated": 0},
+      "B2": {"ctrl": 0, "treated": 1}
+    }
+  },
+  "protocol_context": {
+    "recommend_qc_thresholds": {
+      "input": {"protocol": "polyA"},
+      "response": {
+        "metrics": [
+          {"key": "rin", "label": "RNA Integrity Number", "unit": "1-10", "direction": 0, "pass": 7, "warn": 6, "hardGate": true, "required": true, "rationale": "RNA degradation biases expression quantification; RIN<6 is a hard gate (ENCODE/GTEx)."},
+          {"key": "unique_mapping_rate", "label": "Unique mapping rate", "unit": "%", "direction": 0, "pass": 80, "warn": 60, "hardGate": true, "required": true, "rationale": "Low unique mapping signals contamination or wrong reference; <60% is a hard gate."},
+          {"key": "rrna_rate", "label": "rRNA contamination", "unit": "%", "direction": 1, "pass": 10, "warn": 15, "hardGate": false, "required": false, "rationale": "High rRNA wastes depth and skews counts; >15% is a strong warning (rRNA-depleted/polyA libs)."},
+          {"key": "duplication_rate", "label": "Duplication rate", "unit": "%", "direction": 1, "pass": 20, "warn": 50, "hardGate": false, "required": false, "rationale": "PCR/optical duplication reduces effective complexity; >50% is concerning."},
+          {"key": "nrf", "label": "Non-redundant fraction (library complexity)", "unit": "0-1", "direction": 0, "pass": 0.8, "warn": 0.5, "hardGate": false, "required": false, "rationale": "Low complexity (NRF<0.5) indicates over-amplification/low input."},
+          {"key": "exonic_rate", "label": "Exonic read fraction", "unit": "%", "direction": 0, "pass": 60, "warn": 50, "hardGate": false, "required": false, "rationale": "Low exonic fraction (high intronic/intergenic) suggests gDNA contamination or degradation."},
+          {"key": "genes_detected", "label": "Genes detected", "unit": "count", "direction": 0, "pass": 15000, "warn": 10000, "hardGate": false, "required": false, "rationale": "Too few detected genes signals shallow depth or poor capture for a typical human bulk library."}
+        ],
+        "protocol": "polyA"
+      }
+    },
+    "list_qc_metrics": {
+      "input": {},
+      "response": {
+        "metrics": [
+          {"key": "rin", "label": "RNA Integrity Number", "unit": "1-10", "direction": 0, "pass": 7, "warn": 6, "hardGate": true, "required": true, "rationale": "RNA degradation biases expression quantification; RIN<6 is a hard gate (ENCODE/GTEx)."},
+          {"key": "unique_mapping_rate", "label": "Unique mapping rate", "unit": "%", "direction": 0, "pass": 80, "warn": 60, "hardGate": true, "required": true, "rationale": "Low unique mapping signals contamination or wrong reference; <60% is a hard gate."},
+          {"key": "rrna_rate", "label": "rRNA contamination", "unit": "%", "direction": 1, "pass": 10, "warn": 15, "hardGate": false, "required": false, "rationale": "High rRNA wastes depth and skews counts; >15% is a strong warning (rRNA-depleted/polyA libs)."},
+          {"key": "duplication_rate", "label": "Duplication rate", "unit": "%", "direction": 1, "pass": 20, "warn": 50, "hardGate": false, "required": false, "rationale": "PCR/optical duplication reduces effective complexity; >50% is concerning."},
+          {"key": "nrf", "label": "Non-redundant fraction (library complexity)", "unit": "0-1", "direction": 0, "pass": 0.8, "warn": 0.5, "hardGate": false, "required": false, "rationale": "Low complexity (NRF<0.5) indicates over-amplification/low input."},
+          {"key": "exonic_rate", "label": "Exonic read fraction", "unit": "%", "direction": 0, "pass": 60, "warn": 50, "hardGate": false, "required": false, "rationale": "Low exonic fraction (high intronic/intergenic) suggests gDNA contamination or degradation."},
+          {"key": "genes_detected", "label": "Genes detected", "unit": "count", "direction": 0, "pass": 15000, "warn": 10000, "hardGate": false, "required": false, "rationale": "Too few detected genes signals shallow depth or poor capture for a typical human bulk library."}
+        ],
+        "protocol": "polyA"
+      }
+    }
+  },
+  "discrepancies": [
+    {"item":"S06","detail":"Observed rationale/band tension: re-run returned rrna_rate=22.4% FAIL with pass<=10, warn<=15, while rationale calls >15% a strong warning. Returned FAIL governs. No status change; tool verdict governs per PLAN.","source":"assess_rnaseq_quality(S06); both threshold tools"},
+    {"item":"S06","detail":"Separate protocol_consistency cut >20% appears in S06 re-run gate detail but not in metric grammar's 10%/15% cuts. Do not conflate or relax checks. No status change; tool verdict governs per PLAN.","source":"assess_rnaseq_quality(S06); recommend_qc_thresholds(polyA); list_qc_metrics"},
+    {"item":"S06","detail":"Re-run returned QUARANTINED despite sole FAIL rrna_rate hardGate=false. Derived hard_gate_failure=false concerns metric gates, not lifecycle phase. PLAN preserves returned phase for non-hard-gate FAIL. No status change; exclude follows FAIL.","source":"assess_rnaseq_quality(S06); PLAN.md"},
+    {"item":"overall","detail":"CAPABILITIES.md gap 1 and PLAN describe protocol consistency as reasoned/not tool-verified, but live assessor responses expose completeness and protocol-consistency gates. Gate records are observed software outputs; mechanistic explanations remain hypotheses, not assay validation. No status change.","source":"CAPABILITIES.md; PLAN.md; six QC re-runs"}
+  ],
+  "unassessed_checks": [
+    "DownstreamGate and the PreToolUse hook that blocks DE on non-ANALYSIS_READY samples: not exercisable with the available tools and not claimed as passed.",
+    "compbio multiple-testing-corrected gate: no DE analysis was run and no multiple-testing tool was available.",
+    "Paired-end library-layout check: layout is stated in BRIEF.md but no input field or tool validates it.",
+    "Confidence-tier caps beyond the documented derived-tier selection: no confidence-tier tool was available; per-sample confidence=1 values are tool outputs, not biological certainty.",
+    "DE statistical power, effect sizes, normalization/count-model suitability, and independent biological-replicate adequacy: outside the supplied QC and design checks."
+  ],
+  "provenance": {
+    "serialization_conventions": "Same shape retained: items is an array with unique id fields S01–S06, deliberately equivalent to PLAN sample-key wording. Raw per-sample gates use gate; synthesized study rollups use name. Consumers must distinguish schemas. overall aliases tool verdict; per_metric aliases tool results; missing_required and hard_gate_failure are derived.",
+    "revision_verification": "All six exact-input QC re-runs, full-map compare_samples, both threshold tools, and full and mechanically retained check_batch_confound matched stored raw responses. Library counts derive from design.json, not verified biological independence. Confidence tier checked against CAPABILITIES.md only, not enforced or calibrated.",
+    "optional_metric_explanations": "Optional PLAN Step 10 skipped; explain_qc_metric not called. Explanations come from assessor rationale strings. External attributions such as ENCODE/GTEx were not independently verified.",
+    "remediation_limit": "S05 requires a measured RNA integrity assay record; generic tool FASTQ/BAM/aligner remediation does not supply measured RIN. Protocol-failure explanations are tool hypotheses, not assay diagnoses.",
+    "data_status": "Synthetic teaching data, not measurements from any real study, as stated in inputs/qc_metrics.json and inputs/design.json.",
+    "intended_use": "Pre-DE mechanical QC gate for the synthetic bulk poly(A)-selected RNA-seq design described in BRIEF.md.",
+    "unit_of_analysis": "One bulk RNA-seq library/sample identifier (S01–S06); no cell-level, technical-replicate, or donor-level independence was inferred.",
+    "inputs": {
+      "metrics_and_protocol": "inputs/qc_metrics.json; rates are percentages, nrf is a fraction, genes_detected is a count, and S05's RIN was not recorded.",
+      "design": "inputs/design.json; batches and conditions copied unchanged.",
+      "study_layout": "BRIEF.md states bulk RNA-seq, poly(A)-selected, paired-end libraries; no tool-verified layout field exists."
+    },
+    "sample_qc": {
+      "S01": "assess_rnaseq_quality(sample=S01, metrics=input_metrics.S01); all S01 values and verdicts are from that response and the exact input file map.",
+      "S02": "assess_rnaseq_quality(sample=S02, metrics=input_metrics.S02); all S02 values and verdicts are from that response and the exact input file map.",
+      "S03": "assess_rnaseq_quality(sample=S03, metrics=input_metrics.S03); all S03 values, fail metrics, and blockers are from that response and the exact input file map.",
+      "S04": "assess_rnaseq_quality(sample=S04, metrics=input_metrics.S04); all S04 values and WARN metrics are from that response and the exact input file map.",
+      "S05": "assess_rnaseq_quality(sample=S05, metrics=input_metrics.S05 without rin); missing_required and INCOMPLETE are from that response; no value was added.",
+      "S06": "assess_rnaseq_quality(sample=S06, metrics=input_metrics.S06); all S06 values, fail metrics, and gate details are from that response and the exact input file map."
+    },
+    "sample_ranking": "compare_samples called once with the full six-sample metrics map from inputs/qc_metrics.json; ranking_worst_first is verbatim.",
+    "protocol_context": "recommend_qc_thresholds(protocol=polyA) and list_qc_metrics(); threshold values, directions, required flags, and hard-gate flags are verbatim tool outputs.",
+    "batch_confound_full": "check_batch_confound with both full maps copied from inputs/design.json; response is verbatim.",
+    "batch_confound_retained": "check_batch_confound after restricting both inputs/design.json maps to R=[S01,S02,S04], defined mechanically by include or flag_for_review statuses; response is verbatim.",
+    "replicate_counts": "Derived by direct enumeration of inputs/design.json restricted to R; these counts were not tool-computed.",
+    "de_interpretable_as_is": "Derived solely from batch_confound_retained.response.status=hard_block according to PLAN.md step 9.",
+    "confidence": "0.9 uses the derived=0.90 tier documented in CAPABILITIES.md; it describes confidence in this mechanical synthesis, not calibrated biological validity."
+  }
+}
