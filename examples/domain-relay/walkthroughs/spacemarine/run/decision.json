@@ -1,0 +1,33 @@
+{
+  "model": "Microsoft-Decision-1",
+  "questions": {
+    "needs_revision": "Do the critique findings show at least one item whose status is wrong or unsupported, so the result must be revised before it is used?",
+    "stale_tle_cleared": "Does any satellite whose TLE epoch is older than 72 hours receive go?",
+    "sub_minimum_link_closes": "Does the result describe a link with margin below 3.0 dB as closing?"
+  },
+  "response": {
+    "model": "microsoft-decision-1",
+    "answers": {
+      "needs_revision": {
+        "type": "noul",
+        "noul": 0.6513582524331651
+      },
+      "stale_tle_cleared": {
+        "type": "noul",
+        "noul": 0.005911098378110939
+      },
+      "sub_minimum_link_closes": {
+        "type": "noul",
+        "noul": 0.03308621551013862
+      }
+    },
+    "usage": {
+      "input_tokens": 2938,
+      "output_tokens": 3
+    },
+    "latency_ms": 695.563,
+    "attempts": 1
+  },
+  "exit_code": 0,
+  "routing": "full-revision"
+}

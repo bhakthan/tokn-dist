@@ -26,13 +26,13 @@ Each item hides a trap. The models never saw this list; the grader did.
 
 | # | Stage | Model | Time | Tools called (domain tools in bold) | Wrote |
 |---|---|---|---|---|---|
-| 0 | Discover | claude-haiku-5-5 | 44.8s | `read_file`×7, `edit_file`×3, `list_directory`×1, `write_file`×1 | [`CAPABILITIES.md`](run/CAPABILITIES.md) |
-| 1 | Plan | claude-opus-5-5 | 100.1s | `read_file`×7, `list_directory`×1, `write_file`×1, `git_status`×1 | [`PLAN.md`](run/PLAN.md) |
-| 2 | Execute | Kimi-K3.1-Pro | 897.2s | **`asil_decompose_verify`**×27, **`fmea_fta_engine`**×25, **`safety_validation_report`**×25, `read_file`×9, `run_command`×5, `write_file`×5 | [`RESULT.md`](run/RESULT.md) |
-| 3 | Critique | FW-GLM-5.3 | 815.6s | **`safety_validation_report`**×9, **`asil_decompose_verify`**×8, **`fmea_fta_engine`**×7, `read_file`×25, `grep_search`×3, `write_file`×2 | [`CRITIQUE.md`](run/CRITIQUE.md) |
-| 4 | Decide | Microsoft-Decision-1 | 1.1s | — | [`decision.json`](run/decision.json) |
-| 5 | Revise | gpt-6.1-sol | 410.6s | **`asil_decompose_verify`**×7, **`safety_validation_report`**×7, **`fmea_fta_engine`**×5, `read_file`×25, `run_command`×4, `edit_file`×4 | [`result.json`](run/result.json) |
-| 6 | Reflect | claude-opus-5-5 | 132.9s | `read_file`×8, `grep_search`×5, `write_file`×1 | [`REFLECTION.md`](run/REFLECTION.md) |
+| 0 | Discover | claude-haiku-5.5 | 30.6s | `read_file`×6, `list_directory`×1, `write_file`×1 | [`CAPABILITIES.md`](run/CAPABILITIES.md) |
+| 1 | Plan | claude-opus-5.5 | 105.8s | `read_file`×7, `list_directory`×1, `write_file`×1, `git_status`×1, `file_search`×1 | [`PLAN.md`](run/PLAN.md) |
+| 2 | Execute | Kimi-K3.1-Pro | 534.3s | **`safety_validation_report`**×6, **`asil_decompose_verify`**×5, **`fmea_fta_engine`**×5, `read_file`×8, `run_command`×4, `list_directory`×2 | [`RESULT.md`](run/RESULT.md) |
+| 3 | Critique | FW-GLM-5.3 | 721.0s | **`asil_decompose_verify`**×5, **`fmea_fta_engine`**×5, **`safety_validation_report`**×5, `read_file`×12, `grep_search`×7, `list_directory`×4 | [`CRITIQUE.md`](run/CRITIQUE.md) |
+| 4 | Decide | Microsoft-Decision-1 | 1.2s | — | [`decision.json`](run/decision.json) |
+| 5 | Revise | gpt-6.1-sol | 349.4s | **`asil_decompose_verify`**×10, **`fmea_fta_engine`**×10, **`safety_validation_report`**×5, `read_file`×24, `git_status`×2, `run_command`×2 | [`result.json`](run/result.json) |
+| 6 | Reflect | claude-opus-5.5 | 88.6s | `read_file`×9, `list_directory`×1, `grep_search`×1, `write_file`×1, `edit_file`×1 | [`REFLECTION.md`](run/REFLECTION.md) |
 
 ### 1. Discover — claude-haiku-5.5
 
@@ -41,22 +41,25 @@ Before anyone plans, TOKN describes itself. The discover stage reads `tokn intro
 From [`CAPABILITIES.md`](run/CAPABILITIES.md):
 
 ```text
-# CAPABILITIES — mobility release gate (5 ADAS functions)
+# CAPABILITIES.md — Scout report, mobility functional-safety release gate
 
-Scout stage. Nothing here assesses FN-AEB, FN-LKA, FN-ACC, FN-TJA or FN-APA.
-Sources read: BRIEF.md; inputs/asil_decomposition.json; inputs/fmeda_metrics.json;
-inputs/vv_evidence.json; tokn-self/introspect-slice.json; tokn-self/DOMAIN-README.md;
-my live tool list.
+Scope: items FN-AEB, FN-LKA, FN-ACC, FN-TJA, FN-APA. This file records what tools and rules exist. It does not assess any item.
+
+Sources read: `BRIEF.md`; `inputs/asil_decomposition.json`, `inputs/fmeda_metrics.json`, `inputs/vv_evidence.json`; `tokn-self/introspect-slice.json`; `tokn-self/DOMAIN-README.md`; my live tool list.
+
+Consistency check: the README says "22 LLM tools". My live mobility tool list has 22 tools, so the count matches. The README gives no tool names, so the category split (4/4/5/2/2/1/2/2) could not be verified.
 
 ## Domain tools that apply
 
-| tool (exact name) | applies to | input fields needed, and whether present in inputs/ |
+| tool (exact name) | item(s) / input file it applies to | input fields needed and present in `inputs/` |
 |---|---|---|
-| `asil_decompose_verify` | Check 1 (decomposition) for all 5 functions, from `asil_decomposition.json` | `safety_req`, `architecture`, `independence_claims`, `decomposed_requirements`, `parent_asil`, `child_asils`. All present in every record. Schema is loose (`{}`), so pass each record unchanged. |
-| `fmea_fta_engine` | Check 2 (hardware metrics) for all 5 functions, from `fmeda_metrics.json` | `architecture`, `failure_rates`, `asil_req`. All present in every record. Tool description says it returns PMHF, SPFM, LFM. |
-| `safety_validation_report` | Check 3 (V&V) for all 5 functions, from `vv_evidence.json` | `all_evidence`, `safety_case`, `vv_report_path`, `requirements_covered_pct`, `defects_open`. All present in every record. |
+| `asil_decompose_verify` | all five items; `inputs/asil_decomposition.json` | `safety_req`, `architecture`, `independence_claims` (non-empty), `decomposed_requirements`, `parent_asil`, `child_asils`. All present in every record. |
+| `fmea_fta_engine` | all five items; `inputs/fmeda_metrics.json` | Brief rule 3 supplies `architecture`, `failure_rates`, `asil_req`, `pmhf_fit`, `spfm_pct`, `lfm_pct`. Present. `lifetime_h` is NOT present (see Gaps). `failure_modes` is NOT present (see Gaps). |
+| `safety_validation_report` | all five items; `inputs/vv_evidence.json` | `all_evidence`, `safety_case`, `vv_report_path`, `requirements_covered_pct`, `defects_open`. All present. Not `requirements` or `defects` arrays. |
 
-Not used for this brief (no matching input in `inputs/`): `hara_automate`, `safety_case_build`,
+Not applicable to this brief (listed so the answer does not use them by mistake): `hara_automate` (no HARA input), `safety_case_build` (brief does not ask for a GSN case), `tara_engine`, `sotif_odd_coverage`, `sensor_coverage_analyze`, `hd_map_validate`, `fusion_evaluate`, `digital_twin_validate`, `carla_scenario_execute`, `openscenario_catalog_build`, `v2x_*`, `v2i_infrastructure_simulate`, `ev_charging_plan`, `battery_electrochemical_model`, `utm_simulate`, `evtol_safety_assess`, `regulatory_compliance_track`, `sumo_traffic_generate`. None has inputs in `inputs/`.
+
+## Gates and rules that will constrain the answer
 ```
 
 ### 2. Plan — claude-opus-5.5
@@ -66,23 +69,25 @@ The planner turns the brief into acceptance criteria and names the tool call tha
 From [`PLAN.md`](run/PLAN.md):
 
 ```text
-# PLAN — ISO 26262 release-gate review of five ADAS functions (mobility domain)
+# PLAN.md — Functional-safety release gate for FN-AEB, FN-LKA, FN-ACC, FN-TJA, FN-APA
 
-Planner stage. This plan has not been run. No item has a status yet.
-Sources read: `BRIEF.md`, `CAPABILITIES.md`, `inputs/asil_decomposition.json`,
-`inputs/fmeda_metrics.json`, `inputs/vv_evidence.json`, `tokn-self/DOMAIN-README.md`,
-`tokn-self/introspect-slice.json`.
+Planner stage. This plan has NOT been executed. Every input value below is copied verbatim from `inputs/`. Every threshold comes either from `BRIEF.md` or from a value that a tool returns at execution time. No number is taken from memory of ISO 26262.
+
+Sources read by the Planner: `BRIEF.md`, `CAPABILITIES.md`, `inputs/asil_decomposition.json`, `inputs/fmeda_metrics.json`, `inputs/vv_evidence.json`, `tokn-self/DOMAIN-README.md`, `tokn-self/introspect-slice.json`.
 
 ## Objective
 
-Give each of FN-AEB, FN-LKA, FN-ACC, FN-TJA and FN-APA exactly one status from
-{`release_candidate`, `decomposition_invalid`, `hw_metrics_fail`, `vv_incomplete`}. The status comes from three
-tool checks run in a fixed order: `asil_decompose_verify`, then `fmea_fta_engine`, then
-`safety_validation_report`. Record the result in `result.json` and `RESULT.md` as a DRAFT for safety-manager review.
+For each of the five ADAS functions (FN-AEB, FN-LKA, FN-ACC, FN-TJA, FN-APA), run `asil_decompose_verify`, then `fmea_fta_engine`, then `safety_validation_report` on the records in `inputs/`. Assign exactly one status per function (`release_candidate`, `decomposition_invalid`, `hw_metrics_fail`, `vv_incomplete`) using the first-failing-check rule. Record the results in `result.json` and `RESULT.md` as a DRAFT for safety-manager review.
 
 ## Steps
 
-General instructions for the Executor:
+### General execution rules (apply to every step)
+
+- **G1. Field mapping.** Pass the tool's documented input fields, with values copied **verbatim** from the matching input record. Do not normalise, re-letter, round or annotate any value. For example, `child_asils` stays `["B","C"]`, not `["B(D)","C(D)"]`. The `function` key is not a tool field. Do not pass it. Use it only to label the result. This is how the Planner reads the brief's "exactly as given": the values are exact and the fields are the tool's own.
+- **G2. Run all three checks for every item.** Call all three tools for all five items, even after an earlier check has failed, so the evidence record is complete. Results from later checks are recorded as `informational` and never change the status (Brief rule 1).
+- **G3. Capture the raw output.** Save each tool's full raw output (or full error text) under `evidence.<tool>.<function>` in `result.json`. Any number in `RESULT.md` must trace to one of these outputs or to `inputs/` (Brief rule 5).
+- **G4. No retries that change inputs.** If a call errors, you may retry it once with identical input, to rule out a transient error. If it errors again, record the error. Do not change any input to make a call pass.
+- **G5. No other tools.** Do not use `hara_automate`, `safety_case_build`, `tara_engine` or any other tool that `CAPABILITIES.md` lists as not applicable.
 ```
 
 ### 3. Execute — Kimi-K3.1-Pro
@@ -92,54 +97,50 @@ The executor runs the domain tools and records every item with the tool output t
 From [`RESULT.md`](run/RESULT.md):
 
 ```text
-# DRAFT — revised ADAS mechanical release-gate review
+# DRAFT functional-safety gate report — mobility
 
-## Evidence and decision basis
+**DRAFT — pending safety-manager review. Not a release authorization or proof of safety.**
 
-Every supplied function record was freshly checked with `asil_decompose_verify`, `fmea_fta_engine`, and `safety_validation_report`. The explicit FN-LKA decomposition rejection and FN-APA V&V rejection were retried with identical complete inputs and repeated. Two separate negative probes contrasted ACC’s supplied no-error responses with rejection when only its child ASILs changed to A/A or only coverage changed to 94%.
+## Evidence and method
 
-**Basis: BRIEF’s rejection-based mechanical definitions.** Non-error decomposition and V&V responses expose action/instruction, not explicit positive verdict fields. The observed rejection channel is `error`. No-error is interpreted as mechanical acceptance under BRIEF, not proof of compliance or functional safety.
+Independent reruns of the applicable domain tools reproduced every original item status. The deciding order is decomposition, hardware metrics, then V&V completion; the first failure sets the item status. Later checks remain informational.
 
-**Blocking clarification for human release:** PLAN R1/R3 really require explicit positive verdict fields in addition to no error. Contrary to critique C3’s quotation, literal PLAN does not equate no error alone with PASS. Literal PLAN would leave all five `decomposition_invalid`. The differentiated BRIEF classifications below do not satisfy that literal requirement. The safety manager must clarify or obtain structured verdicts before release use. Decision-1 requested full revision; its routing is not engineering evidence.
+Full corrected live responses or full errors are preserved in `result.json` at `items[].raw_evidence.<tool>.<function>`. Input evidence lists, safety requirements, safety-case goals and element failure rates are recorded in each item's `input_trace`, with complete source records retained in `inputs/`.
 
-## Ordered outcomes
+All hardware calls returned programme targets **PMHF ≤10 FIT, SPFM ≥99%, LFM ≥90%**. The ASIL-D AEB/LKA/TJA calls supply the applied targets; ACC/APA returned identical programme targets. V&V requires coverage **≥95%** and **0 open defects**. Equality passes under the brief.
 
-| Function | Decomposition | Hardware | V&V | First failing check | Status |
-|---|---|---|---|---|---|
-| FN-AEB | PASS under BRIEF | PASS | PASS under BRIEF | none | `release_candidate` |
-| FN-LKA | FAIL | PASS | PASS under BRIEF | decomposition | `decomposition_invalid` |
-| FN-ACC | PASS under BRIEF | PASS | PASS under BRIEF | none | `release_candidate` |
-| FN-TJA | PASS under BRIEF | FAIL | PASS under BRIEF | hardware | `hw_metrics_fail` |
+## Item outcomes
+
+| Item | Status | Deciding rule | PMHF FIT | SPFM % | LFM % | Coverage % | Open defects |
+|---|---|---|---:|---:|---:|---:|---:|
+| FN-AEB | `release_candidate` | R1 | 6.2 | 99.4 | 92.1 | 97.4 | 0 |
+| FN-LKA | `decomposition_invalid` | D1a | 3.1 | 99.7 | 96.0 | 99.1 | 0 |
+| FN-ACC | `release_candidate` | R1 | 8.0 | 99.0 | 90.4 | 95.0 | 0 |
 ```
 
 ### 4. Critique — FW-GLM-5.3
 
-A different model family re-runs the tools and files 11 finding(s). It is told to find faults, not to agree.
+A different model family re-runs the tools and files 10 finding(s). It is told to find faults, not to agree.
 
 From [`CRITIQUE.md`](run/CRITIQUE.md):
 
 ```text
-# CRITIQUE — mobility release-gate review (result.json / RESULT.md)
+# CRITIQUE.md — Critic stage, mobility functional-safety release gate
 
-Critic stage. Every raw tool output the executor quoted was re-run in this session and reproduces exactly: five `asil_decompose_verify` calls, five `fmea_fta_engine` calls, five `safety_validation_report` calls, plus identical-input repeats and control probes. The raw record is honest. The findings below are about what was concluded from it, and about what the deliverable is missing.
+**Critic scope:** read `BRIEF.md`, `inputs/`, `PLAN.md`, `result.json`, `RESULT.md`; re-run every tool whose output decides a status; check reported numbers, statuses, gates, coverage of inputs, and calibrated language. `result.json` and `RESULT.md` were not modified.
 
-Severity is a label, not a filter: every issue found is listed.
+**Re-run evidence.** I re-ran all three domain tools for all five items, passing each function's record verbatim from `inputs/` (15 calls). Every number in `result.json` and `RESULT.md` reproduced exactly: FN-AEB decomposition_valid=true with child_rank_sum=5, independence_claims_count=4, SE-A14153669129; FN-ACC child_rank_sum=3 vs parent_rank=3; FN-TJA hardware_metrics_pass=false on "SPFM 98.9% below 99%"; FN-LKA error "child ASILs [B A] (sum 3) do not cover parent D (4) per ISO 26262-9 §5"; FN-APA error "1 open defects remain — all safety-critical defects must be resolved before V&V completion". All five statuses follow PLAN.md's D→H→V→R rules and BRIEF.md's first-failing-check rule, and the ASIL-D programme targets (PMHF ≤10, SPFM ≥99, LFM ≥90) were correctly applied to all five items per Brief rule 3, with the ASIL-C and ASIL-B ISO-target differences disclosed. Language is calibrated throughout. No item, value, or status is wrong. The findings below are all about the record's form and completeness.
 
-## C1 — Four of five statuses contradict the tool outputs (blocking, overall)
+## Findings
 
-The BRIEF defines `decomposition_invalid` as "`asil_decompose_verify` rejects the ASIL decomposition", and rule 2 says "A tool error is a rejection." The tool rejected **only FN-LKA**. The executor instead assigned `decomposition_invalid` to all five, on the reading that a response carrying no explicit `valid`/`passed`/`accepted` field is a FAIL.
-
-My control probes establish the tools' verdict channel:
-
-- `asil_decompose_verify` with parent `C`, children `[A,A]` → explicit error: *"child ASILs [A A] (sum 2) do not cover parent C (3) per ISO 26262-9 §5"* — the tool actively validates non-D parents, and its message states the operative coverage rule (child ASIL sum vs parent).
-- `safety_validation_report` at 94% coverage → explicit error: *"requirements_covered_pct 94.0% is below the 95% threshold required for V&V completion"*; at exactly 95.0% → no error.
-- `safety_validation_report` with a missing field → *"safety_validation_report requires all_evidence"*.
-
-So: rejection = explicit error; no error = accepted, for these tool contracts. Under the tool's own stated coverage rule, FN-AEB (B+C=5 ≥ D=4), FN-ACC (B+A=3 ≥ C=3), FN-TJA (C+B=5 ≥ D=4) and FN-APA (A+A=2 ≥ B=2) were all returned without error — accepted. PLAN R1's PASS condition ("returns without error **and** no field that indicates rejection") is satisfied by all four.
-
-Applying PLAN R4 with those verdicts:
-
-| Function | Correct status | Basis |
+- **C1 — overall (major): `deciding_rule` missing for every item.** PLAN.md acceptance criterion 1 requires `deciding_rule` in each item entry. No item has one. The rule is named in prose only for the three failures (D1a, H3, V1); the two `release_candidate` items never state that R1 (D2+H5+V3) is the basis for the only positive status in the set. **Fix:** add `deciding_rule` to all five items (R1, D1a, R1, H3, V1) and name R1 in the two positive rationales.
+- **C2 — overall (major): no raw tool outputs preserved.** PLAN.md G3 and criterion 3 require the raw output or full error text of all 15 calls under `evidence.<tool>.<function>`. Each call is instead condensed into one key-value string inside the item, and no raw-output record exists anywhere in the repository (searching the safety_evidence_id values and error strings returns only `result.json` and `RESULT.md`). I re-ran all 15 calls and every value reproduced, so the numbers are honest — but PLAN.md criterion 7's traceability chain ("trace to a recorded tool output") terminates in paraphrase, not raw output. The executor discloses the shape conflict in `limitations` and attributes it to the requested top-level JSON shape; I could not verify that attribution because the executor's stage instructions are not in the repository. **Fix:** preserve the raw outputs (an `evidence` object or a companion file), and surface the shape conflict to the relay owner rather than resolving it silently.
+- **C3 — FN-APA (major): retry claim has no recorded evidence.** `result.json` claims "the permitted retry with verbatim identical input returned this same error". No record of a second call exists anywhere, and PLAN.md G4's retry is exactly the kind of call G3 requires capturing. I reproduced the error on one call, so the status (V1) is unaffected, but an unevidenced procedural claim inside a safety-gate record contradicts Brief rule 5. **Fix:** record the raw output of both attempts, or drop the retry claim and rest V1 on the single recorded error.
+- **C4 — FN-AEB, FN-TJA (minor): `matched_scheme` labels contradict the returned children.** For FN-AEB the tool returned `matched_scheme` "C(D)+A(D)" alongside children [B(rank 2), C(rank 3)]; for FN-TJA "C(D)+A(D)" alongside [C(rank 3), B(rank 2)]. The label names the canonical §5.4.10 scheme matched by rank sum, not the split actually present. Both deliverables quote it verbatim and note it was "not independently rewritten to match the input labels", but neither flags that the label and the children disagree. **Fix:** add a flag/discrepancy that the label does not describe the returned split, and that the actual splits are non-canonical n-way splits accepted by rank sum.
+- **C5 — overall (minor): no `discrepancies` key.** PLAN.md criterion 4 requires one, covering README-vs-tool targets, per-ASIL vs ASIL-D targets, tool pass/fail vs the H2 comparison, and notation-related errors. Most content exists, relocated into `limitations` (strict `<10 FIT` vs the tool's `<= programme target`; ASIL-C/B ISO targets vs the applied ASIL-D programme targets). Tool-vs-H2 agreed for all five items and no notation errors occurred, so those entries would be nil — but the deliverable is incomplete against the plan's own completeness definition. **Fix:** add the array (it may reference the limitations entries) or state explicitly that `limitations` serves as the discrepancies record.
+- **C6 — overall (minor): `applied_targets` and `summary` keys absent.** PLAN.md criteria 2 and 6 require them. The values are recoverable (targets in the PMHF gate detail and item evidence; 2/1/1/1 implied by the verdict) but not stated in the specified form. **Fix:** add `applied_targets` {pmhf 10 FIT, spfm 99, lfm 90, from the fmea_fta_engine programme targets returned identically by all five calls} and `summary` {release_candidate 2, decomposition_invalid 1, hw_metrics_fail 1, vv_incomplete 1}.
+- **C7 — overall (minor): `informational_after_failure`, `draft`, `flags` keys absent.** PLAN.md criterion 1 requires them per item. The information is present in prose (parenthesised "informational after failure"; "DRAFT release candidate pending safety-manager review"; the FN-APA open-goals, ASIL-D-target and FN-ACC 95.0 boundary flags), so nothing is lost, but the machine-checkable form is missing. **Fix:** add the three keys per item, or note the prose substitutes.
+- **C8 — FN-AEB/LKA/ACC/TJA (minor): evidence lists and failure rates dropped from the record.** The four non-APA `all_evidence` lists appear only as counts while FN-APA's is quoted in full; `safety_case.top_goal`, the safety-requirement ids/texts, the per-element `failure_rates`, and the tool's `failure_rates_total_fit` (345/275/220/390/170 FIT) appear nowhere. The rates were passed to the tool, so they were not ignored in the calls — but the hardware and V&V evidence cannot be traced from the deliverable alone. **Fix:** record each item's evidence list, safety_req id, and failure rates (or the returned totals).
 ```
 
 ### 5. Decide — Microsoft-Decision-1
@@ -148,48 +149,49 @@ A decision model answers small, typed questions about the critique. It returns a
 
 | Question | P(yes) |
 |---|---|
-| Do the critique findings show at least one item whose status is wrong or unsupported, so the result must be revised before it is used? | 0.997 |
-| Does any function whose ASIL decomposition asil_decompose_verify rejected still receive release_candidate? | 0.033 |
-| Does the result report FN-TJA's SPFM of 98.9% as meeting the 99% SPFM target? | 0.005 |
+| Do the critique findings show at least one item whose status is wrong or unsupported, so the result must be revised before it is used? | 0.037 |
+| Does any function whose ASIL decomposition asil_decompose_verify rejected still receive release_candidate? | 0.002 |
+| Does the result report FN-TJA's SPFM of 98.9% as meeting the 99% SPFM target? | 0.001 |
 
-Routing: **full-revision**.
+Routing: **light-revision**.
 
 ### 6. Revise — gpt-6.1-sol
 
-The reviser must answer every finding, not only the ones it agrees with: 11 fixed.
+The reviser must answer every finding, not only the ones it agrees with: 10 fixed.
 
 | Finding | Severity | Issue (abridged) | Response |
 |---|---|---|---|
-| C1 | blocking | Four of the five statuses contradict the tool outputs and the BRIEF's status definitions. I re-ran all 15 calls and every raw output the executor quoted reproduces exactly, so the raw record is honest — but the interpret… | **fixed**: Re-ran every supplied record. Corrected BRIEF statuses to AEB/ACC release_candidate (DRAFT), LKA decomposition_invalid, TJA hw_metrics_fail, APA vv_incomplete; … |
-| C2 | blocking | result.json fails the PLAN's acceptance criteria for structure and completeness. PLAN says 'result.json is complete only if it is valid JSON containing' seven elements. Missing entirely: `tool_log` (criterion 3 — 15 entr… | **fixed**: Added first-failure/draft/verdict/metric/observation blocks, targets provenance, discrepancies, not_assessed, summary and disclaimer, preserving original shape.… |
-| C3 | major | The controlling interpretation — 'no explicit positive verdict field, therefore FAIL' — was adopted without any discriminating test, and it is internally inconsistent. The plan's Step-3 instruction says 'Inspect the outp… | **fixed**: Recorded observed error rejection channel and ran independent negative probes: ACC changed to A/A rejects at parent C; ACC coverage changed to 94 rejects while … |
-| C4 | major | Gate G4 (Evidence integrity) is marked 'warn' on a claim the artifact does not support. The G4 detail says 'Raw observations and reported numbers are preserved in the evidence text below', and RESULT.md says 'All require… | **fixed**: Used the finding's fallback: marked G4 not satisfied and explicitly stated selective quotations are not a preserved full raw log. Comprehensive log write blocke… |
-| C5 | major | The confidence and validation language is stronger than the evidence. result.json reports confidence 0.93, and RESULT.md claims 'High confidence comes from direct input-file reads, repeated tool calls, explicit error mes… | **fixed**: Removed unsupported prior JSON/decision-comparison validation claim; reduced assessed confidence to 0.85 in BRIEF classification, not safety or completeness. Co… |
+| C1 | major | PLAN.md acceptance criterion 1 requires every item entry in result.json to carry a `deciding_rule` field (e.g. D1a, H3, V1, R1). No item has one. The deciding rule is named in prose only for the three failures (FN-LKA 'D… | **fixed**: Added deciding_rule to all items and named R1 with D2/H5/V3 in positive rationales; verified against readable PLAN.md rules and live gates. |
+| C2 | major | PLAN.md G3 and acceptance criterion 3 require the raw output or full error text of all 15 tool calls (3 tools x 5 items) to be preserved under `evidence.<tool>.<function>`. result.json stores one condensed key-value stri… | **fixed**: Preserved full corrected live responses/errors in each item's raw_evidence keyed by tool and function. Kept original top-level shape as instructed and surfaced … |
+| C3 | major | result.json's FN-APA evidence string claims 'the permitted retry with verbatim identical input returned this same error'. No record of a second call exists anywhere in the repository, and PLAN.md G4's permitted retry is … | **fixed**: Removed unsupported historical retry claim. Fresh APA V&V call independently reproduced the recorded one-open-defect error; V1 does not need any retry claim. |
+| C4 | minor | For FN-AEB the tool returned `matched_scheme` 'C(D)+A(D)' alongside `children` [B(rank 2), C(rank 3)], and for FN-TJA 'C(D)+A(D)' alongside [C(rank 3), B(rank 2)] — i.e. the scheme label does not describe the split actua… | **fixed**: Fresh AEB/TJA decomposition calls reproduce C(D)+A(D) label with B+C/C+B children. Added explicit mismatch flags and rank-sum acceptance limitation, without cla… |
+| C5 | minor | PLAN.md acceptance criterion 4 requires a `discrepancies` list in result.json covering README-vs-tool targets, per-ASIL vs ASIL-D target differences, tool pass/fail vs the H2 comparison, and notation-related tool errors.… | **fixed**: Explicitly designated limitations as the discrepancies record. Read README directly; fresh hardware calls confirm programme and per-ASIL differences. H2 compari… |
 
 All findings: [`CRITIQUE.md`](run/CRITIQUE.md). All responses: [`result.json`](run/result.json).
 
 ### 7. Reflect — claude-opus-5.5
 
-TOKN reflects on TOKN a second time. Opus reads the full trace, names which tools mattered, and proposes a `/teach` rule so the next run starts smarter.
+TOKN reflects on TOKN a second time. The reflector reads the full trace, names which tools mattered, and proposes a `/teach` rule so the next run starts smarter.
 
 From [`REFLECTION.md`](run/REFLECTION.md):
 
 ```text
 ## Proposed /teach rule
-Before writing pass/fail rules for any domain tool, call it once with a known-good and once with a known-bad input, then record the observed verdict channel (e.g. error field vs result field) in PLAN.md and never require a verdict field the tool did not return.
+
+In mobility release-gate briefs, write each domain tool's raw JSON response or error to `evidence/<tool>/<function>.json` right after each call, including retries, and in `result.json` cite those files instead of paraphrasing tool output or claiming calls that were not saved.
 ```
 
 ## The answer
 
-| Item | First answer (Kimi) | Final (after critique) | Expected |
+| Item | First answer (Kimi-K3.1-Pro) | Final (after critique) | Expected |
 |---|---|---|---|
-| `FN-ACC` | `decomposition_invalid` | `release_candidate` ✅ | `release_candidate` |
-| `FN-AEB` | `decomposition_invalid` | `release_candidate` ✅ | `release_candidate` |
-| `FN-APA` | `decomposition_invalid` | `vv_incomplete` ✅ | `vv_incomplete` |
+| `FN-ACC` | `release_candidate` | `release_candidate` ✅ | `release_candidate` |
+| `FN-AEB` | `release_candidate` | `release_candidate` ✅ | `release_candidate` |
+| `FN-APA` | `vv_incomplete` | `vv_incomplete` ✅ | `vv_incomplete` |
 | `FN-LKA` | `decomposition_invalid` | `decomposition_invalid` ✅ | `decomposition_invalid` |
-| `FN-TJA` | `decomposition_invalid` | `hw_metrics_fail` ✅ | `hw_metrics_fail` |
+| `FN-TJA` | `hw_metrics_fail` | `hw_metrics_fail` ✅ | `hw_metrics_fail` |
 
-Accuracy: first answer 0.2, final 1.0.
+Accuracy: first answer 1.0, final 1.0.
 
 ## How it was graded
 
@@ -201,11 +203,11 @@ No model grades itself. [`verify.py`](../../verify.py) checks the files and the 
 | result_json_valid | ✅ | final result.json parses with an items list |
 | status_vocabulary | ✅ | all statuses in vocabulary |
 | all_items_assessed | ✅ | 5 items |
-| ground_truth | ✅ | final 1.0 (v1 0.2) |
+| ground_truth | ✅ | final 1.0 (v1 1.0) |
 | must_mention | ✅ | all present |
 | forbidden_phrases | ✅ | none found |
-| critique_has_findings | ✅ | 11 findings |
-| every_finding_answered | ✅ | 11 responses |
+| critique_has_findings | ✅ | 10 findings |
+| every_finding_answered | ✅ | 10 responses |
 | decision_answered | ✅ | 3/3 typed answers |
 | execute_used_domain_tools | ✅ | used ['asil_decompose_verify', 'fmea_fta_engine', 'safety_validation_report'] of expected ['asil_decompose_verify', 'fmea_fta_engine', 'safety_validation_report'] |
 | critic_reran_tools | ✅ | critic used ['asil_decompose_verify', 'fmea_fta_engine', 'safety_validation_report'] |

@@ -1,88 +1,126 @@
-# DRAFT — revised ADAS mechanical release-gate review
+# DRAFT functional-safety gate report — mobility
 
-## Evidence and decision basis
+**DRAFT — pending safety-manager review. Not a release authorization or proof of safety.**
 
-Every supplied function record was freshly checked with `asil_decompose_verify`, `fmea_fta_engine`, and `safety_validation_report`. The explicit FN-LKA decomposition rejection and FN-APA V&V rejection were retried with identical complete inputs and repeated. Two separate negative probes contrasted ACC’s supplied no-error responses with rejection when only its child ASILs changed to A/A or only coverage changed to 94%.
+## Evidence and method
 
-**Basis: BRIEF’s rejection-based mechanical definitions.** Non-error decomposition and V&V responses expose action/instruction, not explicit positive verdict fields. The observed rejection channel is `error`. No-error is interpreted as mechanical acceptance under BRIEF, not proof of compliance or functional safety.
+Independent reruns of the applicable domain tools reproduced every original item status. The deciding order is decomposition, hardware metrics, then V&V completion; the first failure sets the item status. Later checks remain informational.
 
-**Blocking clarification for human release:** PLAN R1/R3 really require explicit positive verdict fields in addition to no error. Contrary to critique C3’s quotation, literal PLAN does not equate no error alone with PASS. Literal PLAN would leave all five `decomposition_invalid`. The differentiated BRIEF classifications below do not satisfy that literal requirement. The safety manager must clarify or obtain structured verdicts before release use. Decision-1 requested full revision; its routing is not engineering evidence.
+Full corrected live responses or full errors are preserved in `result.json` at `items[].raw_evidence.<tool>.<function>`. Input evidence lists, safety requirements, safety-case goals and element failure rates are recorded in each item's `input_trace`, with complete source records retained in `inputs/`.
 
-## Ordered outcomes
+All hardware calls returned programme targets **PMHF ≤10 FIT, SPFM ≥99%, LFM ≥90%**. The ASIL-D AEB/LKA/TJA calls supply the applied targets; ACC/APA returned identical programme targets. V&V requires coverage **≥95%** and **0 open defects**. Equality passes under the brief.
 
-| Function | Decomposition | Hardware | V&V | First failing check | Status |
-|---|---|---|---|---|---|
-| FN-AEB | PASS under BRIEF | PASS | PASS under BRIEF | none | `release_candidate` |
-| FN-LKA | FAIL | PASS | PASS under BRIEF | decomposition | `decomposition_invalid` |
-| FN-ACC | PASS under BRIEF | PASS | PASS under BRIEF | none | `release_candidate` |
-| FN-TJA | PASS under BRIEF | FAIL | PASS under BRIEF | hardware | `hw_metrics_fail` |
-| FN-APA | PASS under BRIEF | PASS | FAIL | V&V | `vv_incomplete` |
+## Item outcomes
 
-All items are DRAFT. Later checks cannot override the first failure. Candidate counts describe mechanical classification, not authorized release or a complete PLAN-compliant evidence package.
+| Item | Status | Deciding rule | PMHF FIT | SPFM % | LFM % | Coverage % | Open defects |
+|---|---|---|---:|---:|---:|---:|---:|
+| FN-AEB | `release_candidate` | R1 | 6.2 | 99.4 | 92.1 | 97.4 | 0 |
+| FN-LKA | `decomposition_invalid` | D1a | 3.1 | 99.7 | 96.0 | 99.1 | 0 |
+| FN-ACC | `release_candidate` | R1 | 8.0 | 99.0 | 90.4 | 95.0 | 0 |
+| FN-TJA | `hw_metrics_fail` | H3 | 7.5 | 98.9 | 91.0 | 96.8 | 0 |
+| FN-APA | `vv_incomplete` | V1 | 4.0 | 99.2 | 93.5 | 98.0 | 1 |
 
-## Hardware evidence
+**Computed status summary:** 2 release candidates, 1 decomposition invalid, 1 hardware failure and 1 V&V incomplete; total 5 items.
 
-All five fresh hardware calls returned PMHF target **10 FIT**, SPFM target **99%**, LFM target **90%**. ACC (ASIL C) and APA (ASIL B) returned exactly the same targets as AEB/LKA/TJA (ASIL D). Programme-wide targets apply uniformly. PMHF passes at or below its target; SPFM and LFM pass at or above theirs.
+### FN-AEB — `release_candidate`
 
-The values below come from `inputs/fmeda_metrics.json`. The tool returned targets only, not recomputed metrics, detailed FMEA or a fault tree.
+**R1: D2, H5 and V3 all held. DRAFT — pending safety-manager review.** The decomposition verifier accepted the input, reporting child rank sum 5 against parent D rank 4, four independence claims and a DFA reference. Hardware and V&V values passed the programme rules above; V&V returned a DRAFT summary with 3 evidence items.
 
-| Function | asil_req | PMHF FIT (≤10) | SPFM % (≥99) | LFM % (≥90) |
-|---|---|---:|---:|---:|
-| FN-AEB | D | 6.2 | 99.4 | 92.1 |
-| FN-LKA | D | 3.1 | 99.7 | 96.0 |
-| FN-ACC | C | 8.0 | 99.0 | 90.4 |
-| FN-TJA | D | 7.5 | **98.9 — FAIL** | 91.0 |
-| FN-APA | B | 4.0 | 99.2 | 93.5 |
+**Scheme discrepancy:** returned `matched_scheme=C(D)+A(D)` does not correspond to returned children B+C or the input requirements B(D)+C(D). The tool states a rank-sum acceptance method. Its acceptance is not independent verification of a canonical ISO decomposition; safety-manager review is required.
 
-ACC SPFM passes at equality. TJA SPFM is not rounded up.
+Input safety requirement: **SG-AEB-01**, “Avoid unintended full braking at speeds above 10 km/h”. Input safety-case top goal: “FN-AEB is acceptably safe within its ODD” — an unverified input assertion.
 
-## Per-function rationale and V&V
+Evidence list: HIL campaign HIL-AEB-12; track test TT-AEB-07; SIL regression SIL-AEB-31. Element rates: fusion ECU 210 FIT, radar monitor 95 FIT, brake interface 40 FIT; tool-returned total **345 FIT**. This total does not re-derive the FMEDA metrics.
 
-- **FN-AEB:** Supplied D → (B,C) decomposition returns no error. All hardware comparisons pass. Supplied V&V coverage 97.4%, zero open defects and zero open goals returns no error. BRIEF-based DRAFT candidate, pending contract clarification.
-- **FN-LKA:** Supplied D → (B,A) is explicitly rejected: `child ASILs [B A] (sum 3) do not cover parent D (4) per ISO 26262-9 §5`. Identical retry repeats rejection. Hardware and V&V pass later checks but cannot override decomposition failure. V&V input is 99.1% coverage with zero defects/goals.
-- **FN-ACC:** Supplied C → (B,A) returns no error. The generic instruction’s omission of this pair is not a verdict. All hardware comparisons pass, including SPFM 99.0%. Supplied V&V coverage exactly 95.0%, zero defects/goals returns no error. Negative probes reject C → (A,A) and coverage 94%; these demonstrate contrasting rejection behavior, not explicit positive fields. BRIEF-based DRAFT candidate, pending clarification.
-- **FN-TJA:** Supplied D → (C,B) returns no error. Hardware first fails because SPFM 98.9% < 99%; PMHF and LFM pass. V&V coverage 96.8%, zero defects/goals returns no error but cannot override hardware failure.
-- **FN-APA:** Supplied B → (A,A) returns no error; hardware passes. V&V rejects: `1 open defects remain — all safety-critical defects must be resolved before V&V completion`. Identical complete-input retry repeats rejection. Input coverage is 98.0%, defects_open is 1, and open_goals is 1. The open goal is a separate unresolved observation; the explicit rejection cites the defect, not the goal.
+### FN-LKA — `decomposition_invalid`
 
-## Gate summary
+**D1a:** the verifier returned the full error:
 
-| Gate | Independent check outcomes |
-|---|---|
-| G1 decomposition | 4 satisfied / 1 not satisfied — FN-LKA, under BRIEF |
-| G2 hardware metrics | 4 satisfied / 1 not satisfied — FN-TJA |
-| G3 V&V | 4 satisfied / 1 not satisfied — FN-APA, under BRIEF |
-| G4 evidence integrity | **Not satisfied:** selective evidence, not a complete raw-response audit log |
-| G5 human release | Not assessed; DRAFT only, clarification pending |
-| HARA | Not assessed |
-| Safety Concept | Not independently assessed beyond decomposition records |
+> asil_decompose_verify: ASIL decomposition invalid — child ASILs [B A] (sum 3) do not cover parent D (4) per ISO 26262-9 §5
 
-Gate vocabulary is separately defined in JSON: satisfied, not satisfied, mixed, not assessed. A mixed summary does not mean all items fail. First-failure precedence still controls individual status.
+The later hardware and V&V passes are informational only. V&V returned 3 evidence items and DRAFT status. Its snapshot does not override the direct decomposition rejection.
 
-## Discrepancies and limitations
+Input safety requirement: **SG-LKA-01**, “Avoid unintended steering torque above 3 Nm”. Input safety-case top goal: “FN-LKA is acceptably safe within its ODD” — an unverified input assertion.
 
-1. **D1 — BRIEF versus literal PLAN/tool contract:** Non-error responses lack the explicit positive fields PLAN requires. This remains a blocking human clarification, not silently resolved by probes. BRIEF-based candidate classifications are conditional and do not establish literal PLAN compliance.
-2. **D2 — Generic instruction versus actual outcome:** The four non-error decomposition calls return identical help text. ACC’s non-enumeration carries no verdict weight. Error responses observed here have null results, not the instruction text alleged in part of C6.
-3. **D3 — Threshold wording:** Independently read `tokn-self/DOMAIN-README.md`: its domain-gate and Safety & Compliance sections specify PMHF <10 FIT for ASIL-D, versus BRIEF ≤ returned target 10 FIT. No supplied PMHF equals 10, so it changes none of these comparisons. BRIEF’s inclusive comparison governs.
-4. **D4 — Audit-log completeness:** A comprehensive write containing the full raw response envelopes was blocked first by the command guard and then by the file-content scanner. Neither blocked write changed the files. These final files preserve selective evidence and structured outcomes, not the required complete tool_log. G4 and full PLAN schema completeness are therefore not satisfied. No scanner bypass was attempted.
+Evidence list: HIL campaign HIL-LKA-09; proving-ground test PG-LKA-04; SIL regression SIL-LKA-22. Element rates: controller 180 FIT, limiter 60 FIT, sensor 35 FIT; tool-returned total **275 FIT**.
 
-Independence and DFA completion claims were taken as supplied; supporting artefacts were not independently evaluated. Evidence names and report paths are illustrative. Not assessed: HARA, Safety Concept, supporting DFA/independence evidence, SOTIF/ODD coverage, cybersecurity, underlying evidence-document quality, and the human Release gate.
+### FN-ACC — `release_candidate`
 
-## Grounding and confidence
+**R1: D2, H5 and V3 all held. DRAFT — pending safety-manager review.** The verifier accepted B(C)+A(C), with child rank sum 3 against parent C rank 3, three independence claims and a DFA reference. Hardware passed, including SPFM **99.0% at equality**. V&V accepted coverage **95.0% at equality**, 0 open defects and 2 evidence items.
 
-**Assessed confidence: 0.85 in BRIEF-based mechanical classification**, not in functional safety, release readiness or audit-package completeness. Evidence consists of fresh supplied-record tool calls, identical rejection retries, contrasting negative probes, input metrics and returned targets. Identical retries establish repeatability, not independent engineering assurance. The previous unsupported JSON/decision-comparison validation claim is withdrawn. Structural verification of the revised files is distinct from domain certification.
+ASIL-D programme targets were applied to input ASIL C as directed by the brief. Separate tool ISO targets were PMHF **<100 FIT**, SPFM **≥97%**, LFM **≥80%**; they did not determine this status.
 
-Synthetic teaching data. All statuses are a DRAFT mechanical gate review for safety-manager review. Passing these gates is evidence for a release decision, not proof that a function is safe, and is not release approval. Resolve the contract conflict and incomplete raw audit log before release use.
+Input safety requirement: **SG-ACC-01**, “Avoid unintended acceleration above 2 m/s^2”. Input safety-case top goal: “FN-ACC is acceptably safe within its ODD” — an unverified input assertion.
+
+Evidence list: HIL campaign HIL-ACC-15; road test RT-ACC-11. Element rates: controller 150 FIT, monitor 70 FIT; tool-returned total **220 FIT**.
+
+### FN-TJA — `hw_metrics_fail`
+
+Decomposition was mechanically accepted, reporting child rank sum 5 against parent D rank 4, three independence claims and a DFA reference. **H3:** SPFM **98.9% <99%** fails, although PMHF and LFM pass. The later V&V pass is informational and returned 2 evidence items.
+
+**Scheme discrepancy:** returned `matched_scheme=C(D)+A(D)` does not correspond to returned children C+B or the input requirements C(D)+B(D). The tool states a rank-sum method; this is not independent verification of a canonical ISO split.
+
+Input safety requirement: **SG-TJA-01**, “Avoid unintended lateral or longitudinal motion in traffic-jam assist”. Input safety-case top goal: “FN-TJA is acceptably safe within its ODD” — an unverified input assertion.
+
+Evidence list: HIL campaign HIL-TJA-06; scenario catalogue run SC-TJA-03. Element rates: planner 260 FIT, supervisor 85 FIT, gateway 45 FIT; tool-returned total **390 FIT**.
+
+### FN-APA — `vv_incomplete`
+
+The verifier accepted A(B)+A(B), with child rank sum 2 against parent B rank 2, three independence claims and a DFA reference. Programme hardware metrics passed. **V1:** the fresh V&V call returned:
+
+> safety_validation_report: 1 open defects remain — all safety-critical defects must be resolved before V&V completion
+
+Coverage input is 98.0%; one open defect blocks completion. The historical retry claim has been removed; the recorded error alone supports V1. No later check follows this deciding failure, so `informational_after_failure=false`; the earlier passes are prerequisites, not later informational results. The error returned no evidence tally, so the JSON tool-derived evidence count is null.
+
+ASIL-D programme targets were applied to input ASIL B. Separate tool ISO targets were PMHF **<100 FIT**, SPFM **≥90%**, LFM **≥60%**, not used for the decision. Input `safety_case.open_goals=1` is a review flag, not a deciding field under the brief.
+
+Input safety requirement: **SG-APA-01**, “Avoid unintended vehicle motion above 7 km/h during automated parking”. Input safety-case top goal: “FN-APA is acceptably safe within its ODD” — an unverified input assertion.
+
+Evidence list: HIL campaign HIL-APA-05; parking-lot test PL-APA-02. Element rates: controller 120 FIT, limiter 50 FIT; tool-returned total **170 FIT**.
+
+## Gate roll-ups and overall verdict
+
+These labels are explicit **release-set roll-ups**, not additional per-item rules or blanket failures:
+
+| Gate | Roll-up | Scope |
+|---|---|---|
+| ASIL Decomposition | Fail: 1 rejected check out of 5 | LKA rejected; four mechanically accepted. |
+| Hardware metrics | Fail: 1 failed check out of 5 | TJA SPFM fails; LKA hardware is informational. |
+| V&V | Fail: 1 rejected check out of 5 | APA open defect; LKA/TJA passes are informational. |
+| HARA | n/a | Not assessed. |
+| Safety Concept | n/a | Not assessed; snapshots are not independent reviews. |
+| Release | n/a | Not authorized or assessed. |
+
+AEB and ACC remain **DRAFT release candidates pending safety-manager review**. LKA, TJA and APA remain blocked by their first failing gates. These results do not establish vehicle safety or authorize release.
+
+## Confidence, limitations and discrepancies
+
+**Assessed confidence: 0.98, only in reproducibility and ordered mechanical statuses conditional on the supplied synthetic inputs.** This is not a probability that the functions are safe, nor confidence in substantive independence, DFA, FMEDA or V&V evidence quality.
+
+- Inputs are explicitly synthetic teaching-scenario records.
+- Independence and DFA completion are input claims. The verifier counts claims and keyword-matches DFA references; it does not verify independence or freedom from interference.
+- FMEDA values are supplied summaries, not recomputed. Failure-mode classification and lifetime data needed for re-derivation are absent. Element-rate totals do not validate the supplied metrics.
+- V&V content is counted, not verified. Illustrative report paths were not opened or checked for existence. Input safety-case top goals are not conclusions of this review.
+- The README's strict PMHF **<10 FIT** differs from the applied programme **≤10 FIT** rule. No supplied PMHF equals that boundary, so no outcome changes. SPFM/LFM README targets agree with programme targets.
+- Per-ASIL versus programme target differences for ACC/APA are recorded above. The brief directs ASIL-D targets for all items; safety-manager confirmation remains appropriate.
+- Explicit H2 comparisons agree with all tool hardware verdicts. No notation-related errors or accepted-V&V versus brief-rule mismatch occurred. AEB/TJA label-versus-children mismatches remain explicit review flags.
+- HARA, Safety Concept and Release are not assessed.
+
+**Relay-owner layout conflict:** readable PLAN.md acceptance criteria request extra top-level `evidence`, `applied_targets`, `discrepancies` and `summary` keys; the reviser instruction requires the same shape as before. This revision preserves existing top-level keys and types. Full raw objects are stored in `items[].raw_evidence.<tool>.<function>`; targets are in the hardware gate, counts in the Release gate, and `limitations` explicitly serves as the discrepancies record. Planned per-item fields are now explicit. This disclosed substitution does not claim exact PLAN.md schema compliance.
+
+Initial reviser decomposition/hardware calls included the function label; corrected calls omitted it per G1. Recorded responses are from corrected calls, with unchanged outcomes. No values were changed to obtain a pass. The original APA retry claim is not asserted.
+
+**Verification gap:** Both files were read back after writing. `review_artifact` reported missing producing code and code–artifact provenance; this report was directly authored from live responses, not generated by recorded executable code. That reproducibility-envelope check did not pass. No automated validation pass is claimed.
 
 ## Response to critique
 
-- **C1 — fixed:** Independently reran all supplied records and corrected BRIEF statuses: AEB/ACC release_candidate (DRAFT), LKA decomposition_invalid, TJA hw_metrics_fail, APA vv_incomplete. Updated gates and overall verdict; retained the literal PLAN conflict explicitly.
-- **C2 — fixed, partial correction with remaining blocker:** Added structured item outcomes, first failures, draft flags, metrics, observations, targets provenance, discrepancies, not_assessed, counts and disclaimer while preserving original fields. Complete raw tool_log and full PLAN schema remain unavailable after scanner-blocked writes; not claimed fully resolved. G4 and overall verdict now expose the incompleteness.
-- **C3 — fixed:** Recorded observed rejection channel and ran negative probes C → (A,A) and coverage 94%, contrasted with supplied ACC no-error results including coverage 95.0%. The critic misquotes PLAN’s actual explicit-positive-field rule; D1 retains that conflict for human clarification.
-- **C4 — fixed:** Used the finding’s fallback: G4 marked not satisfied; selective quotations explicitly distinguished from full raw-log preservation. No false preservation claim.
-- **C5 — fixed:** Removed unsupported prior validation claim, lowered assessed confidence to 0.85 for BRIEF classification, and exposed contract and completeness limitations. Retries described as repeatability only.
-- **C6 — fixed:** Removed instruction enumeration as verdict evidence. Fresh calls independently show identical generic help on non-error responses and null error results; part of the critic’s error-string assertion is not reproduced.
-- **C7 — fixed:** Recorded asil_req per function and confirmed identical targets across D/C/B calls. Independently verified README strict PMHF wording and recorded D3; no PMHF boundary input exists.
-- **C8 — fixed:** Added not_assessed and observations, including APA open_goals=1 separately from its explicit defect rejection and unverified DFA assertions.
-- **C9 — fixed:** Replaced blanket gate failures with counts: G1/G2/G3 each four satisfied, one not satisfied, respectively LKA/TJA/APA. First-failure precedence retained.
-- **C10 — fixed:** Performed APA V&V identical complete-input retry; repeated the one-open-defect rejection. LKA decomposition was also retried. Evidence is selectively recorded, not a full audit log.
-- **C11 — fixed:** Current REVISER instructions explicitly require critique_response; populated once per finding. Gate vocabulary separately defined; only the four permitted item statuses used.
+- **C1 — fixed:** Added deciding rules to every item; both positive rationales explicitly name R1 with D2/H5/V3. Verified against readable plan rules and fresh gates.
+- **C2 — fixed:** Recorded full corrected live responses/errors for every applicable call in item-level raw evidence and surfaced the plan-versus-required-shape conflict. Raw evidence replaces paraphrase as the auditable basis.
+- **C3 — fixed:** Removed unsupported historical APA retry claim. A fresh V&V call independently reproduced the recorded open-defect error; V1 needs no retry assertion.
+- **C4 — fixed:** Fresh AEB/TJA calls reproduce the scheme-label mismatch. Added explicit flags and limited the claim to tool rank-sum acceptance, not independent canonical ISO validation.
+- **C5 — fixed:** Explicitly designated `limitations` as the discrepancies record. Direct README reading and fresh tools verify the threshold differences and absence of H2/notation/V&V acceptance mismatches.
+- **C6 — fixed:** Recorded applied targets with source calls in the hardware gate and computed status counts in the Release gate, preserving top-level shape.
+- **C7 — fixed:** Added draft, flags and informational-after-failure fields. LKA/TJA are true; APA is false because no later check follows its V&V failure, contrary to the critic's suggested value and consistent with the plan definition.
+- **C8 — fixed:** Recorded all evidence lists, requirement ids/texts, safety-case goals, element rates and independently reproduced hardware totals in the deliverables.
+- **C9 — fixed:** Explicitly labelled gate outcomes as release-set roll-ups with the affected-item counts; retained n/a for unassessed gates.
+- **C10 — fixed:** Qualified confidence as mechanical-status reproducibility given synthetic inputs, not vehicle safety or unverified evidence quality; removed the historical retry claim.

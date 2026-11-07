@@ -1,0 +1,10 @@
+{
+  "note": "Synthetic X-band downlink budgets for a teaching scenario. margin_db is the computed link margin at the worst-case elevation.",
+  "links": [
+    {"sat": "SAT-1", "freq_ghz": 8.2, "eirp_dbw": 10.5, "distance_km": 2100, "bandwidth_hz": 150000000, "atmospheric_model": "ITU-R P.618 99.5% availability", "margin_db": 7.4},
+    {"sat": "SAT-2", "freq_ghz": 8.2, "eirp_dbw": 9.0,  "distance_km": 2300, "bandwidth_hz": 150000000, "atmospheric_model": "ITU-R P.618 99.5% availability", "margin_db": 3.0},
+    {"sat": "SAT-3", "freq_ghz": 8.2, "eirp_dbw": 13.0, "distance_km": 1900, "bandwidth_hz": 150000000, "atmospheric_model": "ITU-R P.618 99.5% availability", "margin_db": 11.2},
+    {"sat": "SAT-4", "freq_ghz": 8.2, "eirp_dbw": 8.5,  "distance_km": 2400, "bandwidth_hz": 150000000, "atmospheric_model": "ITU-R P.618 99.5% availability", "margin_db": 2.9},
+    {"sat": "SAT-5", "freq_ghz": 8.2, "eirp_dbw": 10.0, "distance_km": 2200, "bandwidth_hz": 150000000, "atmospheric_model": "ITU-R P.618 99.5% availability", "margin_db": 6.1}
+  ]
+}

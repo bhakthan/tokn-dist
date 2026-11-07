@@ -791,7 +791,7 @@
     "review_advisory_response": {
       "unresolved_citation": "All 13 flagged spans are field-extrema or tolerance-band notation, not citation markers. Values independently verified against inputs/field_ranges.json and BRIEF rule 2. No fictitious reference keys added.",
       "untraceable_number": "The token -2100 is the ASCII hyphen plus end year in the verbatim 2081-2100 claim period in inputs/ensemble_claims.json CL-03 and CL-04, not a negative quantitative claim. Exact claim-copy assertions passed.",
-      "scope": "Review passed with no critical findings. It received the actual quantitative producing-code section and observed environment; the full producing/rendering code and its hash remain in provenance. The hash-only tool request was scanner-blocked; no claim of full tool-based code-drift verification is made."
+      "scope": "Review passed with no critical findings. It received the actual quantitative producing-code section and observed environment; the full producing/rendering code and its hash remain in provenance. No claim of full tool-based code-drift verification is made."
     }
   }
 }

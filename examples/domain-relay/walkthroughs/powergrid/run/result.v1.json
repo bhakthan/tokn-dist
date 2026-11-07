@@ -1,0 +1,124 @@
+{
+  "domain": "powergrid",
+  "objective": "Screen IR-1 through IR-5 for the Cluster 7 interconnection queue — summer peak 2029, using the supplied N-1-1 (NERC TPL-001-4 P6/P7) summaries and the IEEE 2800 GFM/GFL expansion gate at threshold_pct=30.",
+  "items": [
+    {
+      "id": "IR-1",
+      "status": "approve",
+      "rationale": "The supplied-summary N-1-1 screen completed with no unscreened pairs and n_violations=0. The IBR gate returned blocked=false for the IR-1-BESS expansion, with Z-NORTH post-expansion GFL penetration of 12.5%, below threshold_pct=30, and gfm_needed_mw=0. Under decision rule D4.5 the planning-screen disposition is approve; this is not a regulatory interconnection approval.",
+      "evidence": [
+        "powergrid_n1_1_screen: screening_complete=true; source=supplied_summary; unscreened_pairs=[]; n_pairs=6 ordered entries covering the three supplied summary pairs; n_violations=0; violations=null",
+        "powergrid_n1_1_screen: standard=NERC TPL-001-4 P6/P7; thermal_limit_pct=115; voltage_min_pu=0.85; voltage_max_pu=1.1",
+        "powergrid_ibr_stability_gate: blocked=false; violations=null; expansion_issues=null; Z-NORTH gfl_penetration_pct=12.5; gfl_headroom_mw=100; gfm_needed_mw=0; over_threshold=false"
+      ],
+      "tools_used": [
+        "powergrid_n1_1_screen",
+        "powergrid_ibr_stability_gate"
+      ]
+    },
+    {
+      "id": "IR-2",
+      "status": "approve_with_conditions",
+      "rationale": "The N-1-1 screen returned one counted HIGH thermal violation: L-203 at 131.0% after the L-201 → L-202 sequence, above the 115% emergency-rating limit. The IBR gate passed with blocked=false, Z-EAST post-expansion GFL penetration of 17.778%, and gfm_needed_mw=0. Decision rule D4.4 therefore gives approve_with_conditions. Before unconditional approval, implement and verify an operating limit or remedial action scheme that keeps L-203 at or below 115% for L-201 → L-202, then rerun the screen.",
+      "evidence": [
+        "powergrid_n1_1_screen: screening_complete=true; source=supplied_summary; unscreened_pairs=[]; n_pairs=6 ordered entries covering the three supplied summary pairs; n_violations=1",
+        "powergrid_n1_1_screen: HIGH — L-203 at 131.0% > 115% emergency rating after L-201 → L-202; pair=L-201|L-202; kind=thermal",
+        "powergrid_ibr_stability_gate: blocked=false; violations=null; expansion_issues=null; Z-EAST gfl_penetration_pct=17.778; gfl_headroom_mw=78.571; gfm_needed_mw=0; over_threshold=false"
+      ],
+      "tools_used": [
+        "powergrid_n1_1_screen",
+        "powergrid_ibr_stability_gate"
+      ]
+    },
+    {
+      "id": "IR-3",
+      "status": "blocked",
+      "rationale": "The IBR tool returned an explicit [BLOCK] for Z-SOUTH in its error field, with result=null: IR-3-PV adds 60 MW GFL with no GFM and produces post-expansion GFL penetration of 34.8%, exceeding the 30.0% threshold. The N-1-1 screen was complete with n_violations=0, but the gate block takes precedence over that clean screen. The disposition is blocked under D4.2 with blocked_reason=ibr_gate_gfl_threshold; add GFM capacity or synchronous condensers before approval, as the gate directs.",
+      "evidence": [
+        "powergrid_ibr_stability_gate: [BLOCK] zone Z-SOUTH: expansion adds 60 MW GFL with no GFM — post-expansion GFL penetration 34.8% exceeds 30.0% threshold. Add GFM capacity (or synchronous condensers) before approving.",
+        "powergrid_ibr_stability_gate: tool returned result=null with the domain BLOCK in the error field; no structured zone_assessment was returned for this blocked call",
+        "powergrid_n1_1_screen: screening_complete=true; source=supplied_summary; unscreened_pairs=[]; n_pairs=6 ordered entries covering the three supplied summary pairs; n_violations=0; violations=null"
+      ],
+      "tools_used": [
+        "powergrid_n1_1_screen",
+        "powergrid_ibr_stability_gate"
+      ]
+    },
+    {
+      "id": "IR-4",
+      "status": "approve",
+      "rationale": "The N-1-1 screen returned n_violations=0, consistent with decision rule D3 treating the supplied values exactly at the loading and voltage limits as non-violations. The IBR gate returned blocked=false and Z-WEST post-expansion GFL penetration of exactly 30%, with over_threshold=false, gfl_headroom_mw=0, and gfm_needed_mw=0; equality with threshold_pct=30 does not trigger a block. Under D4.5 the planning-screen disposition is approve, with no claim of additional GFL headroom.",
+      "evidence": [
+        "powergrid_n1_1_screen: screening_complete=true; source=supplied_summary; unscreened_pairs=[]; n_pairs=6 ordered entries covering the three supplied summary pairs; n_violations=0; violations=null",
+        "powergrid_n1_1_screen: limits returned as thermal_limit_pct=115, voltage_min_pu=0.85, voltage_max_pu=1.1; the supplied 115.0%, 0.85 pu and 1.10 pu boundary values produced no returned violation",
+        "powergrid_ibr_stability_gate: blocked=false; violations=null; expansion_issues=null; Z-WEST gfl_penetration_pct=30; gfl_headroom_mw=0; gfm_needed_mw=0; over_threshold=false"
+      ],
+      "tools_used": [
+        "powergrid_n1_1_screen",
+        "powergrid_ibr_stability_gate"
+      ]
+    },
+    {
+      "id": "IR-5",
+      "status": "reject",
+      "rationale": "The N-1-1 screen returned one CRITICAL stability violation: loss of synchronism / voltage collapse after the L-501 → L-502 outage sequence. The IBR gate passed with blocked=false and Z-CENTRAL post-expansion GFL penetration of 16.667%, but a passing resource-mix gate does not override a CRITICAL N-1-1 result. Under D4.3 the disposition is reject; resubmission requires a validated stability restudy and a corrective operating, RAS, or topology solution demonstrating no loss of synchronism for that sequence.",
+      "evidence": [
+        "powergrid_n1_1_screen: screening_complete=true; source=supplied_summary; unscreened_pairs=[]; n_pairs=6 ordered entries covering the three supplied summary pairs; n_violations=1",
+        "powergrid_n1_1_screen: CRITICAL — loss of synchronism / voltage collapse after outage sequence L-501 → L-502; pair=L-501|L-502; kind=stability",
+        "powergrid_ibr_stability_gate: blocked=false; violations=null; expansion_issues=null; Z-CENTRAL gfl_penetration_pct=16.667; gfl_headroom_mw=68.571; gfm_needed_mw=0; over_threshold=false"
+      ],
+      "tools_used": [
+        "powergrid_n1_1_screen",
+        "powergrid_ibr_stability_gate"
+      ]
+    }
+  ],
+  "gates": [
+    {
+      "name": "G1 — N-1-1 screen validity (IR-1 through IR-5)",
+      "status": "pass",
+      "detail": "Every screen returned computed=true, screening_complete=true, source=supplied_summary, and unscreened_pairs=[]. Each returned n_pairs=6 because both directions are listed for the three supplied outage-pair keys; computed_pairs=0 confirms that no network computation was substituted for the supplied summaries."
+    },
+    {
+      "name": "G2 — IR-1 IBR gate",
+      "status": "pass",
+      "detail": "Z-NORTH gfl_penetration_pct=12.5, over_threshold=false, blocked=false; no violations or expansion issues were returned."
+    },
+    {
+      "name": "G2 — IR-2 IBR gate",
+      "status": "pass",
+      "detail": "Z-EAST gfl_penetration_pct=17.778, over_threshold=false, blocked=false; no violations or expansion issues were returned."
+    },
+    {
+      "name": "G2 — IR-3 IBR gate",
+      "status": "fail",
+      "detail": "The tool returned an explicit domain BLOCK for Z-SOUTH at gfl_penetration_pct=34.8 versus the 30.0 threshold, with result=null. This is an evidenced GFL-threshold block under D4.2, not a clean gate pass."
+    },
+    {
+      "name": "G2 — IR-4 IBR gate",
+      "status": "pass",
+      "detail": "Z-WEST gfl_penetration_pct=30, exactly equal to threshold_pct=30, with over_threshold=false and blocked=false; no violations or expansion issues were returned."
+    },
+    {
+      "name": "G2 — IR-5 IBR gate",
+      "status": "pass",
+      "detail": "Z-CENTRAL gfl_penetration_pct=16.667, over_threshold=false, blocked=false; no violations or expansion issues were returned."
+    },
+    {
+      "name": "G3 — Domain disclosures",
+      "status": "warn",
+      "detail": "N-1 not checked; N-0 power flow not run; SCR not assessed (no short-circuit data). The standard applied is NERC TPL-001-4 P6/P7, and these are planning-screen dispositions rather than regulatory filings or final interconnection approvals."
+    }
+  ],
+  "overall_verdict": "IR-1 and IR-4 are approved at the planning-screen level, IR-2 is approved with the stated L-203 corrective condition, IR-3 is blocked by the Z-SOUTH GFL threshold, and IR-5 is rejected for the CRITICAL L-501|L-502 stability violation; none of these dispositions establishes N-0, N-1, SCR, or time-domain stability compliance.",
+  "confidence": 0.95,
+  "limitations": [
+    "N-1 not checked; N-0 power flow not run: the network model was unavailable, so base-case convergence, per-unit consistency, power balance, and NERC TPL P1–P5 N-1 compliance were not established.",
+    "SCR not assessed (no short-circuit data): zone_short_circuit_mva was absent, and the structured gate outputs returned grid_strength_assessed=false; no SCR, WSCR, or grid-strength class is claimed.",
+    "The N-1-1 findings rely on supplied post-contingency summaries rather than an independently solved network model, and the IR-5 stability result relies on the supplied stability_loss flag rather than a time-domain IBR simulation.",
+    "The IR-3 gate returned its BLOCK in the error field with result=null, so no structured post-expansion zone_assessment, GFL-headroom, or GFM-needed value was available for that call.",
+    "Per-unit voltage values are reported on the unavailable synthetic model's stated per-unit convention; physical kV, A, MW, and MVAr contingency-flow conversions cannot be reconstructed without network base and branch data.",
+    "These are NERC TPL-001-4 P6/P7 planning-screen dispositions only, not regulatory filings or final interconnection approvals."
+  ],
+  "critique_response": []
+}

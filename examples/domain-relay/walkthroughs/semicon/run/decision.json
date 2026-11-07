@@ -1,0 +1,33 @@
+{
+  "model": "Microsoft-Decision-1",
+  "questions": {
+    "needs_revision": "Do the critique findings show at least one item whose status is wrong or unsupported, so the result must be revised before it is used?",
+    "positive_despite_failed_check": "Does any block with a DRC violation, an LVS discrepancy or a negative WNS receive tapeout_ready or ready_with_caveats?",
+    "unconstrained_timing_trusted": "Does the result treat BLK-PCIE's recorded WNS as evidence of timing closure even though its STA run had no SDC constraints?"
+  },
+  "response": {
+    "model": "microsoft-decision-1",
+    "answers": {
+      "needs_revision": {
+        "type": "noul",
+        "noul": 0.5000056701732621
+      },
+      "positive_despite_failed_check": {
+        "type": "noul",
+        "noul": 0.007577272388788262
+      },
+      "unconstrained_timing_trusted": {
+        "type": "noul",
+        "noul": 0.0013250287305173367
+      }
+    },
+    "usage": {
+      "input_tokens": 3353,
+      "output_tokens": 3
+    },
+    "latency_ms": 1021.847,
+    "attempts": 1
+  },
+  "exit_code": 0,
+  "routing": "full-revision"
+}

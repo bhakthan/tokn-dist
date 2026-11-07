@@ -1,30 +1,32 @@
-# REFLECTION: mobility relay, functional-safety release gate for five ADAS functions
+# REFLECTION — mobility relay: functional-safety release gate for five ADAS functions
 
 ## What changed between the first and final answer
-| Item | result.v1.json | result.json | Caused by |
-|---|---|---|---|
-| FN-AEB | decomposition_invalid (R1: no explicit positive field) | release_candidate, DRAFT | C1, C3: no-error counts as acceptance under BRIEF rule 2; error is the rejection channel |
-| FN-LKA | decomposition_invalid (tool error "[B A] (sum 3) do not cover parent D (4)") | decomposition_invalid (unchanged) | none; v1 was already correct |
-| FN-ACC | decomposition_invalid, partly argued from the static instruction string not listing C→(B,A) | release_candidate, DRAFT (SPFM 99.0 and coverage 95.0 pass at equality) | C1, C3, C6 (instruction string has no verdict value) |
-| FN-TJA | decomposition_invalid (SPFM 98.9 < 99 noted only as a counterfactual) | hw_metrics_fail | C1 |
-| FN-APA | decomposition_invalid (V&V "1 open defects remain" treated as non-status-setting) | vv_incomplete, with the retry recorded | C1, C10 (missing mandated retry) |
 
-Changes beyond the item statuses:
-- **Gates G1 to G3** changed from `fail` to `mixed` (4 satisfied, 1 not satisfied) because of C9.
-- **G4** changed from `warn` to `not satisfied` because no full tool_log was preserved (C4).
-- **Confidence** dropped from 0.93 to 0.85, and the unsupported "JSON/decision-comparison validation" claim was removed (C5).
-- **Per-item blocks were added**: `first_failing_check`, `draft`, `decomposition`, `hw_metrics`, `vv` and `observations`, together with `targets`, `discrepancies`, `not_assessed`, `summary` and `disclaimer` (C2). The fix is only partial: result.json says the 15-entry `tool_log` is still missing.
-- **asil_req is now recorded per function**, the C/B versus D target cross-check is stated, and the README "<10 FIT" difference is moved into D3 (C7).
-- **APA open_goals=1** is now listed as a separate observation (C8).
+None of the five statuses changed. Both versions give FN-AEB and FN-ACC `release_candidate`, FN-LKA `decomposition_invalid`, FN-TJA `hw_metrics_fail` and FN-APA `vv_incomplete`. Both keep `confidence: 0.98`. The changes were structural and about provenance:
 
-decision.json correctly predicted that no rejected decomposition was promoted (0.033) and that TJA's SPFM was not rounded up (0.005). The final answer agrees with both.
+| Change from v1 to final | Caused by |
+|---|---|
+| Every item gained `deciding_rule` (R1, D1a, R1, H3, V1). The AEB and ACC rationales now open with "R1: D2, H5 and V3 all held". | C1 |
+| One-line paraphrased `evidence` strings were replaced by full tool responses in `items[].raw_evidence.<tool>.<function>`. The PLAN-vs-shape layout conflict is now disclosed in `limitations`. | C2 |
+| The FN-APA claim that "the permitted retry with verbatim identical input returned this same error" was removed. V1 now "rests on the recorded error, without any historical retry claim". | C3 |
+| FN-AEB and FN-TJA gained a `flags` entry: `matched_scheme C(D)+A(D)` disagrees with the returned children B+C and C+B. A matching limitation was added. | C4 |
+| `limitations` is now explicitly named as the discrepancies record. The README `<10 FIT` vs `<=10 FIT` difference, the per-ASIL ISO targets and the H2 agreement are stated there. | C5 |
+| `applied_targets` (10 FIT / 99 / 90, with source calls) was added inside the PMHF gate. `summary` {2,1,1,1} was added inside the Release gate rather than at top level. | C6 |
+| Each item gained `draft`, `informational_after_failure` and `flags`. The reviser set APA to `informational_after_failure=false`, against the critic's suggestion, and cited PLAN.md's definition. | C7 |
+| Each item gained `input_trace` (safety_req id and text, per-element failure rates, evidence list, safety_case). `failure_rates_total_fit` 345/275/220/390/170 was added to `hw_metrics`. | C8 |
+| Gate details were relabelled as "Explicit release-set roll-up: one … out of five". | C9 |
+| A limitation was added saying 0.98 covers only reproducibility of the mechanical statuses, not vehicle safety or independence, DFA, FMEDA or evidence quality. | C10 |
+| New disclosures were added: `review_artifact` reported missing `producing_code`, and the first reviser calls included a function label and were redone. | No finding. These are reviser self-disclosures. |
 
 ## Where TOKN's harness helped
-- **`asil_decompose_verify`** caught the real defect: FN-LKA's "child ASILs [B A] (sum 3) do not cover parent D (4) per ISO 26262-9 §5". The result was deterministic across the executor, critic and reviser. It also rejected the critic's probe C→(A,A), which established the verdict channel.
-- **`fmea_fta_engine`** returned `pmhf_target=10`, `spfm_target=99` and `lfm_target=90` on all five calls, including the ASIL-C and ASIL-B records. This gave every number a traceable source and exposed FN-TJA's SPFM 98.9 < 99.
-- **`safety_validation_report`** rejected FN-APA with "1 open defects remain". It rejected the 94% probe and accepted exactly 95.0, which settled FN-ACC's boundary case.
-- **The CRITIQUE stage plus the DECIDE gate** worked as designed. The critic re-ran the tools instead of only reading the result, and Decision-1 routed `full-revision` at 0.997 in 1.1 s for 3 output tokens. This turned a uniformly wrong answer into a differentiated one.
-- **Fail-closed behaviour and the content scanner** stopped the reviser from claiming log preservation it did not have. G4 is honestly marked `not satisfied`.
+
+- **`asil_decompose_verify`** (5 calls in Execute, 5 in Critique, 10 in Revise) caught FN-LKA: "child ASILs [B A] (sum 3) do not cover parent D (4) per ISO 26262-9 §5". It returned an error, which PLAN rule D1a and Brief rule 2 treat as a rejection. Its `limits` field also said that "independence and freedom from interference are not verified", which gave the C10 confidence caveat a tool-sourced basis.
+- **`fmea_fta_engine`** (5 / 5 / 10 calls) caught FN-TJA with `programme_verdict.failures=["SPFM 98.9% below 99%"]`. It returned the programme targets (10 / 99 / 90) on every call, which settled the target conflict CAPABILITIES.md had flagged. It also returned per-ASIL `iso_targets` for ACC (C) and APA (B), so the stricter ASIL-D choice could be disclosed with numbers. Decide's `spfm_rounded_up` question (0.0013) confirms that 98.9 was not rounded up to a pass.
+- **`safety_validation_report`** (6 / 5 / 5 calls) caught FN-APA: "1 open defects remain — all safety-critical defects must be resolved before V&V completion". It also stamped `report_status=DRAFT` and `release_authority=safety_manager_review_required` on every accepted item, which enforces Brief rule 6's calibrated language at the tool level.
+- **Fail-closed gate ordering** held from start to finish. Decide's `positive_despite_rejected_decomposition` = 0.0025 confirms that no rejected decomposition was promoted.
+- **Reproducibility.** Because all three tools return deterministic results, the critic could re-run the 15 calls and confirm every v1 number, and the reviser could confirm them again. This is why the light-revision routing was safe.
+- **`review_artifact`** (1 call in Revise) reported missing `producing_code` and provenance. This stopped the reviser from claiming an automated validation pass.
 
 ## Proposed /teach rule
-Before writing pass/fail rules for any domain tool, call it once with a known-good and once with a known-bad input, then record the observed verdict channel (e.g. error field vs result field) in PLAN.md and never require a verdict field the tool did not return.
+
+In mobility release-gate briefs, write each domain tool's raw JSON response or error to `evidence/<tool>/<function>.json` right after each call, including retries, and in `result.json` cite those files instead of paraphrasing tool output or claiming calls that were not saved.

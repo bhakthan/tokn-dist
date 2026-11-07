@@ -1,0 +1,11 @@
+{
+  "note": "Synthetic post-route static-timing records at the slow corner for a teaching scenario. wns is worst negative setup slack in ns. An empty sdc_path means the run was launched without timing constraints.",
+  "sta_runs": [
+    {"block": "BLK-CPU",     "netlist": "pnr/blk_cpu/final.v",     "sdc_path": "constraints/blk_cpu.sdc",     "spef_path": "pnr/blk_cpu/final.spef",     "lib_path": "pdk/sky130hd/sky130_fd_sc_hd__ss_100C_1v60.lib", "wns": 0.085},
+    {"block": "BLK-DSP",     "netlist": "pnr/blk_dsp/final.v",     "sdc_path": "constraints/blk_dsp.sdc",     "spef_path": "pnr/blk_dsp/final.spef",     "lib_path": "pdk/sky130hd/sky130_fd_sc_hd__ss_100C_1v60.lib", "wns": 0.000},
+    {"block": "BLK-USB",     "netlist": "pnr/blk_usb/final.v",     "sdc_path": "constraints/blk_usb.sdc",     "spef_path": "pnr/blk_usb/final.spef",     "lib_path": "pdk/sky130hd/sky130_fd_sc_hd__ss_100C_1v60.lib", "wns": 0.210},
+    {"block": "BLK-SRAMCTL", "netlist": "pnr/blk_sramctl/final.v", "sdc_path": "constraints/blk_sramctl.sdc", "spef_path": "pnr/blk_sramctl/final.spef", "lib_path": "pdk/sky130hd/sky130_fd_sc_hd__ss_100C_1v60.lib", "wns": 0.040},
+    {"block": "BLK-DMA",     "netlist": "pnr/blk_dma/final.v",     "sdc_path": "constraints/blk_dma.sdc",     "spef_path": "pnr/blk_dma/final.spef",     "lib_path": "pdk/sky130hd/sky130_fd_sc_hd__ss_100C_1v60.lib", "wns": -0.003},
+    {"block": "BLK-PCIE",    "netlist": "pnr/blk_pcie/final.v",    "sdc_path": "",                            "spef_path": "pnr/blk_pcie/final.spef",    "lib_path": "pdk/sky130hd/sky130_fd_sc_hd__ss_100C_1v60.lib", "wns": 0.150}
+  ]
+}

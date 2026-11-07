@@ -1,0 +1,146 @@
+{
+  "domain": "semicon",
+  "objective": "Assess the tapeout-signoff status of six hard macros using floorplan utilization, static timing, DRC and LVS evidence from the supplied post-route records.",
+  "items": [
+    {
+      "id": "BLK-CPU",
+      "status": "tapeout_ready",
+      "rationale": "floorplan returned utilization 0.72 from supplied_summary, below the 0.80 target. static_timing accepted the non-empty SDC path and returned WNS 0.085 ns; drc_check returned 0 violations and lvs_check returned 0 discrepancies, all from supplied_summary. The block is signoff-clean on the supplied records, which is not a guarantee of working silicon.",
+      "evidence": [
+        "floorplan: utilization=0.72; utilization_source=supplied_summary",
+        "static_timing: wns=0.085 ns; source=supplied_summary; non-empty sdc_path=constraints/blk_cpu.sdc",
+        "drc_check: violations=0; source=supplied_summary; computed=false",
+        "lvs_check: discrepancies=0; source=supplied_summary; computed=false"
+      ],
+      "tools_used": ["floorplan", "static_timing", "drc_check", "lvs_check"]
+    },
+    {
+      "id": "BLK-DSP",
+      "status": "tapeout_ready",
+      "rationale": "floorplan returned utilization 0.8 from supplied_summary; exact equality with the 0.80 target does not trigger the strictly-above-target caveat. static_timing accepted its non-empty SDC path and returned WNS 0 ns from supplied_summary, which is closed under R4; drc_check returned 0 violations and lvs_check returned 0 discrepancies, both from supplied_summary. The block is signoff-clean on the supplied records, which is not a guarantee of working silicon.",
+      "evidence": [
+        "floorplan: utilization=0.8; utilization_source=supplied_summary; no utilization warning",
+        "static_timing: wns=0 ns; source=supplied_summary; exact zero is closed",
+        "drc_check: violations=0; source=supplied_summary; computed=false",
+        "lvs_check: discrepancies=0; source=supplied_summary; computed=false"
+      ],
+      "tools_used": ["floorplan", "static_timing", "drc_check", "lvs_check"]
+    },
+    {
+      "id": "BLK-USB",
+      "status": "fail_signoff",
+      "rationale": "floorplan returned utilization 0.65 from supplied_summary and static_timing accepted a non-empty SDC path, returning WNS 0.21 ns from supplied_summary; drc_check returned 0 violations from supplied_summary. lvs_check instead issued a blocking error for 2 discrepancies under the zero-discrepancy policy and set post_tool_blocked=true. That LVS failure makes the block fail_signoff despite the other checks.",
+      "evidence": [
+        "floorplan: utilization=0.65; utilization_source=supplied_summary",
+        "static_timing: wns=0.21 ns; source=supplied_summary; non-empty sdc_path=constraints/blk_usb.sdc",
+        "drc_check: violations=0; source=supplied_summary; computed=false",
+        "lvs_check: [SEMICON] BLOCKING: 2 LVS discrepancies — zero-discrepancy LVS policy requires all discrepancies resolved before tapeout; post_tool_blocked=true"
+      ],
+      "tools_used": ["floorplan", "static_timing", "drc_check", "lvs_check"]
+    },
+    {
+      "id": "BLK-SRAMCTL",
+      "status": "ready_with_caveats",
+      "rationale": "floorplan returned utilization 0.82 from supplied_summary and warned that 82.0% exceeds target 80.0% while remaining within the 5.0% margin. static_timing accepted its non-empty SDC path and returned WNS 0.04 ns; drc_check returned 0 violations and lvs_check returned 0 discrepancies, all from supplied_summary. Timing and physical verification are signoff-clean on these records, but utilization above the target implies a routing-congestion risk; this is an inference from utilization alone because route was not run and no gcell_edges were supplied.",
+      "evidence": [
+        "floorplan: utilization=0.82; utilization_source=supplied_summary",
+        "floorplan: Warning: Area utilization 82.0% exceeds target 80.0% (within 5.0% margin) — routing congestion likely",
+        "static_timing: wns=0.04 ns; source=supplied_summary; non-empty sdc_path=constraints/blk_sramctl.sdc",
+        "drc_check: violations=0; source=supplied_summary; computed=false",
+        "lvs_check: discrepancies=0; source=supplied_summary; computed=false"
+      ],
+      "tools_used": ["floorplan", "static_timing", "drc_check", "lvs_check"]
+    },
+    {
+      "id": "BLK-DMA",
+      "status": "fail_signoff",
+      "rationale": "static_timing accepted a non-empty SDC path but returned WNS -0.003 ns from supplied_summary and warned that timing is not closed. floorplan returned utilization 0.70 from supplied_summary; drc_check returned 0 violations and lvs_check returned 0 discrepancies, both from supplied_summary. The negative WNS alone makes the block fail_signoff under R2.",
+      "evidence": [
+        "floorplan: utilization=0.7; utilization_source=supplied_summary",
+        "static_timing: wns=-0.003 ns; source=supplied_summary",
+        "static_timing: [HIGH] WNS = -0.003 ns — timing NOT closed (requires WNS ≥ 0.0 ns)",
+        "drc_check: violations=0; source=supplied_summary; computed=false",
+        "lvs_check: discrepancies=0; source=supplied_summary; computed=false"
+      ],
+      "tools_used": ["floorplan", "static_timing", "drc_check", "lvs_check"]
+    },
+    {
+      "id": "BLK-PCIE",
+      "status": "blocked",
+      "rationale": "The supplied STA record has an empty sdc_path, passed literally, and static_timing refused it with a blocking SDC-constraints error; the input WNS 0.15 ns therefore provides no accepted evidence of timing closure. floorplan returned utilization 0.74 from supplied_summary, while drc_check returned 0 violations and lvs_check returned 0 discrepancies, both from supplied_summary. Those results do not override blocked precedence; the timing run needs real constraints and a rerun before the block can be judged.",
+      "evidence": [
+        "floorplan: utilization=0.74; utilization_source=supplied_summary",
+        "static_timing: [SEMICON] BLOCKING: SDC timing constraints file required — synthesis and STA without constraints produces meaningless results",
+        "static_timing: input sdc_path was empty and was passed literally; no result WNS returned",
+        "drc_check: violations=0; source=supplied_summary; computed=false",
+        "lvs_check: discrepancies=0; source=supplied_summary; computed=false"
+      ],
+      "tools_used": ["floorplan", "static_timing", "drc_check", "lvs_check"]
+    }
+  ],
+  "gates": [
+    {
+      "name": "SDC gate",
+      "status": "fail",
+      "detail": "BLK-PCIE was refused because sdc_path was empty. The other five blocks had non-empty SDC paths accepted by static_timing."
+    },
+    {
+      "name": "Timing gate",
+      "status": "fail",
+      "detail": "BLK-DMA returned WNS -0.003 ns and BLK-PCIE has no accepted constrained timing result. The other four constrained runs returned WNS >= 0 ns from supplied summaries; no signoff_timing state was reported."
+    },
+    {
+      "name": "DRC gate",
+      "status": "pass",
+      "detail": "drc_check returned 0 violations for all six blocks from supplied summaries. No explicit signoff_drc transition was present in the returned result objects."
+    },
+    {
+      "name": "LVS gate",
+      "status": "fail",
+      "detail": "BLK-USB was blocked by 2 discrepancies. The other five blocks returned 0 discrepancies from supplied summaries; explicit signoff_lvs transitions were not reported."
+    },
+    {
+      "name": "Utilization gate",
+      "status": "warn",
+      "detail": "BLK-SRAMCTL returned 0.82, above the 0.80 target but not above the 0.84 hard limit; routing-congestion risk is inferred from utilization alone. BLK-DSP returned exactly 0.8 and does not trigger the caveat."
+    },
+    {
+      "name": "Evidence gate",
+      "status": "pass",
+      "detail": "All four required checks were called for every block and produced values or explicit blocking errors. Successful timing, DRC and LVS checks used supplied summaries rather than recomputed analyses."
+    },
+    {
+      "name": "Synthesis gate",
+      "status": "n/a",
+      "detail": "No synthesis-gate evidence was supplied."
+    },
+    {
+      "name": "Placement gate",
+      "status": "n/a",
+      "detail": "No placement-gate evidence was supplied."
+    },
+    {
+      "name": "ITAR/EAR gate",
+      "status": "n/a",
+      "detail": "No export-control classification evidence was supplied."
+    },
+    {
+      "name": "PDK-NDA gate",
+      "status": "n/a",
+      "detail": "No PDK NDA verification evidence was supplied."
+    }
+  ],
+  "overall_verdict": "BLK-CPU and BLK-DSP are tapeout_ready, BLK-SRAMCTL is ready_with_caveats for an inferred routing-congestion risk, BLK-USB and BLK-DMA fail_signoff for LVS and timing respectively, and BLK-PCIE is blocked pending a constrained STA rerun.",
+  "confidence": 0.93,
+  "limitations": [
+    "The data is synthetic and the input paths are illustrative; the assessments apply only to the supplied records and do not guarantee working silicon.",
+    "floorplan, successful static_timing, successful drc_check and successful lvs_check results were supplied_summary or summary-count evidence, not independently recomputed geometry, parasitic or netlist analyses.",
+    "lib_path was not consumed because static_timing exposes no lib_path argument; application of the stated slow-corner library was not independently established.",
+    "No lifecycle state transition was present in the returned result objects for timing, DRC or LVS; explicit advancement to signoff_timing, signoff_drc or signoff_lvs could not be directly observed.",
+    "No routing tool run or gcell demand/capacity data was available, so BLK-SRAMCTL's routing-congestion risk is an inference from utilization alone.",
+    "Synthesis, Placement, ITAR/EAR and PDK-NDA gates were not evaluable from the supplied inputs.",
+    "Initial timing attempts incorrectly included optional empty timing arrays and returned 'timing_arcs requires startpoints and endpoints (non-empty arrays)'; the five non-empty-SDC calls were retried with the timing arrays omitted entirely. The block-record values were not changed.",
+    "For BLK-USB, the discrepancy count of 2 is quoted directly from the lvs_check blocking error; no separate result object or source tag was returned."
+  ],
+  "critique_response": []
+}

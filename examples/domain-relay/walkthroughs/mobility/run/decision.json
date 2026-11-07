@@ -10,24 +10,24 @@
     "answers": {
       "needs_revision": {
         "type": "noul",
-        "noul": 0.9971990726271679
+        "noul": 0.037327215513275995
       },
       "positive_despite_rejected_decomposition": {
         "type": "noul",
-        "noul": 0.03308628828073936
+        "noul": 0.0024726324427487086
       },
       "spfm_rounded_up": {
         "type": "noul",
-        "noul": 0.005220153152402657
+        "noul": 0.0013250276446022302
       }
     },
     "usage": {
-      "input_tokens": 3926,
+      "input_tokens": 2863,
       "output_tokens": 3
     },
-    "latency_ms": 946.06,
+    "latency_ms": 956.827,
     "attempts": 1
   },
   "exit_code": 0,
-  "routing": "full-revision"
+  "routing": "light-revision"
 }

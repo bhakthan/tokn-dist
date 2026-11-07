@@ -24,7 +24,7 @@
     {
       "name": "ground_truth",
       "ok": true,
-      "detail": "final 1.0 (v1 0.2)"
+      "detail": "final 1.0 (v1 1.0)"
     },
     {
       "name": "must_mention",
@@ -39,12 +39,12 @@
     {
       "name": "critique_has_findings",
       "ok": true,
-      "detail": "11 findings"
+      "detail": "10 findings"
     },
     {
       "name": "every_finding_answered",
       "ok": true,
-      "detail": "11 responses"
+      "detail": "10 responses"
     },
     {
       "name": "decision_answered",
@@ -68,11 +68,11 @@
     }
   ],
   "metrics": {
-    "accuracy_v1": 0.2,
+    "accuracy_v1": 1.0,
     "accuracy_final": 1.0,
-    "findings": 11,
-    "findings_answered": 11,
-    "routing": "full-revision",
+    "findings": 10,
+    "findings_answered": 10,
+    "routing": "light-revision",
     "execute_domain_tools": 3
   }
 }

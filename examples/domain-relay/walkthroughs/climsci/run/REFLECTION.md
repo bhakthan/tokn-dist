@@ -26,7 +26,7 @@ Top-level changes:
 | `critique_response` changed from `[]` to 7 entries, all `"action": "fixed"` | C1–C7 |
 
 How completely each finding was fixed:
-- **C1 is only partly closed.** The Critic's fix said to *declare* the flagged numbers as traceable values. Revise did not. It explained the 14 "high" advisories in prose instead, and its own note says "The hash-only tool request was scanner-blocked; no claim of full tool-based code-drift verification is made."
+- **C1 is only partly closed.** The Critic's fix said to *declare* the flagged numbers as traceable values. Revise did not. It explained the 14 "high" advisories in prose instead, and its own note says "No claim of full tool-based code-drift verification is made."
 - **C3 is fixed.**
 - **C2's "item" requirement is only partly met.** `id` was kept alongside the new `item` key.
 

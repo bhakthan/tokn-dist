@@ -1,0 +1,86 @@
+{
+  "domain": "spacemarine",
+  "objective": "Assess SAT-1 through SAT-5 for pre-pass planning using TLE freshness, delta-v closure, downlink margin, and IADC 25-year disposal gates with the brief's hold/no-go/go precedence.",
+  "items": [
+    {
+      "id": "SAT-1",
+      "status": "go",
+      "rationale": "Orbit propagation was accepted at the supplied epoch age of 18.0 hours and delta_v_closes=true. The downlink is predicted to close from the supplied 7.4 dB margin, but this was accepted as supplied_evidence rather than independently computed. Disposal screening returned compliant=true from the 6.2-year input under IADC, with no contradiction or false 25-year finding; its decay calculation was not computed because area-to-mass and passivation inputs are missing.",
+      "evidence": [
+        "orbit_propagate: computed=true; supplied_epoch_age_hours=18; delta_v_closes=true; accuracy at_epoch_km=1, estimated_error_km=[1,1], growth_km_per_day=[1,3]",
+        "link_budget_calc: link_closes=true; margin_db=7.4; margin_source=supplied_evidence; computed=false; min_margin_db=3",
+        "debris_compliance_check: compliant=true; computed=false; reference_standard=IADC; meets_25_year_rule and estimated_lifetime_years not returned; evidence_contradiction not returned",
+        "inputs/disposal_plans.json: post_mission_lifetime_years=6.2; tool requires area_to_mass_m2_per_kg (or area_m2 + mass_kg) and passivation_planned"
+      ],
+      "tools_used": ["orbit_propagate", "link_budget_calc", "debris_compliance_check"]
+    },
+    {
+      "id": "SAT-2",
+      "status": "go",
+      "rationale": "Orbit propagation accepted the exact 72.0-hour freshness boundary and delta_v_closes=true. The downlink is predicted to close at the exact 3.0 dB supplied margin boundary, with margin_source=supplied_evidence. The 11.0-year disposal input produced compliant=true under IADC without a reported contradiction or false 25-year finding; independent decay estimation was not computed.",
+      "evidence": [
+        "orbit_propagate: computed=true; supplied_epoch_age_hours=72; delta_v_closes=true; accuracy at_epoch_km=1, estimated_error_km=[1,1], growth_km_per_day=[1,3]",
+        "link_budget_calc: link_closes=true; margin_db=3; margin_source=supplied_evidence; computed=false; min_margin_db=3",
+        "debris_compliance_check: compliant=true; computed=false; reference_standard=IADC; meets_25_year_rule and estimated_lifetime_years not returned; evidence_contradiction not returned",
+        "inputs/disposal_plans.json: post_mission_lifetime_years=11.0; tool requires area_to_mass_m2_per_kg (or area_m2 + mass_kg) and passivation_planned"
+      ],
+      "tools_used": ["orbit_propagate", "link_budget_calc", "debris_compliance_check"]
+    },
+    {
+      "id": "SAT-3",
+      "status": "hold",
+      "rationale": "Orbit propagation was refused because the 96.5-hour TLE age exceeds the 72.0-hour maximum, so a fresh TLE is required before the other gates can determine status. The link call returned link_closes=true from the supplied 11.2 dB margin, and disposal returned compliant=true from the 4.1-year input, but both are informational only under the hold precedence. Neither the link margin nor orbital decay was independently computed from complete inputs.",
+      "evidence": [
+        "orbit_propagate: blocked; error='[SPACEMARINE] [HIGH] TLE epoch age 96.5 hours exceeds maximum 72.0 hours — propagation accuracy degraded'; outcome=refused_stale",
+        "link_budget_calc: link_closes=true; margin_db=11.2; margin_source=supplied_evidence; computed=false; informational_only=true",
+        "debris_compliance_check: compliant=true; computed=false; reference_standard=IADC; informational_only=true; decay estimate requires area-to-mass and passivation_planned",
+        "inputs/disposal_plans.json: post_mission_lifetime_years=4.1; informational_only=true"
+      ],
+      "tools_used": ["orbit_propagate", "link_budget_calc", "debris_compliance_check"]
+    },
+    {
+      "id": "SAT-4",
+      "status": "no_go",
+      "rationale": "Orbit propagation was accepted at 20.0 hours with delta_v_closes=true. The downlink gate is no_go because link_budget_calc returned link_closes=false for the supplied 2.9 dB margin against its 3.0 dB minimum. Disposal returned compliant=true from the 9.5-year input but its decay was not independently computed; that does not override the definite link failure.",
+      "evidence": [
+        "orbit_propagate: computed=true; supplied_epoch_age_hours=20; delta_v_closes=true; accuracy at_epoch_km=1, estimated_error_km=[1,1], growth_km_per_day=[1,3]",
+        "link_budget_calc: link_closes=false; margin_db=2.9; margin_source=supplied_evidence; computed=false; validation warning='Link margin 2.9 dB below minimum 3.0 dB — link may not close'",
+        "debris_compliance_check: compliant=true; computed=false; reference_standard=IADC; no evidence_contradiction or false 25-year result returned",
+        "inputs/disposal_plans.json: post_mission_lifetime_years=9.5"
+      ],
+      "tools_used": ["orbit_propagate", "link_budget_calc", "debris_compliance_check"]
+    },
+    {
+      "id": "SAT-5",
+      "status": "no_go",
+      "rationale": "Orbit propagation was accepted at 40.0 hours with delta_v_closes=true, and the supplied 6.1 dB link margin produced link_closes=true. The IADC disposal call was blocked as non-compliant after compliant=false was supplied mechanically from the 25.4-year input, so the item is no_go despite the predicted link closure. The link margin remains supplied evidence rather than an independently computed result.",
+      "evidence": [
+        "orbit_propagate: computed=true; supplied_epoch_age_hours=40; delta_v_closes=true; accuracy at_epoch_km=1, estimated_error_km=[1,1], growth_km_per_day=[1,3]",
+        "link_budget_calc: link_closes=true; margin_db=6.1; margin_source=supplied_evidence; computed=false; min_margin_db=3",
+        "debris_compliance_check: blocked; post_tool_blocked=true; error='[SPACEMARINE] [HIGH] Disposal plan non-compliant per IADC — debris gate remains blocked until remediation'; compliant=false",
+        "inputs/disposal_plans.json: post_mission_lifetime_years=25.4"
+      ],
+      "tools_used": ["orbit_propagate", "link_budget_calc", "debris_compliance_check"]
+    }
+  ],
+  "gates": [
+    {"name": "Orbit", "status": "fail", "detail": "SAT-1, SAT-2, SAT-4, and SAT-5 were accepted with delta_v_closes=true, including SAT-2 at 72.0 hours; SAT-3 failed freshness at 96.5 hours and is hold."},
+    {"name": "Link Budget", "status": "fail", "detail": "SAT-1, SAT-2, SAT-3, and SAT-5 returned link_closes=true and SAT-4 returned false at 2.9 dB; every margin used supplied_evidence with computed=false, and SAT-3's result is informational only."},
+    {"name": "Debris", "status": "fail", "detail": "SAT-1 through SAT-4 returned compliant=true under the brief's input-based IADC rule but computed=false; SAT-5 was blocked as non-compliant for the 25.4-year input."},
+    {"name": "Grounding", "status": "pass", "detail": "The full-report citation check returned verdict=verified: 15 citations verified, with 0 unverifiable, 0 mismatched, and 0 unchecked citations; all mandatory tool calls and the three input files were supplied as sources."},
+    {"name": "ITAR/EAR", "status": "n/a", "detail": "Not assessed: no export decision or supported clearance inputs are in scope."},
+    {"name": "IMO", "status": "n/a", "detail": "Not assessed: marine-only gate outside this brief."},
+    {"name": "Classification", "status": "n/a", "detail": "Not assessed: marine-only gate outside this brief."}
+  ],
+  "overall_verdict": "Under the brief's precedence and supplied-evidence rules, SAT-1 and SAT-2 are go, SAT-3 is hold pending a fresh TLE, SAT-4 is no_go for its below-minimum supplied link margin, and SAT-5 is no_go for its non-compliant disposal plan.",
+  "confidence": 0.9,
+  "limitations": [
+    "All data are synthetic teaching-scenario data for fictional NORAD IDs 99001-99005; these are not operational clearances.",
+    "All five link results used supplied_evidence with computed=false because receiver G/T or gain plus noise temperature, atmospheric_loss_db, data_rate_bps, and required_ebn0_db were missing; the atmospheric-loss retry was not triggered because each first call returned link_closes.",
+    "All four unblocked disposal responses had computed=false and required area-to-mass and passivation_planned; no estimated_lifetime_years or meets_25_year_rule value was returned, so disposal decisions rest on the declared post-mission lifetimes and the brief's rule rather than independent decay verification.",
+    "Each of the four accepted orbit results reported checksum_line1_ok=false and checksum_line2_ok=false despite returning computed ephemeris and elements; the optional standalone checksum pass was not run, so TLE integrity remains a caveat.",
+    "No absolute review timestamp was supplied to cross-check the declared epoch ages; the freshness outcomes therefore rely on epoch_age_hours exactly as provided.",
+    "Link closure and disposal compliance are assessments or predictions, not operational guarantees."
+  ],
+  "critique_response": []
+}

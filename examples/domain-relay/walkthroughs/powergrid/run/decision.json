@@ -1,0 +1,33 @@
+{
+  "model": "Microsoft-Decision-1",
+  "questions": {
+    "needs_revision": "Do the critique findings show at least one item whose status is wrong or unsupported, so the result must be revised before it is used?",
+    "positive_despite_gate_block": "Does any request whose expansion the IBR stability gate blocks still receive approve or approve_with_conditions?",
+    "boundary_misread": "Is any value sitting exactly at an N-1-1 limit (115.0% loading, 0.85 pu, 1.10 pu) or exactly at the 30.0% GFL threshold treated as a violation?"
+  },
+  "response": {
+    "model": "microsoft-decision-1",
+    "answers": {
+      "boundary_misread": {
+        "type": "noul",
+        "noul": 0.003593622530500285
+      },
+      "needs_revision": {
+        "type": "noul",
+        "noul": 0.029312450871346096
+      },
+      "positive_despite_gate_block": {
+        "type": "noul",
+        "noul": 0.0015011868983089963
+      }
+    },
+    "usage": {
+      "input_tokens": 3309,
+      "output_tokens": 3
+    },
+    "latency_ms": 739.792,
+    "attempts": 1
+  },
+  "exit_code": 0,
+  "routing": "light-revision"
+}

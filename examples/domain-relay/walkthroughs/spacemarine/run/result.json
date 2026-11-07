@@ -1,0 +1,1136 @@
+{
+  "domain": "spacemarine",
+  "objective": "Assess SAT-1 through SAT-5 for pre-pass planning using TLE freshness, delta-v closure, downlink margin, and IADC 25-year disposal gates with the brief's hold/no-go/go precedence.",
+  "items": [
+    {
+      "id": "SAT-1",
+      "status": "go",
+      "rationale": "D5 under the brief: orbit accepted at supplied 18 h with delta-v closure, supplied 7.4 dB link closes, and declared 6.2-year lifetime passes the input-based rule. Both TLE checksums fail. Operational use of this scenario go remains conditional on TLE integrity confirmation; disposal compliance was not independently computed.",
+      "evidence": [
+        "revision_evidence.json: SAT-1; mandatory raw outputs also embedded in orbit/link/disposal.raw_output",
+        "inputs/disposal_plans.json: post_mission_lifetime_years=6.2; caller-declared compliant=True",
+        "tle_omm_fetch at inferred review time: {\"checksum_line1_ok\": false, \"checksum_line2_ok\": false, \"epoch\": \"2025-06-09T12:00:00Z\", \"epoch_age_hours\": 18, \"fresh\": true, \"max_age_hours\": 72, \"start_time\": \"2025-06-10T06:00:00Z\", \"informational_only\": true}"
+      ],
+      "tools_used": [
+        "orbit_propagate",
+        "link_budget_calc",
+        "debris_compliance_check"
+      ],
+      "decision_rule": "D5",
+      "reasons": [
+        "all_gates_pass"
+      ],
+      "informational_only": false,
+      "orbit": {
+        "inputs_passed": {
+          "tle_line1": "1 99001U 25001A   25160.50000000  .00001200  00000-0  65000-4 0  9991",
+          "tle_line2": "2 99001  97.4500 120.1000 0012000  90.0000 270.1000 15.21000000 10001",
+          "epoch_age_hours": 18.0,
+          "delta_v_closes": true
+        },
+        "outcome": "accepted",
+        "message": null,
+        "accuracy_estimate": {
+          "at_epoch_km": 1,
+          "estimated_error_km": [
+            1,
+            1
+          ],
+          "growth_km_per_day": [
+            1,
+            3
+          ],
+          "max_offset_from_epoch_days": 0,
+          "model": "SGP4 near-Earth (Vallado et al. 2006, AIAA 2006-6753; WGS-72; TEME frame)",
+          "source": "Kelso 2007, AAS 07-127 (SGP4 vs GPS precision ephemerides)"
+        },
+        "computed": true,
+        "epoch": "2025-06-09T12:00:00Z",
+        "checksum_line1_ok": false,
+        "checksum_line2_ok": false,
+        "raw_output": {
+          "result": {
+            "accuracy_estimate": {
+              "at_epoch_km": 1,
+              "estimated_error_km": [
+                1,
+                1
+              ],
+              "growth_km_per_day": [
+                1,
+                3
+              ],
+              "max_offset_from_epoch_days": 0,
+              "model": "SGP4 near-Earth (Vallado et al. 2006, AIAA 2006-6753; WGS-72; TEME frame)",
+              "source": "Kelso 2007, AAS 07-127 (SGP4 vs GPS precision ephemerides)"
+            },
+            "action": "orbit_propagate",
+            "assumptions": [
+              "no start_time: propagation starts at the TLE epoch"
+            ],
+            "checksum_line1_ok": false,
+            "checksum_line2_ok": false,
+            "computed": true,
+            "configured_propagator": "sgp4",
+            "delta_v_closes": true,
+            "elements": {
+              "apogee_altitude_km": 511.08,
+              "arg_perigee_deg": 90,
+              "bstar": 6.500000000000001e-05,
+              "eccentricity": 0.0012,
+              "inclination_deg": 97.45,
+              "mean_anomaly_deg": 270.1,
+              "mean_motion_rev_per_day": 15.21,
+              "perigee_altitude_km": 494.57,
+              "period_min": 94.6746,
+              "raan_deg": 120.1,
+              "regime": "LEO",
+              "semi_major_axis_km": 6880.962
+            },
+            "ephemeris": [
+              {
+                "alt_km": 505.9299,
+                "lat_deg": -0.16073,
+                "lon_deg": 42.01058,
+                "r_teme_km": [
+                  -3454.592452,
+                  5954.477119,
+                  -19.191759
+                ],
+                "time": "2025-06-09T12:00:00Z",
+                "tsince_min": 0,
+                "v_teme_km_s": [
+                  0.851161194,
+                  0.498112576,
+                  7.546993736
+                ]
+              }
+            ],
+            "epoch": "2025-06-09T12:00:00Z",
+            "frame": "TEME (r, v); geodetic WGS-84 ground track via GMST rotation (polar motion, UT1-UTC neglected)",
+            "method": "SGP4 near-Earth (Vallado et al. 2006, AIAA 2006-6753; WGS-72; TEME frame)",
+            "norad_id": 99001,
+            "points": 1,
+            "supplied_epoch_age_hours": 18
+          },
+          "tool": "orbit_propagate"
+        }
+      },
+      "link": {
+        "inputs_passed": {
+          "freq_ghz": 8.2,
+          "eirp_dbw": 10.5,
+          "distance_km": 2100,
+          "bandwidth_hz": 150000000,
+          "atmospheric_model": "ITU-R P.618 99.5% availability",
+          "margin_db": 7.4
+        },
+        "retry_atm0": false,
+        "link_closes": true,
+        "margin_db": 7.4,
+        "margin_source": "supplied_evidence",
+        "margin_discrepancy_db": null,
+        "requires": [
+          "g_over_t_dbk (dB/K) or rx_antenna_gain_dbi + system_noise_temp_k",
+          "atmospheric_loss_db (dB; gaseous+rain+scintillation at the design availability, pass 0 explicitly for none)",
+          "data_rate_bps (bit/s)",
+          "required_ebn0_db (dB, incl. implementation loss)"
+        ],
+        "link_discrepancy": false,
+        "computed": false,
+        "fspl_db": 177.171,
+        "min_margin_db": 3,
+        "raw_output": {
+          "result": {
+            "action": "link_budget_calc",
+            "computed": false,
+            "freq_ghz": 8.2,
+            "fspl_db": 177.171,
+            "link_closes": true,
+            "margin_db": 7.4,
+            "margin_source": "supplied_evidence",
+            "method": "Friis free-space path loss + C/N0 = EIRP - FSPL - L_atm - L_other + G/T + 228.6 dB; Eb/N0 = C/N0 - 10log10(Rb); margin = Eb/N0 - required (Sklar, Digital Communications 2e, ch. 5)",
+            "min_margin_db": 3,
+            "requires": [
+              "g_over_t_dbk (dB/K) or rx_antenna_gain_dbi + system_noise_temp_k",
+              "atmospheric_loss_db (dB; gaseous+rain+scintillation at the design availability, pass 0 explicitly for none)",
+              "data_rate_bps (bit/s)",
+              "required_ebn0_db (dB, incl. implementation loss)"
+            ]
+          },
+          "tool": "link_budget_calc"
+        }
+      },
+      "disposal": {
+        "inputs_passed": {
+          "orbit": {
+            "altitude_km": 520,
+            "inclination_deg": 97.45
+          },
+          "disposal_plan": {
+            "method": "drag-sail assisted natural decay",
+            "post_mission_lifetime_years": 6.2
+          },
+          "reference_standard": "IADC",
+          "compliant": true
+        },
+        "outcome": "accepted",
+        "message": null,
+        "meets_25_year_rule": null,
+        "estimated_lifetime_years": null,
+        "evidence_contradiction": null,
+        "requires": [
+          "area_to_mass_m2_per_kg (or area_m2 + mass_kg) for the decay estimate",
+          "passivation_planned (bool): IADC §5.2.1 requires depletion of stored energy"
+        ],
+        "computed": false,
+        "post_mission_perigee_km": 520,
+        "post_mission_apogee_km": 520,
+        "raw_output": {
+          "result": {
+            "action": "debris_compliance_check",
+            "compliant": true,
+            "computed": false,
+            "post_mission_apogee_km": 520,
+            "post_mission_perigee_km": 520,
+            "protected_region": "LEO (IADC region A, < 2000 km)",
+            "reference_standard": "IADC",
+            "requires": [
+              "area_to_mass_m2_per_kg (or area_m2 + mass_kg) for the decay estimate",
+              "passivation_planned (bool): IADC §5.2.1 requires depletion of stored energy"
+            ]
+          },
+          "tool": "debris_compliance_check"
+        }
+      },
+      "tle_check": {
+        "checksum_line1_ok": false,
+        "checksum_line2_ok": false,
+        "epoch": "2025-06-09T12:00:00Z",
+        "epoch_age_hours": 18,
+        "fresh": true,
+        "max_age_hours": 72,
+        "start_time": "2025-06-10T06:00:00Z",
+        "informational_only": true
+      }
+    },
+    {
+      "id": "SAT-2",
+      "status": "go",
+      "rationale": "D5 at the inclusive 72 h and 3.0 dB boundaries. The supplied margin has zero headroom above the minimum and the TLE has no remaining freshness allowance. Both checksums fail. Request a fresh, integrity-confirmed TLE before the later pass. Disposal screening accepts the caller-declared 11-year lifetime, not an independent decay calculation.",
+      "evidence": [
+        "revision_evidence.json: SAT-2; mandatory raw outputs also embedded in orbit/link/disposal.raw_output",
+        "inputs/disposal_plans.json: post_mission_lifetime_years=11.0; caller-declared compliant=True",
+        "tle_omm_fetch at inferred review time: {\"checksum_line1_ok\": false, \"checksum_line2_ok\": false, \"epoch\": \"2025-06-07T06:00:00Z\", \"epoch_age_hours\": 72, \"fresh\": true, \"max_age_hours\": 72, \"start_time\": \"2025-06-10T06:00:00Z\", \"informational_only\": true}"
+      ],
+      "tools_used": [
+        "orbit_propagate",
+        "link_budget_calc",
+        "debris_compliance_check"
+      ],
+      "decision_rule": "D5",
+      "reasons": [
+        "all_gates_pass"
+      ],
+      "informational_only": false,
+      "orbit": {
+        "inputs_passed": {
+          "tle_line1": "1 99002U 25001B   25158.25000000  .00001150  00000-0  62000-4 0  9992",
+          "tle_line2": "2 99002  97.4500 150.2000 0011000  85.0000 275.2000 15.21500000 10002",
+          "epoch_age_hours": 72.0,
+          "delta_v_closes": true
+        },
+        "outcome": "accepted",
+        "message": null,
+        "accuracy_estimate": {
+          "at_epoch_km": 1,
+          "estimated_error_km": [
+            1,
+            1
+          ],
+          "growth_km_per_day": [
+            1,
+            3
+          ],
+          "max_offset_from_epoch_days": 0,
+          "model": "SGP4 near-Earth (Vallado et al. 2006, AIAA 2006-6753; WGS-72; TEME frame)",
+          "source": "Kelso 2007, AAS 07-127 (SGP4 vs GPS precision ephemerides)"
+        },
+        "computed": true,
+        "epoch": "2025-06-07T06:00:00Z",
+        "checksum_line1_ok": false,
+        "checksum_line2_ok": false,
+        "raw_output": {
+          "result": {
+            "accuracy_estimate": {
+              "at_epoch_km": 1,
+              "estimated_error_km": [
+                1,
+                1
+              ],
+              "growth_km_per_day": [
+                1,
+                3
+              ],
+              "max_offset_from_epoch_days": 0,
+              "model": "SGP4 near-Earth (Vallado et al. 2006, AIAA 2006-6753; WGS-72; TEME frame)",
+              "source": "Kelso 2007, AAS 07-127 (SGP4 vs GPS precision ephemerides)"
+            },
+            "action": "orbit_propagate",
+            "assumptions": [
+              "no start_time: propagation starts at the TLE epoch"
+            ],
+            "checksum_line1_ok": false,
+            "checksum_line2_ok": false,
+            "computed": true,
+            "configured_propagator": "sgp4",
+            "delta_v_closes": true,
+            "elements": {
+              "apogee_altitude_km": 508.89,
+              "arg_perigee_deg": 85,
+              "bstar": 6.2e-05,
+              "eccentricity": 0.0011,
+              "inclination_deg": 97.45,
+              "mean_anomaly_deg": 275.2,
+              "mean_motion_rev_per_day": 15.215,
+              "perigee_altitude_km": 493.75,
+              "period_min": 94.6434,
+              "raan_deg": 150.2,
+              "regime": "LEO",
+              "semi_major_axis_km": 6879.454
+            },
+            "ephemeris": [
+              {
+                "alt_km": 503.7352,
+                "lat_deg": -0.04903,
+                "lon_deg": 164.31376,
+                "r_teme_km": [
+                  -5972.229293,
+                  3419.445441,
+                  -5.852417
+                ],
+                "time": "2025-06-07T06:00:00Z",
+                "tsince_min": 0,
+                "v_teme_km_s": [
+                  0.498908137,
+                  0.850982743,
+                  7.54856992
+                ]
+              }
+            ],
+            "epoch": "2025-06-07T06:00:00Z",
+            "frame": "TEME (r, v); geodetic WGS-84 ground track via GMST rotation (polar motion, UT1-UTC neglected)",
+            "method": "SGP4 near-Earth (Vallado et al. 2006, AIAA 2006-6753; WGS-72; TEME frame)",
+            "norad_id": 99002,
+            "points": 1,
+            "supplied_epoch_age_hours": 72
+          },
+          "tool": "orbit_propagate"
+        }
+      },
+      "link": {
+        "inputs_passed": {
+          "freq_ghz": 8.2,
+          "eirp_dbw": 9.0,
+          "distance_km": 2300,
+          "bandwidth_hz": 150000000,
+          "atmospheric_model": "ITU-R P.618 99.5% availability",
+          "margin_db": 3.0
+        },
+        "retry_atm0": false,
+        "link_closes": true,
+        "margin_db": 3,
+        "margin_source": "supplied_evidence",
+        "margin_discrepancy_db": null,
+        "requires": [
+          "g_over_t_dbk (dB/K) or rx_antenna_gain_dbi + system_noise_temp_k",
+          "atmospheric_loss_db (dB; gaseous+rain+scintillation at the design availability, pass 0 explicitly for none)",
+          "data_rate_bps (bit/s)",
+          "required_ebn0_db (dB, incl. implementation loss)"
+        ],
+        "link_discrepancy": false,
+        "computed": false,
+        "fspl_db": 177.961,
+        "min_margin_db": 3,
+        "raw_output": {
+          "result": {
+            "action": "link_budget_calc",
+            "computed": false,
+            "freq_ghz": 8.2,
+            "fspl_db": 177.961,
+            "link_closes": true,
+            "margin_db": 3,
+            "margin_source": "supplied_evidence",
+            "method": "Friis free-space path loss + C/N0 = EIRP - FSPL - L_atm - L_other + G/T + 228.6 dB; Eb/N0 = C/N0 - 10log10(Rb); margin = Eb/N0 - required (Sklar, Digital Communications 2e, ch. 5)",
+            "min_margin_db": 3,
+            "requires": [
+              "g_over_t_dbk (dB/K) or rx_antenna_gain_dbi + system_noise_temp_k",
+              "atmospheric_loss_db (dB; gaseous+rain+scintillation at the design availability, pass 0 explicitly for none)",
+              "data_rate_bps (bit/s)",
+              "required_ebn0_db (dB, incl. implementation loss)"
+            ]
+          },
+          "tool": "link_budget_calc"
+        }
+      },
+      "disposal": {
+        "inputs_passed": {
+          "orbit": {
+            "altitude_km": 515,
+            "inclination_deg": 97.45
+          },
+          "disposal_plan": {
+            "method": "natural decay",
+            "post_mission_lifetime_years": 11.0
+          },
+          "reference_standard": "IADC",
+          "compliant": true
+        },
+        "outcome": "accepted",
+        "message": null,
+        "meets_25_year_rule": null,
+        "estimated_lifetime_years": null,
+        "evidence_contradiction": null,
+        "requires": [
+          "area_to_mass_m2_per_kg (or area_m2 + mass_kg) for the decay estimate",
+          "passivation_planned (bool): IADC §5.2.1 requires depletion of stored energy"
+        ],
+        "computed": false,
+        "post_mission_perigee_km": 515,
+        "post_mission_apogee_km": 515,
+        "raw_output": {
+          "result": {
+            "action": "debris_compliance_check",
+            "compliant": true,
+            "computed": false,
+            "post_mission_apogee_km": 515,
+            "post_mission_perigee_km": 515,
+            "protected_region": "LEO (IADC region A, < 2000 km)",
+            "reference_standard": "IADC",
+            "requires": [
+              "area_to_mass_m2_per_kg (or area_m2 + mass_kg) for the decay estimate",
+              "passivation_planned (bool): IADC §5.2.1 requires depletion of stored energy"
+            ]
+          },
+          "tool": "debris_compliance_check"
+        }
+      },
+      "tle_check": {
+        "checksum_line1_ok": false,
+        "checksum_line2_ok": false,
+        "epoch": "2025-06-07T06:00:00Z",
+        "epoch_age_hours": 72,
+        "fresh": true,
+        "max_age_hours": 72,
+        "start_time": "2025-06-10T06:00:00Z",
+        "informational_only": true
+      }
+    },
+    {
+      "id": "SAT-3",
+      "status": "hold",
+      "rationale": "D1a: propagation refused at 96.5 h. Request a fresh TLE. Link and disposal records are informational only. Standalone checksums: line 1 true, line 2 false.",
+      "evidence": [
+        "revision_evidence.json: SAT-3; mandatory raw outputs also embedded in orbit/link/disposal.raw_output",
+        "inputs/disposal_plans.json: post_mission_lifetime_years=4.1; caller-declared compliant=True",
+        "tle_omm_fetch at inferred review time: {\"checksum_line1_ok\": true, \"checksum_line2_ok\": false, \"epoch\": \"2025-06-06T05:30:00.000288Z\", \"epoch_age_hours\": 96.5, \"fresh\": false, \"max_age_hours\": 72, \"start_time\": \"2025-06-10T06:00:00Z\", \"informational_only\": true}"
+      ],
+      "tools_used": [
+        "orbit_propagate",
+        "link_budget_calc",
+        "debris_compliance_check"
+      ],
+      "decision_rule": "D1a",
+      "reasons": [
+        "tle_stale"
+      ],
+      "informational_only": true,
+      "orbit": {
+        "inputs_passed": {
+          "tle_line1": "1 99003U 25001C   25157.22916667  .00001300  00000-0  70000-4 0  9993",
+          "tle_line2": "2 99003  97.4500 180.3000 0010000  80.0000 280.3000 15.20500000 10003",
+          "epoch_age_hours": 96.5,
+          "delta_v_closes": true
+        },
+        "outcome": "refused_stale",
+        "message": "[SPACEMARINE] [HIGH] TLE epoch age 96.5 hours exceeds maximum 72.0 hours — propagation accuracy degraded",
+        "accuracy_estimate": null,
+        "computed": null,
+        "epoch": null,
+        "checksum_line1_ok": null,
+        "checksum_line2_ok": null,
+        "raw_output": {
+          "error": "[SPACEMARINE] [HIGH] TLE epoch age 96.5 hours exceeds maximum 72.0 hours — propagation accuracy degraded"
+        }
+      },
+      "link": {
+        "inputs_passed": {
+          "freq_ghz": 8.2,
+          "eirp_dbw": 13.0,
+          "distance_km": 1900,
+          "bandwidth_hz": 150000000,
+          "atmospheric_model": "ITU-R P.618 99.5% availability",
+          "margin_db": 11.2
+        },
+        "retry_atm0": false,
+        "link_closes": true,
+        "margin_db": 11.2,
+        "margin_source": "supplied_evidence",
+        "margin_discrepancy_db": null,
+        "requires": [
+          "g_over_t_dbk (dB/K) or rx_antenna_gain_dbi + system_noise_temp_k",
+          "atmospheric_loss_db (dB; gaseous+rain+scintillation at the design availability, pass 0 explicitly for none)",
+          "data_rate_bps (bit/s)",
+          "required_ebn0_db (dB, incl. implementation loss)"
+        ],
+        "link_discrepancy": false,
+        "computed": false,
+        "fspl_db": 176.301,
+        "min_margin_db": 3,
+        "raw_output": {
+          "result": {
+            "action": "link_budget_calc",
+            "computed": false,
+            "freq_ghz": 8.2,
+            "fspl_db": 176.301,
+            "link_closes": true,
+            "margin_db": 11.2,
+            "margin_source": "supplied_evidence",
+            "method": "Friis free-space path loss + C/N0 = EIRP - FSPL - L_atm - L_other + G/T + 228.6 dB; Eb/N0 = C/N0 - 10log10(Rb); margin = Eb/N0 - required (Sklar, Digital Communications 2e, ch. 5)",
+            "min_margin_db": 3,
+            "requires": [
+              "g_over_t_dbk (dB/K) or rx_antenna_gain_dbi + system_noise_temp_k",
+              "atmospheric_loss_db (dB; gaseous+rain+scintillation at the design availability, pass 0 explicitly for none)",
+              "data_rate_bps (bit/s)",
+              "required_ebn0_db (dB, incl. implementation loss)"
+            ]
+          },
+          "tool": "link_budget_calc"
+        }
+      },
+      "disposal": {
+        "inputs_passed": {
+          "orbit": {
+            "altitude_km": 525,
+            "inclination_deg": 97.45
+          },
+          "disposal_plan": {
+            "method": "propulsive perigee lowering",
+            "post_mission_lifetime_years": 4.1
+          },
+          "reference_standard": "IADC",
+          "compliant": true
+        },
+        "outcome": "accepted",
+        "message": null,
+        "meets_25_year_rule": null,
+        "estimated_lifetime_years": null,
+        "evidence_contradiction": null,
+        "requires": [
+          "area_to_mass_m2_per_kg (or area_m2 + mass_kg) for the decay estimate",
+          "passivation_planned (bool): IADC §5.2.1 requires depletion of stored energy"
+        ],
+        "computed": false,
+        "post_mission_perigee_km": 525,
+        "post_mission_apogee_km": 525,
+        "raw_output": {
+          "result": {
+            "action": "debris_compliance_check",
+            "compliant": true,
+            "computed": false,
+            "post_mission_apogee_km": 525,
+            "post_mission_perigee_km": 525,
+            "protected_region": "LEO (IADC region A, < 2000 km)",
+            "reference_standard": "IADC",
+            "requires": [
+              "area_to_mass_m2_per_kg (or area_m2 + mass_kg) for the decay estimate",
+              "passivation_planned (bool): IADC §5.2.1 requires depletion of stored energy"
+            ]
+          },
+          "tool": "debris_compliance_check"
+        }
+      },
+      "tle_check": {
+        "checksum_line1_ok": true,
+        "checksum_line2_ok": false,
+        "epoch": "2025-06-06T05:30:00.000288Z",
+        "epoch_age_hours": 96.5,
+        "fresh": false,
+        "max_age_hours": 72,
+        "start_time": "2025-06-10T06:00:00Z",
+        "informational_only": true
+      }
+    },
+    {
+      "id": "SAT-4",
+      "status": "no_go",
+      "rationale": "D2b: supplied 2.9 dB margin yields link_closes=false. Delta-v closes and declared 9.5-year lifetime passes the brief rule, so no other no_go reason applies. Supplied age 20 h differs from cross-check 38 h; both are within 72 h. Both checksums fail.",
+      "evidence": [
+        "revision_evidence.json: SAT-4; mandatory raw outputs also embedded in orbit/link/disposal.raw_output",
+        "inputs/disposal_plans.json: post_mission_lifetime_years=9.5; caller-declared compliant=True",
+        "tle_omm_fetch at inferred review time: {\"checksum_line1_ok\": false, \"checksum_line2_ok\": false, \"epoch\": \"2025-06-08T16:00:00.000288Z\", \"epoch_age_hours\": 38, \"fresh\": true, \"max_age_hours\": 72, \"start_time\": \"2025-06-10T06:00:00Z\", \"informational_only\": true}"
+      ],
+      "tools_used": [
+        "orbit_propagate",
+        "link_budget_calc",
+        "debris_compliance_check"
+      ],
+      "decision_rule": "D2b",
+      "reasons": [
+        "link_margin_below_3db"
+      ],
+      "informational_only": false,
+      "orbit": {
+        "inputs_passed": {
+          "tle_line1": "1 99004U 25001D   25159.66666667  .00001250  00000-0  68000-4 0  9994",
+          "tle_line2": "2 99004  97.4500 210.4000 0013000  95.0000 265.4000 15.22000000 10004",
+          "epoch_age_hours": 20.0,
+          "delta_v_closes": true
+        },
+        "outcome": "accepted",
+        "message": null,
+        "accuracy_estimate": {
+          "at_epoch_km": 1,
+          "estimated_error_km": [
+            1,
+            1
+          ],
+          "growth_km_per_day": [
+            1,
+            3
+          ],
+          "max_offset_from_epoch_days": 0,
+          "model": "SGP4 near-Earth (Vallado et al. 2006, AIAA 2006-6753; WGS-72; TEME frame)",
+          "source": "Kelso 2007, AAS 07-127 (SGP4 vs GPS precision ephemerides)"
+        },
+        "computed": true,
+        "epoch": "2025-06-08T16:00:00.000288Z",
+        "checksum_line1_ok": false,
+        "checksum_line2_ok": false,
+        "raw_output": {
+          "result": {
+            "accuracy_estimate": {
+              "at_epoch_km": 1,
+              "estimated_error_km": [
+                1,
+                1
+              ],
+              "growth_km_per_day": [
+                1,
+                3
+              ],
+              "max_offset_from_epoch_days": 0,
+              "model": "SGP4 near-Earth (Vallado et al. 2006, AIAA 2006-6753; WGS-72; TEME frame)",
+              "source": "Kelso 2007, AAS 07-127 (SGP4 vs GPS precision ephemerides)"
+            },
+            "action": "orbit_propagate",
+            "assumptions": [
+              "no start_time: propagation starts at the TLE epoch"
+            ],
+            "checksum_line1_ok": false,
+            "checksum_line2_ok": false,
+            "computed": true,
+            "configured_propagator": "sgp4",
+            "delta_v_closes": true,
+            "elements": {
+              "apogee_altitude_km": 508.75,
+              "arg_perigee_deg": 95,
+              "bstar": 6.800000000000001e-05,
+              "eccentricity": 0.0013,
+              "inclination_deg": 97.45,
+              "mean_anomaly_deg": 265.4,
+              "mean_motion_rev_per_day": 15.22,
+              "perigee_altitude_km": 490.87,
+              "period_min": 94.6124,
+              "raan_deg": 210.4,
+              "regime": "LEO",
+              "semi_major_axis_km": 6877.948
+            },
+            "ephemeris": [
+              {
+                "alt_km": 503.6128,
+                "lat_deg": 0.12768,
+                "lon_deg": 73.09444,
+                "r_teme_km": [
+                  -5936.597504,
+                  -3480.668941,
+                  15.23995
+                ],
+                "time": "2025-06-08T16:00:00.000288Z",
+                "tsince_min": 0,
+                "v_teme_km_s": [
+                  -0.468832047,
+                  0.868453065,
+                  7.547804805
+                ]
+              }
+            ],
+            "epoch": "2025-06-08T16:00:00.000288Z",
+            "frame": "TEME (r, v); geodetic WGS-84 ground track via GMST rotation (polar motion, UT1-UTC neglected)",
+            "method": "SGP4 near-Earth (Vallado et al. 2006, AIAA 2006-6753; WGS-72; TEME frame)",
+            "norad_id": 99004,
+            "points": 1,
+            "supplied_epoch_age_hours": 20
+          },
+          "tool": "orbit_propagate"
+        }
+      },
+      "link": {
+        "inputs_passed": {
+          "freq_ghz": 8.2,
+          "eirp_dbw": 8.5,
+          "distance_km": 2400,
+          "bandwidth_hz": 150000000,
+          "atmospheric_model": "ITU-R P.618 99.5% availability",
+          "margin_db": 2.9
+        },
+        "retry_atm0": false,
+        "link_closes": false,
+        "margin_db": 2.9,
+        "margin_source": "supplied_evidence",
+        "margin_discrepancy_db": null,
+        "requires": [
+          "g_over_t_dbk (dB/K) or rx_antenna_gain_dbi + system_noise_temp_k",
+          "atmospheric_loss_db (dB; gaseous+rain+scintillation at the design availability, pass 0 explicitly for none)",
+          "data_rate_bps (bit/s)",
+          "required_ebn0_db (dB, incl. implementation loss)"
+        ],
+        "link_discrepancy": false,
+        "computed": false,
+        "fspl_db": 178.331,
+        "min_margin_db": 3,
+        "raw_output": {
+          "result": {
+            "action": "link_budget_calc",
+            "computed": false,
+            "freq_ghz": 8.2,
+            "fspl_db": 178.331,
+            "link_closes": false,
+            "margin_db": 2.9,
+            "margin_source": "supplied_evidence",
+            "method": "Friis free-space path loss + C/N0 = EIRP - FSPL - L_atm - L_other + G/T + 228.6 dB; Eb/N0 = C/N0 - 10log10(Rb); margin = Eb/N0 - required (Sklar, Digital Communications 2e, ch. 5)",
+            "min_margin_db": 3,
+            "requires": [
+              "g_over_t_dbk (dB/K) or rx_antenna_gain_dbi + system_noise_temp_k",
+              "atmospheric_loss_db (dB; gaseous+rain+scintillation at the design availability, pass 0 explicitly for none)",
+              "data_rate_bps (bit/s)",
+              "required_ebn0_db (dB, incl. implementation loss)"
+            ],
+            "validation_warnings": [
+              "[HIGH] Link margin 2.9 dB below minimum 3.0 dB — link may not close"
+            ]
+          },
+          "tool": "link_budget_calc"
+        }
+      },
+      "disposal": {
+        "inputs_passed": {
+          "orbit": {
+            "altitude_km": 510,
+            "inclination_deg": 97.45
+          },
+          "disposal_plan": {
+            "method": "natural decay",
+            "post_mission_lifetime_years": 9.5
+          },
+          "reference_standard": "IADC",
+          "compliant": true
+        },
+        "outcome": "accepted",
+        "message": null,
+        "meets_25_year_rule": null,
+        "estimated_lifetime_years": null,
+        "evidence_contradiction": null,
+        "requires": [
+          "area_to_mass_m2_per_kg (or area_m2 + mass_kg) for the decay estimate",
+          "passivation_planned (bool): IADC §5.2.1 requires depletion of stored energy"
+        ],
+        "computed": false,
+        "post_mission_perigee_km": 510,
+        "post_mission_apogee_km": 510,
+        "raw_output": {
+          "result": {
+            "action": "debris_compliance_check",
+            "compliant": true,
+            "computed": false,
+            "post_mission_apogee_km": 510,
+            "post_mission_perigee_km": 510,
+            "protected_region": "LEO (IADC region A, < 2000 km)",
+            "reference_standard": "IADC",
+            "requires": [
+              "area_to_mass_m2_per_kg (or area_m2 + mass_kg) for the decay estimate",
+              "passivation_planned (bool): IADC §5.2.1 requires depletion of stored energy"
+            ]
+          },
+          "tool": "debris_compliance_check"
+        }
+      },
+      "tle_check": {
+        "checksum_line1_ok": false,
+        "checksum_line2_ok": false,
+        "epoch": "2025-06-08T16:00:00.000288Z",
+        "epoch_age_hours": 38,
+        "fresh": true,
+        "max_age_hours": 72,
+        "start_time": "2025-06-10T06:00:00Z",
+        "informational_only": true
+      }
+    },
+    {
+      "id": "SAT-5",
+      "status": "no_go",
+      "rationale": "D2c: declared 25.4-year lifetime exceeds 25 years; compliant=false produces a blocked debris call, not a computed lifetime. Orbit accepts supplied 40 h with delta-v closure and supplied 6.1 dB link closes. Cross-check gives 58 h. Both checksums fail.",
+      "evidence": [
+        "revision_evidence.json: SAT-5; mandatory raw outputs also embedded in orbit/link/disposal.raw_output",
+        "inputs/disposal_plans.json: post_mission_lifetime_years=25.4; caller-declared compliant=False",
+        "tle_omm_fetch at inferred review time: {\"checksum_line1_ok\": false, \"checksum_line2_ok\": false, \"epoch\": \"2025-06-07T19:59:59.999712Z\", \"epoch_age_hours\": 58, \"fresh\": true, \"max_age_hours\": 72, \"start_time\": \"2025-06-10T06:00:00Z\", \"informational_only\": true}"
+      ],
+      "tools_used": [
+        "orbit_propagate",
+        "link_budget_calc",
+        "debris_compliance_check"
+      ],
+      "decision_rule": "D2c",
+      "reasons": [
+        "disposal_noncompliant"
+      ],
+      "informational_only": false,
+      "orbit": {
+        "inputs_passed": {
+          "tle_line1": "1 99005U 25001E   25158.83333333  .00000900  00000-0  48000-4 0  9995",
+          "tle_line2": "2 99005  97.6000 240.5000 0009000 100.0000 260.5000 14.95000000 10005",
+          "epoch_age_hours": 40.0,
+          "delta_v_closes": true
+        },
+        "outcome": "accepted",
+        "message": null,
+        "accuracy_estimate": {
+          "at_epoch_km": 1,
+          "estimated_error_km": [
+            1,
+            1
+          ],
+          "growth_km_per_day": [
+            1,
+            3
+          ],
+          "max_offset_from_epoch_days": 0,
+          "model": "SGP4 near-Earth (Vallado et al. 2006, AIAA 2006-6753; WGS-72; TEME frame)",
+          "source": "Kelso 2007, AAS 07-127 (SGP4 vs GPS precision ephemerides)"
+        },
+        "computed": true,
+        "epoch": "2025-06-07T19:59:59.999712Z",
+        "checksum_line1_ok": false,
+        "checksum_line2_ok": false,
+        "raw_output": {
+          "result": {
+            "accuracy_estimate": {
+              "at_epoch_km": 1,
+              "estimated_error_km": [
+                1,
+                1
+              ],
+              "growth_km_per_day": [
+                1,
+                3
+              ],
+              "max_offset_from_epoch_days": 0,
+              "model": "SGP4 near-Earth (Vallado et al. 2006, AIAA 2006-6753; WGS-72; TEME frame)",
+              "source": "Kelso 2007, AAS 07-127 (SGP4 vs GPS precision ephemerides)"
+            },
+            "action": "orbit_propagate",
+            "assumptions": [
+              "no start_time: propagation starts at the TLE epoch"
+            ],
+            "checksum_line1_ok": false,
+            "checksum_line2_ok": false,
+            "computed": true,
+            "configured_propagator": "sgp4",
+            "delta_v_closes": true,
+            "elements": {
+              "apogee_altitude_km": 588.64,
+              "arg_perigee_deg": 100,
+              "bstar": 4.8e-05,
+              "eccentricity": 0.0009,
+              "inclination_deg": 97.6,
+              "mean_anomaly_deg": 260.5,
+              "mean_motion_rev_per_day": 14.95,
+              "perigee_altitude_km": 576.11,
+              "period_min": 96.3211,
+              "raan_deg": 240.5,
+              "regime": "LEO",
+              "semi_major_axis_km": 6960.512
+            },
+            "ephemeris": [
+              {
+                "alt_km": 586.4278,
+                "lat_deg": 0.27554,
+                "lon_deg": 43.99586,
+                "r_teme_km": [
+                  -3433.344068,
+                  -6059.389143,
+                  33.287957
+                ],
+                "time": "2025-06-07T19:59:59.999712Z",
+                "tsince_min": 0,
+                "v_teme_km_s": [
+                  -0.845113112,
+                  0.53707977,
+                  7.499917101
+                ]
+              }
+            ],
+            "epoch": "2025-06-07T19:59:59.999712Z",
+            "frame": "TEME (r, v); geodetic WGS-84 ground track via GMST rotation (polar motion, UT1-UTC neglected)",
+            "method": "SGP4 near-Earth (Vallado et al. 2006, AIAA 2006-6753; WGS-72; TEME frame)",
+            "norad_id": 99005,
+            "points": 1,
+            "supplied_epoch_age_hours": 40
+          },
+          "tool": "orbit_propagate"
+        }
+      },
+      "link": {
+        "inputs_passed": {
+          "freq_ghz": 8.2,
+          "eirp_dbw": 10.0,
+          "distance_km": 2200,
+          "bandwidth_hz": 150000000,
+          "atmospheric_model": "ITU-R P.618 99.5% availability",
+          "margin_db": 6.1
+        },
+        "retry_atm0": false,
+        "link_closes": true,
+        "margin_db": 6.1,
+        "margin_source": "supplied_evidence",
+        "margin_discrepancy_db": null,
+        "requires": [
+          "g_over_t_dbk (dB/K) or rx_antenna_gain_dbi + system_noise_temp_k",
+          "atmospheric_loss_db (dB; gaseous+rain+scintillation at the design availability, pass 0 explicitly for none)",
+          "data_rate_bps (bit/s)",
+          "required_ebn0_db (dB, incl. implementation loss)"
+        ],
+        "link_discrepancy": false,
+        "computed": false,
+        "fspl_db": 177.575,
+        "min_margin_db": 3,
+        "raw_output": {
+          "result": {
+            "action": "link_budget_calc",
+            "computed": false,
+            "freq_ghz": 8.2,
+            "fspl_db": 177.575,
+            "link_closes": true,
+            "margin_db": 6.1,
+            "margin_source": "supplied_evidence",
+            "method": "Friis free-space path loss + C/N0 = EIRP - FSPL - L_atm - L_other + G/T + 228.6 dB; Eb/N0 = C/N0 - 10log10(Rb); margin = Eb/N0 - required (Sklar, Digital Communications 2e, ch. 5)",
+            "min_margin_db": 3,
+            "requires": [
+              "g_over_t_dbk (dB/K) or rx_antenna_gain_dbi + system_noise_temp_k",
+              "atmospheric_loss_db (dB; gaseous+rain+scintillation at the design availability, pass 0 explicitly for none)",
+              "data_rate_bps (bit/s)",
+              "required_ebn0_db (dB, incl. implementation loss)"
+            ]
+          },
+          "tool": "link_budget_calc"
+        }
+      },
+      "disposal": {
+        "inputs_passed": {
+          "orbit": {
+            "altitude_km": 610,
+            "inclination_deg": 97.6
+          },
+          "disposal_plan": {
+            "method": "natural decay",
+            "post_mission_lifetime_years": 25.4
+          },
+          "reference_standard": "IADC",
+          "compliant": false
+        },
+        "outcome": "blocked",
+        "message": "[SPACEMARINE] [HIGH] Disposal plan non-compliant per IADC — debris gate remains blocked until remediation",
+        "meets_25_year_rule": null,
+        "estimated_lifetime_years": null,
+        "evidence_contradiction": null,
+        "requires": null,
+        "computed": null,
+        "post_mission_perigee_km": null,
+        "post_mission_apogee_km": null,
+        "raw_output": {
+          "error": "[SPACEMARINE] [HIGH] Disposal plan non-compliant per IADC — debris gate remains blocked until remediation",
+          "post_tool_blocked": true,
+          "tool": "debris_compliance_check"
+        }
+      },
+      "tle_check": {
+        "checksum_line1_ok": false,
+        "checksum_line2_ok": false,
+        "epoch": "2025-06-07T19:59:59.999712Z",
+        "epoch_age_hours": 58,
+        "fresh": true,
+        "max_age_hours": 72,
+        "start_time": "2025-06-10T06:00:00Z",
+        "informational_only": true
+      }
+    }
+  ],
+  "gates": [
+    {
+      "name": "Orbit",
+      "status": "mixed",
+      "detail": "Accepted SAT-1, SAT-2, SAT-4, SAT-5; refused stale SAT-3. Accepted calls do not clear checksum/provenance caveats."
+    },
+    {
+      "name": "Link Budget",
+      "status": "mixed",
+      "detail": "Supplied-evidence threshold passes SAT-1, SAT-2, SAT-5; fails SAT-4; SAT-3 true but informational only. No independently computed margin."
+    },
+    {
+      "name": "Debris",
+      "status": "mixed",
+      "detail": "Caller-declared lifetime screening accepted SAT-1, SAT-2, SAT-4; blocked SAT-5; SAT-3 accepted but informational only. No independent lifetime computation."
+    },
+    {
+      "name": "Grounding",
+      "status": "quote_level_only",
+      "detail": "Value-bearing source ranges and raw evidence are saved in revision_evidence.json. See grounding_check.json for the final literal-range verification; this does not establish operational validity."
+    },
+    {
+      "name": "ITAR/EAR",
+      "status": "not_assessed",
+      "detail": "Outside this brief."
+    },
+    {
+      "name": "IMO",
+      "status": "not_assessed",
+      "detail": "Outside this brief."
+    },
+    {
+      "name": "Classification",
+      "status": "not_assessed",
+      "detail": "Outside this brief."
+    }
+  ],
+  "overall_verdict": "Scenario rule outcomes: SAT-1 and SAT-2 go; SAT-3 hold for stale TLE; SAT-4 no_go for supplied link margin; SAT-5 no_go for declared disposal lifetime. These are not operational clearances; integrity, provenance and independent link/disposal verification remain unresolved.",
+  "confidence": 0.9,
+  "limitations": [
+    "synthetic data (NORAD 99001-99005)",
+    "link and disposal results are predictions, not guarantees",
+    "Every link response uses supplied_evidence with computed=false. Missing receiver G/T or gain plus noise temperature, atmospheric_loss_db, data_rate_bps and required_ebn0_db prevent independent margin computation. No retry or zero-loss placeholder was used.",
+    "The atmospheric_model text label alone does not supply numerical atmospheric loss; the tool still requires atmospheric_loss_db and did not produce a model-derived attenuation. No availability claim is independently established.",
+    "The four accepted debris calls echo caller-declared compliant=true with computed=false. No estimated_lifetime_years, meets_25_year_rule or evidence_contradiction field was returned. Missing area-to-mass and passivation data prevent independent decay and passivation verification.",
+    "Disposal perigee/apogee default to operational altitude: 520/520, 515/515, 525/525 and 510/510 km for SAT-1 through SAT-4. No drag-sail dynamics or perigee-lowering manoeuvre was demonstrated; SAT-3 remains at 525 km in the screening response. SAT-5 was blocked, so these output fields are null.",
+    "All satellites have failing line-2 TLE checksums; SAT-3 alone has a passing line-1 checksum. Nine of ten lines fail. Accepted orbit calls are not evidence of verified TLE integrity.",
+    "An inferred, not supplied, common review time is 2025-06-10T06:00:00Z, derived from SAT-1 epoch plus its supplied age and corroborated by SAT-2 and approximately SAT-3. The standalone cross-check uses this time only; the mandatory orbit calls retain supplied ages.",
+    "SAT-4 supplied age 20 h conflicts with its 2025-06-08T16:00:00.000288Z epoch: standalone cross-check gives 38 h at the inferred review time. Both are below 72 h; status unchanged. Confirm orbit-state provenance.",
+    "SAT-5 supplied age 40 h conflicts with its 2025-06-07T19:59:59.999712Z epoch: standalone cross-check gives 58 h at the inferred review time. Both are below 72 h; status unchanged. Confirm orbit-state provenance.",
+    "SAT-2 has zero margin headroom and zero freshness allowance at the inferred review time. Any later pass using the same TLE exceeds 72 h. Request a fresh, checksum-valid TLE before that pass.",
+    "Accepted propagations contain only an epoch-state ephemeris because no start/end time was supplied. The reported [1,1] km estimated error is at epoch, not an independently demonstrated planning-time error.",
+    "Confidence 0.9 describes only mechanical application of scenario rules, not mission success or evidence validity. Underlying operational evidence confidence is low and unquantified."
+  ],
+  "critique_response": [
+    {
+      "id": "C1",
+      "action": "fixed",
+      "detail": "Preserved existing result shape and added PLAN acceptance keys and structured per-item evidence; absent tool fields are null. Summary and decisions are derived mechanically."
+    },
+    {
+      "id": "C2",
+      "action": "fixed",
+      "detail": "Independent tle_omm_fetch gives SAT-4 epoch 2025-06-08T16:00:00.000288Z and age 38 h at the inferred review time, versus supplied 20 h. Recorded caveat/deviation; mandatory orbit call retains 20 h and no_go remains D2b."
+    },
+    {
+      "id": "C3",
+      "action": "fixed",
+      "detail": "Independent tle_omm_fetch gives SAT-5 epoch 2025-06-07T19:59:59.999712Z and age 58 h versus supplied 40 h. Recorded caveat/deviation; D2c unchanged."
+    },
+    {
+      "id": "C4",
+      "action": "fixed",
+      "detail": "Both independent SAT-1 checksum flags are false. Added tle_check and qualified orbit acceptance and operational-use caveat. Kept scenario go per D5; the optional PLAN check was optional, not mandatory."
+    },
+    {
+      "id": "C5",
+      "action": "fixed",
+      "detail": "Reruns accept SAT-2 at 72 h and margin 3 dB with min_margin_db=3, supplied_evidence and computed=false; both checksums fail. Flagged zero headroom/freshness allowance and request a fresh integrity-confirmed TLE before any later pass. Mechanical go retained; no operational confidence probability asserted."
+    },
+    {
+      "id": "C6",
+      "action": "fixed",
+      "detail": "Propagation independently refused at 96.5 h. Structured informational_only=true and tle_check line1=true, line2=false added; D1a retained."
+    },
+    {
+      "id": "C7",
+      "action": "fixed",
+      "detail": "Confidence explicitly limited to mechanical rule application, with low unquantified operational evidence confidence. Debris acceptance now identified as an echo of caller-declared compliance, not independent verification. Independent checks show nine failing lines, correcting the critique count of eight."
+    },
+    {
+      "id": "C8",
+      "action": "fixed",
+      "detail": "Replaced field-name citations with range citations containing values and outcomes, including SAT-5 orbit/delta-v and input-declared lifetimes. Persisted sources and raw mandatory evidence in revision_evidence.json; quote-level grounding check is saved separately and does not certify scientific validity."
+    },
+    {
+      "id": "C9",
+      "action": "fixed",
+      "detail": "Aggregate gates labelled mixed with explicit per-satellite outcomes, not undefined constellation-wide failures. Item status vocabulary remains go/no_go/hold."
+    },
+    {
+      "id": "C10",
+      "action": "fixed",
+      "detail": "Independent link reruns confirm FSPL 177.171, 177.961, 176.301, 178.331 and 177.575 dB. Saved fspl_db, exact requires and disposal perigee/apogee fields (null for blocked SAT-5). Label-only atmospheric input and unmodelled disposal-method details are caveats; no stronger internal implementation claim is made."
+    },
+    {
+      "id": "C11",
+      "action": "fixed",
+      "detail": "Rerun gives SAT-4 link_closes=false at 2.9 dB, delta-v true, and caller-declared compliant=true. Recorded decision_rule D2b and the sole applicable no_go reason link_margin_below_3db."
+    },
+    {
+      "id": "C12",
+      "action": "fixed",
+      "detail": "Independent SAT-5 debris call with compliant=false was blocked; the 25.4-year declared input is the basis, not a computed lifetime. Added D2c, disposal_noncompliant, and value-bearing orbit/delta-v citation."
+    }
+  ],
+  "summary": {
+    "go": [
+      "SAT-1",
+      "SAT-2"
+    ],
+    "no_go": [
+      "SAT-4",
+      "SAT-5"
+    ],
+    "hold": [
+      "SAT-3"
+    ]
+  },
+  "deviations": [
+    "An inferred, not supplied, common review time is 2025-06-10T06:00:00Z, derived from SAT-1 epoch plus its supplied age and corroborated by SAT-2 and approximately SAT-3. The standalone cross-check uses this time only; the mandatory orbit calls retain supplied ages.",
+    "SAT-4 supplied age 20 h conflicts with its 2025-06-08T16:00:00.000288Z epoch: standalone cross-check gives 38 h at the inferred review time. Both are below 72 h; status unchanged. Confirm orbit-state provenance.",
+    "SAT-5 supplied age 40 h conflicts with its 2025-06-07T19:59:59.999712Z epoch: standalone cross-check gives 58 h at the inferred review time. Both are below 72 h; status unchanged. Confirm orbit-state provenance.",
+    "Standalone tle_omm_fetch was run for all five records with an explicitly inferred start_time, rather than the optional no-start_time checksum-only check in PLAN.md; its ages are informational and never replace supplied orbit gate ages.",
+    "All satellites have failing line-2 TLE checksums; SAT-3 alone has a passing line-1 checksum. Nine of ten lines fail. Accepted orbit calls are not evidence of verified TLE integrity.",
+    "SAT-2 has zero margin headroom and zero freshness allowance at the inferred review time. Any later pass using the same TLE exceeds 72 h. Request a fresh, checksum-valid TLE before that pass.",
+    "No status-rule or threshold discrepancy was observed; checksum/provenance caveats do not create new statuses beyond the brief."
+  ],
+  "gates_not_assessed": [
+    "ITAR/EAR",
+    "IMO",
+    "Classification"
+  ],
+  "caveats": [
+    "synthetic data (NORAD 99001-99005)",
+    "link and disposal results are predictions, not guarantees",
+    "Every link response uses supplied_evidence with computed=false. Missing receiver G/T or gain plus noise temperature, atmospheric_loss_db, data_rate_bps and required_ebn0_db prevent independent margin computation. No retry or zero-loss placeholder was used.",
+    "The atmospheric_model text label alone does not supply numerical atmospheric loss; the tool still requires atmospheric_loss_db and did not produce a model-derived attenuation. No availability claim is independently established.",
+    "The four accepted debris calls echo caller-declared compliant=true with computed=false. No estimated_lifetime_years, meets_25_year_rule or evidence_contradiction field was returned. Missing area-to-mass and passivation data prevent independent decay and passivation verification.",
+    "Disposal perigee/apogee default to operational altitude: 520/520, 515/515, 525/525 and 510/510 km for SAT-1 through SAT-4. No drag-sail dynamics or perigee-lowering manoeuvre was demonstrated; SAT-3 remains at 525 km in the screening response. SAT-5 was blocked, so these output fields are null.",
+    "All satellites have failing line-2 TLE checksums; SAT-3 alone has a passing line-1 checksum. Nine of ten lines fail. Accepted orbit calls are not evidence of verified TLE integrity.",
+    "An inferred, not supplied, common review time is 2025-06-10T06:00:00Z, derived from SAT-1 epoch plus its supplied age and corroborated by SAT-2 and approximately SAT-3. The standalone cross-check uses this time only; the mandatory orbit calls retain supplied ages.",
+    "SAT-4 supplied age 20 h conflicts with its 2025-06-08T16:00:00.000288Z epoch: standalone cross-check gives 38 h at the inferred review time. Both are below 72 h; status unchanged. Confirm orbit-state provenance.",
+    "SAT-5 supplied age 40 h conflicts with its 2025-06-07T19:59:59.999712Z epoch: standalone cross-check gives 58 h at the inferred review time. Both are below 72 h; status unchanged. Confirm orbit-state provenance.",
+    "SAT-2 has zero margin headroom and zero freshness allowance at the inferred review time. Any later pass using the same TLE exceeds 72 h. Request a fresh, checksum-valid TLE before that pass.",
+    "Accepted propagations contain only an epoch-state ephemeris because no start/end time was supplied. The reported [1,1] km estimated error is at epoch, not an independently demonstrated planning-time error.",
+    "Confidence 0.9 describes only mechanical application of scenario rules, not mission success or evidence validity. Underlying operational evidence confidence is low and unquantified."
+  ]
+}

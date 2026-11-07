@@ -1,0 +1,67 @@
+{
+  "findings": [
+    {
+      "id": "C1",
+      "item": "overall",
+      "severity": "major",
+      "issue": "result.json has no top-level `study`, `standard`, `threshold_pct` or `warnings` fields, all four of which PLAN.md acceptance criterion 1 requires (`study` copied from inputs/n11_study.json; `standard` = \"NERC TPL-001-4 P6/P7\"; `threshold_pct` = 30; `warnings` including \"N-1 not checked\", \"N-0 power flow not run\", \"SCR not assessed (no short-circuit data)\"). The content is not missing, only the fields: the study string appears verbatim in RESULT.md's header and inside `objective`; threshold_pct=30 appears in `objective` and in every gate evidence string; the three warning phrases appear in `limitations[0]` and `limitations[1]` and in RESULT.md's \"Required warnings\" blockquote. A consumer reading `warnings` or `standard` as fields finds nothing, so the deliverable fails the plan's own completeness definition.",
+      "fix": "Add the four top-level fields to result.json: `study` = \"Cluster 7 interconnection queue — summer peak 2029, N-1-1 (NERC TPL-001-4 P6/P7)\" copied verbatim from inputs/n11_study.json, `standard` = \"NERC TPL-001-4 P6/P7\", `threshold_pct` = 30, and `warnings` = [\"N-1 not checked\", \"N-0 power flow not run\", \"SCR not assessed (no short-circuit data)\"] (optionally plus the planning-screen-only caveat). No new numbers are introduced; every value already exists in the inputs or the saved tool outputs."
+    },
+    {
+      "id": "C2",
+      "item": "overall",
+      "severity": "major",
+      "issue": "Every item object in result.json carries only `id`, `status`, `rationale`, `evidence` and `tools_used`. Acceptance criterion 2 requires each item to also carry `zone`, a structured `n11` object ({tool, screening_complete, source, pairs_screened, violations: [{pair, element, metric, value, severity_as_returned, counted}], n_critical, n_noncritical}), a structured `ibr_gate` object ({tool, result, zone_gfl_penetration_pct_post_expansion, gfl_headroom_mw, gfm_mw_needed, raw_block_or_violation_messages}), `decision_rule_applied` and `tool_brief_discrepancies`. None of these fields exists in result.json; the underlying values are present only as prose in `rationale`/`evidence`, and `decision_rule_applied` appears only in RESULT.md's \"Decision rule:\" lines. Consequence: acceptance criterion 5 (\"a reviewer who re-applies D1–D4 to the recorded fields must reach the same status\") and criterion 3 (traceability) cannot be evaluated, because the fields the rules would be applied to do not exist. The numbers themselves are correct — I re-ran all ten domain calls with the plan's exact inputs and every reported value reproduced.",
+      "fix": "Restructure each item into the criterion-2 schema, populating every field verbatim from the saved tool outputs. Example for IR-2: n11 = {tool: \"powergrid_n1_1_screen\", screening_complete: true, source: \"supplied_summary\", pairs_screened: 3, violations: [{pair: \"L-201|L-202\", element: \"L-203\", metric: \"branch_loading_pct\", value: 131.0, severity_as_returned: \"HIGH\", counted: true}], n_critical: 0, n_noncritical: 1}; ibr_gate = {tool: \"powergrid_ibr_stability_gate\", result: \"PASS\", zone_gfl_penetration_pct_post_expansion: 17.778, gfl_headroom_mw: 78.571, gfm_mw_needed: 0, raw_block_or_violation_messages: []}; decision_rule_applied = \"D4.4\"; tool_brief_discrepancies = []. Repeat for IR-1, IR-3, IR-4, IR-5 with their own outputs."
+    },
+    {
+      "id": "C3",
+      "item": "IR-3",
+      "severity": "major",
+      "issue": "IR-3's status is `blocked` but the item object has no `blocked_reason` field. Acceptance criterion 2 requires `blocked_reason` whenever the status is blocked. The value `ibr_gate_gfl_threshold` appears only inside the `rationale` prose (\"The disposition is blocked under D4.2 with blocked_reason=ibr_gate_gfl_threshold\"). The underlying gate evidence is accurate: my re-run of powergrid_ibr_stability_gate with the full resources list plus the IR-3-PV addition returned exactly the quoted error — \"[BLOCK] zone Z-SOUTH: expansion adds 60 MW GFL with no GFM — post-expansion GFL penetration 34.8% exceeds 30.0% threshold. Add GFM capacity (or synchronous condensers) before approving.\" — with result=null and no structured zone_assessment.",
+      "fix": "Add a `blocked_reason` field to the IR-3 item object (value per C5: either \"ibr_gate_gfl_threshold\" or \"tool_failure_or_incomplete_screen\"), and put the raw block message into `ibr_gate.raw_block_or_violation_messages` so the 34.8% figure and the 60 MW GFL figure are carried as structured evidence, not only as prose."
+    },
+    {
+      "id": "C4",
+      "item": "IR-2",
+      "severity": "major",
+      "issue": "IR-2's status is `approve_with_conditions` but the item object has no `conditions` field. Acceptance criterion 2 requires `conditions` to be a non-empty list for approve_with_conditions items. The corrective action exists only as prose: the rationale says \"implement and verify an operating limit or remedial action scheme that keeps L-203 at or below 115% for L-201 → L-202, then rerun the screen\", and RESULT.md has a \"Required condition\" bullet. The violation it responds to is real and correctly quoted — my re-run of powergrid_n1_1_screen returned exactly one violation, severity HIGH, \"L-203 at 131.0% > 115% emergency rating after L-201 → L-202\", kind=thermal, pair L-201|L-202 — and 131.0% is below the 132.25% CRITICAL threshold, so HIGH is the right severity and approve_with_conditions is the right status. Only the structured field is missing.",
+      "fix": "Add a non-empty `conditions` array to the IR-2 item: one entry per counted violation, naming the element (L-203), the quoted value (131.0%), the outage pair (L-201|L-202) and the corrective action, ordered by cost and time per PLAN.md D4.4 (operating limit or RAS first, then switching, then protection, then FACTS, then reconductoring, then new transmission). Keep the existing \"rerun the screen to verify\" requirement in the entry."
+    },
+    {
+      "id": "C5",
+      "item": "IR-3",
+      "severity": "minor",
+      "issue": "The recorded decision rule for IR-3 (D4.2, blocked_reason=ibr_gate_gfl_threshold) is not what a literal in-order application of PLAN.md D4 yields. D4 says \"apply in order and stop at the first match\", and D4.1 fires whenever G1 or G2 fails. G2's conditions are: the call returned without error; a GFL penetration value is returned for the item's zone; the gate result is PASS under D2. For IR-3 the call returned an error (result=null, BLOCK in the error field), no structured zone_assessment was returned, and the D2 result is BLOCK — so G2 fails on its first and third conditions and D4.1 gives blocked_reason=\"tool_failure_or_incomplete_screen\". The executor's choice is defensible (the brief's own definition of `blocked` is \"adds grid-following capacity with no grid-forming capacity and pushes zonal GFL penetration past the threshold\", which is exactly IR-3, and the error text does return the 34.8% figure), and the status is `blocked` under both readings — but on the literal reading D4.2 can never fire with this tool, since the gate reports every BLOCK as an error with result=null. The plan is internally tense here and the deliverable does not state which reading was used or why.",
+      "fix": "Either (a) record decision_rule_applied = \"D4.1\" and blocked_reason = \"tool_failure_or_incomplete_screen\", or (b) keep D4.2 / \"ibr_gate_gfl_threshold\" and add one sentence to the IR-3 item stating that the gate's BLOCK message is treated as valid domain evidence (it returns the post-expansion penetration 34.8% and the 60 MW GFL figure) so G2's error-return condition is waived, noting the plan tension. Do not change the status; it is `blocked` either way."
+    },
+    {
+      "id": "C6",
+      "item": "overall",
+      "severity": "minor",
+      "issue": "G1 is marked \"pass\" with the detail \"Each returned n_pairs=6 because both directions are listed for the three supplied outage-pair keys\", but PLAN.md's G1 literally requires \"the number of screened pairs = 3\". The tool returns n_pairs=6; my re-runs confirm the six ordered entries are (L-101,L-102), (L-101,T-11), (L-102,L-101), (L-102,T-11), (T-11,L-101), (T-11,L-102), with computed_pairs=0, unscreened_pairs=[], screening_complete=true and source=supplied_summary. The executor's reconciliation is sound — all three supplied pair keys are covered and no network computation was substituted — but the literal 3-vs-6 mismatch is recorded nowhere, and the `pairs_screened` field that criterion 2 requires (and that would make the reconciliation visible to a reviewer) does not exist in result.json.",
+      "fix": "Record `pairs_screened` in each item's `n11` object as the number of supplied pair summaries screened (3), with a note that the tool enumerates them as 6 ordered entries (n_pairs=6, computed_pairs=0, unscreened_pairs=[]), and add a tool_brief_discrepancies entry (or an explicit note) documenting the n_pairs=6 vs \"screened pairs = 3\" difference so G1's pass is auditable rather than asserted."
+    },
+    {
+      "id": "C7",
+      "item": "overall",
+      "severity": "minor",
+      "issue": "PLAN.md G3 states the domain disclosures are \"required for every item, and required in the outputs\". The three warnings appear globally — RESULT.md's \"Required warnings\" blockquote and result.json `limitations[0]`/`limitations[1]` — but are not carried in any item record. Only IR-1 (\"this is not a regulatory interconnection or N-0/N-1 reliability approval\") and IR-5 (\"The supplied flag is screening evidence, not a time-domain stability demonstration\") carry item-level caveats; IR-2, IR-3 and IR-4 carry none. G3 itself is reported once, globally, as \"warn\".",
+      "fix": "Repeat the disclosure line — \"N-1 not checked; N-0 power flow not run; SCR not assessed (no short-circuit data); NERC TPL-001-4 P6/P7 planning screen only\" — in each item object (for example a `disclosures` field, or by referencing the global `warnings` array) and in each RESULT.md item section, so the per-item requirement in G3 is met as written."
+    },
+    {
+      "id": "C8",
+      "item": "overall",
+      "severity": "minor",
+      "issue": "Acceptance criterion 4 requires \"exactly 10 domain tool calls are recorded (5 screen + 5 gate), each called with the item's own inputs as listed above\". result.json records only per-item `tools_used` name lists; there is no call record, no input echo and no saved raw output in the deliverable, so the \"each called with the item's own inputs\" half of the criterion cannot be audited from result.json alone. I re-ran all ten calls with the plan's exact inputs and reproduced every reported number and severity, so the work was done correctly — the gap is the missing record, not missing analysis. The `evidence` strings, which quote the tool outputs, partially compensate.",
+      "fix": "Add a `calls` array of 10 entries (item id, tool name, and the key inputs actually passed: first_contingencies ids, the three pair keys, the addition's id/type/capacity_mw/zone, threshold_pct=30), or embed the same information in each item's `n11` and `ibr_gate` blocks, and retain the saved raw tool outputs alongside result.json so criterion 3's traceability is checkable."
+    },
+    {
+      "id": "C9",
+      "item": "overall",
+      "severity": "minor",
+      "issue": "result.json carries \"confidence\": 0.95 with no qualifier, and neither result.json nor RESULT.md says anything about conformance to the plan's acceptance criteria. The five dispositions do deserve high confidence — I re-ran all ten calls and every number and severity reproduced — but the deliverable is not conformant to its own schema (C1-C4), so a reader taking `confidence` at face value would read the file as complete when acceptance criteria 1, 2, 3 and 5 are unmet. The confidence claim covers the dispositions but is presented as covering the deliverable. Relatedly, the `overall_verdict` string asserts \"none of these dispositions establishes N-0, N-1, SCR, or time-domain stability compliance\", which is appropriately hedged; the schema-level omissions are not hedged anywhere.",
+      "fix": "Qualify the confidence field (e.g. \"confidence in the five dispositions: 0.95; schema conformance to PLAN.md acceptance criteria: unmet, see critique findings C1-C4\") or add a short conformance note to result.json and RESULT.md stating which acceptance criteria are satisfied and which are not, so the 0.95 is not read as an endorsement of the file's completeness."
+    }
+  ]
+}

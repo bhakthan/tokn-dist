@@ -1,0 +1,2055 @@
+{
+  "domain": "powergrid",
+  "objective": "Screen IR-1 through IR-5 for the Cluster 7 interconnection queue — summer peak 2029, using the supplied N-1-1 (NERC TPL-001-4 P6/P7) summaries and the IEEE 2800 GFM/GFL expansion gate at threshold_pct=30.",
+  "items": [
+    {
+      "id": "IR-1",
+      "status": "approve",
+      "rationale": "The supplied-summary N-1-1 screen completed with no unscreened pairs and n_violations=0. The IBR gate returned blocked=false for the IR-1-BESS expansion, with Z-NORTH post-expansion GFL penetration of 12.5%, below threshold_pct=30, and gfm_needed_mw=0. Under decision rule D4.5 the planning-screen disposition is approve; this is not a regulatory interconnection approval.",
+      "evidence": [
+        "powergrid_n1_1_screen: screening_complete=true; source=supplied_summary; unscreened_pairs=[]; n_pairs=6 ordered entries covering the three supplied summary pairs; n_violations=0; violations=null",
+        "powergrid_n1_1_screen: standard=NERC TPL-001-4 P6/P7; thermal_limit_pct=115; voltage_min_pu=0.85; voltage_max_pu=1.1",
+        "powergrid_ibr_stability_gate: blocked=false; violations=null; expansion_issues=null; Z-NORTH gfl_penetration_pct=12.5; gfl_headroom_mw=100; gfm_needed_mw=0; over_threshold=false"
+      ],
+      "tools_used": [
+        "powergrid_n1_1_screen",
+        "powergrid_ibr_stability_gate"
+      ],
+      "zone": "Z-NORTH",
+      "n11": {
+        "tool": "powergrid_n1_1_screen",
+        "screening_complete": true,
+        "source": "supplied_summary",
+        "pairs_screened": 3,
+        "ordered_entries_returned": 6,
+        "computed_pairs": 0,
+        "unscreened_pairs": [],
+        "violations": [],
+        "n_critical": 0,
+        "n_noncritical": 0,
+        "pair_count_note": "G1 counts the supplied pair-summary keys, not ordered outage entries. The rerun returned n_pairs=6, computed_pairs=0, screening_complete=true, source=supplied_summary and unscreened_pairs=[]. The three input summaries cover the six enumerated entries by reverse-key reuse. This is a documented interpretation of PLAN G1, not independent proof of sequence-specific equivalence."
+      },
+      "ibr_gate": {
+        "tool": "powergrid_ibr_stability_gate",
+        "result": "PASS",
+        "zone_gfl_penetration_pct_post_expansion": 12.5,
+        "gfl_headroom_mw": 100,
+        "gfm_mw_needed": 0,
+        "raw_block_or_violation_messages": [],
+        "grid_strength_assessed": false
+      },
+      "decision_rule_applied": "D4.5",
+      "conditions": [],
+      "tool_brief_discrepancies": [],
+      "disclosures": "N-1 not checked; N-0 power flow not run; SCR not assessed (no short-circuit data); NERC TPL-001-4 P6/P7 planning screen only; not a regulatory filing or final interconnection approval."
+    },
+    {
+      "id": "IR-2",
+      "status": "approve_with_conditions",
+      "rationale": "The N-1-1 screen returned one counted HIGH thermal violation: L-203 at 131.0% after the L-201 → L-202 sequence, above the 115% emergency-rating limit. The IBR gate passed with blocked=false, Z-EAST post-expansion GFL penetration of 17.778%, and gfm_needed_mw=0. Decision rule D4.4 therefore gives approve_with_conditions. Before unconditional approval, implement and verify an operating limit or remedial action scheme that keeps L-203 at or below 115% for L-201 → L-202, then rerun the screen.",
+      "evidence": [
+        "powergrid_n1_1_screen: screening_complete=true; source=supplied_summary; unscreened_pairs=[]; n_pairs=6 ordered entries covering the three supplied summary pairs; n_violations=1",
+        "powergrid_n1_1_screen: HIGH — L-203 at 131.0% > 115% emergency rating after L-201 → L-202; pair=L-201|L-202; kind=thermal",
+        "powergrid_ibr_stability_gate: blocked=false; violations=null; expansion_issues=null; Z-EAST gfl_penetration_pct=17.778; gfl_headroom_mw=78.571; gfm_needed_mw=0; over_threshold=false"
+      ],
+      "tools_used": [
+        "powergrid_n1_1_screen",
+        "powergrid_ibr_stability_gate"
+      ],
+      "zone": "Z-EAST",
+      "n11": {
+        "tool": "powergrid_n1_1_screen",
+        "screening_complete": true,
+        "source": "supplied_summary",
+        "pairs_screened": 3,
+        "ordered_entries_returned": 6,
+        "computed_pairs": 0,
+        "unscreened_pairs": [],
+        "violations": [
+          {
+            "pair": "L-201|L-202",
+            "element": "L-203",
+            "metric": "branch_loading_pct",
+            "value": 131.0,
+            "severity_as_returned": "HIGH",
+            "counted": true,
+            "description": "L-203 at 131.0% > 115% emergency rating after L-201 → L-202"
+          }
+        ],
+        "n_critical": 0,
+        "n_noncritical": 1,
+        "pair_count_note": "G1 counts the supplied pair-summary keys, not ordered outage entries. The rerun returned n_pairs=6, computed_pairs=0, screening_complete=true, source=supplied_summary and unscreened_pairs=[]. The three input summaries cover the six enumerated entries by reverse-key reuse. This is a documented interpretation of PLAN G1, not independent proof of sequence-specific equivalence."
+      },
+      "ibr_gate": {
+        "tool": "powergrid_ibr_stability_gate",
+        "result": "PASS",
+        "zone_gfl_penetration_pct_post_expansion": 17.778,
+        "gfl_headroom_mw": 78.571,
+        "gfm_mw_needed": 0,
+        "raw_block_or_violation_messages": [],
+        "grid_strength_assessed": false
+      },
+      "decision_rule_applied": "D4.4",
+      "conditions": [
+        "For L-203 at 131.0% after L-201|L-202, implement an operating limit or validated RAS keeping loading at or below 115% of emergency rating, then rerun the N-1-1 screen to verify. If ineffective, assess switching before protection, FACTS, reconductoring or new transmission; no corrective design or effectiveness is established by this summary screen."
+      ],
+      "tool_brief_discrepancies": [],
+      "disclosures": "N-1 not checked; N-0 power flow not run; SCR not assessed (no short-circuit data); NERC TPL-001-4 P6/P7 planning screen only; not a regulatory filing or final interconnection approval."
+    },
+    {
+      "id": "IR-3",
+      "status": "blocked",
+      "rationale": "The IBR tool returned an explicit [BLOCK] for Z-SOUTH in its error field, with result=null: IR-3-PV adds 60 MW GFL with no GFM and produces post-expansion GFL penetration of 34.8%, exceeding the 30.0% threshold. The N-1-1 screen was complete with n_violations=0, but the gate block takes precedence over that clean screen. The disposition is blocked under D4.2 with blocked_reason=ibr_gate_gfl_threshold; add GFM capacity or synchronous condensers before approval, as the gate directs. PLAN D4.1/G2 is internally tense with D4.2: G2 requires an error-free PASS, while this domain tool returns an explicit BLOCK in the error field with result=null. For disposition and cause attribution, this BLOCK message is treated as valid domain evidence returning 34.8% post-expansion GFL and 60 MW added GFL; G2’s error-return condition is waived for that purpose only. G2 remains failed for approval. D4.2 and ibr_gate_gfl_threshold are retained to reflect BRIEF precedence and the actual cause. A literal D4.1 interpretation would also leave the request blocked. Synchronous condensers are quoted tool advice, not proven substitutes for GFM MW in this capacity-share gate; a revised GFM/GFL registry must pass the same gate, and any condenser proposal needs separate validated strength/stability evidence.",
+      "evidence": [
+        "powergrid_ibr_stability_gate: [BLOCK] zone Z-SOUTH: expansion adds 60 MW GFL with no GFM — post-expansion GFL penetration 34.8% exceeds 30.0% threshold. Add GFM capacity (or synchronous condensers) before approving.",
+        "powergrid_ibr_stability_gate: tool returned result=null with the domain BLOCK in the error field; no structured zone_assessment was returned for this blocked call",
+        "powergrid_n1_1_screen: screening_complete=true; source=supplied_summary; unscreened_pairs=[]; n_pairs=6 ordered entries covering the three supplied summary pairs; n_violations=0; violations=null"
+      ],
+      "tools_used": [
+        "powergrid_n1_1_screen",
+        "powergrid_ibr_stability_gate"
+      ],
+      "zone": "Z-SOUTH",
+      "n11": {
+        "tool": "powergrid_n1_1_screen",
+        "screening_complete": true,
+        "source": "supplied_summary",
+        "pairs_screened": 3,
+        "ordered_entries_returned": 6,
+        "computed_pairs": 0,
+        "unscreened_pairs": [],
+        "violations": [],
+        "n_critical": 0,
+        "n_noncritical": 0,
+        "pair_count_note": "G1 counts the supplied pair-summary keys, not ordered outage entries. The rerun returned n_pairs=6, computed_pairs=0, screening_complete=true, source=supplied_summary and unscreened_pairs=[]. The three input summaries cover the six enumerated entries by reverse-key reuse. This is a documented interpretation of PLAN G1, not independent proof of sequence-specific equivalence."
+      },
+      "ibr_gate": {
+        "tool": "powergrid_ibr_stability_gate",
+        "result": "BLOCK",
+        "zone_gfl_penetration_pct_post_expansion": 34.8,
+        "penetration_source": "raw_output.error (rounded value as returned)",
+        "gfl_headroom_mw": null,
+        "gfm_mw_needed": null,
+        "raw_block_or_violation_messages": [
+          "IBR stability gate failed: [BLOCK] zone Z-SOUTH: expansion adds 60 MW GFL with no GFM — post-expansion GFL penetration 34.8% exceeds 30.0% threshold. Add GFM capacity (or synchronous condensers) before approving."
+        ],
+        "interpretation_note": "PLAN D4.1/G2 is internally tense with D4.2: G2 requires an error-free PASS, while this domain tool returns an explicit BLOCK in the error field with result=null. For disposition and cause attribution, this BLOCK message is treated as valid domain evidence returning 34.8% post-expansion GFL and 60 MW added GFL; G2’s error-return condition is waived for that purpose only. G2 remains failed for approval. D4.2 and ibr_gate_gfl_threshold are retained to reflect BRIEF precedence and the actual cause. A literal D4.1 interpretation would also leave the request blocked."
+      },
+      "decision_rule_applied": "D4.2",
+      "conditions": [],
+      "tool_brief_discrepancies": [],
+      "disclosures": "N-1 not checked; N-0 power flow not run; SCR not assessed (no short-circuit data); NERC TPL-001-4 P6/P7 planning screen only; not a regulatory filing or final interconnection approval.",
+      "blocked_reason": "ibr_gate_gfl_threshold"
+    },
+    {
+      "id": "IR-4",
+      "status": "approve",
+      "rationale": "The N-1-1 screen returned n_violations=0, consistent with decision rule D3 treating the supplied values exactly at the loading and voltage limits as non-violations. The IBR gate returned blocked=false and Z-WEST post-expansion GFL penetration of exactly 30%, with over_threshold=false, gfl_headroom_mw=0, and gfm_needed_mw=0; equality with threshold_pct=30 does not trigger a block. Under D4.5 the planning-screen disposition is approve, with no claim of additional GFL headroom.",
+      "evidence": [
+        "powergrid_n1_1_screen: screening_complete=true; source=supplied_summary; unscreened_pairs=[]; n_pairs=6 ordered entries covering the three supplied summary pairs; n_violations=0; violations=null",
+        "powergrid_n1_1_screen: limits returned as thermal_limit_pct=115, voltage_min_pu=0.85, voltage_max_pu=1.1; the supplied 115.0%, 0.85 pu and 1.10 pu boundary values produced no returned violation",
+        "powergrid_ibr_stability_gate: blocked=false; violations=null; expansion_issues=null; Z-WEST gfl_penetration_pct=30; gfl_headroom_mw=0; gfm_needed_mw=0; over_threshold=false"
+      ],
+      "tools_used": [
+        "powergrid_n1_1_screen",
+        "powergrid_ibr_stability_gate"
+      ],
+      "zone": "Z-WEST",
+      "n11": {
+        "tool": "powergrid_n1_1_screen",
+        "screening_complete": true,
+        "source": "supplied_summary",
+        "pairs_screened": 3,
+        "ordered_entries_returned": 6,
+        "computed_pairs": 0,
+        "unscreened_pairs": [],
+        "violations": [],
+        "n_critical": 0,
+        "n_noncritical": 0,
+        "pair_count_note": "G1 counts the supplied pair-summary keys, not ordered outage entries. The rerun returned n_pairs=6, computed_pairs=0, screening_complete=true, source=supplied_summary and unscreened_pairs=[]. The three input summaries cover the six enumerated entries by reverse-key reuse. This is a documented interpretation of PLAN G1, not independent proof of sequence-specific equivalence."
+      },
+      "ibr_gate": {
+        "tool": "powergrid_ibr_stability_gate",
+        "result": "PASS",
+        "zone_gfl_penetration_pct_post_expansion": 30,
+        "gfl_headroom_mw": 0,
+        "gfm_mw_needed": 0,
+        "raw_block_or_violation_messages": [],
+        "grid_strength_assessed": false
+      },
+      "decision_rule_applied": "D4.5",
+      "conditions": [],
+      "tool_brief_discrepancies": [],
+      "disclosures": "N-1 not checked; N-0 power flow not run; SCR not assessed (no short-circuit data); NERC TPL-001-4 P6/P7 planning screen only; not a regulatory filing or final interconnection approval."
+    },
+    {
+      "id": "IR-5",
+      "status": "reject",
+      "rationale": "The N-1-1 screen returned one CRITICAL stability violation: loss of synchronism / voltage collapse after the L-501 → L-502 outage sequence. The IBR gate passed with blocked=false and Z-CENTRAL post-expansion GFL penetration of 16.667%, but a passing resource-mix gate does not override a CRITICAL N-1-1 result. Under D4.3 the disposition is reject; resubmission requires a validated stability restudy and a corrective operating, RAS, or topology solution demonstrating no loss of synchronism for that sequence.",
+      "evidence": [
+        "powergrid_n1_1_screen: screening_complete=true; source=supplied_summary; unscreened_pairs=[]; n_pairs=6 ordered entries covering the three supplied summary pairs; n_violations=1",
+        "powergrid_n1_1_screen: CRITICAL — loss of synchronism / voltage collapse after outage sequence L-501 → L-502; pair=L-501|L-502; kind=stability",
+        "powergrid_ibr_stability_gate: blocked=false; violations=null; expansion_issues=null; Z-CENTRAL gfl_penetration_pct=16.667; gfl_headroom_mw=68.571; gfm_needed_mw=0; over_threshold=false"
+      ],
+      "tools_used": [
+        "powergrid_n1_1_screen",
+        "powergrid_ibr_stability_gate"
+      ],
+      "zone": "Z-CENTRAL",
+      "n11": {
+        "tool": "powergrid_n1_1_screen",
+        "screening_complete": true,
+        "source": "supplied_summary",
+        "pairs_screened": 3,
+        "ordered_entries_returned": 6,
+        "computed_pairs": 0,
+        "unscreened_pairs": [],
+        "violations": [
+          {
+            "pair": "L-501|L-502",
+            "element": "L-501|L-502",
+            "metric": "stability_loss",
+            "value": true,
+            "severity_as_returned": "CRITICAL",
+            "counted": true,
+            "description": "loss of synchronism / voltage collapse after outage sequence L-501 → L-502"
+          }
+        ],
+        "n_critical": 1,
+        "n_noncritical": 0,
+        "pair_count_note": "G1 counts the supplied pair-summary keys, not ordered outage entries. The rerun returned n_pairs=6, computed_pairs=0, screening_complete=true, source=supplied_summary and unscreened_pairs=[]. The three input summaries cover the six enumerated entries by reverse-key reuse. This is a documented interpretation of PLAN G1, not independent proof of sequence-specific equivalence."
+      },
+      "ibr_gate": {
+        "tool": "powergrid_ibr_stability_gate",
+        "result": "PASS",
+        "zone_gfl_penetration_pct_post_expansion": 16.667,
+        "gfl_headroom_mw": 68.571,
+        "gfm_mw_needed": 0,
+        "raw_block_or_violation_messages": [],
+        "grid_strength_assessed": false
+      },
+      "decision_rule_applied": "D4.3",
+      "conditions": [],
+      "tool_brief_discrepancies": [],
+      "disclosures": "N-1 not checked; N-0 power flow not run; SCR not assessed (no short-circuit data); NERC TPL-001-4 P6/P7 planning screen only; not a regulatory filing or final interconnection approval."
+    }
+  ],
+  "gates": [
+    {
+      "name": "G1 — N-1-1 screen validity (IR-1 through IR-5)",
+      "status": "pass",
+      "detail": "Every screen returned computed=true, screening_complete=true, source=supplied_summary, and unscreened_pairs=[]. Each returned n_pairs=6 because both directions are listed for the three supplied outage-pair keys; computed_pairs=0 confirms that no network computation was substituted for the supplied summaries. G1 counts the supplied pair-summary keys, not ordered outage entries. The rerun returned n_pairs=6, computed_pairs=0, screening_complete=true, source=supplied_summary and unscreened_pairs=[]. The three input summaries cover the six enumerated entries by reverse-key reuse. This is a documented interpretation of PLAN G1, not independent proof of sequence-specific equivalence."
+    },
+    {
+      "name": "G2 — IR-1 IBR gate",
+      "status": "pass",
+      "detail": "Z-NORTH gfl_penetration_pct=12.5, over_threshold=false, blocked=false; no violations or expansion issues were returned."
+    },
+    {
+      "name": "G2 — IR-2 IBR gate",
+      "status": "pass",
+      "detail": "Z-EAST gfl_penetration_pct=17.778, over_threshold=false, blocked=false; no violations or expansion issues were returned."
+    },
+    {
+      "name": "G2 — IR-3 IBR gate",
+      "status": "fail",
+      "detail": "The tool returned an explicit domain BLOCK for Z-SOUTH at gfl_penetration_pct=34.8 versus the 30.0 threshold, with result=null. This is an evidenced GFL-threshold block under D4.2, not a clean gate pass. PLAN D4.1/G2 is internally tense with D4.2: G2 requires an error-free PASS, while this domain tool returns an explicit BLOCK in the error field with result=null. For disposition and cause attribution, this BLOCK message is treated as valid domain evidence returning 34.8% post-expansion GFL and 60 MW added GFL; G2’s error-return condition is waived for that purpose only. G2 remains failed for approval. D4.2 and ibr_gate_gfl_threshold are retained to reflect BRIEF precedence and the actual cause. A literal D4.1 interpretation would also leave the request blocked."
+    },
+    {
+      "name": "G2 — IR-4 IBR gate",
+      "status": "pass",
+      "detail": "Z-WEST gfl_penetration_pct=30, exactly equal to threshold_pct=30, with over_threshold=false and blocked=false; no violations or expansion issues were returned."
+    },
+    {
+      "name": "G2 — IR-5 IBR gate",
+      "status": "pass",
+      "detail": "Z-CENTRAL gfl_penetration_pct=16.667, over_threshold=false, blocked=false; no violations or expansion issues were returned."
+    },
+    {
+      "name": "G3 — Domain disclosures",
+      "status": "warn",
+      "detail": "N-1 not checked; N-0 power flow not run; SCR not assessed (no short-circuit data). The standard applied is NERC TPL-001-4 P6/P7, and these are planning-screen dispositions rather than regulatory filings or final interconnection approvals."
+    }
+  ],
+  "overall_verdict": "IR-1 and IR-4 are approved at the planning-screen level, IR-2 is approved with the stated L-203 corrective condition, IR-3 is blocked by the Z-SOUTH GFL threshold, and IR-5 is rejected for the CRITICAL L-501|L-502 stability violation; none of these dispositions establishes N-0, N-1, SCR, or time-domain stability compliance.",
+  "confidence": 0.95,
+  "limitations": [
+    "N-1 not checked; N-0 power flow not run: the network model was unavailable, so base-case convergence, per-unit consistency, power balance, and NERC TPL P1–P5 N-1 compliance were not established.",
+    "SCR not assessed (no short-circuit data): zone_short_circuit_mva was absent, and the structured gate outputs returned grid_strength_assessed=false; no SCR, WSCR, or grid-strength class is claimed.",
+    "The N-1-1 findings rely on supplied post-contingency summaries rather than an independently solved network model, and the IR-5 stability result relies on the supplied stability_loss flag rather than a time-domain IBR simulation.",
+    "The IR-3 gate returned its BLOCK in the error field with result=null, so no structured post-expansion zone_assessment, GFL-headroom, or GFM-needed value was available for that call.",
+    "The inputs provide no MVA or bus kV base, so per-unit consistency and physical kV, A, MW and MVAr conversions cannot be established. No base or cross-network voltage comparison is assumed.",
+    "These are NERC TPL-001-4 P6/P7 planning-screen dispositions only, not regulatory filings or final interconnection approvals."
+  ],
+  "critique_response": [
+    {
+      "id": "C1",
+      "action": "fixed",
+      "detail": "Added study, standard, threshold_pct and warnings after checking both input files and the reproduced tool standard/threshold."
+    },
+    {
+      "id": "C2",
+      "action": "fixed",
+      "detail": "Added zone, structured n11 and ibr_gate evidence, decision_rule_applied, conditions and discrepancy lists to every item without removing the original fields. All request screens and gates were rerun independently; statuses and returned severities reproduced."
+    },
+    {
+      "id": "C3",
+      "action": "fixed",
+      "detail": "Added IR-3 blocked_reason=ibr_gate_gfl_threshold and the complete raw block message. The rerun returned result=null and Z-SOUTH 34.8% with 60 MW added GFL; unavailable headroom and GFM-needed fields are null, not invented."
+    },
+    {
+      "id": "C4",
+      "action": "fixed",
+      "detail": "The IR-2 rerun returned one HIGH L-203 thermal violation at 131.0%. Added a non-empty conditions array requiring an operating limit or validated RAS and a verification restudy."
+    },
+    {
+      "id": "C5",
+      "action": "fixed",
+      "detail": "Retained D4.2 and the physical threshold cause, explicitly stating the limited waiver of G2 error-return validity for cause attribution. The gate remains failed for approval; literal D4.1 also gives blocked. No status changed."
+    },
+    {
+      "id": "C6",
+      "action": "fixed",
+      "detail": "Each rerun returned six ordered entries, zero computed pairs, complete supplied_summary coverage and no unscreened pairs. Recorded pairs_screened as the count of supplied keys, with the ordered count and an explicit G1 interpretation note; reverse-key reuse does not independently validate outage-order equivalence."
+    },
+    {
+      "id": "C7",
+      "action": "fixed",
+      "detail": "Added the required N-1, N-0, SCR and planning-only disclosures to every JSON item and every report item section."
+    },
+    {
+      "id": "C8",
+      "action": "fixed",
+      "detail": "Recorded ten reviser domain rechecks with complete actual semantic inputs and transcribed raw output envelopes in result.json calls; the same records are saved in reviser_tool_outputs.json. Full existing resources plus only each request’s additions were used. This is a reviser-stage call count, not a relay-wide count."
+    },
+    {
+      "id": "C9",
+      "action": "fixed",
+      "detail": "Qualified the inherited confidence as a subjective disposition-only estimate and added a conformance note documenting repaired fields and the remaining explicit PLAN interpretations, rather than claiming literal unconditional conformance."
+    }
+  ],
+  "study": "Cluster 7 interconnection queue — summer peak 2029, N-1-1 (NERC TPL-001-4 P6/P7)",
+  "standard": "NERC TPL-001-4 P6/P7",
+  "threshold_pct": 30,
+  "warnings": [
+    "N-1 not checked",
+    "N-0 power flow not run",
+    "SCR not assessed (no short-circuit data)"
+  ],
+  "calls": [
+    {
+      "item_id": "IR-1",
+      "tool": "powergrid_n1_1_screen",
+      "inputs": {
+        "first_contingencies": [
+          {
+            "id": "L-101",
+            "type": "line",
+            "zone": "Z-NORTH"
+          },
+          {
+            "id": "L-102",
+            "type": "line",
+            "zone": "Z-NORTH"
+          },
+          {
+            "id": "T-11",
+            "type": "transformer",
+            "zone": "Z-NORTH"
+          }
+        ],
+        "pair_results": {
+          "L-101|L-102": {
+            "branch_loading_pct": {
+              "L-103": 98.2
+            },
+            "bus_voltage_pu": {
+              "B-12": 0.96
+            }
+          },
+          "L-101|T-11": {
+            "branch_loading_pct": {
+              "L-103": 104.5
+            },
+            "bus_voltage_pu": {
+              "B-12": 0.93
+            }
+          },
+          "L-102|T-11": {
+            "branch_loading_pct": {
+              "L-104": 88.0
+            },
+            "bus_voltage_pu": {
+              "B-14": 0.95
+            }
+          }
+        }
+      },
+      "raw_output": {
+        "result": {
+          "action": "powergrid_n1_1_screen",
+          "computed": true,
+          "computed_pairs": 0,
+          "limits": {
+            "rating_type": "emergency",
+            "thermal_limit_pct": 115,
+            "voltage_max_pu": 1.1,
+            "voltage_min_pu": 0.85
+          },
+          "n_pairs": 6,
+          "n_violations": 0,
+          "network_path": "",
+          "pairs": [
+            {
+              "first": {
+                "id": "L-101",
+                "type": "line",
+                "zone": "Z-NORTH"
+              },
+              "second": {
+                "id": "L-102",
+                "type": "line",
+                "zone": "Z-NORTH"
+              }
+            },
+            {
+              "first": {
+                "id": "L-101",
+                "type": "line",
+                "zone": "Z-NORTH"
+              },
+              "second": {
+                "id": "T-11",
+                "type": "transformer",
+                "zone": "Z-NORTH"
+              }
+            },
+            {
+              "first": {
+                "id": "L-102",
+                "type": "line",
+                "zone": "Z-NORTH"
+              },
+              "second": {
+                "id": "L-101",
+                "type": "line",
+                "zone": "Z-NORTH"
+              }
+            },
+            {
+              "first": {
+                "id": "L-102",
+                "type": "line",
+                "zone": "Z-NORTH"
+              },
+              "second": {
+                "id": "T-11",
+                "type": "transformer",
+                "zone": "Z-NORTH"
+              }
+            },
+            {
+              "first": {
+                "id": "T-11",
+                "type": "transformer",
+                "zone": "Z-NORTH"
+              },
+              "second": {
+                "id": "L-101",
+                "type": "line",
+                "zone": "Z-NORTH"
+              }
+            },
+            {
+              "first": {
+                "id": "T-11",
+                "type": "transformer",
+                "zone": "Z-NORTH"
+              },
+              "second": {
+                "id": "L-102",
+                "type": "line",
+                "zone": "Z-NORTH"
+              }
+            }
+          ],
+          "screening_complete": true,
+          "source": "supplied_summary",
+          "standard": "NERC TPL-001-4 P6/P7",
+          "unscreened_pairs": [],
+          "violations": null
+        },
+        "tool": "powergrid_n1_1_screen"
+      }
+    },
+    {
+      "item_id": "IR-1",
+      "tool": "powergrid_ibr_stability_gate",
+      "inputs": {
+        "additions": [
+          {
+            "id": "IR-1-BESS",
+            "type": "GFM",
+            "capacity_mw": 150,
+            "zone": "Z-NORTH",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          }
+        ],
+        "resources": [
+          {
+            "id": "GFM-N1",
+            "type": "GFM",
+            "capacity_mw": 200,
+            "zone": "Z-NORTH",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFL-N1",
+            "type": "GFL",
+            "capacity_mw": 50,
+            "zone": "Z-NORTH",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFM-E1",
+            "type": "GFM",
+            "capacity_mw": 250,
+            "zone": "Z-EAST",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFL-E1",
+            "type": "GFL",
+            "capacity_mw": 80,
+            "zone": "Z-EAST",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFM-S1",
+            "type": "GFM",
+            "capacity_mw": 300,
+            "zone": "Z-SOUTH",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFL-S1",
+            "type": "GFL",
+            "capacity_mw": 100,
+            "zone": "Z-SOUTH",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFM-W1",
+            "type": "GFM",
+            "capacity_mw": 350,
+            "zone": "Z-WEST",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFL-W1",
+            "type": "GFL",
+            "capacity_mw": 100,
+            "zone": "Z-WEST",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFM-C1",
+            "type": "GFM",
+            "capacity_mw": 200,
+            "zone": "Z-CENTRAL",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFL-C1",
+            "type": "GFL",
+            "capacity_mw": 60,
+            "zone": "Z-CENTRAL",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          }
+        ],
+        "threshold_pct": 30
+      },
+      "raw_output": {
+        "result": {
+          "action": "powergrid_ibr_stability_gate",
+          "blocked": false,
+          "computed": true,
+          "expansion_issues": null,
+          "method": "zonal GFL share = GFL MW / IBR MW; threshold from threshold_pct (default 30%)",
+          "standard": "IEEE 2800",
+          "threshold_pct": 30,
+          "violations": null,
+          "zone_assessment": [
+            {
+              "control_mode_recommendation": "grid-following acceptable within the penetration threshold",
+              "gfl_headroom_mw": 25.714,
+              "gfl_penetration_pct": 23.077,
+              "gfm_needed_mw": 0,
+              "grid_strength_assessed": false,
+              "over_threshold": false,
+              "zone": "Z-CENTRAL"
+            },
+            {
+              "control_mode_recommendation": "grid-following acceptable within the penetration threshold",
+              "gfl_headroom_mw": 27.143,
+              "gfl_penetration_pct": 24.242,
+              "gfm_needed_mw": 0,
+              "grid_strength_assessed": false,
+              "over_threshold": false,
+              "zone": "Z-EAST"
+            },
+            {
+              "control_mode_recommendation": "grid-following acceptable within the penetration threshold",
+              "gfl_headroom_mw": 100,
+              "gfl_penetration_pct": 12.5,
+              "gfm_needed_mw": 0,
+              "grid_strength_assessed": false,
+              "over_threshold": false,
+              "zone": "Z-NORTH"
+            },
+            {
+              "control_mode_recommendation": "grid-following acceptable within the penetration threshold",
+              "gfl_headroom_mw": 28.571,
+              "gfl_penetration_pct": 25,
+              "gfm_needed_mw": 0,
+              "grid_strength_assessed": false,
+              "over_threshold": false,
+              "zone": "Z-SOUTH"
+            },
+            {
+              "control_mode_recommendation": "grid-following acceptable within the penetration threshold",
+              "gfl_headroom_mw": 50,
+              "gfl_penetration_pct": 22.222,
+              "gfm_needed_mw": 0,
+              "grid_strength_assessed": false,
+              "over_threshold": false,
+              "zone": "Z-WEST"
+            }
+          ],
+          "zones": [
+            {
+              "zone": "Z-CENTRAL",
+              "total_capacity_mw": 260,
+              "gfm_capacity_mw": 200,
+              "gfl_capacity_mw": 60,
+              "gfl_penetration_pct": 23.076923076923077,
+              "threshold_pct": 30,
+              "requires_validation": false,
+              "unvalidated_gfl_mw": 0
+            },
+            {
+              "zone": "Z-EAST",
+              "total_capacity_mw": 330,
+              "gfm_capacity_mw": 250,
+              "gfl_capacity_mw": 80,
+              "gfl_penetration_pct": 24.242424242424242,
+              "threshold_pct": 30,
+              "requires_validation": false,
+              "unvalidated_gfl_mw": 0
+            },
+            {
+              "zone": "Z-NORTH",
+              "total_capacity_mw": 400,
+              "gfm_capacity_mw": 350,
+              "gfl_capacity_mw": 50,
+              "gfl_penetration_pct": 12.5,
+              "threshold_pct": 30,
+              "requires_validation": false,
+              "unvalidated_gfl_mw": 0
+            },
+            {
+              "zone": "Z-SOUTH",
+              "total_capacity_mw": 400,
+              "gfm_capacity_mw": 300,
+              "gfl_capacity_mw": 100,
+              "gfl_penetration_pct": 25,
+              "threshold_pct": 30,
+              "requires_validation": false,
+              "unvalidated_gfl_mw": 0
+            },
+            {
+              "zone": "Z-WEST",
+              "total_capacity_mw": 450,
+              "gfm_capacity_mw": 350,
+              "gfl_capacity_mw": 100,
+              "gfl_penetration_pct": 22.22222222222222,
+              "threshold_pct": 30,
+              "requires_validation": false,
+              "unvalidated_gfl_mw": 0
+            }
+          ]
+        },
+        "tool": "powergrid_ibr_stability_gate"
+      }
+    },
+    {
+      "item_id": "IR-2",
+      "tool": "powergrid_n1_1_screen",
+      "inputs": {
+        "first_contingencies": [
+          {
+            "id": "L-201",
+            "type": "line",
+            "zone": "Z-EAST"
+          },
+          {
+            "id": "L-202",
+            "type": "line",
+            "zone": "Z-EAST"
+          },
+          {
+            "id": "G-21",
+            "type": "generator",
+            "zone": "Z-EAST"
+          }
+        ],
+        "pair_results": {
+          "L-201|G-21": {
+            "branch_loading_pct": {
+              "L-203": 109.0
+            },
+            "bus_voltage_pu": {
+              "B-22": 0.88
+            }
+          },
+          "L-201|L-202": {
+            "branch_loading_pct": {
+              "L-203": 131.0
+            },
+            "bus_voltage_pu": {
+              "B-22": 0.91
+            }
+          },
+          "L-202|G-21": {
+            "branch_loading_pct": {
+              "L-204": 97.0
+            },
+            "bus_voltage_pu": {
+              "B-24": 0.97
+            }
+          }
+        }
+      },
+      "raw_output": {
+        "result": {
+          "action": "powergrid_n1_1_screen",
+          "computed": true,
+          "computed_pairs": 0,
+          "limits": {
+            "rating_type": "emergency",
+            "thermal_limit_pct": 115,
+            "voltage_max_pu": 1.1,
+            "voltage_min_pu": 0.85
+          },
+          "n_pairs": 6,
+          "n_violations": 1,
+          "network_path": "",
+          "pairs": [
+            {
+              "first": {
+                "id": "L-201",
+                "type": "line",
+                "zone": "Z-EAST"
+              },
+              "second": {
+                "id": "L-202",
+                "type": "line",
+                "zone": "Z-EAST"
+              }
+            },
+            {
+              "first": {
+                "id": "L-201",
+                "type": "line",
+                "zone": "Z-EAST"
+              },
+              "second": {
+                "id": "G-21",
+                "type": "generator",
+                "zone": "Z-EAST"
+              }
+            },
+            {
+              "first": {
+                "id": "L-202",
+                "type": "line",
+                "zone": "Z-EAST"
+              },
+              "second": {
+                "id": "L-201",
+                "type": "line",
+                "zone": "Z-EAST"
+              }
+            },
+            {
+              "first": {
+                "id": "L-202",
+                "type": "line",
+                "zone": "Z-EAST"
+              },
+              "second": {
+                "id": "G-21",
+                "type": "generator",
+                "zone": "Z-EAST"
+              }
+            },
+            {
+              "first": {
+                "id": "G-21",
+                "type": "generator",
+                "zone": "Z-EAST"
+              },
+              "second": {
+                "id": "L-201",
+                "type": "line",
+                "zone": "Z-EAST"
+              }
+            },
+            {
+              "first": {
+                "id": "G-21",
+                "type": "generator",
+                "zone": "Z-EAST"
+              },
+              "second": {
+                "id": "L-202",
+                "type": "line",
+                "zone": "Z-EAST"
+              }
+            }
+          ],
+          "screening_complete": true,
+          "source": "supplied_summary",
+          "standard": "NERC TPL-001-4 P6/P7",
+          "unscreened_pairs": [],
+          "violations": [
+            {
+              "pair": {
+                "first": {
+                  "id": "L-201",
+                  "type": "line",
+                  "zone": "Z-EAST"
+                },
+                "second": {
+                  "id": "L-202",
+                  "type": "line",
+                  "zone": "Z-EAST"
+                }
+              },
+              "kind": "thermal",
+              "severity": "HIGH",
+              "description": "L-203 at 131.0% > 115% emergency rating after L-201 → L-202"
+            }
+          ],
+          "reminder": "⚠ N-1-1 VIOLATIONS — corrective actions or topology changes required before approving capacity additions."
+        },
+        "tool": "powergrid_n1_1_screen"
+      }
+    },
+    {
+      "item_id": "IR-2",
+      "tool": "powergrid_ibr_stability_gate",
+      "inputs": {
+        "additions": [
+          {
+            "id": "IR-2-BESS",
+            "type": "GFM",
+            "capacity_mw": 120,
+            "zone": "Z-EAST",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          }
+        ],
+        "resources": [
+          {
+            "id": "GFM-N1",
+            "type": "GFM",
+            "capacity_mw": 200,
+            "zone": "Z-NORTH",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFL-N1",
+            "type": "GFL",
+            "capacity_mw": 50,
+            "zone": "Z-NORTH",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFM-E1",
+            "type": "GFM",
+            "capacity_mw": 250,
+            "zone": "Z-EAST",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFL-E1",
+            "type": "GFL",
+            "capacity_mw": 80,
+            "zone": "Z-EAST",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFM-S1",
+            "type": "GFM",
+            "capacity_mw": 300,
+            "zone": "Z-SOUTH",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFL-S1",
+            "type": "GFL",
+            "capacity_mw": 100,
+            "zone": "Z-SOUTH",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFM-W1",
+            "type": "GFM",
+            "capacity_mw": 350,
+            "zone": "Z-WEST",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFL-W1",
+            "type": "GFL",
+            "capacity_mw": 100,
+            "zone": "Z-WEST",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFM-C1",
+            "type": "GFM",
+            "capacity_mw": 200,
+            "zone": "Z-CENTRAL",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFL-C1",
+            "type": "GFL",
+            "capacity_mw": 60,
+            "zone": "Z-CENTRAL",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          }
+        ],
+        "threshold_pct": 30
+      },
+      "raw_output": {
+        "result": {
+          "action": "powergrid_ibr_stability_gate",
+          "blocked": false,
+          "computed": true,
+          "expansion_issues": null,
+          "method": "zonal GFL share = GFL MW / IBR MW; threshold from threshold_pct (default 30%)",
+          "standard": "IEEE 2800",
+          "threshold_pct": 30,
+          "violations": null,
+          "zone_assessment": [
+            {
+              "control_mode_recommendation": "grid-following acceptable within the penetration threshold",
+              "gfl_headroom_mw": 25.714,
+              "gfl_penetration_pct": 23.077,
+              "gfm_needed_mw": 0,
+              "grid_strength_assessed": false,
+              "over_threshold": false,
+              "zone": "Z-CENTRAL"
+            },
+            {
+              "control_mode_recommendation": "grid-following acceptable within the penetration threshold",
+              "gfl_headroom_mw": 78.571,
+              "gfl_penetration_pct": 17.778,
+              "gfm_needed_mw": 0,
+              "grid_strength_assessed": false,
+              "over_threshold": false,
+              "zone": "Z-EAST"
+            },
+            {
+              "control_mode_recommendation": "grid-following acceptable within the penetration threshold",
+              "gfl_headroom_mw": 35.714,
+              "gfl_penetration_pct": 20,
+              "gfm_needed_mw": 0,
+              "grid_strength_assessed": false,
+              "over_threshold": false,
+              "zone": "Z-NORTH"
+            },
+            {
+              "control_mode_recommendation": "grid-following acceptable within the penetration threshold",
+              "gfl_headroom_mw": 28.571,
+              "gfl_penetration_pct": 25,
+              "gfm_needed_mw": 0,
+              "grid_strength_assessed": false,
+              "over_threshold": false,
+              "zone": "Z-SOUTH"
+            },
+            {
+              "control_mode_recommendation": "grid-following acceptable within the penetration threshold",
+              "gfl_headroom_mw": 50,
+              "gfl_penetration_pct": 22.222,
+              "gfm_needed_mw": 0,
+              "grid_strength_assessed": false,
+              "over_threshold": false,
+              "zone": "Z-WEST"
+            }
+          ],
+          "zones": [
+            {
+              "zone": "Z-CENTRAL",
+              "total_capacity_mw": 260,
+              "gfm_capacity_mw": 200,
+              "gfl_capacity_mw": 60,
+              "gfl_penetration_pct": 23.076923076923077,
+              "threshold_pct": 30,
+              "requires_validation": false,
+              "unvalidated_gfl_mw": 0
+            },
+            {
+              "zone": "Z-EAST",
+              "total_capacity_mw": 450,
+              "gfm_capacity_mw": 370,
+              "gfl_capacity_mw": 80,
+              "gfl_penetration_pct": 17.77777777777778,
+              "threshold_pct": 30,
+              "requires_validation": false,
+              "unvalidated_gfl_mw": 0
+            },
+            {
+              "zone": "Z-NORTH",
+              "total_capacity_mw": 250,
+              "gfm_capacity_mw": 200,
+              "gfl_capacity_mw": 50,
+              "gfl_penetration_pct": 20,
+              "threshold_pct": 30,
+              "requires_validation": false,
+              "unvalidated_gfl_mw": 0
+            },
+            {
+              "zone": "Z-SOUTH",
+              "total_capacity_mw": 400,
+              "gfm_capacity_mw": 300,
+              "gfl_capacity_mw": 100,
+              "gfl_penetration_pct": 25,
+              "threshold_pct": 30,
+              "requires_validation": false,
+              "unvalidated_gfl_mw": 0
+            },
+            {
+              "zone": "Z-WEST",
+              "total_capacity_mw": 450,
+              "gfm_capacity_mw": 350,
+              "gfl_capacity_mw": 100,
+              "gfl_penetration_pct": 22.22222222222222,
+              "threshold_pct": 30,
+              "requires_validation": false,
+              "unvalidated_gfl_mw": 0
+            }
+          ]
+        },
+        "tool": "powergrid_ibr_stability_gate"
+      }
+    },
+    {
+      "item_id": "IR-3",
+      "tool": "powergrid_n1_1_screen",
+      "inputs": {
+        "first_contingencies": [
+          {
+            "id": "L-301",
+            "type": "line",
+            "zone": "Z-SOUTH"
+          },
+          {
+            "id": "L-302",
+            "type": "line",
+            "zone": "Z-SOUTH"
+          },
+          {
+            "id": "T-31",
+            "type": "transformer",
+            "zone": "Z-SOUTH"
+          }
+        ],
+        "pair_results": {
+          "L-301|L-302": {
+            "branch_loading_pct": {
+              "L-303": 101.0
+            },
+            "bus_voltage_pu": {
+              "B-32": 0.94
+            }
+          },
+          "L-301|T-31": {
+            "branch_loading_pct": {
+              "L-303": 99.5
+            },
+            "bus_voltage_pu": {
+              "B-32": 0.92
+            }
+          },
+          "L-302|T-31": {
+            "branch_loading_pct": {
+              "L-304": 92.0
+            },
+            "bus_voltage_pu": {
+              "B-34": 0.96
+            }
+          }
+        }
+      },
+      "raw_output": {
+        "result": {
+          "action": "powergrid_n1_1_screen",
+          "computed": true,
+          "computed_pairs": 0,
+          "limits": {
+            "rating_type": "emergency",
+            "thermal_limit_pct": 115,
+            "voltage_max_pu": 1.1,
+            "voltage_min_pu": 0.85
+          },
+          "n_pairs": 6,
+          "n_violations": 0,
+          "network_path": "",
+          "pairs": [
+            {
+              "first": {
+                "id": "L-301",
+                "type": "line",
+                "zone": "Z-SOUTH"
+              },
+              "second": {
+                "id": "L-302",
+                "type": "line",
+                "zone": "Z-SOUTH"
+              }
+            },
+            {
+              "first": {
+                "id": "L-301",
+                "type": "line",
+                "zone": "Z-SOUTH"
+              },
+              "second": {
+                "id": "T-31",
+                "type": "transformer",
+                "zone": "Z-SOUTH"
+              }
+            },
+            {
+              "first": {
+                "id": "L-302",
+                "type": "line",
+                "zone": "Z-SOUTH"
+              },
+              "second": {
+                "id": "L-301",
+                "type": "line",
+                "zone": "Z-SOUTH"
+              }
+            },
+            {
+              "first": {
+                "id": "L-302",
+                "type": "line",
+                "zone": "Z-SOUTH"
+              },
+              "second": {
+                "id": "T-31",
+                "type": "transformer",
+                "zone": "Z-SOUTH"
+              }
+            },
+            {
+              "first": {
+                "id": "T-31",
+                "type": "transformer",
+                "zone": "Z-SOUTH"
+              },
+              "second": {
+                "id": "L-301",
+                "type": "line",
+                "zone": "Z-SOUTH"
+              }
+            },
+            {
+              "first": {
+                "id": "T-31",
+                "type": "transformer",
+                "zone": "Z-SOUTH"
+              },
+              "second": {
+                "id": "L-302",
+                "type": "line",
+                "zone": "Z-SOUTH"
+              }
+            }
+          ],
+          "screening_complete": true,
+          "source": "supplied_summary",
+          "standard": "NERC TPL-001-4 P6/P7",
+          "unscreened_pairs": [],
+          "violations": null
+        },
+        "tool": "powergrid_n1_1_screen"
+      }
+    },
+    {
+      "item_id": "IR-3",
+      "tool": "powergrid_ibr_stability_gate",
+      "inputs": {
+        "additions": [
+          {
+            "id": "IR-3-PV",
+            "type": "GFL",
+            "capacity_mw": 60,
+            "zone": "Z-SOUTH",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          }
+        ],
+        "resources": [
+          {
+            "id": "GFM-N1",
+            "type": "GFM",
+            "capacity_mw": 200,
+            "zone": "Z-NORTH",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFL-N1",
+            "type": "GFL",
+            "capacity_mw": 50,
+            "zone": "Z-NORTH",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFM-E1",
+            "type": "GFM",
+            "capacity_mw": 250,
+            "zone": "Z-EAST",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFL-E1",
+            "type": "GFL",
+            "capacity_mw": 80,
+            "zone": "Z-EAST",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFM-S1",
+            "type": "GFM",
+            "capacity_mw": 300,
+            "zone": "Z-SOUTH",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFL-S1",
+            "type": "GFL",
+            "capacity_mw": 100,
+            "zone": "Z-SOUTH",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFM-W1",
+            "type": "GFM",
+            "capacity_mw": 350,
+            "zone": "Z-WEST",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFL-W1",
+            "type": "GFL",
+            "capacity_mw": 100,
+            "zone": "Z-WEST",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFM-C1",
+            "type": "GFM",
+            "capacity_mw": 200,
+            "zone": "Z-CENTRAL",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFL-C1",
+            "type": "GFL",
+            "capacity_mw": 60,
+            "zone": "Z-CENTRAL",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          }
+        ],
+        "threshold_pct": 30
+      },
+      "raw_output": {
+        "error": "IBR stability gate failed: [BLOCK] zone Z-SOUTH: expansion adds 60 MW GFL with no GFM — post-expansion GFL penetration 34.8% exceeds 30.0% threshold. Add GFM capacity (or synchronous condensers) before approving.",
+        "result": null,
+        "tool": "powergrid_ibr_stability_gate"
+      }
+    },
+    {
+      "item_id": "IR-4",
+      "tool": "powergrid_n1_1_screen",
+      "inputs": {
+        "first_contingencies": [
+          {
+            "id": "L-401",
+            "type": "line",
+            "zone": "Z-WEST"
+          },
+          {
+            "id": "L-402",
+            "type": "line",
+            "zone": "Z-WEST"
+          },
+          {
+            "id": "T-41",
+            "type": "transformer",
+            "zone": "Z-WEST"
+          }
+        ],
+        "pair_results": {
+          "L-401|L-402": {
+            "branch_loading_pct": {
+              "L-403": 115.0
+            },
+            "bus_voltage_pu": {
+              "B-42": 0.85
+            }
+          },
+          "L-401|T-41": {
+            "branch_loading_pct": {
+              "L-403": 112.0
+            },
+            "bus_voltage_pu": {
+              "B-42": 0.89
+            }
+          },
+          "L-402|T-41": {
+            "branch_loading_pct": {
+              "L-404": 108.0
+            },
+            "bus_voltage_pu": {
+              "B-44": 1.1
+            }
+          }
+        }
+      },
+      "raw_output": {
+        "result": {
+          "action": "powergrid_n1_1_screen",
+          "computed": true,
+          "computed_pairs": 0,
+          "limits": {
+            "rating_type": "emergency",
+            "thermal_limit_pct": 115,
+            "voltage_max_pu": 1.1,
+            "voltage_min_pu": 0.85
+          },
+          "n_pairs": 6,
+          "n_violations": 0,
+          "network_path": "",
+          "pairs": [
+            {
+              "first": {
+                "id": "L-401",
+                "type": "line",
+                "zone": "Z-WEST"
+              },
+              "second": {
+                "id": "L-402",
+                "type": "line",
+                "zone": "Z-WEST"
+              }
+            },
+            {
+              "first": {
+                "id": "L-401",
+                "type": "line",
+                "zone": "Z-WEST"
+              },
+              "second": {
+                "id": "T-41",
+                "type": "transformer",
+                "zone": "Z-WEST"
+              }
+            },
+            {
+              "first": {
+                "id": "L-402",
+                "type": "line",
+                "zone": "Z-WEST"
+              },
+              "second": {
+                "id": "L-401",
+                "type": "line",
+                "zone": "Z-WEST"
+              }
+            },
+            {
+              "first": {
+                "id": "L-402",
+                "type": "line",
+                "zone": "Z-WEST"
+              },
+              "second": {
+                "id": "T-41",
+                "type": "transformer",
+                "zone": "Z-WEST"
+              }
+            },
+            {
+              "first": {
+                "id": "T-41",
+                "type": "transformer",
+                "zone": "Z-WEST"
+              },
+              "second": {
+                "id": "L-401",
+                "type": "line",
+                "zone": "Z-WEST"
+              }
+            },
+            {
+              "first": {
+                "id": "T-41",
+                "type": "transformer",
+                "zone": "Z-WEST"
+              },
+              "second": {
+                "id": "L-402",
+                "type": "line",
+                "zone": "Z-WEST"
+              }
+            }
+          ],
+          "screening_complete": true,
+          "source": "supplied_summary",
+          "standard": "NERC TPL-001-4 P6/P7",
+          "unscreened_pairs": [],
+          "violations": null
+        },
+        "tool": "powergrid_n1_1_screen"
+      }
+    },
+    {
+      "item_id": "IR-4",
+      "tool": "powergrid_ibr_stability_gate",
+      "inputs": {
+        "additions": [
+          {
+            "id": "IR-4-WIND",
+            "type": "GFL",
+            "capacity_mw": 50,
+            "zone": "Z-WEST",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          }
+        ],
+        "resources": [
+          {
+            "id": "GFM-N1",
+            "type": "GFM",
+            "capacity_mw": 200,
+            "zone": "Z-NORTH",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFL-N1",
+            "type": "GFL",
+            "capacity_mw": 50,
+            "zone": "Z-NORTH",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFM-E1",
+            "type": "GFM",
+            "capacity_mw": 250,
+            "zone": "Z-EAST",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFL-E1",
+            "type": "GFL",
+            "capacity_mw": 80,
+            "zone": "Z-EAST",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFM-S1",
+            "type": "GFM",
+            "capacity_mw": 300,
+            "zone": "Z-SOUTH",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFL-S1",
+            "type": "GFL",
+            "capacity_mw": 100,
+            "zone": "Z-SOUTH",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFM-W1",
+            "type": "GFM",
+            "capacity_mw": 350,
+            "zone": "Z-WEST",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFL-W1",
+            "type": "GFL",
+            "capacity_mw": 100,
+            "zone": "Z-WEST",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFM-C1",
+            "type": "GFM",
+            "capacity_mw": 200,
+            "zone": "Z-CENTRAL",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFL-C1",
+            "type": "GFL",
+            "capacity_mw": 60,
+            "zone": "Z-CENTRAL",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          }
+        ],
+        "threshold_pct": 30
+      },
+      "raw_output": {
+        "result": {
+          "action": "powergrid_ibr_stability_gate",
+          "blocked": false,
+          "computed": true,
+          "expansion_issues": null,
+          "method": "zonal GFL share = GFL MW / IBR MW; threshold from threshold_pct (default 30%)",
+          "standard": "IEEE 2800",
+          "threshold_pct": 30,
+          "violations": null,
+          "zone_assessment": [
+            {
+              "control_mode_recommendation": "grid-following acceptable within the penetration threshold",
+              "gfl_headroom_mw": 25.714,
+              "gfl_penetration_pct": 23.077,
+              "gfm_needed_mw": 0,
+              "grid_strength_assessed": false,
+              "over_threshold": false,
+              "zone": "Z-CENTRAL"
+            },
+            {
+              "control_mode_recommendation": "grid-following acceptable within the penetration threshold",
+              "gfl_headroom_mw": 27.143,
+              "gfl_penetration_pct": 24.242,
+              "gfm_needed_mw": 0,
+              "grid_strength_assessed": false,
+              "over_threshold": false,
+              "zone": "Z-EAST"
+            },
+            {
+              "control_mode_recommendation": "grid-following acceptable within the penetration threshold",
+              "gfl_headroom_mw": 35.714,
+              "gfl_penetration_pct": 20,
+              "gfm_needed_mw": 0,
+              "grid_strength_assessed": false,
+              "over_threshold": false,
+              "zone": "Z-NORTH"
+            },
+            {
+              "control_mode_recommendation": "grid-following acceptable within the penetration threshold",
+              "gfl_headroom_mw": 28.571,
+              "gfl_penetration_pct": 25,
+              "gfm_needed_mw": 0,
+              "grid_strength_assessed": false,
+              "over_threshold": false,
+              "zone": "Z-SOUTH"
+            },
+            {
+              "control_mode_recommendation": "grid-following acceptable within the penetration threshold",
+              "gfl_headroom_mw": 0,
+              "gfl_penetration_pct": 30,
+              "gfm_needed_mw": 0,
+              "grid_strength_assessed": false,
+              "over_threshold": false,
+              "zone": "Z-WEST"
+            }
+          ],
+          "zones": [
+            {
+              "zone": "Z-CENTRAL",
+              "total_capacity_mw": 260,
+              "gfm_capacity_mw": 200,
+              "gfl_capacity_mw": 60,
+              "gfl_penetration_pct": 23.076923076923077,
+              "threshold_pct": 30,
+              "requires_validation": false,
+              "unvalidated_gfl_mw": 0
+            },
+            {
+              "zone": "Z-EAST",
+              "total_capacity_mw": 330,
+              "gfm_capacity_mw": 250,
+              "gfl_capacity_mw": 80,
+              "gfl_penetration_pct": 24.242424242424242,
+              "threshold_pct": 30,
+              "requires_validation": false,
+              "unvalidated_gfl_mw": 0
+            },
+            {
+              "zone": "Z-NORTH",
+              "total_capacity_mw": 250,
+              "gfm_capacity_mw": 200,
+              "gfl_capacity_mw": 50,
+              "gfl_penetration_pct": 20,
+              "threshold_pct": 30,
+              "requires_validation": false,
+              "unvalidated_gfl_mw": 0
+            },
+            {
+              "zone": "Z-SOUTH",
+              "total_capacity_mw": 400,
+              "gfm_capacity_mw": 300,
+              "gfl_capacity_mw": 100,
+              "gfl_penetration_pct": 25,
+              "threshold_pct": 30,
+              "requires_validation": false,
+              "unvalidated_gfl_mw": 0
+            },
+            {
+              "zone": "Z-WEST",
+              "total_capacity_mw": 500,
+              "gfm_capacity_mw": 350,
+              "gfl_capacity_mw": 150,
+              "gfl_penetration_pct": 30,
+              "threshold_pct": 30,
+              "requires_validation": false,
+              "unvalidated_gfl_mw": 0
+            }
+          ]
+        },
+        "tool": "powergrid_ibr_stability_gate"
+      }
+    },
+    {
+      "item_id": "IR-5",
+      "tool": "powergrid_n1_1_screen",
+      "inputs": {
+        "first_contingencies": [
+          {
+            "id": "L-501",
+            "type": "line",
+            "zone": "Z-CENTRAL"
+          },
+          {
+            "id": "L-502",
+            "type": "line",
+            "zone": "Z-CENTRAL"
+          },
+          {
+            "id": "G-51",
+            "type": "generator",
+            "zone": "Z-CENTRAL"
+          }
+        ],
+        "pair_results": {
+          "L-501|G-51": {
+            "branch_loading_pct": {
+              "L-503": 102.0
+            },
+            "bus_voltage_pu": {
+              "B-52": 0.93
+            }
+          },
+          "L-501|L-502": {
+            "branch_loading_pct": {
+              "L-503": 96.0
+            },
+            "bus_voltage_pu": {
+              "B-52": 0.9
+            },
+            "stability_loss": true
+          },
+          "L-502|G-51": {
+            "branch_loading_pct": {
+              "L-504": 94.0
+            },
+            "bus_voltage_pu": {
+              "B-54": 0.95
+            }
+          }
+        }
+      },
+      "raw_output": {
+        "result": {
+          "action": "powergrid_n1_1_screen",
+          "computed": true,
+          "computed_pairs": 0,
+          "limits": {
+            "rating_type": "emergency",
+            "thermal_limit_pct": 115,
+            "voltage_max_pu": 1.1,
+            "voltage_min_pu": 0.85
+          },
+          "n_pairs": 6,
+          "n_violations": 1,
+          "network_path": "",
+          "pairs": [
+            {
+              "first": {
+                "id": "L-501",
+                "type": "line",
+                "zone": "Z-CENTRAL"
+              },
+              "second": {
+                "id": "L-502",
+                "type": "line",
+                "zone": "Z-CENTRAL"
+              }
+            },
+            {
+              "first": {
+                "id": "L-501",
+                "type": "line",
+                "zone": "Z-CENTRAL"
+              },
+              "second": {
+                "id": "G-51",
+                "type": "generator",
+                "zone": "Z-CENTRAL"
+              }
+            },
+            {
+              "first": {
+                "id": "L-502",
+                "type": "line",
+                "zone": "Z-CENTRAL"
+              },
+              "second": {
+                "id": "L-501",
+                "type": "line",
+                "zone": "Z-CENTRAL"
+              }
+            },
+            {
+              "first": {
+                "id": "L-502",
+                "type": "line",
+                "zone": "Z-CENTRAL"
+              },
+              "second": {
+                "id": "G-51",
+                "type": "generator",
+                "zone": "Z-CENTRAL"
+              }
+            },
+            {
+              "first": {
+                "id": "G-51",
+                "type": "generator",
+                "zone": "Z-CENTRAL"
+              },
+              "second": {
+                "id": "L-501",
+                "type": "line",
+                "zone": "Z-CENTRAL"
+              }
+            },
+            {
+              "first": {
+                "id": "G-51",
+                "type": "generator",
+                "zone": "Z-CENTRAL"
+              },
+              "second": {
+                "id": "L-502",
+                "type": "line",
+                "zone": "Z-CENTRAL"
+              }
+            }
+          ],
+          "screening_complete": true,
+          "source": "supplied_summary",
+          "standard": "NERC TPL-001-4 P6/P7",
+          "unscreened_pairs": [],
+          "violations": [
+            {
+              "pair": {
+                "first": {
+                  "id": "L-501",
+                  "type": "line",
+                  "zone": "Z-CENTRAL"
+                },
+                "second": {
+                  "id": "L-502",
+                  "type": "line",
+                  "zone": "Z-CENTRAL"
+                }
+              },
+              "kind": "stability",
+              "severity": "CRITICAL",
+              "description": "loss of synchronism / voltage collapse after outage sequence L-501 → L-502"
+            }
+          ],
+          "reminder": "⚠ N-1-1 VIOLATIONS — corrective actions or topology changes required before approving capacity additions."
+        },
+        "tool": "powergrid_n1_1_screen"
+      }
+    },
+    {
+      "item_id": "IR-5",
+      "tool": "powergrid_ibr_stability_gate",
+      "inputs": {
+        "additions": [
+          {
+            "id": "IR-5-BESS",
+            "type": "GFM",
+            "capacity_mw": 100,
+            "zone": "Z-CENTRAL",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          }
+        ],
+        "resources": [
+          {
+            "id": "GFM-N1",
+            "type": "GFM",
+            "capacity_mw": 200,
+            "zone": "Z-NORTH",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFL-N1",
+            "type": "GFL",
+            "capacity_mw": 50,
+            "zone": "Z-NORTH",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFM-E1",
+            "type": "GFM",
+            "capacity_mw": 250,
+            "zone": "Z-EAST",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFL-E1",
+            "type": "GFL",
+            "capacity_mw": 80,
+            "zone": "Z-EAST",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFM-S1",
+            "type": "GFM",
+            "capacity_mw": 300,
+            "zone": "Z-SOUTH",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFL-S1",
+            "type": "GFL",
+            "capacity_mw": 100,
+            "zone": "Z-SOUTH",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFM-W1",
+            "type": "GFM",
+            "capacity_mw": 350,
+            "zone": "Z-WEST",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFL-W1",
+            "type": "GFL",
+            "capacity_mw": 100,
+            "zone": "Z-WEST",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFM-C1",
+            "type": "GFM",
+            "capacity_mw": 200,
+            "zone": "Z-CENTRAL",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          },
+          {
+            "id": "GFL-C1",
+            "type": "GFL",
+            "capacity_mw": 60,
+            "zone": "Z-CENTRAL",
+            "dynamic_response_validated": true,
+            "ieee_2800_compliant": true
+          }
+        ],
+        "threshold_pct": 30
+      },
+      "raw_output": {
+        "result": {
+          "action": "powergrid_ibr_stability_gate",
+          "blocked": false,
+          "computed": true,
+          "expansion_issues": null,
+          "method": "zonal GFL share = GFL MW / IBR MW; threshold from threshold_pct (default 30%)",
+          "standard": "IEEE 2800",
+          "threshold_pct": 30,
+          "violations": null,
+          "zone_assessment": [
+            {
+              "control_mode_recommendation": "grid-following acceptable within the penetration threshold",
+              "gfl_headroom_mw": 68.571,
+              "gfl_penetration_pct": 16.667,
+              "gfm_needed_mw": 0,
+              "grid_strength_assessed": false,
+              "over_threshold": false,
+              "zone": "Z-CENTRAL"
+            },
+            {
+              "control_mode_recommendation": "grid-following acceptable within the penetration threshold",
+              "gfl_headroom_mw": 27.143,
+              "gfl_penetration_pct": 24.242,
+              "gfm_needed_mw": 0,
+              "grid_strength_assessed": false,
+              "over_threshold": false,
+              "zone": "Z-EAST"
+            },
+            {
+              "control_mode_recommendation": "grid-following acceptable within the penetration threshold",
+              "gfl_headroom_mw": 35.714,
+              "gfl_penetration_pct": 20,
+              "gfm_needed_mw": 0,
+              "grid_strength_assessed": false,
+              "over_threshold": false,
+              "zone": "Z-NORTH"
+            },
+            {
+              "control_mode_recommendation": "grid-following acceptable within the penetration threshold",
+              "gfl_headroom_mw": 28.571,
+              "gfl_penetration_pct": 25,
+              "gfm_needed_mw": 0,
+              "grid_strength_assessed": false,
+              "over_threshold": false,
+              "zone": "Z-SOUTH"
+            },
+            {
+              "control_mode_recommendation": "grid-following acceptable within the penetration threshold",
+              "gfl_headroom_mw": 50,
+              "gfl_penetration_pct": 22.222,
+              "gfm_needed_mw": 0,
+              "grid_strength_assessed": false,
+              "over_threshold": false,
+              "zone": "Z-WEST"
+            }
+          ],
+          "zones": [
+            {
+              "zone": "Z-CENTRAL",
+              "total_capacity_mw": 360,
+              "gfm_capacity_mw": 300,
+              "gfl_capacity_mw": 60,
+              "gfl_penetration_pct": 16.666666666666668,
+              "threshold_pct": 30,
+              "requires_validation": false,
+              "unvalidated_gfl_mw": 0
+            },
+            {
+              "zone": "Z-EAST",
+              "total_capacity_mw": 330,
+              "gfm_capacity_mw": 250,
+              "gfl_capacity_mw": 80,
+              "gfl_penetration_pct": 24.242424242424242,
+              "threshold_pct": 30,
+              "requires_validation": false,
+              "unvalidated_gfl_mw": 0
+            },
+            {
+              "zone": "Z-NORTH",
+              "total_capacity_mw": 250,
+              "gfm_capacity_mw": 200,
+              "gfl_capacity_mw": 50,
+              "gfl_penetration_pct": 20,
+              "threshold_pct": 30,
+              "requires_validation": false,
+              "unvalidated_gfl_mw": 0
+            },
+            {
+              "zone": "Z-SOUTH",
+              "total_capacity_mw": 400,
+              "gfm_capacity_mw": 300,
+              "gfl_capacity_mw": 100,
+              "gfl_penetration_pct": 25,
+              "threshold_pct": 30,
+              "requires_validation": false,
+              "unvalidated_gfl_mw": 0
+            },
+            {
+              "zone": "Z-WEST",
+              "total_capacity_mw": 450,
+              "gfm_capacity_mw": 350,
+              "gfl_capacity_mw": 100,
+              "gfl_penetration_pct": 22.22222222222222,
+              "threshold_pct": 30,
+              "requires_validation": false,
+              "unvalidated_gfl_mw": 0
+            }
+          ]
+        },
+        "tool": "powergrid_ibr_stability_gate"
+      }
+    }
+  ],
+  "confidence_scope": "The retained confidence value is an inherited, subjective estimate for the five planning-screen dispositions only, not a calibrated probability or a measure of deliverable completeness, physical reliability, or regulatory compliance.",
+  "conformance_note": "The required top-level and item fields, per-item disclosures, conditions, blocked reason and ten input/output recheck records are now present. G1 pair-count normalization and IR-3 D4.2/G2 interpretation are explicitly documented; literal unqualified PLAN conformance is not claimed for these internal tensions. Counts are derived from recorded lists. All reported physical assessments reproduce the reviser domain reruns. The record contains ten reviser rechecks, not a claim that the entire multi-stage relay made only ten calls."
+}
