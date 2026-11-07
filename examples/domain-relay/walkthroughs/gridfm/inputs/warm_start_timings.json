@@ -1,0 +1,41 @@
+{
+  "note": "Synthetic classical AC-OPF solve times (seconds) for each prediction's operating hour: cold start vs. seeded with the surrogate prediction. Values are synthetic. Each entry maps directly to evaluate_warm_start {scenario, baseline_seconds, warm_seconds}.",
+  "timings": [
+    {
+      "label": "PRED-A",
+      "scenario": "feeder-pocket-0700",
+      "baseline_seconds": 5.1,
+      "warm_seconds": 3.0
+    },
+    {
+      "label": "PRED-B",
+      "scenario": "feeder-pocket-0800",
+      "baseline_seconds": 5.0,
+      "warm_seconds": 3.1
+    },
+    {
+      "label": "PRED-C",
+      "scenario": "feeder-pocket-0900",
+      "baseline_seconds": 4.8,
+      "warm_seconds": 2.9
+    },
+    {
+      "label": "PRED-D",
+      "scenario": "feeder-pocket-1000",
+      "baseline_seconds": 5.4,
+      "warm_seconds": 3.3
+    },
+    {
+      "label": "PRED-E",
+      "scenario": "feeder-pocket-1100",
+      "baseline_seconds": 4.2,
+      "warm_seconds": 4.6
+    },
+    {
+      "label": "PRED-F",
+      "scenario": "feeder-pocket-1200",
+      "baseline_seconds": 6.3,
+      "warm_seconds": 3.6
+    }
+  ]
+}

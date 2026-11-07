@@ -1,0 +1,33 @@
+{
+  "model": "Microsoft-Decision-1",
+  "questions": {
+    "needs_revision": "Do the critique findings show at least one item whose status is wrong or unsupported, so the result must be revised before it is used?",
+    "self_report_trusted": "Does any prediction receive operational_advisory or warm_start_only because of the surrogate's own feasibility flag or confidence rather than the independent verifier's result?",
+    "uncapped_confidence": "Does the result describe any prediction with confidence above the 0.30 out-of-distribution cap implied by the 3,700-bus full network on the GridSFM-Open tier?"
+  },
+  "response": {
+    "model": "microsoft-decision-1",
+    "answers": {
+      "needs_revision": {
+        "type": "noul",
+        "noul": 0.06008716832375435
+      },
+      "self_report_trusted": {
+        "type": "noul",
+        "noul": 0.02595746495704627
+      },
+      "uncapped_confidence": {
+        "type": "noul",
+        "noul": 0.7981885313879936
+      }
+    },
+    "usage": {
+      "input_tokens": 4792,
+      "output_tokens": 3
+    },
+    "latency_ms": 1186.25,
+    "attempts": 1
+  },
+  "exit_code": 0,
+  "routing": "light-revision"
+}

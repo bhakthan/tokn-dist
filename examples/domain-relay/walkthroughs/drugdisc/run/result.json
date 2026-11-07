@@ -1,0 +1,3319 @@
+{
+  "domain": "drugdisc",
+  "objective": "Assign gate-supported hit-to-lead triage statuses to six synthetic kinase-series compounds using the unmodified supplied records and required advancement-gate calls.",
+  "items": [
+    {
+      "id": "CMP-01",
+      "status": "advance",
+      "decision_rule": "D4",
+      "rationale": "check_advancement_gate evaluated eight criteria and returned hard_blocked=false and overall_pass=true, with every evaluated criterion passing. The herg_predict, cyp_predict, pains_filter, compute_2d_properties and corrected predict_admet calls did not run because dependencies were missing, so they supply no independent clearance and do not alter this gate-only status.",
+      "evidence": [
+        "check_advancement_gate: evaluated=8; hard_blocked=false; overall_pass=true",
+        "check_advancement_gate: Ames=0 passed; MW=262.3 passed; cLogP=0.9 passed; HBD=2 passed; HBA=4 passed; PSA=67.4 Å² passed; QED=0.83 passed; LogS=-2.4 passed",
+        "herg_predict / cyp_predict / pains_filter: No module named 'rdkit'",
+        "compute_2d_properties: {\"error\": \"RDKit not installed\"}",
+        "predict_admet: ModuleNotFoundError: No module named 'admet_ai'; fallback ModuleNotFoundError: No module named 'rdkit'"
+      ],
+      "tools_used": [
+        "check_advancement_gate",
+        "herg_predict",
+        "cyp_predict",
+        "pains_filter",
+        "compute_2d_properties",
+        "predict_admet"
+      ],
+      "gate_call": {
+        "id": "CMP-01",
+        "smiles": "CC(=O)Nc1ccc(cc1)C(=O)NC2CCOCC2",
+        "mw": 262.3,
+        "clogp": 0.9,
+        "hbd": 2,
+        "hba": 4,
+        "psa": 67.4,
+        "qed": 0.83,
+        "ames": 0,
+        "solubility": -2.4,
+        "herg_ic50_uM": 34.0
+      },
+      "gate_response": {
+        "result": {
+          "evaluated": 8,
+          "gates": [
+            {
+              "criterion": "ames",
+              "value": 0,
+              "passed": true,
+              "label": "Ames mutagenicity = negative (hard block)"
+            },
+            {
+              "criterion": "clogp",
+              "value": 0.9,
+              "passed": true,
+              "label": "cLogP ≤ 5 (Lipinski)"
+            },
+            {
+              "criterion": "hba",
+              "value": 4,
+              "passed": true,
+              "label": "H-bond acceptors ≤ 10 (Lipinski)"
+            },
+            {
+              "criterion": "hbd",
+              "value": 2,
+              "passed": true,
+              "label": "H-bond donors ≤ 5 (Lipinski)"
+            },
+            {
+              "criterion": "mw",
+              "value": 262.3,
+              "passed": true,
+              "label": "Molecular weight ≤ 500 (Lipinski)"
+            },
+            {
+              "criterion": "psa",
+              "value": 67.4,
+              "passed": true,
+              "label": "PSA ≤ 140 Å²"
+            },
+            {
+              "criterion": "qed",
+              "value": 0.83,
+              "passed": true,
+              "label": "QED ≥ 0.3"
+            },
+            {
+              "criterion": "solubility",
+              "value": -2.4,
+              "passed": true,
+              "label": "LogS ≥ -6"
+            }
+          ],
+          "hard_blocked": false,
+          "note": "Soft gate failures may be acceptable with justification. Hard blocks require structural changes.",
+          "overall_pass": true,
+          "smiles": "CC(=O)Nc1ccc(cc1)C(=O)NC2CCOCC2"
+        },
+        "tool": "check_advancement_gate"
+      },
+      "criteria": [
+        {
+          "criterion": "ames",
+          "value": 0,
+          "threshold": "Ames mutagenicity = negative (hard block)",
+          "passed": true
+        },
+        {
+          "criterion": "clogp",
+          "value": 0.9,
+          "threshold": "cLogP ≤ 5 (Lipinski)",
+          "passed": true
+        },
+        {
+          "criterion": "hba",
+          "value": 4,
+          "threshold": "H-bond acceptors ≤ 10 (Lipinski)",
+          "passed": true
+        },
+        {
+          "criterion": "hbd",
+          "value": 2,
+          "threshold": "H-bond donors ≤ 5 (Lipinski)",
+          "passed": true
+        },
+        {
+          "criterion": "mw",
+          "value": 262.3,
+          "threshold": "Molecular weight ≤ 500 (Lipinski)",
+          "passed": true
+        },
+        {
+          "criterion": "psa",
+          "value": 67.4,
+          "threshold": "PSA ≤ 140 Å²",
+          "passed": true
+        },
+        {
+          "criterion": "qed",
+          "value": 0.83,
+          "threshold": "QED ≥ 0.3",
+          "passed": true
+        },
+        {
+          "criterion": "solubility",
+          "value": -2.4,
+          "threshold": "LogS ≥ -6",
+          "passed": true
+        }
+      ],
+      "failed_advisory_criteria": [],
+      "caveats": [],
+      "limitations": [
+        "Independent hERG, CYP and PAINS context checks were unassessed because their tools lacked RDKit.",
+        "Descriptor and ADMET cross-checks were unassessed because dependencies were missing.",
+        "The input identifies values only collectively as measured or predicted; field-level experimental provenance and assay uncertainty are not supplied.",
+        "Reviser reproduced this exact complete-record gate response through the batch interface. Software rule reproduction is not independent biological validation."
+      ],
+      "evidence_type": {
+        "gate_inputs": "supplied; measured versus predicted is not identified per field",
+        "gate_result": "TOKN rule evaluation of supplied inputs, not a biological measurement",
+        "herg_cyp_pains_admet_and_descriptors": "no model outputs obtained; missing-dependency errors only"
+      },
+      "unassessed_checks": [
+        "pains_filter: no result; missing RDKit",
+        "herg_predict: no result; missing RDKit",
+        "cyp_predict: no result; missing RDKit",
+        "compute_2d_properties: no result; RDKit not installed",
+        "predict_admet: no result; admet_ai and RDKit missing"
+      ],
+      "next_review": "Medicinal-chemistry review; the gate-derived status is not synthesis authorization.",
+      "provenance": {
+        "compound_id": "CMP-01",
+        "smiles": "CC(=O)Nc1ccc(cc1)C(=O)NC2CCOCC2",
+        "admet_fields": {
+          "mw": 262.3,
+          "clogp": 0.9,
+          "hbd": 2,
+          "hba": 4,
+          "psa": 67.4,
+          "qed": 0.83,
+          "ames": 0,
+          "solubility": -2.4,
+          "herg_ic50_uM": 34.0
+        },
+        "agent_version": "TOKN drugdisc executor; runtime version not reported"
+      }
+    },
+    {
+      "id": "CMP-02",
+      "status": "advance",
+      "decision_rule": "D4",
+      "rationale": "check_advancement_gate evaluated eight criteria and returned hard_blocked=false and overall_pass=true; QED=0.30 and LogS=-6.0 passed rather than failed. MW=500.0, cLogP=5.0, HBD=5, HBA=10 and PSA=140.0 are all boundary values that the gate marked as passing, and the independent context tools were unavailable.",
+      "evidence": [
+        "check_advancement_gate: evaluated=8; hard_blocked=false; overall_pass=true",
+        "check_advancement_gate: MW=500 passed; cLogP=5 passed; HBD=5 passed; HBA=10 passed; PSA=140 passed; QED=0.3 passed; LogS=-6 passed; Ames=0 passed",
+        "herg_predict / cyp_predict / pains_filter: No module named 'rdkit'",
+        "compute_2d_properties: {\"error\": \"RDKit not installed\"}",
+        "predict_admet: ModuleNotFoundError: No module named 'admet_ai'; fallback ModuleNotFoundError: No module named 'rdkit'"
+      ],
+      "tools_used": [
+        "check_advancement_gate",
+        "herg_predict",
+        "cyp_predict",
+        "pains_filter",
+        "compute_2d_properties",
+        "predict_admet"
+      ],
+      "gate_call": {
+        "id": "CMP-02",
+        "smiles": "COc1ccc(cc1)C(=O)Nc2ccc(cc2)S(=O)(=O)N3CCN(CC3)c4ccccn4",
+        "mw": 500.0,
+        "clogp": 5.0,
+        "hbd": 5,
+        "hba": 10,
+        "psa": 140.0,
+        "qed": 0.3,
+        "ames": 0,
+        "solubility": -6.0,
+        "herg_ic50_uM": 12.0
+      },
+      "gate_response": {
+        "result": {
+          "evaluated": 8,
+          "gates": [
+            {
+              "criterion": "ames",
+              "value": 0,
+              "passed": true,
+              "label": "Ames mutagenicity = negative (hard block)"
+            },
+            {
+              "criterion": "clogp",
+              "value": 5,
+              "passed": true,
+              "label": "cLogP ≤ 5 (Lipinski)"
+            },
+            {
+              "criterion": "hba",
+              "value": 10,
+              "passed": true,
+              "label": "H-bond acceptors ≤ 10 (Lipinski)"
+            },
+            {
+              "criterion": "hbd",
+              "value": 5,
+              "passed": true,
+              "label": "H-bond donors ≤ 5 (Lipinski)"
+            },
+            {
+              "criterion": "mw",
+              "value": 500,
+              "passed": true,
+              "label": "Molecular weight ≤ 500 (Lipinski)"
+            },
+            {
+              "criterion": "psa",
+              "value": 140,
+              "passed": true,
+              "label": "PSA ≤ 140 Å²"
+            },
+            {
+              "criterion": "qed",
+              "value": 0.3,
+              "passed": true,
+              "label": "QED ≥ 0.3"
+            },
+            {
+              "criterion": "solubility",
+              "value": -6,
+              "passed": true,
+              "label": "LogS ≥ -6"
+            }
+          ],
+          "hard_blocked": false,
+          "note": "Soft gate failures may be acceptable with justification. Hard blocks require structural changes.",
+          "overall_pass": true,
+          "smiles": "COc1ccc(cc1)C(=O)Nc2ccc(cc2)S(=O)(=O)N3CCN(CC3)c4ccccn4"
+        },
+        "tool": "check_advancement_gate"
+      },
+      "criteria": [
+        {
+          "criterion": "ames",
+          "value": 0,
+          "threshold": "Ames mutagenicity = negative (hard block)",
+          "passed": true
+        },
+        {
+          "criterion": "clogp",
+          "value": 5,
+          "threshold": "cLogP ≤ 5 (Lipinski)",
+          "passed": true
+        },
+        {
+          "criterion": "hba",
+          "value": 10,
+          "threshold": "H-bond acceptors ≤ 10 (Lipinski)",
+          "passed": true
+        },
+        {
+          "criterion": "hbd",
+          "value": 5,
+          "threshold": "H-bond donors ≤ 5 (Lipinski)",
+          "passed": true
+        },
+        {
+          "criterion": "mw",
+          "value": 500,
+          "threshold": "Molecular weight ≤ 500 (Lipinski)",
+          "passed": true
+        },
+        {
+          "criterion": "psa",
+          "value": 140,
+          "threshold": "PSA ≤ 140 Å²",
+          "passed": true
+        },
+        {
+          "criterion": "qed",
+          "value": 0.3,
+          "threshold": "QED ≥ 0.3",
+          "passed": true
+        },
+        {
+          "criterion": "solubility",
+          "value": -6,
+          "threshold": "LogS ≥ -6",
+          "passed": true
+        }
+      ],
+      "failed_advisory_criteria": [],
+      "caveats": [
+        "boundary_values_all_passed: MW=500.0, cLogP=5.0, HBD=5, HBA=10, PSA=140.0, QED=0.30 and LogS=-6.0; independent recomputation was unavailable"
+      ],
+      "limitations": [
+        "Independent hERG, CYP and PAINS context checks were unassessed because their tools lacked RDKit.",
+        "Descriptor and ADMET cross-checks were unassessed because dependencies were missing; boundary agreement with RDKit therefore remains unverified.",
+        "Field-level assay provenance, rounding precision and uncertainty are not supplied.",
+        "Reviser reproduced this exact complete-record gate response through the batch interface. Software rule reproduction is not independent biological validation."
+      ],
+      "evidence_type": {
+        "gate_inputs": "supplied; measured versus predicted is not identified per field",
+        "gate_result": "TOKN rule evaluation of supplied inputs, not a biological measurement",
+        "herg_cyp_pains_admet_and_descriptors": "no model outputs obtained; missing-dependency errors only"
+      },
+      "unassessed_checks": [
+        "pains_filter: no result; missing RDKit",
+        "herg_predict: no result; missing RDKit",
+        "cyp_predict: no result; missing RDKit",
+        "compute_2d_properties: no result; RDKit not installed",
+        "predict_admet: no result; admet_ai and RDKit missing"
+      ],
+      "next_review": "Medicinal-chemistry review of exact boundary values and property verification; the gate-derived status is not synthesis authorization.",
+      "provenance": {
+        "compound_id": "CMP-02",
+        "smiles": "COc1ccc(cc1)C(=O)Nc2ccc(cc2)S(=O)(=O)N3CCN(CC3)c4ccccn4",
+        "admet_fields": {
+          "mw": 500.0,
+          "clogp": 5.0,
+          "hbd": 5,
+          "hba": 10,
+          "psa": 140.0,
+          "qed": 0.3,
+          "ames": 0,
+          "solubility": -6.0,
+          "herg_ic50_uM": 12.0
+        },
+        "agent_version": "TOKN drugdisc executor; runtime version not reported"
+      }
+    },
+    {
+      "id": "CMP-03",
+      "status": "hold",
+      "decision_rule": "D1",
+      "rationale": "check_advancement_gate was refused by the response headed '[DRUGDISC] hERG HARD BLOCK', reporting hERG IC50=0.620 μM below 1.00 μM, so no criteria were evaluated and the status is hold under D1. herg_predict and the other context tools returned missing-dependency errors rather than independent biological or model findings.",
+      "evidence": [
+        "check_advancement_gate: [DRUGDISC] hERG HARD BLOCK: predicted hERG IC50 = 0.620 μM < 1.00 μM",
+        "check_advancement_gate: Severe cardiac liability (Torsades de Pointes risk); mitigation requested by error text but none was added",
+        "herg_predict / cyp_predict / pains_filter: No module named 'rdkit'",
+        "compute_2d_properties: {\"error\": \"RDKit not installed\"}",
+        "predict_admet: ModuleNotFoundError: No module named 'admet_ai'; fallback ModuleNotFoundError: No module named 'rdkit'"
+      ],
+      "tools_used": [
+        "check_advancement_gate",
+        "herg_predict",
+        "cyp_predict",
+        "pains_filter",
+        "compute_2d_properties",
+        "predict_admet"
+      ],
+      "gate_call": {
+        "id": "CMP-03",
+        "smiles": "Cc1ccc(cc1)C(=O)Nc2cccc(c2)C(=O)N3CCCC3",
+        "mw": 308.4,
+        "clogp": 2.6,
+        "hbd": 1,
+        "hba": 3,
+        "psa": 49.4,
+        "qed": 0.91,
+        "ames": 0,
+        "solubility": -3.1,
+        "herg_ic50_uM": 0.62
+      },
+      "gate_response": {
+        "error": "[DRUGDISC] hERG HARD BLOCK: predicted hERG IC50 = 0.620 μM < 1.00 μM. Severe cardiac liability (Torsades de Pointes risk). Attach a mitigation plan (mitigation=true, mitigation_notes=<patch-clamp confirmation | structural modification | ion-channel selectivity panel>) before retrying."
+      },
+      "criteria": [],
+      "failed_advisory_criteria": [],
+      "blocking_criterion": null,
+      "hook": "[DRUGDISC] hERG HARD BLOCK",
+      "trigger": {
+        "field": "herg_ic50_uM",
+        "value": 0.62,
+        "gate_reported_threshold": "IC50 < 1.00 μM"
+      },
+      "to_clear": "Safety pharmacology review of measured patch-clamp hERG IC50 ≥ the gate threshold (1.00 μM), or a structural change, followed by a new gate call; no mitigation was fabricated in this run.",
+      "caveats": [
+        "The gate error calls the hERG value predicted, while the input identifies the record only as supplied measured-or-predicted data; this report does not reclassify it as measured."
+      ],
+      "limitations": [
+        "No independent hERG prediction, CYP prediction, PAINS filter, descriptor recomputation or ADMET prediction was obtained.",
+        "The refusal identifies a risk signal under the local hook; it is not a clinical determination of Torsades risk.",
+        "Reviser reproduced this exact complete-record gate response through the batch interface. Software rule reproduction is not independent biological validation.",
+        "Visible gate schema omits herg_ic50_uM, but the complete-record batch invocation reproduced the hERG refusal. Reduced-field calls cannot establish clearance. Independent hERG prediction and assay confirmation remain unavailable."
+      ],
+      "evidence_type": {
+        "gate_inputs": "supplied; measured versus predicted is not identified per field",
+        "herg_ic50_uM": "supplied value, described as predicted in the gate refusal",
+        "gate_result": "safety-hook refusal; no scored pharmacology gate result",
+        "context_tools": "missing-dependency errors only; no predictions"
+      },
+      "provenance": {
+        "compound_id": "CMP-03",
+        "smiles": "Cc1ccc(cc1)C(=O)Nc2cccc(c2)C(=O)N3CCCC3",
+        "admet_fields": {
+          "mw": 308.4,
+          "clogp": 2.6,
+          "hbd": 1,
+          "hba": 3,
+          "psa": 49.4,
+          "qed": 0.91,
+          "ames": 0,
+          "solubility": -3.1,
+          "herg_ic50_uM": 0.62
+        },
+        "agent_version": "TOKN drugdisc executor; runtime version not reported"
+      },
+      "unassessed_checks": [
+        "pains_filter: no result; missing RDKit",
+        "herg_predict: no result; missing RDKit",
+        "cyp_predict: no result; missing RDKit",
+        "compute_2d_properties: no result; RDKit not installed",
+        "predict_admet: no result; admet_ai and RDKit missing"
+      ]
+    },
+    {
+      "id": "CMP-04",
+      "status": "reject",
+      "decision_rule": "D2",
+      "rationale": "check_advancement_gate evaluated eight criteria and returned hard_blocked=true and overall_pass=false because Ames=1 failed with hard_block=true. The other seven criteria passed, but they do not override the Ames hard block; independent ADMET and PAINS checks were unavailable.",
+      "evidence": [
+        "check_advancement_gate: evaluated=8; hard_blocked=true; overall_pass=false",
+        "check_advancement_gate: ames value=1; passed=false; hard_block=true; note='HARD BLOCK: Ames-positive compounds cannot advance. Consider structural modification to remove mutagenic liability.'",
+        "check_advancement_gate: cLogP=2.2, HBA=4, HBD=1, MW=242.2, PSA=75.0, QED=0.66 and LogS=-3.4 passed",
+        "herg_predict / cyp_predict / pains_filter: No module named 'rdkit'",
+        "compute_2d_properties: {\"error\": \"RDKit not installed\"}",
+        "predict_admet: ModuleNotFoundError: No module named 'admet_ai'; fallback ModuleNotFoundError: No module named 'rdkit'"
+      ],
+      "tools_used": [
+        "check_advancement_gate",
+        "herg_predict",
+        "cyp_predict",
+        "pains_filter",
+        "compute_2d_properties",
+        "predict_admet"
+      ],
+      "gate_call": {
+        "id": "CMP-04",
+        "smiles": "O=C(Nc1ccc(cc1)N(=O)=O)c2ccccc2",
+        "mw": 242.2,
+        "clogp": 2.2,
+        "hbd": 1,
+        "hba": 4,
+        "psa": 75.0,
+        "qed": 0.66,
+        "ames": 1,
+        "solubility": -3.4,
+        "herg_ic50_uM": 41.0
+      },
+      "gate_response": {
+        "result": {
+          "evaluated": 8,
+          "gates": [
+            {
+              "criterion": "ames",
+              "value": 1,
+              "passed": false,
+              "hard_block": true,
+              "label": "Ames mutagenicity = negative (hard block)"
+            },
+            {
+              "criterion": "clogp",
+              "value": 2.2,
+              "passed": true,
+              "label": "cLogP ≤ 5 (Lipinski)"
+            },
+            {
+              "criterion": "hba",
+              "value": 4,
+              "passed": true,
+              "label": "H-bond acceptors ≤ 10 (Lipinski)"
+            },
+            {
+              "criterion": "hbd",
+              "value": 1,
+              "passed": true,
+              "label": "H-bond donors ≤ 5 (Lipinski)"
+            },
+            {
+              "criterion": "mw",
+              "value": 242.2,
+              "passed": true,
+              "label": "Molecular weight ≤ 500 (Lipinski)"
+            },
+            {
+              "criterion": "psa",
+              "value": 75,
+              "passed": true,
+              "label": "PSA ≤ 140 Å²"
+            },
+            {
+              "criterion": "qed",
+              "value": 0.66,
+              "passed": true,
+              "label": "QED ≥ 0.3"
+            },
+            {
+              "criterion": "solubility",
+              "value": -3.4,
+              "passed": true,
+              "label": "LogS ≥ -6"
+            }
+          ],
+          "hard_blocked": true,
+          "note": "HARD BLOCK: Ames-positive compounds cannot advance. Consider structural modification to remove mutagenic liability.",
+          "overall_pass": false,
+          "smiles": "O=C(Nc1ccc(cc1)N(=O)=O)c2ccccc2"
+        },
+        "tool": "check_advancement_gate"
+      },
+      "criteria": [
+        {
+          "criterion": "ames",
+          "value": 1,
+          "threshold": "Ames mutagenicity = negative (hard block)",
+          "passed": false,
+          "hard_block": true
+        },
+        {
+          "criterion": "clogp",
+          "value": 2.2,
+          "threshold": "cLogP ≤ 5 (Lipinski)",
+          "passed": true
+        },
+        {
+          "criterion": "hba",
+          "value": 4,
+          "threshold": "H-bond acceptors ≤ 10 (Lipinski)",
+          "passed": true
+        },
+        {
+          "criterion": "hbd",
+          "value": 1,
+          "threshold": "H-bond donors ≤ 5 (Lipinski)",
+          "passed": true
+        },
+        {
+          "criterion": "mw",
+          "value": 242.2,
+          "threshold": "Molecular weight ≤ 500 (Lipinski)",
+          "passed": true
+        },
+        {
+          "criterion": "psa",
+          "value": 75,
+          "threshold": "PSA ≤ 140 Å²",
+          "passed": true
+        },
+        {
+          "criterion": "qed",
+          "value": 0.66,
+          "threshold": "QED ≥ 0.3",
+          "passed": true
+        },
+        {
+          "criterion": "solubility",
+          "value": -3.4,
+          "threshold": "LogS ≥ -6",
+          "passed": true
+        }
+      ],
+      "failed_advisory_criteria": [],
+      "blocking_criterion": "ames: supplied value 1; passed=false; hard_block=true; gate note: HARD BLOCK: Ames-positive compounds cannot advance. Consider structural modification to remove mutagenic liability.",
+      "caveats": [],
+      "limitations": [
+        "Ames prediction could not be independently cross-checked because predict_admet lacked admet_ai and RDKit; the supplied Ames value still governs.",
+        "hERG, CYP, PAINS and descriptor context checks were unassessed because dependencies were missing.",
+        "No assay format, replicate count or uncertainty was supplied for the Ames result.",
+        "Reviser reproduced this exact complete-record gate response through the batch interface. Software rule reproduction is not independent biological validation."
+      ],
+      "evidence_type": {
+        "gate_inputs": "supplied; measured versus predicted is not identified per field",
+        "gate_result": "TOKN hard-block evaluation, not a newly performed Ames assay",
+        "context_tools": "missing-dependency errors only; no predictions"
+      },
+      "provenance": {
+        "compound_id": "CMP-04",
+        "smiles": "O=C(Nc1ccc(cc1)N(=O)=O)c2ccccc2",
+        "admet_fields": {
+          "mw": 242.2,
+          "clogp": 2.2,
+          "hbd": 1,
+          "hba": 4,
+          "psa": 75.0,
+          "qed": 0.66,
+          "ames": 1,
+          "solubility": -3.4,
+          "herg_ic50_uM": 41.0
+        },
+        "agent_version": "TOKN drugdisc executor; runtime version not reported"
+      },
+      "unassessed_checks": [
+        "pains_filter: no result; missing RDKit",
+        "herg_predict: no result; missing RDKit",
+        "cyp_predict: no result; missing RDKit",
+        "compute_2d_properties: no result; RDKit not installed",
+        "predict_admet: no result; admet_ai and RDKit missing"
+      ]
+    },
+    {
+      "id": "CMP-05",
+      "status": "advance_with_caveats",
+      "decision_rule": "D3",
+      "rationale": "check_advancement_gate evaluated eight criteria and returned hard_blocked=false and overall_pass=false: MW=548.6 failed the ≤500 Lipinski limit and cLogP=5.6 failed the ≤5 limit. Ames, HBA, HBD, PSA, QED=0.41 and LogS=-5.4 passed; per the brief's advisory mapping this is advance_with_caveats despite the README's conflicting one-violation rule, and unavailable context tools do not change that gate-derived status.",
+      "evidence": [
+        "check_advancement_gate: evaluated=8; hard_blocked=false; overall_pass=false",
+        "check_advancement_gate: mw value=548.6, passed=false, threshold 'Molecular weight ≤ 500 (Lipinski)'",
+        "check_advancement_gate: clogp value=5.6, passed=false, threshold 'cLogP ≤ 5 (Lipinski)'",
+        "check_advancement_gate: ames=0, hba=5, hbd=1, psa=51.2, qed=0.41 and solubility=-5.4 passed",
+        "herg_predict / cyp_predict / pains_filter: No module named 'rdkit'",
+        "compute_2d_properties: {\"error\": \"RDKit not installed\"}",
+        "predict_admet: ModuleNotFoundError: No module named 'admet_ai'; fallback ModuleNotFoundError: No module named 'rdkit'"
+      ],
+      "tools_used": [
+        "check_advancement_gate",
+        "herg_predict",
+        "cyp_predict",
+        "pains_filter",
+        "compute_2d_properties",
+        "predict_admet"
+      ],
+      "gate_call": {
+        "id": "CMP-05",
+        "smiles": "CC(C)(C)c1ccc(cc1)C(=O)Nc2ccc(cc2)Oc3ccc(cc3)C(F)(F)F",
+        "mw": 548.6,
+        "clogp": 5.6,
+        "hbd": 1,
+        "hba": 5,
+        "psa": 51.2,
+        "qed": 0.41,
+        "ames": 0,
+        "solubility": -5.4,
+        "herg_ic50_uM": 25.0
+      },
+      "gate_response": {
+        "result": {
+          "evaluated": 8,
+          "gates": [
+            {
+              "criterion": "ames",
+              "value": 0,
+              "passed": true,
+              "label": "Ames mutagenicity = negative (hard block)"
+            },
+            {
+              "criterion": "clogp",
+              "value": 5.6,
+              "passed": false,
+              "label": "cLogP ≤ 5 (Lipinski)"
+            },
+            {
+              "criterion": "hba",
+              "value": 5,
+              "passed": true,
+              "label": "H-bond acceptors ≤ 10 (Lipinski)"
+            },
+            {
+              "criterion": "hbd",
+              "value": 1,
+              "passed": true,
+              "label": "H-bond donors ≤ 5 (Lipinski)"
+            },
+            {
+              "criterion": "mw",
+              "value": 548.6,
+              "passed": false,
+              "label": "Molecular weight ≤ 500 (Lipinski)"
+            },
+            {
+              "criterion": "psa",
+              "value": 51.2,
+              "passed": true,
+              "label": "PSA ≤ 140 Å²"
+            },
+            {
+              "criterion": "qed",
+              "value": 0.41,
+              "passed": true,
+              "label": "QED ≥ 0.3"
+            },
+            {
+              "criterion": "solubility",
+              "value": -5.4,
+              "passed": true,
+              "label": "LogS ≥ -6"
+            }
+          ],
+          "hard_blocked": false,
+          "note": "Soft gate failures may be acceptable with justification. Hard blocks require structural changes.",
+          "overall_pass": false,
+          "smiles": "CC(C)(C)c1ccc(cc1)C(=O)Nc2ccc(cc2)Oc3ccc(cc3)C(F)(F)F"
+        },
+        "tool": "check_advancement_gate"
+      },
+      "criteria": [
+        {
+          "criterion": "ames",
+          "value": 0,
+          "threshold": "Ames mutagenicity = negative (hard block)",
+          "passed": true
+        },
+        {
+          "criterion": "clogp",
+          "value": 5.6,
+          "threshold": "cLogP ≤ 5 (Lipinski)",
+          "passed": false
+        },
+        {
+          "criterion": "hba",
+          "value": 5,
+          "threshold": "H-bond acceptors ≤ 10 (Lipinski)",
+          "passed": true
+        },
+        {
+          "criterion": "hbd",
+          "value": 1,
+          "threshold": "H-bond donors ≤ 5 (Lipinski)",
+          "passed": true
+        },
+        {
+          "criterion": "mw",
+          "value": 548.6,
+          "threshold": "Molecular weight ≤ 500 (Lipinski)",
+          "passed": false
+        },
+        {
+          "criterion": "psa",
+          "value": 51.2,
+          "threshold": "PSA ≤ 140 Å²",
+          "passed": true
+        },
+        {
+          "criterion": "qed",
+          "value": 0.41,
+          "threshold": "QED ≥ 0.3",
+          "passed": true
+        },
+        {
+          "criterion": "solubility",
+          "value": -5.4,
+          "threshold": "LogS ≥ -6",
+          "passed": true
+        }
+      ],
+      "failed_advisory_criteria": [
+        {
+          "criterion": "mw",
+          "value": 548.6,
+          "threshold": "≤500 (Lipinski)"
+        },
+        {
+          "criterion": "clogp",
+          "value": 5.6,
+          "threshold": "≤5 (Lipinski)"
+        }
+      ],
+      "caveats": [
+        "mw: supplied value 548.6 exceeds gate threshold 500",
+        "clogp: supplied value 5.6 exceeds gate threshold 5",
+        "Two Lipinski component failures were returned; the README says at most one violation, whereas the brief maps non-hard-blocked advisory failures to advance_with_caveats. A medicinal-chemistry reviewer must resolve this policy conflict before synthesis."
+      ],
+      "limitations": [
+        "Independent hERG, CYP, PAINS and ADMET context was not obtained because dependencies were missing.",
+        "RDKit returned 'RDKit not installed', so neither the supplied MW/cLogP nor the planner's unverified structural concern was independently checked.",
+        "Reviser reproduced this exact complete-record gate response through the batch interface. Software rule reproduction is not independent biological validation."
+      ],
+      "evidence_type": {
+        "gate_inputs": "supplied; measured versus predicted is not identified per field",
+        "gate_result": "TOKN rule evaluation of supplied inputs, not an experimental finding",
+        "context_tools": "missing-dependency errors only; no predictions or recomputed descriptors"
+      },
+      "provenance": {
+        "compound_id": "CMP-05",
+        "smiles": "CC(C)(C)c1ccc(cc1)C(=O)Nc2ccc(cc2)Oc3ccc(cc3)C(F)(F)F",
+        "admet_fields": {
+          "mw": 548.6,
+          "clogp": 5.6,
+          "hbd": 1,
+          "hba": 5,
+          "psa": 51.2,
+          "qed": 0.41,
+          "ames": 0,
+          "solubility": -5.4,
+          "herg_ic50_uM": 25.0
+        },
+        "agent_version": "TOKN drugdisc executor; runtime version not reported"
+      },
+      "unassessed_checks": [
+        "pains_filter: no result; missing RDKit",
+        "herg_predict: no result; missing RDKit",
+        "cyp_predict: no result; missing RDKit",
+        "compute_2d_properties: no result; RDKit not installed",
+        "predict_admet: no result; admet_ai and RDKit missing"
+      ]
+    },
+    {
+      "id": "CMP-06",
+      "status": "hold",
+      "decision_rule": "D1",
+      "rationale": "check_advancement_gate was refused by '[DRUGDISC] CYP450 HARD BLOCK', reporting supplied CYP3A4 IC50=0.450 μM below 1.00 μM and no DDI analysis on file, with ddi_analysis_done=false left unchanged. The standalone ddi_analyze call returned the same refusal rather than an analysis, so it did not clear the hold; other context tools were unavailable.",
+      "evidence": [
+        "check_advancement_gate: [DRUGDISC] CYP450 HARD BLOCK: CYP3A4 IC50 0.450 μM < 1.00 μM (strong inhibitor) and no DDI analysis on file",
+        "ddi_analyze: returned the same CYP450 HARD BLOCK text, not a DDI analysis; no output was fed back to the gate",
+        "ddi_analysis_done=false in the unmodified gate input",
+        "herg_predict / cyp_predict / pains_filter: No module named 'rdkit'",
+        "compute_2d_properties: {\"error\": \"RDKit not installed\"}",
+        "predict_admet: ModuleNotFoundError: No module named 'admet_ai'; fallback ModuleNotFoundError: No module named 'rdkit'"
+      ],
+      "tools_used": [
+        "check_advancement_gate",
+        "herg_predict",
+        "cyp_predict",
+        "ddi_analyze",
+        "pains_filter",
+        "compute_2d_properties",
+        "predict_admet"
+      ],
+      "gate_call": {
+        "id": "CMP-06",
+        "smiles": "Cc1nc(sc1)C(=O)Nc2ccc(cc2)C(=O)N3CCOCC3",
+        "mw": 331.4,
+        "clogp": 1.8,
+        "hbd": 1,
+        "hba": 5,
+        "psa": 71.5,
+        "qed": 0.79,
+        "ames": 0,
+        "solubility": -2.9,
+        "herg_ic50_uM": 28.0,
+        "cyp3a4_ic50_uM": 0.45,
+        "ddi_analysis_done": false
+      },
+      "gate_response": {
+        "error": "[DRUGDISC] CYP450 HARD BLOCK: CYP3A4 IC50 0.450 μM < 1.00 μM (strong inhibitor) and no DDI analysis on file. Run ddi_analyze and attach ddi_analysis_done=true before advancement."
+      },
+      "criteria": [],
+      "failed_advisory_criteria": [],
+      "blocking_criterion": null,
+      "hook": "[DRUGDISC] CYP450 HARD BLOCK",
+      "trigger": {
+        "fields": {
+          "cyp3a4_ic50_uM": 0.45,
+          "ddi_analysis_done": false
+        },
+        "gate_reported_threshold": "CYP3A4 IC50 < 1.00 μM and no DDI analysis on file"
+      },
+      "to_clear": "A qualified DDI reviewer must review and attach an accepted DDI analysis, or supply a measured CYP3A4 IC50 ≥1 μM, before a new gate call; this run did not change ddi_analysis_done or attach mitigation.",
+      "what_would_clear_hold": {
+        "ddi_analyze_raw_response": "[DRUGDISC] CYP450 HARD BLOCK: CYP3A4 IC50 0.450 μM < 1.00 μM (strong inhibitor) and no DDI analysis on file. Run ddi_analyze and attach ddi_analysis_done=true before advancement.",
+        "interpretation": "The informational call did not return an analysis. Only qualified DDI review, an accepted attached analysis and a fresh gate call, or qualifying measured CYP3A4 evidence and review, could clear the hold; attachment is a human decision outside this run."
+      },
+      "caveats": [
+        "No other isozyme IC50 values were supplied or invented; CYP prediction was unavailable."
+      ],
+      "limitations": [
+        "The standalone DDI analysis was not obtained; exposure, substrate context, unbound concentration and clinical DDI risk remain unassessed.",
+        "Independent hERG, CYP, PAINS, descriptor and ADMET checks were unassessed because dependencies were missing.",
+        "Reviser reproduced this exact complete-record gate response through the batch interface. Software rule reproduction is not independent biological validation.",
+        "Both complete-record gate and standalone ddi_analyze reproduced the CYP450 refusal. No DDI analysis was generated or attached."
+      ],
+      "evidence_type": {
+        "gate_inputs": "supplied; CYP3A4 is supplied measured-or-predicted data and ddi_analysis_done=false",
+        "gate_result": "CYP450 safety-hook refusal; no scored pharmacology gate result",
+        "ddi_analyze": "refusal text only, not a completed DDI analysis",
+        "context_tools": "missing-dependency errors only; no predictions"
+      },
+      "provenance": {
+        "compound_id": "CMP-06",
+        "smiles": "Cc1nc(sc1)C(=O)Nc2ccc(cc2)C(=O)N3CCOCC3",
+        "admet_fields": {
+          "mw": 331.4,
+          "clogp": 1.8,
+          "hbd": 1,
+          "hba": 5,
+          "psa": 71.5,
+          "qed": 0.79,
+          "ames": 0,
+          "solubility": -2.9,
+          "herg_ic50_uM": 28.0,
+          "cyp3a4_ic50_uM": 0.45,
+          "ddi_analysis_done": false
+        },
+        "agent_version": "TOKN drugdisc executor; runtime version not reported"
+      },
+      "unassessed_checks": [
+        "pains_filter: no result; missing RDKit",
+        "herg_predict: no result; missing RDKit",
+        "cyp_predict: no result; missing RDKit",
+        "compute_2d_properties: no result; RDKit not installed",
+        "predict_admet: no result; admet_ai and RDKit missing",
+        "ddi_analyze: refusal; no completed DDI analysis"
+      ]
+    }
+  ],
+  "gates": [
+    {
+      "name": "advancement_gate",
+      "status": "hold",
+      "detail": "Four scored responses (CMP-01, CMP-02, CMP-04, CMP-05); two reproduced safety-hook refusals (CMP-03, CMP-06). Aggregate hold does not replace item statuses."
+    },
+    {
+      "name": "Ames",
+      "status": "reject",
+      "detail": "CMP-04 Ames=1 failed as a hard block. The other three scored responses (CMP-01, CMP-02, CMP-05) had Ames=0 and passed. Held compounds did not reach scored criteria."
+    },
+    {
+      "name": "hERG",
+      "status": "hold",
+      "detail": "CMP-03 complete-record gate reproduced hERG refusal at 0.620 μM <1.00 μM. Independent prediction unavailable."
+    },
+    {
+      "name": "CYP450",
+      "status": "hold",
+      "detail": "CMP-06 complete-record gate and ddi_analyze reproduced CYP450 refusal at 0.450 μM <1.00 μM without DDI analysis. Independent prediction unavailable."
+    },
+    {
+      "name": "PAINS",
+      "status": "hold",
+      "detail": "Unassessed: missing RDKit; no absence of PAINS alerts claimed."
+    },
+    {
+      "name": "MW_gt_1200_validation",
+      "status": "hold",
+      "detail": "Not triggered (supplied values): all supplied MW below 1200 Da and no returned block. Input comparison, not independently verified validation pass."
+    },
+    {
+      "name": "advisory_criteria",
+      "status": "advance_with_caveats",
+      "detail": "CMP-05 failed MW ≤500 and cLogP ≤5. Other scored advisory criteria passed; no override of hard blocks."
+    },
+    {
+      "name": "context_tools",
+      "status": "hold",
+      "detail": "Context unavailable: missing RDKit/admet_ai, refused DDI analysis. No predictions, recomputed descriptors or DDI analysis obtained."
+    }
+  ],
+  "overall_verdict": "Under the brief's gate-only decision rules, CMP-01 and CMP-02 advance, CMP-05 advances with MW/cLogP caveats, CMP-04 is rejected for its supplied Ames-positive hard block, and CMP-03/CMP-06 remain on hERG/CYP450 safety holds while independent PAINS and prediction checks remain unassessed.",
+  "confidence": null,
+  "limitations": [
+    "Former 0.99 confidence withdrawn. Fresh tool reproduction supports rule translation, not biological safety; no calibrated correctness probability is available.",
+    "The input describes the synthetic records collectively as measured or predicted; it does not specify measurement type, assay format, species, replicates, exclusions or uncertainty for each field.",
+    "herg_predict, cyp_predict and pains_filter returned the exact error 'No module named 'rdkit'' for every compound; no hERG/CYP discordance or PAINS alert assessment could be made.",
+    "compute_2d_properties returned '{\"error\": \"RDKit not installed\"}' with exit code 1 for every compound, so supplied-versus-computed descriptors and CMP-02 boundary consistency remain unverified.",
+    "predict_admet failed for every correctly addressed compound with ModuleNotFoundError: No module named 'admet_ai', then a fallback ModuleNotFoundError: No module named 'rdkit'; no Ames cross-check was obtained.",
+    "ddi_analyze returned a CYP450 refusal rather than a DDI analysis for CMP-06; the hold was not cleared and no DDI conclusion is claimed.",
+    "A gate response without a safety-hook refusal is not proof of absent hERG, CYP or PAINS liabilities; conversely, a supplied or predicted low IC50 indicates risk rather than proving clinical harm or disproving safety.",
+    "The hERG 1 μM versus 10 μM, PAINS warn versus block, and Lipinski advisory versus at-most-one-violation source conflicts remain for qualified review; this run followed the actual gate response and the brief's explicit status mapping.",
+    "No biochemical potency, target engagement, phenotypic efficacy, cellular exposure, kinase selectivity, literature, in vivo, clinical or synthesis data were supplied or assessed.",
+    "These are DRAFT in-silico/supplied-data triage recommendations only, not advancement authorization; T4 advancement requires senior reviewer sign-off.",
+    "All six complete-record gates rerun. One representative per context dependency family was rechecked; other context errors are retained historical records, not fresh reruns. No dependencies installed."
+  ],
+  "critique_response": [
+    {
+      "id": "C1",
+      "action": "rebutted",
+      "detail": "Complete-record check_advancement_gate with herg_ic50_uM=0.62 reproduced the exact hERG HARD BLOCK at 0.620 μM <1.00 μM through the batch interface despite schema omission. Reduced-field critic passes do not establish clearance. Independent biological corroboration remains unavailable and is explicit."
+    },
+    {
+      "id": "C2",
+      "action": "rebutted",
+      "detail": "Complete-record CMP-06 gate reproduced CYP450 HARD BLOCK at 0.450 μM <1.00 μM with ddi_analysis_done=false; standalone ddi_analyze returned the same refusal. Gate-specific reproducibility gap closed; hold unchanged, no DDI analysis."
+    },
+    {
+      "id": "C3",
+      "action": "fixed",
+      "detail": "Withdrew uncalibrated 0.99 estimate (confidence=null); confidence-omitted abstention_gate returned defer for drugdisc/high stakes. Named senior medicinal-chemistry, safety-pharmacology and DDI reviewers; draft statuses retained without authorization."
+    },
+    {
+      "id": "C4",
+      "action": "fixed",
+      "detail": "Fresh grounding_check_citations arguments and actual raw output are recorded in step-8 tool_log for the revised report; missing historical checker output was not invented."
+    },
+    {
+      "id": "C5",
+      "action": "fixed",
+      "detail": "Recovered missing original calls from the local executor run log: mistyped SMILES CC(=O)Nc1ccc(cc1)C(=O)NC2CCO and execute_domain_script arguments {\"script\":\"noop\"}. Added actual arguments and verbatim raw response text to tool_log, with source path. Both calls failed and contributed no scientific result."
+    },
+    {
+      "id": "C6",
+      "action": "fixed",
+      "detail": "Moved observed_wrapper outside historical raw_output into sibling annotation. Item gate_response now contains full fresh result/tool wrapper or actual error-only object for all six items."
+    },
+    {
+      "id": "C7",
+      "action": "fixed",
+      "detail": "Defined summary scale and restricted gates statuses to brief vocabulary. Aggregate advancement, hERG and CYP450 consistently labelled hold. MW detail and report explicitly say not triggered (supplied values), not verified pass."
+    },
+    {
+      "id": "C8",
+      "action": "fixed",
+      "detail": "Fresh gates verify four scored compounds, three scored Ames-negative responses (CMP-01, CMP-02, CMP-05). Corrected other four to other three and named them."
+    },
+    {
+      "id": "C9",
+      "action": "fixed",
+      "detail": "Verified five failed historical context families on every compound. Populated unassessed_checks for all six; CMP-06 also records incomplete refused DDI analysis."
+    }
+  ],
+  "tool_log": [
+    {
+      "step": "1",
+      "item": "CMP-01",
+      "tool": "check_advancement_gate",
+      "arguments": {
+        "id": "CMP-01",
+        "smiles": "CC(=O)Nc1ccc(cc1)C(=O)NC2CCOCC2",
+        "mw": 262.3,
+        "clogp": 0.9,
+        "hbd": 2,
+        "hba": 4,
+        "psa": 67.4,
+        "qed": 0.83,
+        "ames": 0,
+        "solubility": -2.4,
+        "herg_ic50_uM": 34.0
+      },
+      "raw_output": {
+        "result": {
+          "evaluated": 8,
+          "gates": [
+            {
+              "criterion": "ames",
+              "value": 0,
+              "passed": true,
+              "label": "Ames mutagenicity = negative (hard block)"
+            },
+            {
+              "criterion": "clogp",
+              "value": 0.9,
+              "passed": true,
+              "label": "cLogP ≤ 5 (Lipinski)"
+            },
+            {
+              "criterion": "hba",
+              "value": 4,
+              "passed": true,
+              "label": "H-bond acceptors ≤ 10 (Lipinski)"
+            },
+            {
+              "criterion": "hbd",
+              "value": 2,
+              "passed": true,
+              "label": "H-bond donors ≤ 5 (Lipinski)"
+            },
+            {
+              "criterion": "mw",
+              "value": 262.3,
+              "passed": true,
+              "label": "Molecular weight ≤ 500 (Lipinski)"
+            },
+            {
+              "criterion": "psa",
+              "value": 67.4,
+              "passed": true,
+              "label": "PSA ≤ 140 Å²"
+            },
+            {
+              "criterion": "qed",
+              "value": 0.83,
+              "passed": true,
+              "label": "QED ≥ 0.3"
+            },
+            {
+              "criterion": "solubility",
+              "value": -2.4,
+              "passed": true,
+              "label": "LogS ≥ -6"
+            }
+          ],
+          "hard_blocked": false,
+          "note": "Soft gate failures may be acceptable with justification. Hard blocks require structural changes.",
+          "overall_pass": true,
+          "smiles": "CC(=O)Nc1ccc(cc1)C(=O)NC2CCOCC2"
+        },
+        "tool": "check_advancement_gate"
+      },
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "1",
+      "item": "CMP-02",
+      "tool": "check_advancement_gate",
+      "arguments": {
+        "id": "CMP-02",
+        "smiles": "COc1ccc(cc1)C(=O)Nc2ccc(cc2)S(=O)(=O)N3CCN(CC3)c4ccccn4",
+        "mw": 500.0,
+        "clogp": 5.0,
+        "hbd": 5,
+        "hba": 10,
+        "psa": 140.0,
+        "qed": 0.3,
+        "ames": 0,
+        "solubility": -6.0,
+        "herg_ic50_uM": 12.0
+      },
+      "raw_output": {
+        "result": {
+          "evaluated": 8,
+          "gates": [
+            {
+              "criterion": "ames",
+              "value": 0,
+              "passed": true,
+              "label": "Ames mutagenicity = negative (hard block)"
+            },
+            {
+              "criterion": "clogp",
+              "value": 5,
+              "passed": true,
+              "label": "cLogP ≤ 5 (Lipinski)"
+            },
+            {
+              "criterion": "hba",
+              "value": 10,
+              "passed": true,
+              "label": "H-bond acceptors ≤ 10 (Lipinski)"
+            },
+            {
+              "criterion": "hbd",
+              "value": 5,
+              "passed": true,
+              "label": "H-bond donors ≤ 5 (Lipinski)"
+            },
+            {
+              "criterion": "mw",
+              "value": 500,
+              "passed": true,
+              "label": "Molecular weight ≤ 500 (Lipinski)"
+            },
+            {
+              "criterion": "psa",
+              "value": 140,
+              "passed": true,
+              "label": "PSA ≤ 140 Å²"
+            },
+            {
+              "criterion": "qed",
+              "value": 0.3,
+              "passed": true,
+              "label": "QED ≥ 0.3"
+            },
+            {
+              "criterion": "solubility",
+              "value": -6,
+              "passed": true,
+              "label": "LogS ≥ -6"
+            }
+          ],
+          "hard_blocked": false,
+          "note": "Soft gate failures may be acceptable with justification. Hard blocks require structural changes.",
+          "overall_pass": true,
+          "smiles": "COc1ccc(cc1)C(=O)Nc2ccc(cc2)S(=O)(=O)N3CCN(CC3)c4ccccn4"
+        },
+        "tool": "check_advancement_gate"
+      },
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "1",
+      "item": "CMP-03",
+      "tool": "check_advancement_gate",
+      "arguments": {
+        "id": "CMP-03",
+        "smiles": "Cc1ccc(cc1)C(=O)Nc2cccc(c2)C(=O)N3CCCC3",
+        "mw": 308.4,
+        "clogp": 2.6,
+        "hbd": 1,
+        "hba": 3,
+        "psa": 49.4,
+        "qed": 0.91,
+        "ames": 0,
+        "solubility": -3.1,
+        "herg_ic50_uM": 0.62
+      },
+      "raw_output": {
+        "error": "[DRUGDISC] hERG HARD BLOCK: predicted hERG IC50 = 0.620 μM < 1.00 μM. Severe cardiac liability (Torsades de Pointes risk). Attach a mitigation plan (mitigation=true, mitigation_notes=<patch-clamp confirmation | structural modification | ion-channel selectivity panel>) before retrying.",
+        "tool": "check_advancement_gate"
+      },
+      "stage": "executor: retained historical record",
+      "annotation": "error-only response; no result object or per-criterion output"
+    },
+    {
+      "step": "1",
+      "item": "CMP-04",
+      "tool": "check_advancement_gate",
+      "arguments": {
+        "id": "CMP-04",
+        "smiles": "O=C(Nc1ccc(cc1)N(=O)=O)c2ccccc2",
+        "mw": 242.2,
+        "clogp": 2.2,
+        "hbd": 1,
+        "hba": 4,
+        "psa": 75.0,
+        "qed": 0.66,
+        "ames": 1,
+        "solubility": -3.4,
+        "herg_ic50_uM": 41.0
+      },
+      "raw_output": {
+        "result": {
+          "evaluated": 8,
+          "gates": [
+            {
+              "criterion": "ames",
+              "value": 1,
+              "passed": false,
+              "hard_block": true,
+              "label": "Ames mutagenicity = negative (hard block)"
+            },
+            {
+              "criterion": "clogp",
+              "value": 2.2,
+              "passed": true,
+              "label": "cLogP ≤ 5 (Lipinski)"
+            },
+            {
+              "criterion": "hba",
+              "value": 4,
+              "passed": true,
+              "label": "H-bond acceptors ≤ 10 (Lipinski)"
+            },
+            {
+              "criterion": "hbd",
+              "value": 1,
+              "passed": true,
+              "label": "H-bond donors ≤ 5 (Lipinski)"
+            },
+            {
+              "criterion": "mw",
+              "value": 242.2,
+              "passed": true,
+              "label": "Molecular weight ≤ 500 (Lipinski)"
+            },
+            {
+              "criterion": "psa",
+              "value": 75,
+              "passed": true,
+              "label": "PSA ≤ 140 Å²"
+            },
+            {
+              "criterion": "qed",
+              "value": 0.66,
+              "passed": true,
+              "label": "QED ≥ 0.3"
+            },
+            {
+              "criterion": "solubility",
+              "value": -3.4,
+              "passed": true,
+              "label": "LogS ≥ -6"
+            }
+          ],
+          "hard_blocked": true,
+          "note": "HARD BLOCK: Ames-positive compounds cannot advance. Consider structural modification to remove mutagenic liability.",
+          "overall_pass": false,
+          "smiles": "O=C(Nc1ccc(cc1)N(=O)=O)c2ccccc2"
+        },
+        "tool": "check_advancement_gate"
+      },
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "1",
+      "item": "CMP-05",
+      "tool": "check_advancement_gate",
+      "arguments": {
+        "id": "CMP-05",
+        "smiles": "CC(C)(C)c1ccc(cc1)C(=O)Nc2ccc(cc2)Oc3ccc(cc3)C(F)(F)F",
+        "mw": 548.6,
+        "clogp": 5.6,
+        "hbd": 1,
+        "hba": 5,
+        "psa": 51.2,
+        "qed": 0.41,
+        "ames": 0,
+        "solubility": -5.4,
+        "herg_ic50_uM": 25.0
+      },
+      "raw_output": {
+        "result": {
+          "evaluated": 8,
+          "gates": [
+            {
+              "criterion": "ames",
+              "value": 0,
+              "passed": true,
+              "label": "Ames mutagenicity = negative (hard block)"
+            },
+            {
+              "criterion": "clogp",
+              "value": 5.6,
+              "passed": false,
+              "label": "cLogP ≤ 5 (Lipinski)"
+            },
+            {
+              "criterion": "hba",
+              "value": 5,
+              "passed": true,
+              "label": "H-bond acceptors ≤ 10 (Lipinski)"
+            },
+            {
+              "criterion": "hbd",
+              "value": 1,
+              "passed": true,
+              "label": "H-bond donors ≤ 5 (Lipinski)"
+            },
+            {
+              "criterion": "mw",
+              "value": 548.6,
+              "passed": false,
+              "label": "Molecular weight ≤ 500 (Lipinski)"
+            },
+            {
+              "criterion": "psa",
+              "value": 51.2,
+              "passed": true,
+              "label": "PSA ≤ 140 Å²"
+            },
+            {
+              "criterion": "qed",
+              "value": 0.41,
+              "passed": true,
+              "label": "QED ≥ 0.3"
+            },
+            {
+              "criterion": "solubility",
+              "value": -5.4,
+              "passed": true,
+              "label": "LogS ≥ -6"
+            }
+          ],
+          "hard_blocked": false,
+          "note": "Soft gate failures may be acceptable with justification. Hard blocks require structural changes.",
+          "overall_pass": false,
+          "smiles": "CC(C)(C)c1ccc(cc1)C(=O)Nc2ccc(cc2)Oc3ccc(cc3)C(F)(F)F"
+        },
+        "tool": "check_advancement_gate"
+      },
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "1",
+      "item": "CMP-06",
+      "tool": "check_advancement_gate",
+      "arguments": {
+        "id": "CMP-06",
+        "smiles": "Cc1nc(sc1)C(=O)Nc2ccc(cc2)C(=O)N3CCOCC3",
+        "mw": 331.4,
+        "clogp": 1.8,
+        "hbd": 1,
+        "hba": 5,
+        "psa": 71.5,
+        "qed": 0.79,
+        "ames": 0,
+        "solubility": -2.9,
+        "herg_ic50_uM": 28.0,
+        "cyp3a4_ic50_uM": 0.45,
+        "ddi_analysis_done": false
+      },
+      "raw_output": {
+        "error": "[DRUGDISC] CYP450 HARD BLOCK: CYP3A4 IC50 0.450 μM < 1.00 μM (strong inhibitor) and no DDI analysis on file. Run ddi_analyze and attach ddi_analysis_done=true before advancement."
+      },
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "2",
+      "item": "CMP-01",
+      "tool": "herg_predict",
+      "arguments": {
+        "smiles": "CC(=O)Nc1ccc(cc1)C(=O)NC2CCOCC2"
+      },
+      "raw_output": {
+        "result": {
+          "error": "No module named 'rdkit'",
+          "install": "pip install rdkit"
+        },
+        "tool": "herg_predict"
+      },
+      "output_type": "missing_dependency_error; not a prediction",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "2",
+      "item": "CMP-02",
+      "tool": "herg_predict",
+      "arguments": {
+        "smiles": "COc1ccc(cc1)C(=O)Nc2ccc(cc2)S(=O)(=O)N3CCN(CC3)c4ccccn4"
+      },
+      "raw_output": {
+        "result": {
+          "error": "No module named 'rdkit'",
+          "install": "pip install rdkit"
+        },
+        "tool": "herg_predict"
+      },
+      "output_type": "missing_dependency_error; not a prediction",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "2",
+      "item": "CMP-03",
+      "tool": "herg_predict",
+      "arguments": {
+        "smiles": "Cc1ccc(cc1)C(=O)Nc2cccc(c2)C(=O)N3CCCC3"
+      },
+      "raw_output": {
+        "result": {
+          "error": "No module named 'rdkit'",
+          "install": "pip install rdkit"
+        },
+        "tool": "herg_predict"
+      },
+      "output_type": "missing_dependency_error; not a prediction",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "2",
+      "item": "CMP-04",
+      "tool": "herg_predict",
+      "arguments": {
+        "smiles": "O=C(Nc1ccc(cc1)N(=O)=O)c2ccccc2"
+      },
+      "raw_output": {
+        "result": {
+          "error": "No module named 'rdkit'",
+          "install": "pip install rdkit"
+        },
+        "tool": "herg_predict"
+      },
+      "output_type": "missing_dependency_error; not a prediction",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "2",
+      "item": "CMP-05",
+      "tool": "herg_predict",
+      "arguments": {
+        "smiles": "CC(C)(C)c1ccc(cc1)C(=O)Nc2ccc(cc2)Oc3ccc(cc3)C(F)(F)F"
+      },
+      "raw_output": {
+        "result": {
+          "error": "No module named 'rdkit'",
+          "install": "pip install rdkit"
+        },
+        "tool": "herg_predict"
+      },
+      "output_type": "missing_dependency_error; not a prediction",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "2",
+      "item": "CMP-06",
+      "tool": "herg_predict",
+      "arguments": {
+        "smiles": "Cc1nc(sc1)C(=O)Nc2ccc(cc2)C(=O)N3CCOCC3"
+      },
+      "raw_output": {
+        "result": {
+          "error": "No module named 'rdkit'",
+          "install": "pip install rdkit"
+        },
+        "tool": "herg_predict"
+      },
+      "output_type": "missing_dependency_error; not a prediction",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "3",
+      "item": "CMP-01",
+      "tool": "cyp_predict",
+      "arguments": {
+        "smiles": "CC(=O)Nc1ccc(cc1)C(=O)NC2CCOCC2"
+      },
+      "raw_output": {
+        "result": {
+          "error": "No module named 'rdkit'",
+          "install": "pip install rdkit"
+        },
+        "tool": "cyp_predict"
+      },
+      "output_type": "missing_dependency_error; not a prediction",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "3",
+      "item": "CMP-02",
+      "tool": "cyp_predict",
+      "arguments": {
+        "smiles": "COc1ccc(cc1)C(=O)Nc2ccc(cc2)S(=O)(=O)N3CCN(CC3)c4ccccn4"
+      },
+      "raw_output": {
+        "result": {
+          "error": "No module named 'rdkit'",
+          "install": "pip install rdkit"
+        },
+        "tool": "cyp_predict"
+      },
+      "output_type": "missing_dependency_error; not a prediction",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "3",
+      "item": "CMP-03",
+      "tool": "cyp_predict",
+      "arguments": {
+        "smiles": "Cc1ccc(cc1)C(=O)Nc2cccc(c2)C(=O)N3CCCC3"
+      },
+      "raw_output": {
+        "result": {
+          "error": "No module named 'rdkit'",
+          "install": "pip install rdkit"
+        },
+        "tool": "cyp_predict"
+      },
+      "output_type": "missing_dependency_error; not a prediction",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "3",
+      "item": "CMP-04",
+      "tool": "cyp_predict",
+      "arguments": {
+        "smiles": "O=C(Nc1ccc(cc1)N(=O)=O)c2ccccc2"
+      },
+      "raw_output": {
+        "result": {
+          "error": "No module named 'rdkit'",
+          "install": "pip install rdkit"
+        },
+        "tool": "cyp_predict"
+      },
+      "output_type": "missing_dependency_error; not a prediction",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "3",
+      "item": "CMP-05",
+      "tool": "cyp_predict",
+      "arguments": {
+        "smiles": "CC(C)(C)c1ccc(cc1)C(=O)Nc2ccc(cc2)Oc3ccc(cc3)C(F)(F)F"
+      },
+      "raw_output": {
+        "result": {
+          "error": "No module named 'rdkit'",
+          "install": "pip install rdkit"
+        },
+        "tool": "cyp_predict"
+      },
+      "output_type": "missing_dependency_error; not a prediction",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "3",
+      "item": "CMP-06",
+      "tool": "cyp_predict",
+      "arguments": {
+        "smiles": "Cc1nc(sc1)C(=O)Nc2ccc(cc2)C(=O)N3CCOCC3"
+      },
+      "raw_output": {
+        "result": {
+          "error": "No module named 'rdkit'",
+          "install": "pip install rdkit"
+        },
+        "tool": "cyp_predict"
+      },
+      "output_type": "missing_dependency_error; not a prediction",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "4",
+      "item": "CMP-06",
+      "tool": "ddi_analyze",
+      "arguments": {
+        "cyp3a4_ic50_uM": 0.45,
+        "source": "inputs/compounds.json CMP-06 (measured/supplied)",
+        "notes": "Informational only; not attached to the gate record; ddi_analysis_done remains false"
+      },
+      "raw_output": {
+        "error": "[DRUGDISC] CYP450 HARD BLOCK: CYP3A4 IC50 0.450 μM < 1.00 μM (strong inhibitor) and no DDI analysis on file. Run ddi_analyze and attach ddi_analysis_done=true before advancement."
+      },
+      "output_type": "safety refusal; not a completed DDI analysis",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "5",
+      "item": "CMP-01",
+      "tool": "pains_filter",
+      "arguments": {
+        "smiles": "CC(=O)Nc1ccc(cc1)C(=O)NC2CCOCC2"
+      },
+      "raw_output": {
+        "result": {
+          "error": "No module named 'rdkit'",
+          "install": "pip install rdkit"
+        },
+        "tool": "pains_filter"
+      },
+      "output_type": "missing_dependency_error; not a clear PAINS result",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "5",
+      "item": "CMP-02",
+      "tool": "pains_filter",
+      "arguments": {
+        "smiles": "COc1ccc(cc1)C(=O)Nc2ccc(cc2)S(=O)(=O)N3CCN(CC3)c4ccccn4"
+      },
+      "raw_output": {
+        "result": {
+          "error": "No module named 'rdkit'",
+          "install": "pip install rdkit"
+        },
+        "tool": "pains_filter"
+      },
+      "output_type": "missing_dependency_error; not a clear PAINS result",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "5",
+      "item": "CMP-03",
+      "tool": "pains_filter",
+      "arguments": {
+        "smiles": "Cc1ccc(cc1)C(=O)Nc2cccc(c2)C(=O)N3CCCC3"
+      },
+      "raw_output": {
+        "result": {
+          "error": "No module named 'rdkit'",
+          "install": "pip install rdkit"
+        },
+        "tool": "pains_filter"
+      },
+      "output_type": "missing_dependency_error; not a clear PAINS result",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "5",
+      "item": "CMP-04",
+      "tool": "pains_filter",
+      "arguments": {
+        "smiles": "O=C(Nc1ccc(cc1)N(=O)=O)c2ccccc2"
+      },
+      "raw_output": {
+        "result": {
+          "error": "No module named 'rdkit'",
+          "install": "pip install rdkit"
+        },
+        "tool": "pains_filter"
+      },
+      "output_type": "missing_dependency_error; not a clear PAINS result",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "5",
+      "item": "CMP-05",
+      "tool": "pains_filter",
+      "arguments": {
+        "smiles": "CC(C)(C)c1ccc(cc1)C(=O)Nc2ccc(cc2)Oc3ccc(cc3)C(F)(F)F"
+      },
+      "raw_output": {
+        "result": {
+          "error": "No module named 'rdkit'",
+          "install": "pip install rdkit"
+        },
+        "tool": "pains_filter"
+      },
+      "output_type": "missing_dependency_error; not a clear PAINS result",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "5",
+      "item": "CMP-06",
+      "tool": "pains_filter",
+      "arguments": {
+        "smiles": "Cc1nc(sc1)C(=O)Nc2ccc(cc2)C(=O)N3CCOCC3"
+      },
+      "raw_output": {
+        "result": {
+          "error": "No module named 'rdkit'",
+          "install": "pip install rdkit"
+        },
+        "tool": "pains_filter"
+      },
+      "output_type": "missing_dependency_error; not a clear PAINS result",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "6a",
+      "item": "CMP-01",
+      "tool": "compute_2d_properties",
+      "arguments": {
+        "smiles": "CC(=O)Nc1ccc(cc1)C(=O)NC2CCOCC2"
+      },
+      "raw_output": {
+        "result": {
+          "exit_code": 1,
+          "label": "2d-properties",
+          "output": "{\"error\": \"RDKit not installed\"}",
+          "status": "error"
+        },
+        "tool": "compute_2d_properties"
+      },
+      "output_type": "missing_dependency_error; not a recomputation",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "6a",
+      "item": "CMP-02",
+      "tool": "compute_2d_properties",
+      "arguments": {
+        "smiles": "COc1ccc(cc1)C(=O)Nc2ccc(cc2)S(=O)(=O)N3CCN(CC3)c4ccccn4"
+      },
+      "raw_output": {
+        "result": {
+          "exit_code": 1,
+          "label": "2d-properties",
+          "output": "{\"error\": \"RDKit not installed\"}",
+          "status": "error"
+        },
+        "tool": "compute_2d_properties"
+      },
+      "output_type": "missing_dependency_error; not a recomputation",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "6a",
+      "item": "CMP-03",
+      "tool": "compute_2d_properties",
+      "arguments": {
+        "smiles": "Cc1ccc(cc1)C(=O)Nc2cccc(c2)C(=O)N3CCCC3"
+      },
+      "raw_output": {
+        "result": {
+          "exit_code": 1,
+          "label": "2d-properties",
+          "output": "{\"error\": \"RDKit not installed\"}",
+          "status": "error"
+        },
+        "tool": "compute_2d_properties"
+      },
+      "output_type": "missing_dependency_error; not a recomputation",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "6a",
+      "item": "CMP-04",
+      "tool": "compute_2d_properties",
+      "arguments": {
+        "smiles": "O=C(Nc1ccc(cc1)N(=O)=O)c2ccccc2"
+      },
+      "raw_output": {
+        "result": {
+          "exit_code": 1,
+          "label": "2d-properties",
+          "output": "{\"error\": \"RDKit not installed\"}",
+          "status": "error"
+        },
+        "tool": "compute_2d_properties"
+      },
+      "output_type": "missing_dependency_error; not a recomputation",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "6a",
+      "item": "CMP-05",
+      "tool": "compute_2d_properties",
+      "arguments": {
+        "smiles": "CC(C)(C)c1ccc(cc1)C(=O)Nc2ccc(cc2)Oc3ccc(cc3)C(F)(F)F"
+      },
+      "raw_output": {
+        "result": {
+          "exit_code": 1,
+          "label": "2d-properties",
+          "output": "{\"error\": \"RDKit not installed\"}",
+          "status": "error"
+        },
+        "tool": "compute_2d_properties"
+      },
+      "output_type": "missing_dependency_error; not a recomputation",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "6a",
+      "item": "CMP-06",
+      "tool": "compute_2d_properties",
+      "arguments": {
+        "smiles": "Cc1nc(sc1)C(=O)Nc2ccc(cc2)C(=O)N3CCOCC3"
+      },
+      "raw_output": {
+        "result": {
+          "exit_code": 1,
+          "label": "2d-properties",
+          "output": "{\"error\": \"RDKit not installed\"}",
+          "status": "error"
+        },
+        "tool": "compute_2d_properties"
+      },
+      "output_type": "missing_dependency_error; not a recomputation",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "6b",
+      "item": "CMP-01",
+      "tool": "predict_admet",
+      "arguments": {
+        "smiles": "CC(=O)Nc1ccc(cc1)C(=O)NC2CCOCC2"
+      },
+      "raw_output": {
+        "result": {
+          "exit_code": 1,
+          "label": "admet-prediction",
+          "output": "Traceback (most recent call last):\r\n  File \"<string>\", line 6, in <module>\r\n    from admet_ai import ADMETModel\r\nModuleNotFoundError: No module named 'admet_ai'\r\n\r\nDuring handling of the above exception, another exception occurred:\r\n\r\nTraceback (most recent call last):\r\n  File \"<string>\", line 18, in <module>\r\n    from rdkit import Chem\r\nModuleNotFoundError: No module named 'rdkit'",
+          "status": "error"
+        },
+        "tool": "predict_admet"
+      },
+      "output_type": "missing_dependency_error; not an ADMET prediction",
+      "note": "corrected invocation with the exact input SMILES",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "6b",
+      "item": "CMP-02",
+      "tool": "predict_admet",
+      "arguments": {
+        "smiles": "COc1ccc(cc1)C(=O)Nc2ccc(cc2)S(=O)(=O)N3CCN(CC3)c4ccccn4"
+      },
+      "raw_output": {
+        "result": {
+          "exit_code": 1,
+          "label": "admet-prediction",
+          "output": "Traceback (most recent call last):\r\n  File \"<string>\", line 6, in <module>\r\n    from admet_ai import ADMETModel\r\nModuleNotFoundError: No module named 'admet_ai'\r\n\r\nDuring handling of the above exception, another exception occurred:\r\n\r\nTraceback (most recent call last):\r\n  File \"<string>\", line 18, in <module>\r\n    from rdkit import Chem\r\nModuleNotFoundError: No module named 'rdkit'",
+          "status": "error"
+        },
+        "tool": "predict_admet"
+      },
+      "output_type": "missing_dependency_error; not an ADMET prediction",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "6b",
+      "item": "CMP-03",
+      "tool": "predict_admet",
+      "arguments": {
+        "smiles": "Cc1ccc(cc1)C(=O)Nc2cccc(c2)C(=O)N3CCCC3"
+      },
+      "raw_output": {
+        "result": {
+          "exit_code": 1,
+          "label": "admet-prediction",
+          "output": "Traceback (most recent call last):\r\n  File \"<string>\", line 6, in <module>\r\n    from admet_ai import ADMETModel\r\nModuleNotFoundError: No module named 'admet_ai'\r\n\r\nDuring handling of the above exception, another exception occurred:\r\n\r\nTraceback (most recent call last):\r\n  File \"<string>\", line 18, in <module>\r\n    from rdkit import Chem\r\nModuleNotFoundError: No module named 'rdkit'",
+          "status": "error"
+        },
+        "tool": "predict_admet"
+      },
+      "output_type": "missing_dependency_error; not an ADMET prediction",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "6b",
+      "item": "CMP-04",
+      "tool": "predict_admet",
+      "arguments": {
+        "smiles": "O=C(Nc1ccc(cc1)N(=O)=O)c2ccccc2"
+      },
+      "raw_output": {
+        "result": {
+          "exit_code": 1,
+          "label": "admet-prediction",
+          "output": "Traceback (most recent call last):\r\n  File \"<string>\", line 6, in <module>\r\n    from admet_ai import ADMETModel\r\nModuleNotFoundError: No module named 'admet_ai'\r\n\r\nDuring handling of the above exception, another exception occurred:\r\n\r\nTraceback (most recent call last):\r\n  File \"<string>\", line 18, in <module>\r\n    from rdkit import Chem\r\nModuleNotFoundError: No module named 'rdkit'",
+          "status": "error"
+        },
+        "tool": "predict_admet"
+      },
+      "output_type": "missing_dependency_error; not an ADMET prediction",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "6b",
+      "item": "CMP-05",
+      "tool": "predict_admet",
+      "arguments": {
+        "smiles": "CC(C)(C)c1ccc(cc1)C(=O)Nc2ccc(cc2)Oc3ccc(cc3)C(F)(F)F"
+      },
+      "raw_output": {
+        "result": {
+          "exit_code": 1,
+          "label": "admet-prediction",
+          "output": "Traceback (most recent call last):\r\n  File \"<string>\", line 6, in <module>\r\n    from admet_ai import ADMETModel\r\nModuleNotFoundError: No module named 'admet_ai'\r\n\r\nDuring handling of the above exception, another exception occurred:\r\n\r\nTraceback (most recent call last):\r\n  File \"<string>\", line 18, in <module>\r\n    from rdkit import Chem\r\nModuleNotFoundError: No module named 'rdkit'",
+          "status": "error"
+        },
+        "tool": "predict_admet"
+      },
+      "output_type": "missing_dependency_error; not an ADMET prediction",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "6b",
+      "item": "CMP-06",
+      "tool": "predict_admet",
+      "arguments": {
+        "smiles": "Cc1nc(sc1)C(=O)Nc2ccc(cc2)C(=O)N3CCOCC3"
+      },
+      "raw_output": {
+        "result": {
+          "exit_code": 1,
+          "label": "admet-prediction",
+          "output": "Traceback (most recent call last):\r\n  File \"<string>\", line 6, in <module>\r\n    from admet_ai import ADMETModel\r\nModuleNotFoundError: No module named 'admet_ai'\r\n\r\nDuring handling of the above exception, another exception occurred:\r\n\r\nTraceback (most recent call last):\r\n  File \"<string>\", line 18, in <module>\r\n    from rdkit import Chem\r\nModuleNotFoundError: No module named 'rdkit'",
+          "status": "error"
+        },
+        "tool": "predict_admet"
+      },
+      "output_type": "missing_dependency_error; not an ADMET prediction",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "7",
+      "tool": "abstention_gate",
+      "arguments": {
+        "confidence": 0.99,
+        "domain": "drugdisc",
+        "stakes": "high"
+      },
+      "raw_output": {
+        "answer_at": 0.5,
+        "band": "very high confidence",
+        "confidence": 0.99,
+        "disposition": "answer",
+        "guidance": "This gate decides ANSWER vs ABSTAIN vs DEFER from a confidence estimate and the domain's stakes — it does not measure confidence for you. Supply your HONEST calibrated confidence (from an eval, the uncertainty layer, or a sober self-assessment), not an optimistic default. If you have no basis to estimate confidence, omit it: the gate then fails closed (defers on high stakes, otherwise abstains). Honor the disposition: on ABSTAIN, decline and say what would raise your confidence; on DEFER, escalate to a human and do not act. An explicit, informed user instruction to proceed anyway overrides the gate.",
+        "hedge": "I'm confident that:",
+        "measured": true,
+        "message": "",
+        "reason": "confidence 0.99 >= answer threshold 0.50 (very high confidence)",
+        "regulated": false,
+        "stakes": "high"
+      },
+      "output_type": "calibration disposition only; not biological validation",
+      "stage": "executor: retained historical record"
+    },
+    {
+      "step": "1",
+      "stage": "reviser",
+      "item": "CMP-01",
+      "tool": "check_advancement_gate",
+      "arguments": {
+        "id": "CMP-01",
+        "smiles": "CC(=O)Nc1ccc(cc1)C(=O)NC2CCOCC2",
+        "mw": 262.3,
+        "clogp": 0.9,
+        "hbd": 2,
+        "hba": 4,
+        "psa": 67.4,
+        "qed": 0.83,
+        "ames": 0,
+        "solubility": -2.4,
+        "herg_ic50_uM": 34.0
+      },
+      "raw_output": {
+        "result": {
+          "evaluated": 8,
+          "gates": [
+            {
+              "criterion": "ames",
+              "value": 0,
+              "passed": true,
+              "label": "Ames mutagenicity = negative (hard block)"
+            },
+            {
+              "criterion": "clogp",
+              "value": 0.9,
+              "passed": true,
+              "label": "cLogP ≤ 5 (Lipinski)"
+            },
+            {
+              "criterion": "hba",
+              "value": 4,
+              "passed": true,
+              "label": "H-bond acceptors ≤ 10 (Lipinski)"
+            },
+            {
+              "criterion": "hbd",
+              "value": 2,
+              "passed": true,
+              "label": "H-bond donors ≤ 5 (Lipinski)"
+            },
+            {
+              "criterion": "mw",
+              "value": 262.3,
+              "passed": true,
+              "label": "Molecular weight ≤ 500 (Lipinski)"
+            },
+            {
+              "criterion": "psa",
+              "value": 67.4,
+              "passed": true,
+              "label": "PSA ≤ 140 Å²"
+            },
+            {
+              "criterion": "qed",
+              "value": 0.83,
+              "passed": true,
+              "label": "QED ≥ 0.3"
+            },
+            {
+              "criterion": "solubility",
+              "value": -2.4,
+              "passed": true,
+              "label": "LogS ≥ -6"
+            }
+          ],
+          "hard_blocked": false,
+          "note": "Soft gate failures may be acceptable with justification. Hard blocks require structural changes.",
+          "overall_pass": true,
+          "smiles": "CC(=O)Nc1ccc(cc1)C(=O)NC2CCOCC2"
+        },
+        "tool": "check_advancement_gate"
+      }
+    },
+    {
+      "step": "1",
+      "stage": "reviser",
+      "item": "CMP-02",
+      "tool": "check_advancement_gate",
+      "arguments": {
+        "id": "CMP-02",
+        "smiles": "COc1ccc(cc1)C(=O)Nc2ccc(cc2)S(=O)(=O)N3CCN(CC3)c4ccccn4",
+        "mw": 500.0,
+        "clogp": 5.0,
+        "hbd": 5,
+        "hba": 10,
+        "psa": 140.0,
+        "qed": 0.3,
+        "ames": 0,
+        "solubility": -6.0,
+        "herg_ic50_uM": 12.0
+      },
+      "raw_output": {
+        "result": {
+          "evaluated": 8,
+          "gates": [
+            {
+              "criterion": "ames",
+              "value": 0,
+              "passed": true,
+              "label": "Ames mutagenicity = negative (hard block)"
+            },
+            {
+              "criterion": "clogp",
+              "value": 5,
+              "passed": true,
+              "label": "cLogP ≤ 5 (Lipinski)"
+            },
+            {
+              "criterion": "hba",
+              "value": 10,
+              "passed": true,
+              "label": "H-bond acceptors ≤ 10 (Lipinski)"
+            },
+            {
+              "criterion": "hbd",
+              "value": 5,
+              "passed": true,
+              "label": "H-bond donors ≤ 5 (Lipinski)"
+            },
+            {
+              "criterion": "mw",
+              "value": 500,
+              "passed": true,
+              "label": "Molecular weight ≤ 500 (Lipinski)"
+            },
+            {
+              "criterion": "psa",
+              "value": 140,
+              "passed": true,
+              "label": "PSA ≤ 140 Å²"
+            },
+            {
+              "criterion": "qed",
+              "value": 0.3,
+              "passed": true,
+              "label": "QED ≥ 0.3"
+            },
+            {
+              "criterion": "solubility",
+              "value": -6,
+              "passed": true,
+              "label": "LogS ≥ -6"
+            }
+          ],
+          "hard_blocked": false,
+          "note": "Soft gate failures may be acceptable with justification. Hard blocks require structural changes.",
+          "overall_pass": true,
+          "smiles": "COc1ccc(cc1)C(=O)Nc2ccc(cc2)S(=O)(=O)N3CCN(CC3)c4ccccn4"
+        },
+        "tool": "check_advancement_gate"
+      }
+    },
+    {
+      "step": "1",
+      "stage": "reviser",
+      "item": "CMP-03",
+      "tool": "check_advancement_gate",
+      "arguments": {
+        "id": "CMP-03",
+        "smiles": "Cc1ccc(cc1)C(=O)Nc2cccc(c2)C(=O)N3CCCC3",
+        "mw": 308.4,
+        "clogp": 2.6,
+        "hbd": 1,
+        "hba": 3,
+        "psa": 49.4,
+        "qed": 0.91,
+        "ames": 0,
+        "solubility": -3.1,
+        "herg_ic50_uM": 0.62
+      },
+      "raw_output": {
+        "error": "[DRUGDISC] hERG HARD BLOCK: predicted hERG IC50 = 0.620 μM < 1.00 μM. Severe cardiac liability (Torsades de Pointes risk). Attach a mitigation plan (mitigation=true, mitigation_notes=<patch-clamp confirmation | structural modification | ion-channel selectivity panel>) before retrying."
+      }
+    },
+    {
+      "step": "1",
+      "stage": "reviser",
+      "item": "CMP-04",
+      "tool": "check_advancement_gate",
+      "arguments": {
+        "id": "CMP-04",
+        "smiles": "O=C(Nc1ccc(cc1)N(=O)=O)c2ccccc2",
+        "mw": 242.2,
+        "clogp": 2.2,
+        "hbd": 1,
+        "hba": 4,
+        "psa": 75.0,
+        "qed": 0.66,
+        "ames": 1,
+        "solubility": -3.4,
+        "herg_ic50_uM": 41.0
+      },
+      "raw_output": {
+        "result": {
+          "evaluated": 8,
+          "gates": [
+            {
+              "criterion": "ames",
+              "value": 1,
+              "passed": false,
+              "hard_block": true,
+              "label": "Ames mutagenicity = negative (hard block)"
+            },
+            {
+              "criterion": "clogp",
+              "value": 2.2,
+              "passed": true,
+              "label": "cLogP ≤ 5 (Lipinski)"
+            },
+            {
+              "criterion": "hba",
+              "value": 4,
+              "passed": true,
+              "label": "H-bond acceptors ≤ 10 (Lipinski)"
+            },
+            {
+              "criterion": "hbd",
+              "value": 1,
+              "passed": true,
+              "label": "H-bond donors ≤ 5 (Lipinski)"
+            },
+            {
+              "criterion": "mw",
+              "value": 242.2,
+              "passed": true,
+              "label": "Molecular weight ≤ 500 (Lipinski)"
+            },
+            {
+              "criterion": "psa",
+              "value": 75,
+              "passed": true,
+              "label": "PSA ≤ 140 Å²"
+            },
+            {
+              "criterion": "qed",
+              "value": 0.66,
+              "passed": true,
+              "label": "QED ≥ 0.3"
+            },
+            {
+              "criterion": "solubility",
+              "value": -3.4,
+              "passed": true,
+              "label": "LogS ≥ -6"
+            }
+          ],
+          "hard_blocked": true,
+          "note": "HARD BLOCK: Ames-positive compounds cannot advance. Consider structural modification to remove mutagenic liability.",
+          "overall_pass": false,
+          "smiles": "O=C(Nc1ccc(cc1)N(=O)=O)c2ccccc2"
+        },
+        "tool": "check_advancement_gate"
+      }
+    },
+    {
+      "step": "1",
+      "stage": "reviser",
+      "item": "CMP-05",
+      "tool": "check_advancement_gate",
+      "arguments": {
+        "id": "CMP-05",
+        "smiles": "CC(C)(C)c1ccc(cc1)C(=O)Nc2ccc(cc2)Oc3ccc(cc3)C(F)(F)F",
+        "mw": 548.6,
+        "clogp": 5.6,
+        "hbd": 1,
+        "hba": 5,
+        "psa": 51.2,
+        "qed": 0.41,
+        "ames": 0,
+        "solubility": -5.4,
+        "herg_ic50_uM": 25.0
+      },
+      "raw_output": {
+        "result": {
+          "evaluated": 8,
+          "gates": [
+            {
+              "criterion": "ames",
+              "value": 0,
+              "passed": true,
+              "label": "Ames mutagenicity = negative (hard block)"
+            },
+            {
+              "criterion": "clogp",
+              "value": 5.6,
+              "passed": false,
+              "label": "cLogP ≤ 5 (Lipinski)"
+            },
+            {
+              "criterion": "hba",
+              "value": 5,
+              "passed": true,
+              "label": "H-bond acceptors ≤ 10 (Lipinski)"
+            },
+            {
+              "criterion": "hbd",
+              "value": 1,
+              "passed": true,
+              "label": "H-bond donors ≤ 5 (Lipinski)"
+            },
+            {
+              "criterion": "mw",
+              "value": 548.6,
+              "passed": false,
+              "label": "Molecular weight ≤ 500 (Lipinski)"
+            },
+            {
+              "criterion": "psa",
+              "value": 51.2,
+              "passed": true,
+              "label": "PSA ≤ 140 Å²"
+            },
+            {
+              "criterion": "qed",
+              "value": 0.41,
+              "passed": true,
+              "label": "QED ≥ 0.3"
+            },
+            {
+              "criterion": "solubility",
+              "value": -5.4,
+              "passed": true,
+              "label": "LogS ≥ -6"
+            }
+          ],
+          "hard_blocked": false,
+          "note": "Soft gate failures may be acceptable with justification. Hard blocks require structural changes.",
+          "overall_pass": false,
+          "smiles": "CC(C)(C)c1ccc(cc1)C(=O)Nc2ccc(cc2)Oc3ccc(cc3)C(F)(F)F"
+        },
+        "tool": "check_advancement_gate"
+      }
+    },
+    {
+      "step": "1",
+      "stage": "reviser",
+      "item": "CMP-06",
+      "tool": "check_advancement_gate",
+      "arguments": {
+        "id": "CMP-06",
+        "smiles": "Cc1nc(sc1)C(=O)Nc2ccc(cc2)C(=O)N3CCOCC3",
+        "mw": 331.4,
+        "clogp": 1.8,
+        "hbd": 1,
+        "hba": 5,
+        "psa": 71.5,
+        "qed": 0.79,
+        "ames": 0,
+        "solubility": -2.9,
+        "herg_ic50_uM": 28.0,
+        "cyp3a4_ic50_uM": 0.45,
+        "ddi_analysis_done": false
+      },
+      "raw_output": {
+        "error": "[DRUGDISC] CYP450 HARD BLOCK: CYP3A4 IC50 0.450 μM < 1.00 μM (strong inhibitor) and no DDI analysis on file. Run ddi_analyze and attach ddi_analysis_done=true before advancement."
+      }
+    },
+    {
+      "step": "6a",
+      "stage": "reviser",
+      "item": "CMP-01",
+      "tool": "compute_2d_properties",
+      "arguments": {
+        "smiles": "CC(=O)Nc1ccc(cc1)C(=O)NC2CCOCC2"
+      },
+      "raw_output": {
+        "result": {
+          "exit_code": 1,
+          "label": "2d-properties",
+          "output": "{\"error\": \"RDKit not installed\"}",
+          "status": "error"
+        },
+        "tool": "compute_2d_properties"
+      },
+      "output_type": "missing dependency; no scientific result"
+    },
+    {
+      "step": "2",
+      "stage": "reviser",
+      "item": "CMP-03",
+      "tool": "herg_predict",
+      "arguments": {
+        "smiles": "Cc1ccc(cc1)C(=O)Nc2cccc(c2)C(=O)N3CCCC3"
+      },
+      "raw_output": {
+        "result": {
+          "error": "No module named 'rdkit'",
+          "install": "pip install rdkit"
+        },
+        "tool": "herg_predict"
+      },
+      "output_type": "missing dependency; no scientific result"
+    },
+    {
+      "step": "3",
+      "stage": "reviser",
+      "item": "CMP-06",
+      "tool": "cyp_predict",
+      "arguments": {
+        "smiles": "Cc1nc(sc1)C(=O)Nc2ccc(cc2)C(=O)N3CCOCC3"
+      },
+      "raw_output": {
+        "result": {
+          "error": "No module named 'rdkit'",
+          "install": "pip install rdkit"
+        },
+        "tool": "cyp_predict"
+      },
+      "output_type": "missing dependency; no scientific result"
+    },
+    {
+      "step": "5",
+      "stage": "reviser",
+      "item": "CMP-04",
+      "tool": "pains_filter",
+      "arguments": {
+        "smiles": "O=C(Nc1ccc(cc1)N(=O)=O)c2ccccc2"
+      },
+      "raw_output": {
+        "result": {
+          "error": "No module named 'rdkit'",
+          "install": "pip install rdkit"
+        },
+        "tool": "pains_filter"
+      },
+      "output_type": "missing dependency; no scientific result"
+    },
+    {
+      "step": "6b",
+      "stage": "reviser",
+      "item": "CMP-01",
+      "tool": "predict_admet",
+      "arguments": {
+        "smiles": "CC(=O)Nc1ccc(cc1)C(=O)NC2CCOCC2"
+      },
+      "raw_output": {
+        "result": {
+          "exit_code": 1,
+          "label": "admet-prediction",
+          "output": "Traceback (most recent call last):\r\n  File \"<string>\", line 6, in <module>\r\n    from admet_ai import ADMETModel\r\nModuleNotFoundError: No module named 'admet_ai'\r\n\r\nDuring handling of the above exception, another exception occurred:\r\n\r\nTraceback (most recent call last):\r\n  File \"<string>\", line 18, in <module>\r\n    from rdkit import Chem\r\nModuleNotFoundError: No module named 'rdkit'",
+          "status": "error"
+        },
+        "tool": "predict_admet"
+      },
+      "output_type": "missing dependency; no scientific result"
+    },
+    {
+      "step": "4",
+      "stage": "reviser",
+      "item": "CMP-06",
+      "tool": "ddi_analyze",
+      "arguments": {
+        "cyp3a4_ic50_uM": 0.45,
+        "notes": "Informational only; not attached to the gate record; ddi_analysis_done remains false",
+        "source": "inputs/compounds.json CMP-06 (supplied; field-level provenance unspecified)"
+      },
+      "raw_output": {
+        "error": "[DRUGDISC] CYP450 HARD BLOCK: CYP3A4 IC50 0.450 μM < 1.00 μM (strong inhibitor) and no DDI analysis on file. Run ddi_analyze and attach ddi_analysis_done=true before advancement."
+      },
+      "output_type": "refusal, not an analysis"
+    },
+    {
+      "step": "7",
+      "stage": "reviser",
+      "tool": "abstention_gate",
+      "arguments": {
+        "domain": "drugdisc",
+        "stakes": "high"
+      },
+      "raw_output": {
+        "result": {
+          "answer_at": 0.5,
+          "band": "",
+          "confidence": 0,
+          "disposition": "defer",
+          "guidance": "This gate decides ANSWER vs ABSTAIN vs DEFER from a confidence estimate and the domain's stakes — it does not measure confidence for you. Supply your HONEST calibrated confidence (from an eval, the uncertainty layer, or a sober self-assessment), not an optimistic default. If you have no basis to estimate confidence, omit it: the gate then fails closed (defers on high stakes, otherwise abstains). Honor the disposition: on ABSTAIN, decline and say what would raise your confidence; on DEFER, escalate to a human and do not act. An explicit, informed user instruction to proceed anyway overrides the gate.",
+          "hedge": "",
+          "measured": false,
+          "message": "This in drugdisc carries high stakes and I'm not confident enough to answer reliably. I'm escalating to a human expert rather than guessing. Please have a qualified reviewer confirm before acting, and share any authoritative source so I can assist with higher confidence.",
+          "reason": "no confidence estimate available and stakes are high — escalate rather than guess",
+          "regulated": false,
+          "stakes": "high"
+        },
+        "tool": "abstention_gate"
+      }
+    },
+    {
+      "step": "historical recovery",
+      "stage": "reviser recovery of executor evidence",
+      "item": null,
+      "tool": "execute_domain_script",
+      "arguments": {
+        "script": "noop"
+      },
+      "raw_output": {
+        "error": "execute_domain_script requires script_path",
+        "result": null,
+        "tool": "execute_domain_script"
+      },
+      "raw_output_text": "{\"error\":\"execute_domain_script requires script_path\",\"result\":null,\"tool\":\"execute_domain_script\"}",
+      "provenance": ".nospace\\runs\\2026-11-07T01-33-51-354666600-46480-0001.jsonl",
+      "output_type": "failed superseded call; no scientific result"
+    },
+    {
+      "step": "historical recovery",
+      "stage": "reviser recovery of executor evidence",
+      "item": "CMP-01",
+      "tool": "predict_admet",
+      "arguments": {
+        "smiles": "CC(=O)Nc1ccc(cc1)C(=O)NC2CCO"
+      },
+      "raw_output": {
+        "result": {
+          "exit_code": 1,
+          "label": "admet-prediction",
+          "output": "Traceback (most recent call last):\r\n  File \"<string>\", line 6, in <module>\r\n    from admet_ai import ADMETModel\r\nModuleNotFoundError: No module named 'admet_ai'\r\n\r\nDuring handling of the above exception, another exception occurred:\r\n\r\nTraceback (most recent call last):\r\n  File \"<string>\", line 18, in <module>\r\n    from rdkit import Chem\r\nModuleNotFoundError: No module named 'rdkit'",
+          "status": "error"
+        },
+        "tool": "predict_admet"
+      },
+      "raw_output_text": "{\"result\":{\"exit_code\":1,\"label\":\"admet-prediction\",\"output\":\"Traceback (most recent call last):\\r\\n  File \\\"\\u003cstring\\u003e\\\", line 6, in \\u003cmodule\\u003e\\r\\n    from admet_ai import ADMETModel\\r\\nModuleNotFoundError: No module named 'admet_ai'\\r\\n\\r\\nDuring handling of the above exception, another exception occurred:\\r\\n\\r\\nTraceback (most recent call last):\\r\\n  File \\\"\\u003cstring\\u003e\\\", line 18, in \\u003cmodule\\u003e\\r\\n    from rdkit import Chem\\r\\nModuleNotFoundError: No module named 'rdkit'\",\"status\":\"error\"},\"tool\":\"predict_admet\"}",
+      "provenance": ".nospace\\runs\\2026-11-07T01-33-51-354666600-46480-0001.jsonl",
+      "output_type": "failed superseded call; no scientific result"
+    },
+    {
+      "step": "8",
+      "stage": "reviser",
+      "tool": "grounding_check_citations",
+      "arguments": {
+        "answer": "# Hit-to-lead triage — kinase series KX (revised DRAFT)\n\n**Disposition: DEFER to qualified human review before acting.** All six complete-record gate results reproduced; no safety hold was cleared. Synthetic supplied-data triage is not advancement authorization.\n\n**Question, intended use, provenance and unit of analysis.** Assess six compound records before lead-optimisation synthesis. One compound record is the unit of analysis; these are not biological replicates. inputs/compounds.json describes values collectively as measured or predicted, without field-level assay provenance, species, formats, replicate structure, censoring, exclusions or uncertainty. Chemical identities and all gate fields were preserved. No activity, exposure or clinical benefit is established.\n\n## Findings and supporting evidence\n\n| Compound | Status | Rule | Decisive evidence |\n|---|---|---|---|\n| CMP-01 | advance | D4 | Eight criteria passed |\n| CMP-02 | advance | D4 | Eight criteria passed, including exact boundaries |\n| CMP-03 | hold | D1 | hERG 0.620 μM <1.00 μM; refused |\n| CMP-04 | reject | D2 | Ames 1; hard_blocked=true |\n| CMP-05 | advance_with_caveats | D3 | MW 548.6 >500 and cLogP 5.6 >5; advisory failures |\n| CMP-06 | hold | D1 | CYP3A4 0.450 μM <1.00 μM; no DDI analysis; refused |\n\nAll six complete-record reviser gate arguments equal the inputs, including safety keys omitted from the declared schema. Batch calls reproduced both refusals: schema omission does not demonstrate runtime stripping. Reduced-field passing calls cannot clear a complete-record hold. No mitigation, mitigation_notes, pains_justified or ddi_analysis_done=true was added. User-requested audit reruns changed no inputs and sought no bypass.\n\n### CMP-01 — advance\n\nFresh gate: evaluated=8, hard_blocked=false, overall_pass=true.\n\n| Criterion | Supplied value | Gate-reported condition | Passed |\n|---|---:|---|---|\n| ames | 0 | Ames mutagenicity = negative (hard block) | true |\n| clogp | 0.9 | cLogP ≤ 5 (Lipinski) | true |\n| hba | 4 | H-bond acceptors ≤ 10 (Lipinski) | true |\n| hbd | 2 | H-bond donors ≤ 5 (Lipinski) | true |\n| mw | 262.3 | Molecular weight ≤ 500 (Lipinski) | true |\n| psa | 67.4 | PSA ≤ 140 Å² | true |\n| qed | 0.83 | QED ≥ 0.3 | true |\n| solubility | -2.4 | LogS ≥ -6 | true |\n\nReturned criterion evidence: [src:gCMP01 \"PSA ≤ 140 Å²\"]\n\n### CMP-02 — advance\n\nFresh gate: evaluated=8, hard_blocked=false, overall_pass=true.\n\n| Criterion | Supplied value | Gate-reported condition | Passed |\n|---|---:|---|---|\n| ames | 0 | Ames mutagenicity = negative (hard block) | true |\n| clogp | 5 | cLogP ≤ 5 (Lipinski) | true |\n| hba | 10 | H-bond acceptors ≤ 10 (Lipinski) | true |\n| hbd | 5 | H-bond donors ≤ 5 (Lipinski) | true |\n| mw | 500 | Molecular weight ≤ 500 (Lipinski) | true |\n| psa | 140 | PSA ≤ 140 Å² | true |\n| qed | 0.3 | QED ≥ 0.3 | true |\n| solubility | -6 | LogS ≥ -6 | true |\n\nReturned criterion evidence: [src:gCMP02 \"QED ≥ 0.3\"]\n\nMW, cLogP, HBD, HBA, PSA, QED and LogS passed exactly at inclusive local limits. Planner expected QED/LogS failures, but actual passes govern. Rounding and independent descriptor consistency remain unverified.\n\n### CMP-03 — hold\n\nNo scored criteria returned. Fresh refusal: [src:gCMP03 \"hERG HARD BLOCK: predicted hERG IC50 = 0.620 μM < 1.00 μM\"]\n\nSafety pharmacology review of measured patch-clamp hERG IC50 ≥ the gate threshold (1.00 μM), or a structural change, followed by a new gate call; no mitigation was fabricated in this run.\n\nSoftware refusal now independently reproduced; independent prediction/assay corroboration remains unavailable. Input evidence type is unspecified although the hook calls the value predicted. Low IC50 indicates risk, not a clinical Torsades determination.\n\n### CMP-04 — reject\n\nFresh gate: evaluated=8, hard_blocked=true, overall_pass=false.\n\n| Criterion | Supplied value | Gate-reported condition | Passed |\n|---|---:|---|---|\n| ames | 1 | Ames mutagenicity = negative (hard block) | false |\n| clogp | 2.2 | cLogP ≤ 5 (Lipinski) | true |\n| hba | 4 | H-bond acceptors ≤ 10 (Lipinski) | true |\n| hbd | 1 | H-bond donors ≤ 5 (Lipinski) | true |\n| mw | 242.2 | Molecular weight ≤ 500 (Lipinski) | true |\n| psa | 75 | PSA ≤ 140 Å² | true |\n| qed | 0.66 | QED ≥ 0.3 | true |\n| solubility | -3.4 | LogS ≥ -6 | true |\n\nReturned criterion evidence: [src:gCMP04 \"HARD BLOCK: Ames-positive compounds cannot advance.\"]\n\nOther passes cannot override Ames=1. No new Ames assay or prediction obtained. Medicinal-chemistry review of structural changes is required; no advancement recommended.\n\n### CMP-05 — advance_with_caveats\n\nFresh gate: evaluated=8, hard_blocked=false, overall_pass=false.\n\n| Criterion | Supplied value | Gate-reported condition | Passed |\n|---|---:|---|---|\n| ames | 0 | Ames mutagenicity = negative (hard block) | true |\n| clogp | 5.6 | cLogP ≤ 5 (Lipinski) | false |\n| hba | 5 | H-bond acceptors ≤ 10 (Lipinski) | true |\n| hbd | 1 | H-bond donors ≤ 5 (Lipinski) | true |\n| mw | 548.6 | Molecular weight ≤ 500 (Lipinski) | false |\n| psa | 51.2 | PSA ≤ 140 Å² | true |\n| qed | 0.41 | QED ≥ 0.3 | true |\n| solubility | -5.4 | LogS ≥ -6 | true |\n\nReturned criterion evidence: [src:gCMP05 \"Molecular weight ≤ 500 (Lipinski)\"]\n\nOnly MW and cLogP failed. These advisory failures map to advance_with_caveats under the brief, not developability or synthesis authorization.\n\n### CMP-06 — hold\n\nNo scored criteria returned. Fresh refusal: [src:gCMP06 \"CYP450 HARD BLOCK: CYP3A4 IC50 0.450 μM < 1.00 μM\"]\n\nA qualified DDI reviewer must review and attach an accepted DDI analysis, or supply a measured CYP3A4 IC50 ≥1 μM, before a new gate call; this run did not change ddi_analysis_done or attach mitigation.\n\nStandalone ddi_analyze also returned the refusal, not an analysis. [src:dCMP06 \"CYP450 HARD BLOCK: CYP3A4 IC50 0.450 μM < 1.00 μM\"] No other isozyme values invented; ddi_analysis_done=false unchanged. Unbound exposure, substrate context and clinical DDI implications remain unassessed.\n\n## Counterevidence, limitations and unassessed checks\n\nAll six historical logs contain errors for hERG, CYP, PAINS, descriptors and ADMET. The reviser freshly rechecked one representative per dependency family, not all six context calls: herg_predict (CMP-03), cyp_predict (CMP-06), pains_filter (CMP-04), compute_2d_properties and predict_admet (CMP-01). All still failed. Errors are not negative or clear scientific results.\n\n- hERG/CYP/PAINS: `No module named 'rdkit'`. [src:ctx \"No module named 'rdkit'\"] No independent IC50 discordance or PAINS alert assessment available.\n- Descriptors: `RDKit not installed`, exit code 1. [src:desc \"RDKit not installed\"] Supplied MW/cLogP versus SMILES consistency, including CMP-02/CMP-05 concerns, unverified.\n- ADMET: missing admet_ai, then fallback RDKit. [src:admetAll \"ModuleNotFoundError: No module named 'admet_ai'\"] No Ames cross-check or new predictions.\n- DDI analysis not generated, reviewed or attached; hold intact.\n- No potency, cellular target engagement, phenotype, exposure, kinase selectivity, in-vivo/clinical efficacy, docking/FEP or synthetic feasibility assessed. These levels are not interchangeable. No in-silico-only result establishes safety, efficacy or a human dose.\n- Executor prose discloses mistyped predict_admet and accidental execute_domain_script calls. Original arguments, mistyped SMILES and raw outputs were not retained in supplied artifacts; only prose-disclosed facts are known. Missing outputs were not reconstructed.\n\n## Gate summaries and policy conflicts\n\nSummary statuses use brief tokens only: aggregate hold means blocked, unassessed or pending review; reject identifies hard block; advance_with_caveats identifies advisory failures. They do not replace item statuses. Four scored compounds comprise CMP-04 Ames-positive and the other **three** Ames-negative (CMP-01, CMP-02, CMP-05). Two compounds were refused before scoring.\n\nMW >1200 Da validation: **not triggered (supplied values)**. All supplied MW below 1200; no such returned block. This is not an independently verified validation pass.\n\nCAPABILITIES.md records hERG 1 versus 10 μM, PAINS warn versus block, and Lipinski advisory versus at most one violation conflicts. These source summaries are not freshly authenticated regulatory standards. Actual local hook blocked below 1 μM; 10 μM would be more restrictive for clearance, not less. TOKN thresholds are local policies, not universal ICH safety determinations. PAINS alerts warn of interference, not proof of toxicity or inactivity; existing blocks remain intact. CMP-05 has two Lipinski failures: the brief maps them to caveats while the reported README differs. Qualified review must resolve conflicts, not relax gates. QED ≥0.3 and LogS ≥-6 are thresholds reported by the gate.\n\n## Confidence, disposition and permitted next step\n\nFormer 0.99 estimate withdrawn; no calibrated probability is available (confidence=null). Confidence is high in observed reproduction and rule translation, not biological validity. Confidence-omitted abstention_gate returned defer: [src:abstain \"no confidence estimate available and stakes are high — escalate rather than guess\"] Returned confidence=0 is a fail-closed sentinel, not a measured probability.\n\n**Finding:** draft statuses remain CMP-01/CMP-02 advance, CMP-05 advance_with_caveats, CMP-04 reject, CMP-03/CMP-06 hold. **Supporting evidence:** six complete-record gate reruns and input equality checks. **Counterevidence/limitations:** incomplete assay provenance, policy conflicts, missing context dependencies. **Unassessed checks:** independent hERG/CYP/PAINS, descriptors/ADMET, completed DDI analysis, efficacy/exposure/selectivity and synthesis. **Permitted next step and responsible reviewer:** senior medicinal-chemistry review before synthesis; safety pharmacologist for CMP-03; qualified DDI reviewer for CMP-06; operator restoration of dependencies followed by guarded rechecks. Any real advancement requires separate senior reviewer sign-off; no clearance or authorization given.\n\n## Response to critique\n\n- **C1 — rebutted:** Complete-record check_advancement_gate with herg_ic50_uM=0.62 reproduced the exact hERG HARD BLOCK at 0.620 μM <1.00 μM through the batch interface despite schema omission. Reduced-field critic passes do not establish clearance. Independent biological corroboration remains unavailable and is explicit.\n- **C2 — rebutted:** Complete-record CMP-06 gate reproduced CYP450 HARD BLOCK at 0.450 μM <1.00 μM with ddi_analysis_done=false; standalone ddi_analyze returned the same refusal. Gate-specific reproducibility gap closed; hold unchanged, no DDI analysis.\n- **C3 — fixed:** Withdrew uncalibrated 0.99 estimate (confidence=null); confidence-omitted abstention_gate returned defer for drugdisc/high stakes. Named senior medicinal-chemistry, safety-pharmacology and DDI reviewers; draft statuses retained without authorization.\n- **C4 — fixed:** Fresh grounding_check_citations arguments and actual raw output are recorded in step-8 tool_log for the revised report; missing historical checker output was not invented.\n- **C5 — fixed:** Confirmed disclosures exist in provenance but raw log entries are absent. Explicitly stated original arguments, mistyped SMILES and raw responses were not retained in supplied artifacts; only prose-disclosed facts are known. No raw output reconstructed.\n- **C6 — fixed:** Moved observed_wrapper outside historical raw_output into sibling annotation. Item gate_response now contains full fresh result/tool wrapper or actual error-only object for all six items.\n- **C7 — fixed:** Defined summary scale and restricted gates statuses to brief vocabulary. Aggregate advancement, hERG and CYP450 consistently labelled hold. MW detail and report explicitly say not triggered (supplied values), not verified pass.\n- **C8 — fixed:** Fresh gates verify four scored compounds, three scored Ames-negative responses (CMP-01, CMP-02, CMP-05). Corrected other four to other three and named them.\n- **C9 — fixed:** Verified five failed historical context families on every compound. Populated unassessed_checks for all six; CMP-06 also records incomplete refused DDI analysis.\n",
+        "sources": [
+          {
+            "id": "gCMP01",
+            "text": "{\"result\":{\"evaluated\":8,\"gates\":[{\"criterion\":\"ames\",\"value\":0,\"passed\":true,\"label\":\"Ames mutagenicity = negative (hard block)\"},{\"criterion\":\"clogp\",\"value\":0.9,\"passed\":true,\"label\":\"cLogP ≤ 5 (Lipinski)\"},{\"criterion\":\"hba\",\"value\":4,\"passed\":true,\"label\":\"H-bond acceptors ≤ 10 (Lipinski)\"},{\"criterion\":\"hbd\",\"value\":2,\"passed\":true,\"label\":\"H-bond donors ≤ 5 (Lipinski)\"},{\"criterion\":\"mw\",\"value\":262.3,\"passed\":true,\"label\":\"Molecular weight ≤ 500 (Lipinski)\"},{\"criterion\":\"psa\",\"value\":67.4,\"passed\":true,\"label\":\"PSA ≤ 140 Å²\"},{\"criterion\":\"qed\",\"value\":0.83,\"passed\":true,\"label\":\"QED ≥ 0.3\"},{\"criterion\":\"solubility\",\"value\":-2.4,\"passed\":true,\"label\":\"LogS ≥ -6\"}],\"hard_blocked\":false,\"note\":\"Soft gate failures may be acceptable with justification. Hard blocks require structural changes.\",\"overall_pass\":true,\"smiles\":\"CC(=O)Nc1ccc(cc1)C(=O)NC2CCOCC2\"},\"tool\":\"check_advancement_gate\"}"
+          },
+          {
+            "id": "gCMP02",
+            "text": "{\"result\":{\"evaluated\":8,\"gates\":[{\"criterion\":\"ames\",\"value\":0,\"passed\":true,\"label\":\"Ames mutagenicity = negative (hard block)\"},{\"criterion\":\"clogp\",\"value\":5,\"passed\":true,\"label\":\"cLogP ≤ 5 (Lipinski)\"},{\"criterion\":\"hba\",\"value\":10,\"passed\":true,\"label\":\"H-bond acceptors ≤ 10 (Lipinski)\"},{\"criterion\":\"hbd\",\"value\":5,\"passed\":true,\"label\":\"H-bond donors ≤ 5 (Lipinski)\"},{\"criterion\":\"mw\",\"value\":500,\"passed\":true,\"label\":\"Molecular weight ≤ 500 (Lipinski)\"},{\"criterion\":\"psa\",\"value\":140,\"passed\":true,\"label\":\"PSA ≤ 140 Å²\"},{\"criterion\":\"qed\",\"value\":0.3,\"passed\":true,\"label\":\"QED ≥ 0.3\"},{\"criterion\":\"solubility\",\"value\":-6,\"passed\":true,\"label\":\"LogS ≥ -6\"}],\"hard_blocked\":false,\"note\":\"Soft gate failures may be acceptable with justification. Hard blocks require structural changes.\",\"overall_pass\":true,\"smiles\":\"COc1ccc(cc1)C(=O)Nc2ccc(cc2)S(=O)(=O)N3CCN(CC3)c4ccccn4\"},\"tool\":\"check_advancement_gate\"}"
+          },
+          {
+            "id": "gCMP03",
+            "text": "{\"error\":\"[DRUGDISC] hERG HARD BLOCK: predicted hERG IC50 = 0.620 μM < 1.00 μM. Severe cardiac liability (Torsades de Pointes risk). Attach a mitigation plan (mitigation=true, mitigation_notes=<patch-clamp confirmation | structural modification | ion-channel selectivity panel>) before retrying.\"}"
+          },
+          {
+            "id": "gCMP04",
+            "text": "{\"result\":{\"evaluated\":8,\"gates\":[{\"criterion\":\"ames\",\"value\":1,\"passed\":false,\"hard_block\":true,\"label\":\"Ames mutagenicity = negative (hard block)\"},{\"criterion\":\"clogp\",\"value\":2.2,\"passed\":true,\"label\":\"cLogP ≤ 5 (Lipinski)\"},{\"criterion\":\"hba\",\"value\":4,\"passed\":true,\"label\":\"H-bond acceptors ≤ 10 (Lipinski)\"},{\"criterion\":\"hbd\",\"value\":1,\"passed\":true,\"label\":\"H-bond donors ≤ 5 (Lipinski)\"},{\"criterion\":\"mw\",\"value\":242.2,\"passed\":true,\"label\":\"Molecular weight ≤ 500 (Lipinski)\"},{\"criterion\":\"psa\",\"value\":75,\"passed\":true,\"label\":\"PSA ≤ 140 Å²\"},{\"criterion\":\"qed\",\"value\":0.66,\"passed\":true,\"label\":\"QED ≥ 0.3\"},{\"criterion\":\"solubility\",\"value\":-3.4,\"passed\":true,\"label\":\"LogS ≥ -6\"}],\"hard_blocked\":true,\"note\":\"HARD BLOCK: Ames-positive compounds cannot advance. Consider structural modification to remove mutagenic liability.\",\"overall_pass\":false,\"smiles\":\"O=C(Nc1ccc(cc1)N(=O)=O)c2ccccc2\"},\"tool\":\"check_advancement_gate\"}"
+          },
+          {
+            "id": "gCMP05",
+            "text": "{\"result\":{\"evaluated\":8,\"gates\":[{\"criterion\":\"ames\",\"value\":0,\"passed\":true,\"label\":\"Ames mutagenicity = negative (hard block)\"},{\"criterion\":\"clogp\",\"value\":5.6,\"passed\":false,\"label\":\"cLogP ≤ 5 (Lipinski)\"},{\"criterion\":\"hba\",\"value\":5,\"passed\":true,\"label\":\"H-bond acceptors ≤ 10 (Lipinski)\"},{\"criterion\":\"hbd\",\"value\":1,\"passed\":true,\"label\":\"H-bond donors ≤ 5 (Lipinski)\"},{\"criterion\":\"mw\",\"value\":548.6,\"passed\":false,\"label\":\"Molecular weight ≤ 500 (Lipinski)\"},{\"criterion\":\"psa\",\"value\":51.2,\"passed\":true,\"label\":\"PSA ≤ 140 Å²\"},{\"criterion\":\"qed\",\"value\":0.41,\"passed\":true,\"label\":\"QED ≥ 0.3\"},{\"criterion\":\"solubility\",\"value\":-5.4,\"passed\":true,\"label\":\"LogS ≥ -6\"}],\"hard_blocked\":false,\"note\":\"Soft gate failures may be acceptable with justification. Hard blocks require structural changes.\",\"overall_pass\":false,\"smiles\":\"CC(C)(C)c1ccc(cc1)C(=O)Nc2ccc(cc2)Oc3ccc(cc3)C(F)(F)F\"},\"tool\":\"check_advancement_gate\"}"
+          },
+          {
+            "id": "gCMP06",
+            "text": "{\"error\":\"[DRUGDISC] CYP450 HARD BLOCK: CYP3A4 IC50 0.450 μM < 1.00 μM (strong inhibitor) and no DDI analysis on file. Run ddi_analyze and attach ddi_analysis_done=true before advancement.\"}"
+          },
+          {
+            "id": "dCMP06",
+            "text": "{\"error\":\"[DRUGDISC] CYP450 HARD BLOCK: CYP3A4 IC50 0.450 μM < 1.00 μM (strong inhibitor) and no DDI analysis on file. Run ddi_analyze and attach ddi_analysis_done=true before advancement.\"}"
+          },
+          {
+            "id": "ctx",
+            "text": "{\"result\":{\"error\":\"No module named 'rdkit'\",\"install\":\"pip install rdkit\"},\"tool\":\"herg_predict\"}"
+          },
+          {
+            "id": "desc",
+            "text": "{\"result\":{\"exit_code\":1,\"label\":\"2d-properties\",\"output\":\"{\\\"error\\\": \\\"RDKit not installed\\\"}\",\"status\":\"error\"},\"tool\":\"compute_2d_properties\"}"
+          },
+          {
+            "id": "admetAll",
+            "text": "Traceback (most recent call last):\r\n  File \"<string>\", line 6, in <module>\r\n    from admet_ai import ADMETModel\r\nModuleNotFoundError: No module named 'admet_ai'\r\n\r\nDuring handling of the above exception, another exception occurred:\r\n\r\nTraceback (most recent call last):\r\n  File \"<string>\", line 18, in <module>\r\n    from rdkit import Chem\r\nModuleNotFoundError: No module named 'rdkit'"
+          },
+          {
+            "id": "abstain",
+            "text": "{\"result\":{\"answer_at\":0.5,\"band\":\"\",\"confidence\":0,\"disposition\":\"defer\",\"guidance\":\"This gate decides ANSWER vs ABSTAIN vs DEFER from a confidence estimate and the domain's stakes — it does not measure confidence for you. Supply your HONEST calibrated confidence (from an eval, the uncertainty layer, or a sober self-assessment), not an optimistic default. If you have no basis to estimate confidence, omit it: the gate then fails closed (defers on high stakes, otherwise abstains). Honor the disposition: on ABSTAIN, decline and say what would raise your confidence; on DEFER, escalate to a human and do not act. An explicit, informed user instruction to proceed anyway overrides the gate.\",\"hedge\":\"\",\"measured\":false,\"message\":\"This in drugdisc carries high stakes and I'm not confident enough to answer reliably. I'm escalating to a human expert rather than guessing. Please have a qualified reviewer confirm before acting, and share any authoritative source so I can assist with higher confidence.\",\"reason\":\"no confidence estimate available and stakes are high — escalate rather than guess\",\"regulated\":false,\"stakes\":\"high\"},\"tool\":\"abstention_gate\"}],"
+          }
+        ]
+      },
+      "raw_output": {
+        "result": {
+          "verdict": "partially_verified",
+          "citations": [
+            {
+              "raw": "[src:gCMP01 \"PSA ≤ 140 Å²\"]",
+              "offset": 2334,
+              "source_id": "gCMP01",
+              "quote": "PSA ≤ 140 Å²",
+              "claim": "Returned criterion evidence:",
+              "status": "verified"
+            },
+            {
+              "raw": "[src:gCMP02 \"QED ≥ 0.3\"]",
+              "offset": 2964,
+              "source_id": "gCMP02",
+              "quote": "QED ≥ 0.3",
+              "claim": "Returned criterion evidence:",
+              "status": "unchecked",
+              "reason": "quote is too short to be evidence (minimum 8 non-space characters)"
+            },
+            {
+              "raw": "[src:gCMP03 \"hERG HARD BLOCK: predicted hERG IC50 = 0.620 μM < 1.00 μM\"]",
+              "offset": 3268,
+              "source_id": "gCMP03",
+              "quote": "hERG HARD BLOCK: predicted hERG IC50 = 0.620 μM < 1.00 μM",
+              "claim": "Fresh refusal:",
+              "status": "verified"
+            },
+            {
+              "raw": "[src:gCMP04 \"HARD BLOCK: Ames-positive compounds cannot advance.\"]",
+              "offset": 4394,
+              "source_id": "gCMP04",
+              "quote": "HARD BLOCK: Ames-positive compounds cannot advance.",
+              "claim": "Returned criterion evidence:",
+              "status": "verified"
+            },
+            {
+              "raw": "[src:gCMP05 \"Molecular weight ≤ 500 (Lipinski)\"]",
+              "offset": 5252,
+              "source_id": "gCMP05",
+              "quote": "Molecular weight ≤ 500 (Lipinski)",
+              "claim": "Returned criterion evidence:",
+              "status": "verified"
+            },
+            {
+              "raw": "[src:gCMP06 \"CYP450 HARD BLOCK: CYP3A4 IC50 0.450 μM < 1.00 μM\"]",
+              "offset": 5512,
+              "source_id": "gCMP06",
+              "quote": "CYP450 HARD BLOCK: CYP3A4 IC50 0.450 μM < 1.00 μM",
+              "claim": "Fresh refusal:",
+              "status": "verified"
+            },
+            {
+              "raw": "[src:dCMP06 \"CYP450 HARD BLOCK: CYP3A4 IC50 0.450 μM < 1.00 μM\"]",
+              "offset": 5853,
+              "source_id": "dCMP06",
+              "quote": "CYP450 HARD BLOCK: CYP3A4 IC50 0.450 μM < 1.00 μM",
+              "claim": "Standalone ddi_analyze also returned the refusal, not an analysis.",
+              "status": "verified"
+            },
+            {
+              "raw": "[src:ctx \"No module named 'rdkit'\"]",
+              "offset": 6548,
+              "source_id": "ctx",
+              "quote": "No module named 'rdkit'",
+              "claim": "hERG/CYP/PAINS: `No module named 'rdkit'`.",
+              "status": "verified"
+            },
+            {
+              "raw": "[src:desc \"RDKit not installed\"]",
+              "offset": 6704,
+              "source_id": "desc",
+              "quote": "RDKit not installed",
+              "claim": "Descriptors: `RDKit not installed`, exit code 1.",
+              "status": "verified"
+            },
+            {
+              "raw": "[src:admetAll \"ModuleNotFoundError: No module named 'admet_ai'\"]",
+              "offset": 6876,
+              "source_id": "admetAll",
+              "quote": "ModuleNotFoundError: No module named 'admet_ai'",
+              "claim": "ADMET: missing admet_ai, then fallback RDKit.",
+              "status": "verified"
+            },
+            {
+              "raw": "[src:abstain \"no confidence estimate available and stakes are high — escalate rather than guess\"]",
+              "offset": 9154,
+              "source_id": "abstain",
+              "quote": "no confidence estimate available and stakes are high — escalate rather than guess",
+              "claim": "Confidence-omitted abstention_gate returned defer: Returned confidence=0 is a fail-closed sentinel, not a measured probability.",
+              "status": "verified"
+            }
+          ],
+          "total": 11,
+          "verified": 10,
+          "unverifiable": 0,
+          "mismatched": 0,
+          "unchecked": 1,
+          "uncited_factual_looking": [
+            {
+              "sentence": "**Disposition: DEFER to qualified human review before acting.** All six complete-record gate results reproduced; no safety hold was cleared.",
+              "signals": [
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "**Question, intended use, provenance and unit of analysis.** Assess six compound records before lead-optimisation synthesis.",
+              "signals": [
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| Compound | Status | Rule | Decisive evidence |",
+              "signals": [
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| CMP-01 | advance | D4 | Eight criteria passed |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| CMP-02 | advance | D4 | Eight criteria passed, including exact boundaries |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| CMP-03 | hold | D1 | hERG 0.620 μM <1.00 μM; refused |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| CMP-04 | reject | D2 | Ames 1; hard_blocked=true |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| CMP-05 | advance_with_caveats | D3 | MW 548.6 >500 and cLogP 5.6 >5; advisory failures |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| CMP-06 | hold | D1 | CYP3A4 0.450 μM <1.00 μM; no DDI analysis; refused |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "Fresh gate: evaluated=8, hard_blocked=false, overall_pass=true.",
+              "signals": [
+                "number"
+              ]
+            },
+            {
+              "sentence": "| Criterion | Supplied value | Gate-reported condition | Passed |",
+              "signals": [
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| ames | 0 | Ames mutagenicity = negative (hard block) | true |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| clogp | 0.9 | cLogP ≤ 5 (Lipinski) | true |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| hba | 4 | H-bond acceptors ≤ 10 (Lipinski) | true |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| hbd | 2 | H-bond donors ≤ 5 (Lipinski) | true |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| mw | 262.3 | Molecular weight ≤ 500 (Lipinski) | true |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| psa | 67.4 | PSA ≤ 140 Å² | true |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| qed | 0.83 | QED ≥ 0.3 | true |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| solubility | -2.4 | LogS ≥ -6 | true |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "Fresh gate: evaluated=8, hard_blocked=false, overall_pass=true.",
+              "signals": [
+                "number"
+              ]
+            },
+            {
+              "sentence": "| Criterion | Supplied value | Gate-reported condition | Passed |",
+              "signals": [
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| ames | 0 | Ames mutagenicity = negative (hard block) | true |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| clogp | 5 | cLogP ≤ 5 (Lipinski) | true |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| hba | 10 | H-bond acceptors ≤ 10 (Lipinski) | true |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| hbd | 5 | H-bond donors ≤ 5 (Lipinski) | true |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| mw | 500 | Molecular weight ≤ 500 (Lipinski) | true |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| psa | 140 | PSA ≤ 140 Å² | true |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| qed | 0.3 | QED ≥ 0.3 | true |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| solubility | -6 | LogS ≥ -6 | true |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "MW, cLogP, HBD, HBA, PSA, QED and LogS passed exactly at inclusive local limits.",
+              "signals": [
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "Planner expected QED/LogS failures, but actual passes govern.",
+              "signals": [
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "Safety pharmacology review of measured patch-clamp hERG IC50 ≥ the gate threshold (1.00 μM), or a structural change, followed by a new gate call; no mitigation was fabricated in this run.",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "Low IC50 indicates risk, not a clinical Torsades determination.",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "Fresh gate: evaluated=8, hard_blocked=true, overall_pass=false.",
+              "signals": [
+                "number"
+              ]
+            },
+            {
+              "sentence": "| Criterion | Supplied value | Gate-reported condition | Passed |",
+              "signals": [
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| ames | 1 | Ames mutagenicity = negative (hard block) | false |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| clogp | 2.2 | cLogP ≤ 5 (Lipinski) | true |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| hba | 4 | H-bond acceptors ≤ 10 (Lipinski) | true |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| hbd | 1 | H-bond donors ≤ 5 (Lipinski) | true |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| mw | 242.2 | Molecular weight ≤ 500 (Lipinski) | true |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| psa | 75 | PSA ≤ 140 Å² | true |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| qed | 0.66 | QED ≥ 0.3 | true |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| solubility | -3.4 | LogS ≥ -6 | true |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "Other passes cannot override Ames=1.",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "No new Ames assay or prediction obtained.",
+              "signals": [
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "Fresh gate: evaluated=8, hard_blocked=false, overall_pass=false.",
+              "signals": [
+                "number"
+              ]
+            },
+            {
+              "sentence": "| Criterion | Supplied value | Gate-reported condition | Passed |",
+              "signals": [
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| ames | 0 | Ames mutagenicity = negative (hard block) | true |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| clogp | 5.6 | cLogP ≤ 5 (Lipinski) | false |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| hba | 5 | H-bond acceptors ≤ 10 (Lipinski) | true |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| hbd | 1 | H-bond donors ≤ 5 (Lipinski) | true |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| mw | 548.6 | Molecular weight ≤ 500 (Lipinski) | false |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| psa | 51.2 | PSA ≤ 140 Å² | true |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| qed | 0.41 | QED ≥ 0.3 | true |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "| solubility | -5.4 | LogS ≥ -6 | true |",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "Only MW and cLogP failed.",
+              "signals": [
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "A qualified DDI reviewer must review and attach an accepted DDI analysis, or supply a measured CYP3A4 IC50 ≥1 μM, before a new gate call; this run did not change ddi_analysis_done or attach mitigation.",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "Unbound exposure, substrate context and clinical DDI implications remain unassessed.",
+              "signals": [
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "All six historical logs contain errors for hERG, CYP, PAINS, descriptors and ADMET.",
+              "signals": [
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "The reviser freshly rechecked one representative per dependency family, not all six context calls: herg_predict (CMP-03), cyp_predict (CMP-06), pains_filter (CMP-04), compute_2d_properties and predict_admet (CMP-01).",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "No independent IC50 discordance or PAINS alert assessment available.",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "Supplied MW/cLogP versus SMILES consistency, including CMP-02/CMP-05 concerns, unverified.",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "No Ames cross-check or new predictions.",
+              "signals": [
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "Original arguments, mistyped SMILES and raw outputs were not retained in supplied artifacts; only prose-disclosed facts are known.",
+              "signals": [
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "Four scored compounds comprise CMP-04 Ames-positive and the other **three** Ames-negative (CMP-01, CMP-02, CMP-05).",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "MW >1200 Da validation: **not triggered (supplied values)**.",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "All supplied MW below 1200; no such returned block.",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "CAPABILITIES.md records hERG 1 versus 10 μM, PAINS warn versus block, and Lipinski advisory versus at most one violation conflicts.",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "Actual local hook blocked below 1 μM; 10 μM would be more restrictive for clearance, not less.",
+              "signals": [
+                "number"
+              ]
+            },
+            {
+              "sentence": "TOKN thresholds are local policies, not universal ICH safety determinations.",
+              "signals": [
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "CMP-05 has two Lipinski failures: the brief maps them to caveats while the reported README differs.",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "QED ≥0.3 and LogS ≥-6 are thresholds reported by the gate.",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "Former 0.99 estimate withdrawn; no calibrated probability is available (confidence=null).",
+              "signals": [
+                "number"
+              ]
+            },
+            {
+              "sentence": "**Finding:** draft statuses remain CMP-01/CMP-02 advance, CMP-05 advance_with_caveats, CMP-04 reject, CMP-03/CMP-06 hold.",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "**Unassessed checks:** independent hERG/CYP/PAINS, descriptors/ADMET, completed DDI analysis, efficacy/exposure/selectivity and synthesis.",
+              "signals": [
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "**Permitted next step and responsible reviewer:** senior medicinal-chemistry review before synthesis; safety pharmacologist for CMP-03; qualified DDI reviewer for CMP-06; operator restoration of dependencies followed by guarded rechecks.",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "**C1 — rebutted:** Complete-record check_advancement_gate with herg_ic50_uM=0.62 reproduced the exact hERG HARD BLOCK at 0.620 μM <1.00 μM through the batch interface despite schema omission.",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "**C2 — rebutted:** Complete-record CMP-06 gate reproduced CYP450 HARD BLOCK at 0.450 μM <1.00 μM with ddi_analysis_done=false; standalone ddi_analyze returned the same refusal.",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "Gate-specific reproducibility gap closed; hold unchanged, no DDI analysis.",
+              "signals": [
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "**C3 — fixed:** Withdrew uncalibrated 0.99 estimate (confidence=null); confidence-omitted abstention_gate returned defer for drugdisc/high stakes.",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "Named senior medicinal-chemistry, safety-pharmacology and DDI reviewers; draft statuses retained without authorization.",
+              "signals": [
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "**C4 — fixed:** Fresh grounding_check_citations arguments and actual raw output are recorded in step-8 tool_log for the revised report; missing historical checker output was not invented.",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "**C5 — fixed:** Confirmed disclosures exist in provenance but raw log entries are absent.",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "Explicitly stated original arguments, mistyped SMILES and raw responses were not retained in supplied artifacts; only prose-disclosed facts are known.",
+              "signals": [
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "**C6 — fixed:** Moved observed_wrapper outside historical raw_output into sibling annotation.",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "**C7 — fixed:** Defined summary scale and restricted gates statuses to brief vocabulary.",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "Aggregate advancement, hERG and CYP450 consistently labelled hold.",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "**C8 — fixed:** Fresh gates verify four scored compounds, three scored Ames-negative responses (CMP-01, CMP-02, CMP-05).",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "**C9 — fixed:** Verified five failed historical context families on every compound.",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            },
+            {
+              "sentence": "Populated unassessed_checks for all six; CMP-06 also records incomplete refused DDI analysis.",
+              "signals": [
+                "number",
+                "proper_noun"
+              ]
+            }
+          ],
+          "sources_seen": 11
+        },
+        "tool": "grounding_check_citations"
+      },
+      "raw_output_text": "{\"result\":{\"verdict\":\"partially_verified\",\"citations\":[{\"raw\":\"[src:gCMP01 \\\"PSA ≤ 140 Å²\\\"]\",\"offset\":2334,\"source_id\":\"gCMP01\",\"quote\":\"PSA ≤ 140 Å²\",\"claim\":\"Returned criterion evidence:\",\"status\":\"verified\"},{\"raw\":\"[src:gCMP02 \\\"QED ≥ 0.3\\\"]\",\"offset\":2964,\"source_id\":\"gCMP02\",\"quote\":\"QED ≥ 0.3\",\"claim\":\"Returned criterion evidence:\",\"status\":\"unchecked\",\"reason\":\"quote is too short to be evidence (minimum 8 non-space characters)\"},{\"raw\":\"[src:gCMP03 \\\"hERG HARD BLOCK: predicted hERG IC50 = 0.620 μM \\u003c 1.00 μM\\\"]\",\"offset\":3268,\"source_id\":\"gCMP03\",\"quote\":\"hERG HARD BLOCK: predicted hERG IC50 = 0.620 μM \\u003c 1.00 μM\",\"claim\":\"Fresh refusal:\",\"status\":\"verified\"},{\"raw\":\"[src:gCMP04 \\\"HARD BLOCK: Ames-positive compounds cannot advance.\\\"]\",\"offset\":4394,\"source_id\":\"gCMP04\",\"quote\":\"HARD BLOCK: Ames-positive compounds cannot advance.\",\"claim\":\"Returned criterion evidence:\",\"status\":\"verified\"},{\"raw\":\"[src:gCMP05 \\\"Molecular weight ≤ 500 (Lipinski)\\\"]\",\"offset\":5252,\"source_id\":\"gCMP05\",\"quote\":\"Molecular weight ≤ 500 (Lipinski)\",\"claim\":\"Returned criterion evidence:\",\"status\":\"verified\"},{\"raw\":\"[src:gCMP06 \\\"CYP450 HARD BLOCK: CYP3A4 IC50 0.450 μM \\u003c 1.00 μM\\\"]\",\"offset\":5512,\"source_id\":\"gCMP06\",\"quote\":\"CYP450 HARD BLOCK: CYP3A4 IC50 0.450 μM \\u003c 1.00 μM\",\"claim\":\"Fresh refusal:\",\"status\":\"verified\"},{\"raw\":\"[src:dCMP06 \\\"CYP450 HARD BLOCK: CYP3A4 IC50 0.450 μM \\u003c 1.00 μM\\\"]\",\"offset\":5853,\"source_id\":\"dCMP06\",\"quote\":\"CYP450 HARD BLOCK: CYP3A4 IC50 0.450 μM \\u003c 1.00 μM\",\"claim\":\"Standalone ddi_analyze also returned the refusal, not an analysis.\",\"status\":\"verified\"},{\"raw\":\"[src:ctx \\\"No module named 'rdkit'\\\"]\",\"offset\":6548,\"source_id\":\"ctx\",\"quote\":\"No module named 'rdkit'\",\"claim\":\"hERG/CYP/PAINS: `No module named 'rdkit'`.\",\"status\":\"verified\"},{\"raw\":\"[src:desc \\\"RDKit not installed\\\"]\",\"offset\":6704,\"source_id\":\"desc\",\"quote\":\"RDKit not installed\",\"claim\":\"Descriptors: `RDKit not installed`, exit code 1.\",\"status\":\"verified\"},{\"raw\":\"[src:admetAll \\\"ModuleNotFoundError: No module named 'admet_ai'\\\"]\",\"offset\":6876,\"source_id\":\"admetAll\",\"quote\":\"ModuleNotFoundError: No module named 'admet_ai'\",\"claim\":\"ADMET: missing admet_ai, then fallback RDKit.\",\"status\":\"verified\"},{\"raw\":\"[src:abstain \\\"no confidence estimate available and stakes are high — escalate rather than guess\\\"]\",\"offset\":9154,\"source_id\":\"abstain\",\"quote\":\"no confidence estimate available and stakes are high — escalate rather than guess\",\"claim\":\"Confidence-omitted abstention_gate returned defer: Returned confidence=0 is a fail-closed sentinel, not a measured probability.\",\"status\":\"verified\"}],\"total\":11,\"verified\":10,\"unverifiable\":0,\"mismatched\":0,\"unchecked\":1,\"uncited_factual_looking\":[{\"sentence\":\"**Disposition: DEFER to qualified human review before acting.** All six complete-record gate results reproduced; no safety hold was cleared.\",\"signals\":[\"proper_noun\"]},{\"sentence\":\"**Question, intended use, provenance and unit of analysis.** Assess six compound records before lead-optimisation synthesis.\",\"signals\":[\"proper_noun\"]},{\"sentence\":\"| Compound | Status | Rule | Decisive evidence |\",\"signals\":[\"proper_noun\"]},{\"sentence\":\"| CMP-01 | advance | D4 | Eight criteria passed |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| CMP-02 | advance | D4 | Eight criteria passed, including exact boundaries |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| CMP-03 | hold | D1 | hERG 0.620 μM \\u003c1.00 μM; refused |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| CMP-04 | reject | D2 | Ames 1; hard_blocked=true |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| CMP-05 | advance_with_caveats | D3 | MW 548.6 \\u003e500 and cLogP 5.6 \\u003e5; advisory failures |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| CMP-06 | hold | D1 | CYP3A4 0.450 μM \\u003c1.00 μM; no DDI analysis; refused |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"Fresh gate: evaluated=8, hard_blocked=false, overall_pass=true.\",\"signals\":[\"number\"]},{\"sentence\":\"| Criterion | Supplied value | Gate-reported condition | Passed |\",\"signals\":[\"proper_noun\"]},{\"sentence\":\"| ames | 0 | Ames mutagenicity = negative (hard block) | true |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| clogp | 0.9 | cLogP ≤ 5 (Lipinski) | true |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| hba | 4 | H-bond acceptors ≤ 10 (Lipinski) | true |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| hbd | 2 | H-bond donors ≤ 5 (Lipinski) | true |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| mw | 262.3 | Molecular weight ≤ 500 (Lipinski) | true |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| psa | 67.4 | PSA ≤ 140 Å² | true |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| qed | 0.83 | QED ≥ 0.3 | true |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| solubility | -2.4 | LogS ≥ -6 | true |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"Fresh gate: evaluated=8, hard_blocked=false, overall_pass=true.\",\"signals\":[\"number\"]},{\"sentence\":\"| Criterion | Supplied value | Gate-reported condition | Passed |\",\"signals\":[\"proper_noun\"]},{\"sentence\":\"| ames | 0 | Ames mutagenicity = negative (hard block) | true |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| clogp | 5 | cLogP ≤ 5 (Lipinski) | true |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| hba | 10 | H-bond acceptors ≤ 10 (Lipinski) | true |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| hbd | 5 | H-bond donors ≤ 5 (Lipinski) | true |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| mw | 500 | Molecular weight ≤ 500 (Lipinski) | true |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| psa | 140 | PSA ≤ 140 Å² | true |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| qed | 0.3 | QED ≥ 0.3 | true |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| solubility | -6 | LogS ≥ -6 | true |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"MW, cLogP, HBD, HBA, PSA, QED and LogS passed exactly at inclusive local limits.\",\"signals\":[\"proper_noun\"]},{\"sentence\":\"Planner expected QED/LogS failures, but actual passes govern.\",\"signals\":[\"proper_noun\"]},{\"sentence\":\"Safety pharmacology review of measured patch-clamp hERG IC50 ≥ the gate threshold (1.00 μM), or a structural change, followed by a new gate call; no mitigation was fabricated in this run.\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"Low IC50 indicates risk, not a clinical Torsades determination.\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"Fresh gate: evaluated=8, hard_blocked=true, overall_pass=false.\",\"signals\":[\"number\"]},{\"sentence\":\"| Criterion | Supplied value | Gate-reported condition | Passed |\",\"signals\":[\"proper_noun\"]},{\"sentence\":\"| ames | 1 | Ames mutagenicity = negative (hard block) | false |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| clogp | 2.2 | cLogP ≤ 5 (Lipinski) | true |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| hba | 4 | H-bond acceptors ≤ 10 (Lipinski) | true |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| hbd | 1 | H-bond donors ≤ 5 (Lipinski) | true |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| mw | 242.2 | Molecular weight ≤ 500 (Lipinski) | true |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| psa | 75 | PSA ≤ 140 Å² | true |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| qed | 0.66 | QED ≥ 0.3 | true |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| solubility | -3.4 | LogS ≥ -6 | true |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"Other passes cannot override Ames=1.\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"No new Ames assay or prediction obtained.\",\"signals\":[\"proper_noun\"]},{\"sentence\":\"Fresh gate: evaluated=8, hard_blocked=false, overall_pass=false.\",\"signals\":[\"number\"]},{\"sentence\":\"| Criterion | Supplied value | Gate-reported condition | Passed |\",\"signals\":[\"proper_noun\"]},{\"sentence\":\"| ames | 0 | Ames mutagenicity = negative (hard block) | true |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| clogp | 5.6 | cLogP ≤ 5 (Lipinski) | false |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| hba | 5 | H-bond acceptors ≤ 10 (Lipinski) | true |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| hbd | 1 | H-bond donors ≤ 5 (Lipinski) | true |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| mw | 548.6 | Molecular weight ≤ 500 (Lipinski) | false |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| psa | 51.2 | PSA ≤ 140 Å² | true |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| qed | 0.41 | QED ≥ 0.3 | true |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"| solubility | -5.4 | LogS ≥ -6 | true |\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"Only MW and cLogP failed.\",\"signals\":[\"proper_noun\"]},{\"sentence\":\"A qualified DDI reviewer must review and attach an accepted DDI analysis, or supply a measured CYP3A4 IC50 ≥1 μM, before a new gate call; this run did not change ddi_analysis_done or attach mitigation.\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"Unbound exposure, substrate context and clinical DDI implications remain unassessed.\",\"signals\":[\"proper_noun\"]},{\"sentence\":\"All six historical logs contain errors for hERG, CYP, PAINS, descriptors and ADMET.\",\"signals\":[\"proper_noun\"]},{\"sentence\":\"The reviser freshly rechecked one representative per dependency family, not all six context calls: herg_predict (CMP-03), cyp_predict (CMP-06), pains_filter (CMP-04), compute_2d_properties and predict_admet (CMP-01).\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"No independent IC50 discordance or PAINS alert assessment available.\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"Supplied MW/cLogP versus SMILES consistency, including CMP-02/CMP-05 concerns, unverified.\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"No Ames cross-check or new predictions.\",\"signals\":[\"proper_noun\"]},{\"sentence\":\"Original arguments, mistyped SMILES and raw outputs were not retained in supplied artifacts; only prose-disclosed facts are known.\",\"signals\":[\"proper_noun\"]},{\"sentence\":\"Four scored compounds comprise CMP-04 Ames-positive and the other **three** Ames-negative (CMP-01, CMP-02, CMP-05).\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"MW \\u003e1200 Da validation: **not triggered (supplied values)**.\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"All supplied MW below 1200; no such returned block.\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"CAPABILITIES.md records hERG 1 versus 10 μM, PAINS warn versus block, and Lipinski advisory versus at most one violation conflicts.\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"Actual local hook blocked below 1 μM; 10 μM would be more restrictive for clearance, not less.\",\"signals\":[\"number\"]},{\"sentence\":\"TOKN thresholds are local policies, not universal ICH safety determinations.\",\"signals\":[\"proper_noun\"]},{\"sentence\":\"CMP-05 has two Lipinski failures: the brief maps them to caveats while the reported README differs.\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"QED ≥0.3 and LogS ≥-6 are thresholds reported by the gate.\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"Former 0.99 estimate withdrawn; no calibrated probability is available (confidence=null).\",\"signals\":[\"number\"]},{\"sentence\":\"**Finding:** draft statuses remain CMP-01/CMP-02 advance, CMP-05 advance_with_caveats, CMP-04 reject, CMP-03/CMP-06 hold.\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"**Unassessed checks:** independent hERG/CYP/PAINS, descriptors/ADMET, completed DDI analysis, efficacy/exposure/selectivity and synthesis.\",\"signals\":[\"proper_noun\"]},{\"sentence\":\"**Permitted next step and responsible reviewer:** senior medicinal-chemistry review before synthesis; safety pharmacologist for CMP-03; qualified DDI reviewer for CMP-06; operator restoration of dependencies followed by guarded rechecks.\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"**C1 — rebutted:** Complete-record check_advancement_gate with herg_ic50_uM=0.62 reproduced the exact hERG HARD BLOCK at 0.620 μM \\u003c1.00 μM through the batch interface despite schema omission.\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"**C2 — rebutted:** Complete-record CMP-06 gate reproduced CYP450 HARD BLOCK at 0.450 μM \\u003c1.00 μM with ddi_analysis_done=false; standalone ddi_analyze returned the same refusal.\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"Gate-specific reproducibility gap closed; hold unchanged, no DDI analysis.\",\"signals\":[\"proper_noun\"]},{\"sentence\":\"**C3 — fixed:** Withdrew uncalibrated 0.99 estimate (confidence=null); confidence-omitted abstention_gate returned defer for drugdisc/high stakes.\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"Named senior medicinal-chemistry, safety-pharmacology and DDI reviewers; draft statuses retained without authorization.\",\"signals\":[\"proper_noun\"]},{\"sentence\":\"**C4 — fixed:** Fresh grounding_check_citations arguments and actual raw output are recorded in step-8 tool_log for the revised report; missing historical checker output was not invented.\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"**C5 — fixed:** Confirmed disclosures exist in provenance but raw log entries are absent.\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"Explicitly stated original arguments, mistyped SMILES and raw responses were not retained in supplied artifacts; only prose-disclosed facts are known.\",\"signals\":[\"proper_noun\"]},{\"sentence\":\"**C6 — fixed:** Moved observed_wrapper outside historical raw_output into sibling annotation.\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"**C7 — fixed:** Defined summary scale and restricted gates statuses to brief vocabulary.\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"Aggregate advancement, hERG and CYP450 consistently labelled hold.\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"**C8 — fixed:** Fresh gates verify four scored compounds, three scored Ames-negative responses (CMP-01, CMP-02, CMP-05).\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"**C9 — fixed:** Verified five failed historical context families on every compound.\",\"signals\":[\"number\",\"proper_noun\"]},{\"sentence\":\"Populated unassessed_checks for all six; CMP-06 also records incomplete refused DDI analysis.\",\"signals\":[\"number\",\"proper_noun\"]}],\"sources_seen\":11},\"tool\":\"grounding_check_citations\"}",
+      "provenance": ".nospace\\runs\\2026-11-07T02-04-56-984500200-14408-0001.jsonl",
+      "annotation": "Checked report before C5 historical recovery wording update. All citation-bearing spans remain unchanged. 11 citations: 10 verified, one unchecked because QED quote has fewer than 8 non-space characters. No mismatched or unverifiable citations. This checker verifies quote matching, not every factual claim."
+    }
+  ],
+  "fabrication_check": "All six reviser gate-call argument objects equal the supplied records. No mitigation, mitigation_notes, pains_justified or ddi_analysis_done=true was added. ddi_analysis_done=false preserved. No context result attached or used to clear a block. Audit reruns were user-requested verification, not clearance-seeking retries.",
+  "conflicts_reported": [
+    "hERG: CAPABILITIES records a README failure threshold below 10 μM and a tool-description block below 1 μM; CMP-03's actual hook applied below 1.00 μM. The conflict remains for safety-pharmacology and governance review.",
+    "PAINS: CAPABILITIES records README 'warn, not block' versus the tool description's hard block unless a documented non-interfering mechanism exists. No mechanism was documented and no independent filter result was obtained because RDKit was missing.",
+    "Lipinski: the README allows at most one violation, whereas the brief maps advisory failures not hard-blocked to advance_with_caveats. CMP-05 failed two Lipinski components; the brief and gate response governed this report, with medicinal-chemistry review required before synthesis.",
+    "QED and LogS: CAPABILITIES noted thresholds were undefined in the initial sources, but the gate itself reported QED ≥0.3 and LogS ≥-6. Those are local gate thresholds, not universal pharmacology standards; CMP-02 passed both exactly at those returned limits.",
+    "CMP-02 boundaries: the gate marked MW=500, cLogP=5, HBD=5, HBA=10 and PSA=140 as passing, consistent with inclusive limits; QED=0.3 and LogS=-6 also passed. RDKit recomputation and rounding assessment were unavailable."
+  ],
+  "expectation_mismatches": [
+    {
+      "item": "CMP-02",
+      "planner_expectation_not_evidence": "advance_with_caveats (QED/LogS)",
+      "actual": "advance",
+      "reason": "Gate passed QED=0.3 against QED ≥0.3 and LogS=-6 against LogS ≥-6; no advisory criterion failed under D4."
+    }
+  ],
+  "run_disposition": {
+    "disposition": "defer",
+    "human_reviewer": "Senior medicinal-chemistry reviewer, with safety-pharmacology and qualified DDI reviewers",
+    "detail": "Confidence omitted because no calibrated probability is available; observed high-stakes abstention_gate disposition=defer. Preserve draft statuses and escalate before acting. No advancement authorized."
+  },
+  "provenance": {
+    "input_file": "inputs/compounds.json",
+    "brief": "BRIEF.md",
+    "plan": "PLAN.md",
+    "capabilities": "CAPABILITIES.md",
+    "tools": [
+      "check_advancement_gate",
+      "herg_predict",
+      "cyp_predict",
+      "ddi_analyze",
+      "pains_filter",
+      "compute_2d_properties",
+      "predict_admet",
+      "abstention_gate",
+      "grounding_check_citations"
+    ],
+    "run_date": "2026-11-07",
+    "declaration": "synthetic data; in-silico and supplied values; recommendation only, not an advancement decision (T4 advance requires senior reviewer sign-off)",
+    "execution_correction": "Recovered original arguments and raw responses from .nospace/runs/2026-11-07T01-33-51-354666600-46480-0001.jsonl. Initial CMP-01 predict_admet SMILES was CC(=O)Nc1ccc(cc1)C(=O)NC2CCO; it failed for missing admet_ai then RDKit. Accidental execute_domain_script arguments were {\"script\":\"noop\"}; response was execute_domain_script requires script_path. Both actual responses now logged; no predictions or successful script execution resulted. Corrected CMP-01 call was independently rechecked.",
+    "tool_output_classification": "All context-tool dependency errors are recorded as errors, never as negative or clear results. No mock, simulated or placeholder pharmacology output was generated or used.",
+    "revision_scope": "Full revision: all six records and criteria checked; complete-record gates reproduced; all nine findings assessed. Historical run date retained, not independently authenticated.",
+    "gate_summary_scale": "Same four tokens as item statuses: aggregate hold indicates blocked, unassessed or pending review; reject identifies hard block; advance_with_caveats identifies advisory failure; advance would require evaluated passes. Descriptive summaries are not new item gate outcomes. MW validation is not triggered (supplied values), not pass.",
+    "citation_check_scope": "Actual checker answer/source arguments and full raw output retained. 10 verified, 1 unchecked short QED quote; no mismatches/unverifiable citations. Subsequent C5 non-citation prose corrected from recovered logs; citation spans unchanged."
+  }
+}

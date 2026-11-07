@@ -1,0 +1,1217 @@
+{
+  "domain": "gridfm",
+  "objective": "Assign evidence-backed trust dispositions to PRED-A through PRED-F by independently checking the exact GridSFM predictions against physics and applying the deployment scale, OOD, and warm-start gates.",
+  "items": [
+    {
+      "id": "PRED-A",
+      "status": "operational_advisory",
+      "rationale": "verify_surrogate_solution returned OPERATIONAL and independentlyFeasible=true, with no violations listed (violations=null); the powerBalancePU residual was 2.498001805406602e-16 pu. R4 therefore assigns operational_advisory, with G1-G5 passing; any actuation remains human-approved under G6. The deployment confidence cap is 0.3 from assess_ood, lower than the returned per-prediction cap of 0.9; evaluate_warm_start was not run because the disposition was not WARM_START.",
+      "evidence": [
+        "verify_surrogate_solution: disposition=OPERATIONAL; independentlyFeasible=true; violations=null; powerBalancePU=2.498001805406602e-16; confidenceCap=0.9",
+        "verify_surrogate_solution: rationale=independently verified feasible and surrogate agrees; may inform operations (actuation remains human-gated)",
+        "select_model_tier: tier.name=GridSFM-Open; scaleHeadroom=0.925; bus_count input=3700",
+        "assess_ood: outOfDist=true; confidenceCap=0.3; scaleHeadroom=0.925",
+        "PLAN.md Step 10: evaluate_warm_start not run because disposition was not WARM_START"
+      ],
+      "tools_used": [
+        "verify_surrogate_solution",
+        "select_model_tier",
+        "assess_ood",
+        "list_verification_checks"
+      ],
+      "label": "PRED-A",
+      "disposition": "OPERATIONAL",
+      "phase": "OPERATIONAL",
+      "independently_feasible": true,
+      "power_balance_residual_pu": 2.498001805406602e-16,
+      "prediction_cap": 0.9,
+      "confidence_cap_applied": 0.3,
+      "decision_rule": "R4",
+      "discrepancies": [],
+      "flow_voltage_consistency": "not_reported_by_verifier",
+      "surrogate_self_report": {
+        "feasibility": "feasible",
+        "confidence": 0.94,
+        "evidence": false
+      },
+      "violations": [],
+      "violations_by_kind": {},
+      "violation_schema_note": "Raw null normalized to []; native violation entries provide detail/margin, not separate value/limit. Added fields have labelled provenance.",
+      "flow_voltage_consistency_note": "No admittance data; execution and tolerance use not reported. No run/not_run, pass, or unused-tolerance claim.",
+      "warm_start": null,
+      "not_run": "disposition not WARM_START"
+    },
+    {
+      "id": "PRED-B",
+      "status": "hold_for_review",
+      "rationale": "verify_surrogate_solution returned REVIEW and independentlyFeasible=true, with no violations listed (violations=null) and powerBalancePU=2.498001805406602e-16 pu. Its rationale was that the verifier passed but the surrogate self-reported infeasible, so R3 assigns hold_for_review rather than an operational status. The applied confidence cap is 0.3 from assess_ood, versus the per-prediction cap of 0.9; evaluate_warm_start was not run because the disposition was not WARM_START.",
+      "evidence": [
+        "verify_surrogate_solution: disposition=REVIEW; independentlyFeasible=true; violations=null; powerBalancePU=2.498001805406602e-16; confidenceCap=0.9",
+        "verify_surrogate_solution: rationale=verifier passed but surrogate self-reported infeasible; safe-leaning disagreement - hold for human review",
+        "assess_ood: outOfDist=true; confidenceCap=0.3",
+        "PLAN.md R3: disposition REVIEW maps to hold_for_review",
+        "PLAN.md Step 10: evaluate_warm_start not run because disposition was not WARM_START"
+      ],
+      "tools_used": [
+        "verify_surrogate_solution",
+        "select_model_tier",
+        "assess_ood",
+        "list_verification_checks"
+      ],
+      "label": "PRED-B",
+      "disposition": "REVIEW",
+      "phase": "WARM_START",
+      "independently_feasible": true,
+      "power_balance_residual_pu": 2.498001805406602e-16,
+      "prediction_cap": 0.9,
+      "confidence_cap_applied": 0.3,
+      "decision_rule": "R3",
+      "discrepancies": [
+        "Rerun phase=WARM_START differs from disposition=REVIEW. R3 and Step 10 use disposition; status remains hold_for_review and timing not run."
+      ],
+      "flow_voltage_consistency": "not_reported_by_verifier",
+      "surrogate_self_report": {
+        "feasibility": "infeasible",
+        "confidence": 0.41,
+        "evidence": false
+      },
+      "violations": [],
+      "violations_by_kind": {},
+      "violation_schema_note": "Raw null normalized to []; native violation entries provide detail/margin, not separate value/limit. Added fields have labelled provenance.",
+      "flow_voltage_consistency_note": "No admittance data; execution and tolerance use not reported. No run/not_run, pass, or unused-tolerance claim.",
+      "warm_start": null,
+      "not_run": "disposition not WARM_START"
+    },
+    {
+      "id": "PRED-C",
+      "status": "reject",
+      "rationale": "verify_surrogate_solution returned REJECTED and independentlyFeasible=false with powerBalancePU=-0.1500000000000001 pu. The sole violation was power_balance at element system, with margin=0.1400000000000001 and detail that residual -0.1500 pu exceeds tolerance 0.0100 (gen=1.8800, load=2.0000, losses=0.0300). R1 makes this a reject; a warm-start evaluation is not permitted by the plan for a REJECTED disposition, and the applied confidence cap is 0.3.",
+      "evidence": [
+        "verify_surrogate_solution: disposition=REJECTED; independentlyFeasible=false; powerBalancePU=-0.1500000000000001; confidenceCap=0.5",
+        "verify_surrogate_solution: violation kind=power_balance; element=system; margin=0.1400000000000001; detail=power-balance residual -0.1500 pu exceeds tolerance 0.0100 (gen=1.8800 load=2.0000 losses=0.0300)",
+        "list_verification_checks: powerBalancePU tolerance=0.01; thermalSlack=0; consistencyPU=0.05",
+        "assess_ood: outOfDist=true; confidenceCap=0.3",
+        "PLAN.md Step 10: evaluate_warm_start not run because disposition was not WARM_START"
+      ],
+      "tools_used": [
+        "verify_surrogate_solution",
+        "list_verification_checks",
+        "select_model_tier",
+        "assess_ood"
+      ],
+      "label": "PRED-C",
+      "disposition": "REJECTED",
+      "phase": "REJECTED",
+      "independently_feasible": false,
+      "power_balance_residual_pu": -0.1500000000000001,
+      "prediction_cap": 0.5,
+      "confidence_cap_applied": 0.3,
+      "decision_rule": "R1",
+      "discrepancies": [],
+      "flow_voltage_consistency": "not_reported_by_verifier",
+      "surrogate_self_report": {
+        "feasibility": "feasible",
+        "confidence": 0.97,
+        "evidence": false
+      },
+      "violations": [
+        {
+          "kind": "power_balance",
+          "element": "system",
+          "value": -0.1500000000000001,
+          "limit": 0.01,
+          "detail": "power-balance residual -0.1500 pu exceeds tolerance 0.0100 (gen=1.8800 load=2.0000 losses=0.0300)",
+          "margin": 0.1400000000000001,
+          "value_limit_source": "Verifier residual/tolerance for power balance (absolute-residual limit); otherwise returned detail and exact input fields."
+        }
+      ],
+      "violations_by_kind": {
+        "power_balance": 1
+      },
+      "violation_schema_note": "Raw null normalized to []; native violation entries provide detail/margin, not separate value/limit. Added fields have labelled provenance.",
+      "flow_voltage_consistency_note": "No admittance data; execution and tolerance use not reported. No run/not_run, pass, or unused-tolerance claim.",
+      "warm_start": null,
+      "not_run": "disposition not WARM_START"
+    },
+    {
+      "id": "PRED-D",
+      "status": "operational_advisory",
+      "rationale": "verify_surrogate_solution returned OPERATIONAL and independentlyFeasible=true, with violations=null and powerBalancePU=2.498001805406602e-16 pu. Exact-limit input values did not produce any violation, so there is no R6 discrepancy; R4 assigns operational_advisory with G1-G5 passing, and actuation remains human-approved. The applied cap is 0.3 from assess_ood rather than the per-prediction 0.9; no warm-start evaluation was run because the disposition was not WARM_START.",
+      "evidence": [
+        "verify_surrogate_solution: disposition=OPERATIONAL; independentlyFeasible=true; violations=null; powerBalancePU=2.498001805406602e-16; confidenceCap=0.9",
+        "inputs/predictions.json PRED-D exact-limit values checked under R6: B1 vMagPU=1.05 equals vMaxPU=1.05; G2 pgPU=1.0 equals pMaxPU=1.0; L23 sFlowPU=0.4 equals ratingPU=0.4; verifier violations=null",
+        "select_model_tier: tier.name=GridSFM-Open; maxBuses=4000; bus_count input=3700",
+        "assess_ood: outOfDist=true; confidenceCap=0.3",
+        "PLAN.md Step 10: evaluate_warm_start not run because disposition was not WARM_START"
+      ],
+      "tools_used": [
+        "verify_surrogate_solution",
+        "select_model_tier",
+        "assess_ood",
+        "list_verification_checks"
+      ],
+      "label": "PRED-D",
+      "disposition": "OPERATIONAL",
+      "phase": "OPERATIONAL",
+      "independently_feasible": true,
+      "power_balance_residual_pu": 2.498001805406602e-16,
+      "prediction_cap": 0.9,
+      "confidence_cap_applied": 0.3,
+      "decision_rule": "R4",
+      "discrepancies": [],
+      "flow_voltage_consistency": "not_reported_by_verifier",
+      "surrogate_self_report": {
+        "feasibility": "feasible",
+        "confidence": 0.88,
+        "evidence": false
+      },
+      "violations": [],
+      "violations_by_kind": {},
+      "violation_schema_note": "Raw null normalized to []; native violation entries provide detail/margin, not separate value/limit. Added fields have labelled provenance.",
+      "flow_voltage_consistency_note": "No admittance data; execution and tolerance use not reported. No run/not_run, pass, or unused-tolerance claim.",
+      "warm_start": null,
+      "not_run": "disposition not WARM_START"
+    },
+    {
+      "id": "PRED-E",
+      "status": "reject",
+      "rationale": "verify_surrogate_solution returned WARM_START and independentlyFeasible=false, with thermal_limit at L13 (margin=0.06000000000000005; |S|=1.0600 pu above rating 1.0000) and voltage_bound at B3 (margin=0.019999999999999907; |V|=0.9300 pu below 0.9500); powerBalancePU=-1.942890293094024e-16. evaluate_warm_start returned speedup=0.9130434782608696, baselineSeconds=4.2 and warmSeconds=4.6, and withinExpected=false with the note that the seed hurt convergence. Because that speedup is below 1.0, R2 and G4 require reject rather than warm_start_only; the applied confidence cap is 0.3.",
+      "evidence": [
+        "verify_surrogate_solution: disposition=WARM_START; independentlyFeasible=false; powerBalancePU=-1.942890293094024e-16; confidenceCap=0.5",
+        "verify_surrogate_solution: thermal_limit element=L13; margin=0.06000000000000005; detail=|S|=1.0600 pu exceeds rating 1.0000",
+        "verify_surrogate_solution: voltage_bound element=B3; margin=0.019999999999999907; detail=|V|=0.9300 pu below lower bound 0.9500",
+        "evaluate_warm_start: scenario=feeder-pocket-1100; baselineSeconds=4.2; warmSeconds=4.6; speedup=0.9130434782608696; withinExpected=false; note=warm start was SLOWER (0.91x) - the surrogate seed hurt convergence here; do not use it for this grid",
+        "assess_ood: outOfDist=true; confidenceCap=0.3"
+      ],
+      "tools_used": [
+        "verify_surrogate_solution",
+        "evaluate_warm_start",
+        "assess_ood",
+        "select_model_tier",
+        "list_verification_checks"
+      ],
+      "label": "PRED-E",
+      "disposition": "WARM_START",
+      "phase": "WARM_START",
+      "independently_feasible": false,
+      "power_balance_residual_pu": -1.942890293094024e-16,
+      "prediction_cap": 0.5,
+      "confidence_cap_applied": 0.3,
+      "decision_rule": "R2",
+      "discrepancies": [],
+      "flow_voltage_consistency": "not_reported_by_verifier",
+      "surrogate_self_report": {
+        "feasibility": "feasible",
+        "confidence": 0.9,
+        "evidence": false
+      },
+      "violations": [
+        {
+          "kind": "thermal_limit",
+          "element": "L13",
+          "value": 1.06,
+          "limit": 1.0,
+          "detail": "|S|=1.0600 pu exceeds rating 1.0000",
+          "margin": 0.06000000000000005,
+          "value_limit_source": "Verifier residual/tolerance for power balance (absolute-residual limit); otherwise returned detail and exact input fields."
+        },
+        {
+          "kind": "voltage_bound",
+          "element": "B3",
+          "value": 0.93,
+          "limit": 0.95,
+          "detail": "|V|=0.9300 pu below lower bound 0.9500",
+          "margin": 0.019999999999999907,
+          "value_limit_source": "Verifier residual/tolerance for power balance (absolute-residual limit); otherwise returned detail and exact input fields."
+        }
+      ],
+      "violations_by_kind": {
+        "thermal_limit": 1,
+        "voltage_bound": 1
+      },
+      "violation_schema_note": "Raw null normalized to []; native violation entries provide detail/margin, not separate value/limit. Added fields have labelled provenance.",
+      "flow_voltage_consistency_note": "No admittance data; execution and tolerance use not reported. No run/not_run, pass, or unused-tolerance claim.",
+      "warm_start": {
+        "scenario": "feeder-pocket-1100",
+        "baseline_seconds": 4.2,
+        "warm_seconds": 4.6,
+        "speedup": 0.9130434782608696,
+        "flags": {
+          "within_expected": false,
+          "seed_hurt_convergence": true,
+          "single_sample": true,
+          "synthetic": true,
+          "variance_not_estimated": true
+        },
+        "note": "warm start was SLOWER (0.91x) - the surrogate seed hurt convergence here; do not use it for this grid"
+      }
+    },
+    {
+      "id": "PRED-F",
+      "status": "warm_start_only",
+      "rationale": "verify_surrogate_solution returned WARM_START and independentlyFeasible=false with one generator_reactive_limit violation at G2: Qg=0.6200 above Qmax=0.5000, margin=0.12, and powerBalancePU=2.498001805406602e-16 pu. evaluate_warm_start returned speedup=1.75 and withinExpected=true for baselineSeconds=6.3 and warmSeconds=3.6, stating that 1.75x is within the expected 1.5-2.0x band. R2 therefore assigns warm_start_only; this is solver-seed use, not an operational advisory, and the applied confidence cap is 0.3.",
+      "evidence": [
+        "verify_surrogate_solution: disposition=WARM_START; independentlyFeasible=false; powerBalancePU=2.498001805406602e-16; confidenceCap=0.5",
+        "verify_surrogate_solution: generator_reactive_limit element=G2; margin=0.12; detail=Qg=0.6200 above Qmax=0.5000",
+        "evaluate_warm_start: scenario=feeder-pocket-1200; baselineSeconds=6.3; warmSeconds=3.6; speedup=1.75; withinExpected=true; note=speedup 1.75x within the expected 1.5-2.0x band",
+        "assess_ood: outOfDist=true; confidenceCap=0.3",
+        "select_model_tier: tier.name=GridSFM-Open; scaleHeadroom=0.925"
+      ],
+      "tools_used": [
+        "verify_surrogate_solution",
+        "evaluate_warm_start",
+        "assess_ood",
+        "select_model_tier",
+        "list_verification_checks"
+      ],
+      "label": "PRED-F",
+      "disposition": "WARM_START",
+      "phase": "WARM_START",
+      "independently_feasible": false,
+      "power_balance_residual_pu": 2.498001805406602e-16,
+      "prediction_cap": 0.5,
+      "confidence_cap_applied": 0.3,
+      "decision_rule": "R2",
+      "discrepancies": [],
+      "flow_voltage_consistency": "not_reported_by_verifier",
+      "surrogate_self_report": {
+        "feasibility": "feasible",
+        "confidence": 0.86,
+        "evidence": false
+      },
+      "violations": [
+        {
+          "kind": "generator_reactive_limit",
+          "element": "G2",
+          "value": 0.62,
+          "limit": 0.5,
+          "detail": "Qg=0.6200 above Qmax=0.5000",
+          "margin": 0.12,
+          "value_limit_source": "Verifier residual/tolerance for power balance (absolute-residual limit); otherwise returned detail and exact input fields."
+        }
+      ],
+      "violations_by_kind": {
+        "generator_reactive_limit": 1
+      },
+      "violation_schema_note": "Raw null normalized to []; native violation entries provide detail/margin, not separate value/limit. Added fields have labelled provenance.",
+      "flow_voltage_consistency_note": "No admittance data; execution and tolerance use not reported. No run/not_run, pass, or unused-tolerance claim.",
+      "warm_start": {
+        "scenario": "feeder-pocket-1200",
+        "baseline_seconds": 6.3,
+        "warm_seconds": 3.6,
+        "speedup": 1.75,
+        "flags": {
+          "within_expected": true,
+          "seed_hurt_convergence": false,
+          "single_sample": true,
+          "synthetic": true,
+          "variance_not_estimated": true
+        },
+        "note": "speedup 1.75x within the expected 1.5-2.0x band"
+      }
+    }
+  ],
+  "gates": [
+    {
+      "name": "G1 PRED-A scale",
+      "status": "pass",
+      "detail": "select_model_tier({bus_count:3700}) returned GridSFM-Open, maxBuses=4000 and scaleHeadroom=0.925; no refusal or tier mismatch."
+    },
+    {
+      "name": "G2 PRED-A independent verification",
+      "status": "pass",
+      "detail": "Valid disposition OPERATIONAL and independentlyFeasible=true; violations=null; powerBalancePU=2.498001805406602e-16."
+    },
+    {
+      "name": "G3 PRED-A trust",
+      "status": "pass",
+      "detail": "Verifier returned OPERATIONAL and its rationale records verifier/surrogate agreement; advisory status does not rely on surrogate confidence."
+    },
+    {
+      "name": "G4 PRED-A warm start",
+      "status": "n/a",
+      "detail": "Disposition was OPERATIONAL, so evaluate_warm_start was not run and no warm_start_only status was assigned."
+    },
+    {
+      "name": "G5 PRED-A no false all-clear",
+      "status": "pass",
+      "detail": "The verifier listed no violations, and no R6 false-all-clear discrepancy is present in the exact input values."
+    },
+    {
+      "name": "G1 PRED-B scale",
+      "status": "pass",
+      "detail": "select_model_tier({bus_count:3700}) returned GridSFM-Open, maxBuses=4000 and scaleHeadroom=0.925; no refusal or tier mismatch."
+    },
+    {
+      "name": "G2 PRED-B independent verification",
+      "status": "pass",
+      "detail": "Valid disposition REVIEW and independentlyFeasible=true; violations=null; powerBalancePU=2.498001805406602e-16."
+    },
+    {
+      "name": "G3 PRED-B trust",
+      "status": "n/a",
+      "detail": "No operational_advisory is claimed: REVIEW maps to hold_for_review because the verifier passed but surrogate self-report was infeasible."
+    },
+    {
+      "name": "G4 PRED-B warm start",
+      "status": "n/a",
+      "detail": "Disposition was REVIEW, so evaluate_warm_start was not run and no warm_start_only status was assigned."
+    },
+    {
+      "name": "G5 PRED-B no false all-clear",
+      "status": "pass",
+      "detail": "The verifier listed no violations, and no R6 false-all-clear discrepancy is present in the exact input values."
+    },
+    {
+      "name": "G1 PRED-C scale",
+      "status": "pass",
+      "detail": "select_model_tier({bus_count:3700}) returned GridSFM-Open, maxBuses=4000 and scaleHeadroom=0.925; no refusal or tier mismatch."
+    },
+    {
+      "name": "G2 PRED-C independent verification",
+      "status": "pass",
+      "detail": "The tool ran and returned valid disposition REJECTED, independentlyFeasible=false, powerBalancePU=-0.1500000000000001 and a power_balance violation."
+    },
+    {
+      "name": "G3 PRED-C trust",
+      "status": "n/a",
+      "detail": "No operational_advisory is claimed; the hard power_balance violation forces reject under R1."
+    },
+    {
+      "name": "G4 PRED-C warm start",
+      "status": "n/a",
+      "detail": "Disposition was REJECTED, so the plan did not permit evaluate_warm_start."
+    },
+    {
+      "name": "G5 PRED-C no false all-clear",
+      "status": "pass",
+      "detail": "There is no false all-clear: the verifier explicitly rejected power_balance at system with margin=0.1400000000000001."
+    },
+    {
+      "name": "G1 PRED-D scale",
+      "status": "pass",
+      "detail": "select_model_tier({bus_count:3700}) returned GridSFM-Open, maxBuses=4000 and scaleHeadroom=0.925; no refusal or tier mismatch."
+    },
+    {
+      "name": "G2 PRED-D independent verification",
+      "status": "pass",
+      "detail": "Valid disposition OPERATIONAL and independentlyFeasible=true; violations=null; powerBalancePU=2.498001805406602e-16."
+    },
+    {
+      "name": "G3 PRED-D trust",
+      "status": "pass",
+      "detail": "Verifier returned OPERATIONAL and its rationale records verifier/surrogate agreement; advisory status does not rely on surrogate confidence."
+    },
+    {
+      "name": "G4 PRED-D warm start",
+      "status": "n/a",
+      "detail": "Disposition was OPERATIONAL, so evaluate_warm_start was not run and no warm_start_only status was assigned."
+    },
+    {
+      "name": "G5 PRED-D no false all-clear",
+      "status": "pass",
+      "detail": "No R6 discrepancy: exact-limit B1 voltage 1.05=vMaxPU, G2 active power 1.0=pMaxPU, and L23 flow 0.4=ratingPU were not flagged, consistent with the brief's strict-outside rule."
+    },
+    {
+      "name": "G1 PRED-E scale",
+      "status": "pass",
+      "detail": "select_model_tier({bus_count:3700}) returned GridSFM-Open, maxBuses=4000 and scaleHeadroom=0.925; no refusal or tier mismatch."
+    },
+    {
+      "name": "G2 PRED-E independent verification",
+      "status": "pass",
+      "detail": "The tool ran and returned valid disposition WARM_START, independentlyFeasible=false and two bound/limit violations."
+    },
+    {
+      "name": "G3 PRED-E trust",
+      "status": "n/a",
+      "detail": "No operational_advisory is claimed; thermal_limit and voltage_bound findings prevented OPERATIONAL disposition."
+    },
+    {
+      "name": "G4 PRED-E warm start",
+      "status": "fail",
+      "detail": "evaluate_warm_start returned speedup=0.9130434782608696 and withinExpected=false, below the required 1.0; R2 assigns reject."
+    },
+    {
+      "name": "G5 PRED-E no false all-clear",
+      "status": "pass",
+      "detail": "The verifier reported both the L13 thermal_limit and B3 voltage_bound violations visible in the exact input; no R6 false all-clear."
+    },
+    {
+      "name": "G1 PRED-F scale",
+      "status": "pass",
+      "detail": "select_model_tier({bus_count:3700}) returned GridSFM-Open, maxBuses=4000 and scaleHeadroom=0.925; no refusal or tier mismatch."
+    },
+    {
+      "name": "G2 PRED-F independent verification",
+      "status": "pass",
+      "detail": "The tool ran and returned valid disposition WARM_START, independentlyFeasible=false and generator_reactive_limit at G2."
+    },
+    {
+      "name": "G3 PRED-F trust",
+      "status": "n/a",
+      "detail": "No operational_advisory is claimed; generator_reactive_limit at G2 prevented OPERATIONAL disposition."
+    },
+    {
+      "name": "G4 PRED-F warm start",
+      "status": "pass",
+      "detail": "evaluate_warm_start returned speedup=1.75, withinExpected=true, baselineSeconds=6.3 and warmSeconds=3.6; speedup is at least 1.0."
+    },
+    {
+      "name": "G5 PRED-F no false all-clear",
+      "status": "pass",
+      "detail": "The verifier reported G2 Qg=0.6200 above Qmax=0.5000 with margin=0.12; no R6 false all-clear."
+    },
+    {
+      "name": "G6 human-in-the-loop",
+      "status": "pass",
+      "detail": "deployment_context.requested_use states hour-ahead dispatch advisory with any actuation human-approved; PRED-A and PRED-D are advisories only, and PRED-F is only a classical-solver seed."
+    }
+  ],
+  "overall_verdict": "At the capped confidence level, PRED-A and PRED-D may be human-gated operational advisories, PRED-B must be held for review, PRED-F is suitable only as a classical-solver warm start, and PRED-C and PRED-E are rejected; the near-ceiling OOD finding and incomplete reporting of flow-voltage-consistency execution prevent any broader assurance claim.",
+  "confidence": 0.3,
+  "limitations": [
+    "assess_ood marked the full 3700-bus deployment outOfDist=true at GridSFM-Open scaleHeadroom=0.925 and imposed confidenceCap=0.3 because it is at or near the validated ceiling; overall confidence is limited accordingly.",
+    "The 3-bus reduced pocket has not been certified as representative of the full 3700-bus model, and assess_ood used bus count alone; these are reduced-model disposition results, not full-network validation.",
+    "Inputs contain no admittance data. list_verification_checks lists flow_voltage_consistency with tolerance consistencyPU=0.05, but the verifier outputs did not explicitly report whether that check ran, so no per-item run/not_run claim can be evidence-backed.",
+    "Raw null violations normalized to []; native entries return detail/margin. Structured value/limit fields sourced from verifier residual/tolerance or detail and exact inputs.",
+    "Warm-start timings are single-sample synthetic input values; only PRED-E and PRED-F qualified for evaluate_warm_start, and the tools quantify no timing variance.",
+    "No domain hooks or slash commands were available in the live tool list; human approval for actuation is a stated gate, not an observed technical enforcement test.",
+    "screen_n1_contingencies was not run because there are no contingency cases in inputs; no N-1 assurance is provided.",
+    "This assessment does not execute a classical AC-OPF re-solve or prove optimality; it applies the independent verifier and the requested warm-start timing gate."
+  ],
+  "critique_response": [
+    {
+      "id": "C1",
+      "action": "fixed",
+      "detail": "Independently reran deployment and tolerance tools: GridSFM-Open, scaleHeadroom=0.925, OOD cap=0.3, powerBalancePU=0.01, thermalSlack=0, consistencyPU=0.05 reproduced. Added deployment, verification_checks, tools_not_run and full domain input ledger. assess_ood input omits independently_verified; six exact prediction objects included."
+    },
+    {
+      "id": "C2",
+      "action": "fixed",
+      "detail": "All exact-object verifier reruns reproduce dispositions, residuals, caps and violation detail/margin. Added structured item fields and counts; normalized null to []. Added value/limit provenance rather than presenting these as native fields."
+    },
+    {
+      "id": "C3",
+      "action": "fixed",
+      "detail": "Read all input self-reports and recorded feasibility/confidence with evidence=false. Exact-object rerun rejects PRED-C despite feasible/0.97 self-report."
+    },
+    {
+      "id": "C4",
+      "action": "fixed",
+      "detail": "All reruns omit consistency execution metadata. Added not_reported_by_verifier per item. Did not adopt unsupported suggested assertion that consistencyPU=0.05 was unused; tool reports neither execution nor tolerance use."
+    },
+    {
+      "id": "C5",
+      "action": "fixed",
+      "detail": "Independent B rerun confirms disposition=REVIEW, phase=WARM_START. Recorded every phase and B mismatch; R3/Step 10 use disposition, preserving hold_for_review and no timing evaluation."
+    },
+    {
+      "id": "C6",
+      "action": "fixed",
+      "detail": "Added consolidated report table with independently reproduced dispositions, violation counts, residuals and timing speedups."
+    },
+    {
+      "id": "C7",
+      "action": "fixed",
+      "detail": "Compared existing report with rerun rationale; rephrased unquoted safe-leaning wording as fail-closed disagreement. No prediction called safe."
+    },
+    {
+      "id": "C8",
+      "action": "fixed",
+      "detail": "Verified PLAN defines G1-G6 only. Moved former G7-G10 content to additional reported checks; independently reproduced OOD/tolerance facts retained."
+    },
+    {
+      "id": "C9",
+      "action": "fixed",
+      "detail": "Independent timing reruns reproduce E speedup=0.9130434782608696 and F=1.75. Added point-of-use within_expected, synthetic, single_sample, variance_not_estimated and slower-seed flags."
+    }
+  ],
+  "deployment": {
+    "bus_count": 3700,
+    "select_model_tier": {
+      "tier": {
+        "name": "GridSFM-Open",
+        "maxBuses": 4000
+      },
+      "scaleHeadroom": 0.925,
+      "refused": false
+    },
+    "assess_ood": {
+      "busCount": 3700,
+      "tier": "GridSFM-Open",
+      "scaleHeadroom": 0.925,
+      "outOfDist": true,
+      "confidenceCap": 0.3
+    },
+    "ood_cap": 0.3,
+    "tier_mismatch": false
+  },
+  "verification_checks": {
+    "checks": [
+      "voltage_bound",
+      "generator_active_limit",
+      "generator_reactive_limit",
+      "thermal_limit",
+      "power_balance",
+      "flow_voltage_consistency"
+    ],
+    "tolerances": {
+      "powerBalancePU": 0.01,
+      "thermalSlack": 0,
+      "consistencyPU": 0.05
+    },
+    "tolerance_discrepancy": []
+  },
+  "tools_not_run": {
+    "screen_n1_contingencies": "no contingency cases in inputs"
+  },
+  "tool_calls": [
+    {
+      "name": "list_verification_checks",
+      "input": {}
+    },
+    {
+      "name": "select_model_tier",
+      "input": {
+        "bus_count": 3700
+      }
+    },
+    {
+      "name": "assess_ood",
+      "input": {
+        "bus_count": 3700
+      }
+    },
+    {
+      "name": "verify_surrogate_solution",
+      "item": "PRED-A",
+      "input": {
+        "prediction": {
+          "scenario": {
+            "name": "feeder-pocket-0700",
+            "baseMVA": 100,
+            "buses": [
+              {
+                "id": "B1",
+                "vMagPU": 1.02,
+                "vAngRad": 0.0,
+                "vMinPU": 0.95,
+                "vMaxPU": 1.05,
+                "isSlack": true
+              },
+              {
+                "id": "B2",
+                "vMagPU": 1.0,
+                "vAngRad": -0.04,
+                "vMinPU": 0.95,
+                "vMaxPU": 1.05
+              },
+              {
+                "id": "B3",
+                "vMagPU": 0.98,
+                "vAngRad": -0.07,
+                "vMinPU": 0.95,
+                "vMaxPU": 1.05
+              }
+            ],
+            "generators": [
+              {
+                "id": "G1",
+                "busID": "B1",
+                "pgPU": 1.33,
+                "qgPU": 0.25,
+                "pMinPU": 0.0,
+                "pMaxPU": 2.0,
+                "qMinPU": -1.0,
+                "qMaxPU": 1.0
+              },
+              {
+                "id": "G2",
+                "busID": "B2",
+                "pgPU": 0.7,
+                "qgPU": 0.2,
+                "pMinPU": 0.1,
+                "pMaxPU": 1.0,
+                "qMinPU": -0.5,
+                "qMaxPU": 0.5
+              }
+            ],
+            "loads": [
+              {
+                "busID": "B2",
+                "pdPU": 1.2,
+                "qdPU": 0.3
+              },
+              {
+                "busID": "B3",
+                "pdPU": 0.8,
+                "qdPU": 0.2
+              }
+            ],
+            "branches": [
+              {
+                "id": "L12",
+                "fromBus": "B1",
+                "toBus": "B2",
+                "sFlowPU": 0.64,
+                "ratingPU": 1.0
+              },
+              {
+                "id": "L13",
+                "fromBus": "B1",
+                "toBus": "B3",
+                "sFlowPU": 0.7,
+                "ratingPU": 1.0
+              },
+              {
+                "id": "L23",
+                "fromBus": "B2",
+                "toBus": "B3",
+                "sFlowPU": 0.13,
+                "ratingPU": 0.4
+              }
+            ],
+            "lossesPU": 0.03
+          },
+          "surrogateFeasibility": "feasible",
+          "surrogateConfidence": 0.94,
+          "tier": "GridSFM-Open"
+        }
+      }
+    },
+    {
+      "name": "verify_surrogate_solution",
+      "item": "PRED-B",
+      "input": {
+        "prediction": {
+          "scenario": {
+            "name": "feeder-pocket-0800",
+            "baseMVA": 100,
+            "buses": [
+              {
+                "id": "B1",
+                "vMagPU": 1.02,
+                "vAngRad": 0.0,
+                "vMinPU": 0.95,
+                "vMaxPU": 1.05,
+                "isSlack": true
+              },
+              {
+                "id": "B2",
+                "vMagPU": 1.0,
+                "vAngRad": -0.04,
+                "vMinPU": 0.95,
+                "vMaxPU": 1.05
+              },
+              {
+                "id": "B3",
+                "vMagPU": 0.98,
+                "vAngRad": -0.07,
+                "vMinPU": 0.95,
+                "vMaxPU": 1.05
+              }
+            ],
+            "generators": [
+              {
+                "id": "G1",
+                "busID": "B1",
+                "pgPU": 1.33,
+                "qgPU": 0.25,
+                "pMinPU": 0.0,
+                "pMaxPU": 2.0,
+                "qMinPU": -1.0,
+                "qMaxPU": 1.0
+              },
+              {
+                "id": "G2",
+                "busID": "B2",
+                "pgPU": 0.7,
+                "qgPU": 0.2,
+                "pMinPU": 0.1,
+                "pMaxPU": 1.0,
+                "qMinPU": -0.5,
+                "qMaxPU": 0.5
+              }
+            ],
+            "loads": [
+              {
+                "busID": "B2",
+                "pdPU": 1.2,
+                "qdPU": 0.3
+              },
+              {
+                "busID": "B3",
+                "pdPU": 0.8,
+                "qdPU": 0.2
+              }
+            ],
+            "branches": [
+              {
+                "id": "L12",
+                "fromBus": "B1",
+                "toBus": "B2",
+                "sFlowPU": 0.64,
+                "ratingPU": 1.0
+              },
+              {
+                "id": "L13",
+                "fromBus": "B1",
+                "toBus": "B3",
+                "sFlowPU": 0.7,
+                "ratingPU": 1.0
+              },
+              {
+                "id": "L23",
+                "fromBus": "B2",
+                "toBus": "B3",
+                "sFlowPU": 0.13,
+                "ratingPU": 0.4
+              }
+            ],
+            "lossesPU": 0.03
+          },
+          "surrogateFeasibility": "infeasible",
+          "surrogateConfidence": 0.41,
+          "tier": "GridSFM-Open"
+        }
+      }
+    },
+    {
+      "name": "verify_surrogate_solution",
+      "item": "PRED-C",
+      "input": {
+        "prediction": {
+          "scenario": {
+            "name": "feeder-pocket-0900",
+            "baseMVA": 100,
+            "buses": [
+              {
+                "id": "B1",
+                "vMagPU": 1.02,
+                "vAngRad": 0.0,
+                "vMinPU": 0.95,
+                "vMaxPU": 1.05,
+                "isSlack": true
+              },
+              {
+                "id": "B2",
+                "vMagPU": 1.0,
+                "vAngRad": -0.04,
+                "vMinPU": 0.95,
+                "vMaxPU": 1.05
+              },
+              {
+                "id": "B3",
+                "vMagPU": 0.98,
+                "vAngRad": -0.07,
+                "vMinPU": 0.95,
+                "vMaxPU": 1.05
+              }
+            ],
+            "generators": [
+              {
+                "id": "G1",
+                "busID": "B1",
+                "pgPU": 1.18,
+                "qgPU": 0.25,
+                "pMinPU": 0.0,
+                "pMaxPU": 2.0,
+                "qMinPU": -1.0,
+                "qMaxPU": 1.0
+              },
+              {
+                "id": "G2",
+                "busID": "B2",
+                "pgPU": 0.7,
+                "qgPU": 0.2,
+                "pMinPU": 0.1,
+                "pMaxPU": 1.0,
+                "qMinPU": -0.5,
+                "qMaxPU": 0.5
+              }
+            ],
+            "loads": [
+              {
+                "busID": "B2",
+                "pdPU": 1.2,
+                "qdPU": 0.3
+              },
+              {
+                "busID": "B3",
+                "pdPU": 0.8,
+                "qdPU": 0.2
+              }
+            ],
+            "branches": [
+              {
+                "id": "L12",
+                "fromBus": "B1",
+                "toBus": "B2",
+                "sFlowPU": 0.52,
+                "ratingPU": 1.0
+              },
+              {
+                "id": "L13",
+                "fromBus": "B1",
+                "toBus": "B3",
+                "sFlowPU": 0.7,
+                "ratingPU": 1.0
+              },
+              {
+                "id": "L23",
+                "fromBus": "B2",
+                "toBus": "B3",
+                "sFlowPU": 0.1,
+                "ratingPU": 0.4
+              }
+            ],
+            "lossesPU": 0.03
+          },
+          "surrogateFeasibility": "feasible",
+          "surrogateConfidence": 0.97,
+          "tier": "GridSFM-Open"
+        }
+      }
+    },
+    {
+      "name": "verify_surrogate_solution",
+      "item": "PRED-D",
+      "input": {
+        "prediction": {
+          "scenario": {
+            "name": "feeder-pocket-1000",
+            "baseMVA": 100,
+            "buses": [
+              {
+                "id": "B1",
+                "vMagPU": 1.05,
+                "vAngRad": 0.0,
+                "vMinPU": 0.95,
+                "vMaxPU": 1.05,
+                "isSlack": true
+              },
+              {
+                "id": "B2",
+                "vMagPU": 1.0,
+                "vAngRad": -0.04,
+                "vMinPU": 0.95,
+                "vMaxPU": 1.05
+              },
+              {
+                "id": "B3",
+                "vMagPU": 0.98,
+                "vAngRad": -0.07,
+                "vMinPU": 0.95,
+                "vMaxPU": 1.05
+              }
+            ],
+            "generators": [
+              {
+                "id": "G1",
+                "busID": "B1",
+                "pgPU": 1.03,
+                "qgPU": 0.25,
+                "pMinPU": 0.0,
+                "pMaxPU": 2.0,
+                "qMinPU": -1.0,
+                "qMaxPU": 1.0
+              },
+              {
+                "id": "G2",
+                "busID": "B2",
+                "pgPU": 1.0,
+                "qgPU": 0.2,
+                "pMinPU": 0.1,
+                "pMaxPU": 1.0,
+                "qMinPU": -0.5,
+                "qMaxPU": 0.5
+              }
+            ],
+            "loads": [
+              {
+                "busID": "B2",
+                "pdPU": 1.2,
+                "qdPU": 0.3
+              },
+              {
+                "busID": "B3",
+                "pdPU": 0.8,
+                "qdPU": 0.2
+              }
+            ],
+            "branches": [
+              {
+                "id": "L12",
+                "fromBus": "B1",
+                "toBus": "B2",
+                "sFlowPU": 0.6,
+                "ratingPU": 1.0
+              },
+              {
+                "id": "L13",
+                "fromBus": "B1",
+                "toBus": "B3",
+                "sFlowPU": 0.4,
+                "ratingPU": 1.0
+              },
+              {
+                "id": "L23",
+                "fromBus": "B2",
+                "toBus": "B3",
+                "sFlowPU": 0.4,
+                "ratingPU": 0.4
+              }
+            ],
+            "lossesPU": 0.03
+          },
+          "surrogateFeasibility": "feasible",
+          "surrogateConfidence": 0.88,
+          "tier": "GridSFM-Open"
+        }
+      }
+    },
+    {
+      "name": "verify_surrogate_solution",
+      "item": "PRED-E",
+      "input": {
+        "prediction": {
+          "scenario": {
+            "name": "feeder-pocket-1100",
+            "baseMVA": 100,
+            "buses": [
+              {
+                "id": "B1",
+                "vMagPU": 1.02,
+                "vAngRad": 0.0,
+                "vMinPU": 0.95,
+                "vMaxPU": 1.05,
+                "isSlack": true
+              },
+              {
+                "id": "B2",
+                "vMagPU": 1.0,
+                "vAngRad": -0.04,
+                "vMinPU": 0.95,
+                "vMaxPU": 1.05
+              },
+              {
+                "id": "B3",
+                "vMagPU": 0.93,
+                "vAngRad": -0.07,
+                "vMinPU": 0.95,
+                "vMaxPU": 1.05
+              }
+            ],
+            "generators": [
+              {
+                "id": "G1",
+                "busID": "B1",
+                "pgPU": 1.38,
+                "qgPU": 0.25,
+                "pMinPU": 0.0,
+                "pMaxPU": 2.0,
+                "qMinPU": -1.0,
+                "qMaxPU": 1.0
+              },
+              {
+                "id": "G2",
+                "busID": "B2",
+                "pgPU": 0.65,
+                "qgPU": 0.2,
+                "pMinPU": 0.1,
+                "pMaxPU": 1.0,
+                "qMinPU": -0.5,
+                "qMaxPU": 0.5
+              }
+            ],
+            "loads": [
+              {
+                "busID": "B2",
+                "pdPU": 1.2,
+                "qdPU": 0.3
+              },
+              {
+                "busID": "B3",
+                "pdPU": 0.8,
+                "qdPU": 0.2
+              }
+            ],
+            "branches": [
+              {
+                "id": "L12",
+                "fromBus": "B1",
+                "toBus": "B2",
+                "sFlowPU": 0.33,
+                "ratingPU": 1.0
+              },
+              {
+                "id": "L13",
+                "fromBus": "B1",
+                "toBus": "B3",
+                "sFlowPU": 1.06,
+                "ratingPU": 1.0
+              },
+              {
+                "id": "L23",
+                "fromBus": "B2",
+                "toBus": "B3",
+                "sFlowPU": 0.25,
+                "ratingPU": 0.4
+              }
+            ],
+            "lossesPU": 0.03
+          },
+          "surrogateFeasibility": "feasible",
+          "surrogateConfidence": 0.9,
+          "tier": "GridSFM-Open"
+        }
+      }
+    },
+    {
+      "name": "verify_surrogate_solution",
+      "item": "PRED-F",
+      "input": {
+        "prediction": {
+          "scenario": {
+            "name": "feeder-pocket-1200",
+            "baseMVA": 100,
+            "buses": [
+              {
+                "id": "B1",
+                "vMagPU": 1.02,
+                "vAngRad": 0.0,
+                "vMinPU": 0.95,
+                "vMaxPU": 1.05,
+                "isSlack": true
+              },
+              {
+                "id": "B2",
+                "vMagPU": 1.0,
+                "vAngRad": -0.04,
+                "vMinPU": 0.95,
+                "vMaxPU": 1.05
+              },
+              {
+                "id": "B3",
+                "vMagPU": 0.98,
+                "vAngRad": -0.07,
+                "vMinPU": 0.95,
+                "vMaxPU": 1.05
+              }
+            ],
+            "generators": [
+              {
+                "id": "G1",
+                "busID": "B1",
+                "pgPU": 1.3,
+                "qgPU": 0.25,
+                "pMinPU": 0.0,
+                "pMaxPU": 2.0,
+                "qMinPU": -1.0,
+                "qMaxPU": 1.0
+              },
+              {
+                "id": "G2",
+                "busID": "B2",
+                "pgPU": 0.73,
+                "qgPU": 0.62,
+                "pMinPU": 0.1,
+                "pMaxPU": 1.0,
+                "qMinPU": -0.5,
+                "qMaxPU": 0.5
+              }
+            ],
+            "loads": [
+              {
+                "busID": "B2",
+                "pdPU": 1.2,
+                "qdPU": 0.3
+              },
+              {
+                "busID": "B3",
+                "pdPU": 0.8,
+                "qdPU": 0.2
+              }
+            ],
+            "branches": [
+              {
+                "id": "L12",
+                "fromBus": "B1",
+                "toBus": "B2",
+                "sFlowPU": 0.66,
+                "ratingPU": 1.0
+              },
+              {
+                "id": "L13",
+                "fromBus": "B1",
+                "toBus": "B3",
+                "sFlowPU": 0.67,
+                "ratingPU": 1.0
+              },
+              {
+                "id": "L23",
+                "fromBus": "B2",
+                "toBus": "B3",
+                "sFlowPU": 0.18,
+                "ratingPU": 0.4
+              }
+            ],
+            "lossesPU": 0.03
+          },
+          "surrogateFeasibility": "feasible",
+          "surrogateConfidence": 0.86,
+          "tier": "GridSFM-Open"
+        }
+      }
+    },
+    {
+      "name": "evaluate_warm_start",
+      "item": "PRED-E",
+      "input": {
+        "scenario": "feeder-pocket-1100",
+        "baseline_seconds": 4.2,
+        "warm_seconds": 4.6
+      },
+      "output": {
+        "speedup": 0.9130434782608696,
+        "withinExpected": false
+      }
+    },
+    {
+      "name": "evaluate_warm_start",
+      "item": "PRED-F",
+      "input": {
+        "scenario": "feeder-pocket-1200",
+        "baseline_seconds": 6.3,
+        "warm_seconds": 3.6
+      },
+      "output": {
+        "speedup": 1.75,
+        "withinExpected": true
+      }
+    }
+  ],
+  "additional_reported_checks": [
+    {
+      "name": "OOD and confidence cap",
+      "status": "warn",
+      "detail": "assess_ood({bus_count:3700}) returned outOfDist=true, confidenceCap=0.3, tier=GridSFM-Open and scaleHeadroom=0.925 because the grid is at or near the validated ceiling. This cap applies to every item instead of its returned prediction cap and does not alter status under R7."
+    },
+    {
+      "name": "verification tolerances",
+      "status": "pass",
+      "detail": "list_verification_checks returned powerBalancePU=0.01, thermalSlack=0 and consistencyPU=0.05, matching the brief; checks were voltage_bound, generator_active_limit, generator_reactive_limit, thermal_limit, power_balance and flow_voltage_consistency."
+    },
+    {
+      "name": "flow-voltage consistency evidence",
+      "status": "warn",
+      "detail": "The inputs contain no admittance data. list_verification_checks identifies flow_voltage_consistency as a check, but per-item verifier outputs did not report whether it ran; results therefore provide no observed flow-voltage-consistency verdict rather than an affirmative pass claim."
+    },
+    {
+      "name": "N-1 contingency screening",
+      "status": "n/a",
+      "detail": "screen_n1_contingencies was not run: inputs contain no contingency cases, as required by PLAN.md."
+    }
+  ]
+}

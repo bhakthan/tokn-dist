@@ -1,0 +1,570 @@
+{
+  "note": "Synthetic GridSFM surrogate AC-OPF predictions for a fictional 3-bus reduced equivalent. Values are synthetic. Each cases[i].prediction can be passed directly as the 'prediction' input of verify_surrogate_solution.",
+  "units": "per-unit on 100 MVA base",
+  "cases": [
+    {
+      "label": "PRED-A",
+      "prediction": {
+        "scenario": {
+          "name": "feeder-pocket-0700",
+          "baseMVA": 100,
+          "buses": [
+            {
+              "id": "B1",
+              "vMagPU": 1.02,
+              "vAngRad": 0.0,
+              "vMinPU": 0.95,
+              "vMaxPU": 1.05,
+              "isSlack": true
+            },
+            {
+              "id": "B2",
+              "vMagPU": 1.0,
+              "vAngRad": -0.04,
+              "vMinPU": 0.95,
+              "vMaxPU": 1.05
+            },
+            {
+              "id": "B3",
+              "vMagPU": 0.98,
+              "vAngRad": -0.07,
+              "vMinPU": 0.95,
+              "vMaxPU": 1.05
+            }
+          ],
+          "generators": [
+            {
+              "id": "G1",
+              "busID": "B1",
+              "pgPU": 1.33,
+              "qgPU": 0.25,
+              "pMinPU": 0.0,
+              "pMaxPU": 2.0,
+              "qMinPU": -1.0,
+              "qMaxPU": 1.0
+            },
+            {
+              "id": "G2",
+              "busID": "B2",
+              "pgPU": 0.7,
+              "qgPU": 0.2,
+              "pMinPU": 0.1,
+              "pMaxPU": 1.0,
+              "qMinPU": -0.5,
+              "qMaxPU": 0.5
+            }
+          ],
+          "loads": [
+            {
+              "busID": "B2",
+              "pdPU": 1.2,
+              "qdPU": 0.3
+            },
+            {
+              "busID": "B3",
+              "pdPU": 0.8,
+              "qdPU": 0.2
+            }
+          ],
+          "branches": [
+            {
+              "id": "L12",
+              "fromBus": "B1",
+              "toBus": "B2",
+              "sFlowPU": 0.64,
+              "ratingPU": 1.0
+            },
+            {
+              "id": "L13",
+              "fromBus": "B1",
+              "toBus": "B3",
+              "sFlowPU": 0.7,
+              "ratingPU": 1.0
+            },
+            {
+              "id": "L23",
+              "fromBus": "B2",
+              "toBus": "B3",
+              "sFlowPU": 0.13,
+              "ratingPU": 0.4
+            }
+          ],
+          "lossesPU": 0.03
+        },
+        "surrogateFeasibility": "feasible",
+        "surrogateConfidence": 0.94,
+        "tier": "GridSFM-Open"
+      }
+    },
+    {
+      "label": "PRED-B",
+      "prediction": {
+        "scenario": {
+          "name": "feeder-pocket-0800",
+          "baseMVA": 100,
+          "buses": [
+            {
+              "id": "B1",
+              "vMagPU": 1.02,
+              "vAngRad": 0.0,
+              "vMinPU": 0.95,
+              "vMaxPU": 1.05,
+              "isSlack": true
+            },
+            {
+              "id": "B2",
+              "vMagPU": 1.0,
+              "vAngRad": -0.04,
+              "vMinPU": 0.95,
+              "vMaxPU": 1.05
+            },
+            {
+              "id": "B3",
+              "vMagPU": 0.98,
+              "vAngRad": -0.07,
+              "vMinPU": 0.95,
+              "vMaxPU": 1.05
+            }
+          ],
+          "generators": [
+            {
+              "id": "G1",
+              "busID": "B1",
+              "pgPU": 1.33,
+              "qgPU": 0.25,
+              "pMinPU": 0.0,
+              "pMaxPU": 2.0,
+              "qMinPU": -1.0,
+              "qMaxPU": 1.0
+            },
+            {
+              "id": "G2",
+              "busID": "B2",
+              "pgPU": 0.7,
+              "qgPU": 0.2,
+              "pMinPU": 0.1,
+              "pMaxPU": 1.0,
+              "qMinPU": -0.5,
+              "qMaxPU": 0.5
+            }
+          ],
+          "loads": [
+            {
+              "busID": "B2",
+              "pdPU": 1.2,
+              "qdPU": 0.3
+            },
+            {
+              "busID": "B3",
+              "pdPU": 0.8,
+              "qdPU": 0.2
+            }
+          ],
+          "branches": [
+            {
+              "id": "L12",
+              "fromBus": "B1",
+              "toBus": "B2",
+              "sFlowPU": 0.64,
+              "ratingPU": 1.0
+            },
+            {
+              "id": "L13",
+              "fromBus": "B1",
+              "toBus": "B3",
+              "sFlowPU": 0.7,
+              "ratingPU": 1.0
+            },
+            {
+              "id": "L23",
+              "fromBus": "B2",
+              "toBus": "B3",
+              "sFlowPU": 0.13,
+              "ratingPU": 0.4
+            }
+          ],
+          "lossesPU": 0.03
+        },
+        "surrogateFeasibility": "infeasible",
+        "surrogateConfidence": 0.41,
+        "tier": "GridSFM-Open"
+      }
+    },
+    {
+      "label": "PRED-C",
+      "prediction": {
+        "scenario": {
+          "name": "feeder-pocket-0900",
+          "baseMVA": 100,
+          "buses": [
+            {
+              "id": "B1",
+              "vMagPU": 1.02,
+              "vAngRad": 0.0,
+              "vMinPU": 0.95,
+              "vMaxPU": 1.05,
+              "isSlack": true
+            },
+            {
+              "id": "B2",
+              "vMagPU": 1.0,
+              "vAngRad": -0.04,
+              "vMinPU": 0.95,
+              "vMaxPU": 1.05
+            },
+            {
+              "id": "B3",
+              "vMagPU": 0.98,
+              "vAngRad": -0.07,
+              "vMinPU": 0.95,
+              "vMaxPU": 1.05
+            }
+          ],
+          "generators": [
+            {
+              "id": "G1",
+              "busID": "B1",
+              "pgPU": 1.18,
+              "qgPU": 0.25,
+              "pMinPU": 0.0,
+              "pMaxPU": 2.0,
+              "qMinPU": -1.0,
+              "qMaxPU": 1.0
+            },
+            {
+              "id": "G2",
+              "busID": "B2",
+              "pgPU": 0.7,
+              "qgPU": 0.2,
+              "pMinPU": 0.1,
+              "pMaxPU": 1.0,
+              "qMinPU": -0.5,
+              "qMaxPU": 0.5
+            }
+          ],
+          "loads": [
+            {
+              "busID": "B2",
+              "pdPU": 1.2,
+              "qdPU": 0.3
+            },
+            {
+              "busID": "B3",
+              "pdPU": 0.8,
+              "qdPU": 0.2
+            }
+          ],
+          "branches": [
+            {
+              "id": "L12",
+              "fromBus": "B1",
+              "toBus": "B2",
+              "sFlowPU": 0.52,
+              "ratingPU": 1.0
+            },
+            {
+              "id": "L13",
+              "fromBus": "B1",
+              "toBus": "B3",
+              "sFlowPU": 0.7,
+              "ratingPU": 1.0
+            },
+            {
+              "id": "L23",
+              "fromBus": "B2",
+              "toBus": "B3",
+              "sFlowPU": 0.1,
+              "ratingPU": 0.4
+            }
+          ],
+          "lossesPU": 0.03
+        },
+        "surrogateFeasibility": "feasible",
+        "surrogateConfidence": 0.97,
+        "tier": "GridSFM-Open"
+      }
+    },
+    {
+      "label": "PRED-D",
+      "prediction": {
+        "scenario": {
+          "name": "feeder-pocket-1000",
+          "baseMVA": 100,
+          "buses": [
+            {
+              "id": "B1",
+              "vMagPU": 1.05,
+              "vAngRad": 0.0,
+              "vMinPU": 0.95,
+              "vMaxPU": 1.05,
+              "isSlack": true
+            },
+            {
+              "id": "B2",
+              "vMagPU": 1.0,
+              "vAngRad": -0.04,
+              "vMinPU": 0.95,
+              "vMaxPU": 1.05
+            },
+            {
+              "id": "B3",
+              "vMagPU": 0.98,
+              "vAngRad": -0.07,
+              "vMinPU": 0.95,
+              "vMaxPU": 1.05
+            }
+          ],
+          "generators": [
+            {
+              "id": "G1",
+              "busID": "B1",
+              "pgPU": 1.03,
+              "qgPU": 0.25,
+              "pMinPU": 0.0,
+              "pMaxPU": 2.0,
+              "qMinPU": -1.0,
+              "qMaxPU": 1.0
+            },
+            {
+              "id": "G2",
+              "busID": "B2",
+              "pgPU": 1.0,
+              "qgPU": 0.2,
+              "pMinPU": 0.1,
+              "pMaxPU": 1.0,
+              "qMinPU": -0.5,
+              "qMaxPU": 0.5
+            }
+          ],
+          "loads": [
+            {
+              "busID": "B2",
+              "pdPU": 1.2,
+              "qdPU": 0.3
+            },
+            {
+              "busID": "B3",
+              "pdPU": 0.8,
+              "qdPU": 0.2
+            }
+          ],
+          "branches": [
+            {
+              "id": "L12",
+              "fromBus": "B1",
+              "toBus": "B2",
+              "sFlowPU": 0.6,
+              "ratingPU": 1.0
+            },
+            {
+              "id": "L13",
+              "fromBus": "B1",
+              "toBus": "B3",
+              "sFlowPU": 0.4,
+              "ratingPU": 1.0
+            },
+            {
+              "id": "L23",
+              "fromBus": "B2",
+              "toBus": "B3",
+              "sFlowPU": 0.4,
+              "ratingPU": 0.4
+            }
+          ],
+          "lossesPU": 0.03
+        },
+        "surrogateFeasibility": "feasible",
+        "surrogateConfidence": 0.88,
+        "tier": "GridSFM-Open"
+      }
+    },
+    {
+      "label": "PRED-E",
+      "prediction": {
+        "scenario": {
+          "name": "feeder-pocket-1100",
+          "baseMVA": 100,
+          "buses": [
+            {
+              "id": "B1",
+              "vMagPU": 1.02,
+              "vAngRad": 0.0,
+              "vMinPU": 0.95,
+              "vMaxPU": 1.05,
+              "isSlack": true
+            },
+            {
+              "id": "B2",
+              "vMagPU": 1.0,
+              "vAngRad": -0.04,
+              "vMinPU": 0.95,
+              "vMaxPU": 1.05
+            },
+            {
+              "id": "B3",
+              "vMagPU": 0.93,
+              "vAngRad": -0.07,
+              "vMinPU": 0.95,
+              "vMaxPU": 1.05
+            }
+          ],
+          "generators": [
+            {
+              "id": "G1",
+              "busID": "B1",
+              "pgPU": 1.38,
+              "qgPU": 0.25,
+              "pMinPU": 0.0,
+              "pMaxPU": 2.0,
+              "qMinPU": -1.0,
+              "qMaxPU": 1.0
+            },
+            {
+              "id": "G2",
+              "busID": "B2",
+              "pgPU": 0.65,
+              "qgPU": 0.2,
+              "pMinPU": 0.1,
+              "pMaxPU": 1.0,
+              "qMinPU": -0.5,
+              "qMaxPU": 0.5
+            }
+          ],
+          "loads": [
+            {
+              "busID": "B2",
+              "pdPU": 1.2,
+              "qdPU": 0.3
+            },
+            {
+              "busID": "B3",
+              "pdPU": 0.8,
+              "qdPU": 0.2
+            }
+          ],
+          "branches": [
+            {
+              "id": "L12",
+              "fromBus": "B1",
+              "toBus": "B2",
+              "sFlowPU": 0.33,
+              "ratingPU": 1.0
+            },
+            {
+              "id": "L13",
+              "fromBus": "B1",
+              "toBus": "B3",
+              "sFlowPU": 1.06,
+              "ratingPU": 1.0
+            },
+            {
+              "id": "L23",
+              "fromBus": "B2",
+              "toBus": "B3",
+              "sFlowPU": 0.25,
+              "ratingPU": 0.4
+            }
+          ],
+          "lossesPU": 0.03
+        },
+        "surrogateFeasibility": "feasible",
+        "surrogateConfidence": 0.9,
+        "tier": "GridSFM-Open"
+      }
+    },
+    {
+      "label": "PRED-F",
+      "prediction": {
+        "scenario": {
+          "name": "feeder-pocket-1200",
+          "baseMVA": 100,
+          "buses": [
+            {
+              "id": "B1",
+              "vMagPU": 1.02,
+              "vAngRad": 0.0,
+              "vMinPU": 0.95,
+              "vMaxPU": 1.05,
+              "isSlack": true
+            },
+            {
+              "id": "B2",
+              "vMagPU": 1.0,
+              "vAngRad": -0.04,
+              "vMinPU": 0.95,
+              "vMaxPU": 1.05
+            },
+            {
+              "id": "B3",
+              "vMagPU": 0.98,
+              "vAngRad": -0.07,
+              "vMinPU": 0.95,
+              "vMaxPU": 1.05
+            }
+          ],
+          "generators": [
+            {
+              "id": "G1",
+              "busID": "B1",
+              "pgPU": 1.3,
+              "qgPU": 0.25,
+              "pMinPU": 0.0,
+              "pMaxPU": 2.0,
+              "qMinPU": -1.0,
+              "qMaxPU": 1.0
+            },
+            {
+              "id": "G2",
+              "busID": "B2",
+              "pgPU": 0.73,
+              "qgPU": 0.62,
+              "pMinPU": 0.1,
+              "pMaxPU": 1.0,
+              "qMinPU": -0.5,
+              "qMaxPU": 0.5
+            }
+          ],
+          "loads": [
+            {
+              "busID": "B2",
+              "pdPU": 1.2,
+              "qdPU": 0.3
+            },
+            {
+              "busID": "B3",
+              "pdPU": 0.8,
+              "qdPU": 0.2
+            }
+          ],
+          "branches": [
+            {
+              "id": "L12",
+              "fromBus": "B1",
+              "toBus": "B2",
+              "sFlowPU": 0.66,
+              "ratingPU": 1.0
+            },
+            {
+              "id": "L13",
+              "fromBus": "B1",
+              "toBus": "B3",
+              "sFlowPU": 0.67,
+              "ratingPU": 1.0
+            },
+            {
+              "id": "L23",
+              "fromBus": "B2",
+              "toBus": "B3",
+              "sFlowPU": 0.18,
+              "ratingPU": 0.4
+            }
+          ],
+          "lossesPU": 0.03
+        },
+        "surrogateFeasibility": "feasible",
+        "surrogateConfidence": 0.86,
+        "tier": "GridSFM-Open"
+      }
+    }
+  ]
+}

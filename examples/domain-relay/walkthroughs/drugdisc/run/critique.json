@@ -1,0 +1,67 @@
+{
+  "findings": [
+    {
+      "id": "C1",
+      "item": "CMP-03",
+      "severity": "major",
+      "issue": "The `hold` status rests on a hERG safety-hook refusal that could not be reproduced and has no independent corroboration. The executor's tool_log records check_advancement_gate returning '[DRUGDISC] hERG HARD BLOCK: predicted hERG IC50 = 0.620 μM < 1.00 μM...'. The critic re-ran check_advancement_gate on CMP-03's declared fields (smiles, mw 308.4, clogp 2.6, hbd 1, hba 3, psa 49.4, qed 0.91, ames 0, solubility -3.1) and the gate returned a full scored pass: evaluated=8, hard_blocked=false, overall_pass=true, all eight criteria passed. The refusal can only fire if the undeclared key `herg_ic50_uM` reaches the PreToolUse hook, but check_advancement_gate's schema declares only the nine scored fields (CAPABILITIES Gap 1) and strips the rest, so the critic could not deliver that key. No other tool exposes the hERG hook: the critic's herg_predict re-run returned only {\"error\": \"No module named 'rdkit'\", \"install\": \"pip install rdkit\"} — no IC50, no threshold. The status therefore flips entirely on one uncorroborated log entry: if the key did not reach the hook, decision rule D4 gives `advance`, not `hold`. Mitigating evidence, which makes fabrication unlikely but is not verification: the refusal quotes 0.620 μM, exactly the supplied herg_ic50_uM=0.62 reformatted to three decimals; its message shape parallels the CYP450 refusal; and herg_predict's own description states 'IC50 < 1 μM is a hard advancement block (ICH S7B)', matching the refusal's threshold. The executor presented this as settled evidence with no note of its single-source, non-reproducible character.",
+      "fix": "Keep the `hold` status (internal evidence is consistent) but add a limitation to the CMP-03 item stating that the hERG refusal is a single log entry that no independent tool call in this environment can corroborate, because herg_ic50_uM is not accepted by check_advancement_gate's declared schema. Before the hold is acted on, a senior reviewer must re-run check_advancement_gate with the complete record in an environment where the undeclared keys reach the PreToolUse hooks. Do not change the status to `advance` without that re-run: the alternative would equally rest on a call that omitted a required field."
+    },
+    {
+      "id": "C2",
+      "item": "CMP-06",
+      "severity": "minor",
+      "issue": "The same reproducibility gap applies to the CYP450 refusal, but here the hook is independently corroborated. The critic could not reproduce the refusal through check_advancement_gate itself (re-run on the declared fields returned evaluated=8, hard_blocked=false, overall_pass=true, all criteria passed, because cyp3a4_ic50_uM and ddi_analysis_done are stripped by the schema). However, the critic's own ddi_analyze re-run with cyp3a4_ic50_uM=0.45 returned the byte-identical message: '[DRUGDISC] CYP450 HARD BLOCK: CYP3A4 IC50 0.450 μM < 1.00 μM (strong inhibitor) and no DDI analysis on file. Run ddi_analyze and attach ddi_analysis_done=true before advancement.' This proves a drugdisc CYP450 PreToolUse hook exists, reads cyp3a4_ic50_uM, and blocks below 1.00 μM with exactly the logged text. The residual gap is only that the refusal was not reproduced through check_advancement_gate specifically.",
+      "fix": "No status change; `hold` under D1 is well supported. Optionally note in the CMP-06 limitations that the CYP450 hook was corroborated via ddi_analyze rather than by a second gate call, so the evidence trail is explicit."
+    },
+    {
+      "id": "C3",
+      "item": "overall",
+      "severity": "major",
+      "issue": "The Step 7 confidence of 0.99 ('very high confidence') is not a calibrated self-assessment and produces an over-confident run_disposition. The executor's own result lists ten limitations, records that every hERG/CYP/PAINS/descriptor/ADMET context check returned a missing-dependency error, and two of six statuses (CMP-03, CMP-06) rest on hook refusals that no independent tool can corroborate (C1). Reserving ~1% for the possibility that a logged refusal is wrong is not defensible. The abstention_gate's own guidance, reproduced verbatim by the critic's re-run, warns: 'Supply your HONEST calibrated confidence (from an eval, the uncertainty layer, or a sober self-assessment), not an optimistic default.' The critic's abstention_gate re-run with confidence omitted (the fail-closed path) returned disposition 'defer' with reason 'no confidence estimate available and stakes are high — escalate rather than guess' and the message 'Please have a qualified reviewer confirm before acting'. The executor's 0.99 returned 'answer', and run_disposition accordingly records human_reviewer: null, removing the named-reviewer escalation that a sober estimate would have produced on high stakes.",
+      "fix": "Re-run Step 7 with a sober confidence estimate (or omit confidence, letting the gate fail closed). On high stakes in drugdisc this yields 'defer' and requires naming a human reviewer in run_disposition. Keep the six statuses; only the disposition and reviewer naming change. Note that RESULT.md already names responsible reviewers in its closing section, so the fix is to make run_disposition consistent with that."
+    },
+    {
+      "id": "C4",
+      "item": "overall",
+      "severity": "minor",
+      "issue": "Step 8 (grounding_check_citations) is missing from tool_log. PLAN acceptance criterion 2 requires 'tool_log: every call from Steps 1–8 with tool name, arguments and raw output', and provenance.tools lists grounding_check_citations among the tools used, but no tool_log entry exists for it — the log ends at step 7 (abstention_gate). The substantive check appears to have been done correctly: the critic re-ran grounding_check_citations against RESULT.md and the underlying tool outputs and got 10 citations checked, 10 verified, 0 unverifiable, 0 mismatched, 0 unchecked.",
+      "fix": "Append a step-8 tool_log entry for grounding_check_citations with its arguments (the RESULT.md text and the source set) and its raw output. No citation needs correcting; the omission is bookkeeping."
+    },
+    {
+      "id": "C5",
+      "item": "overall",
+      "severity": "minor",
+      "issue": "Two tool calls are disclosed in prose but their raw outputs are absent from tool_log, contrary to the PLAN instruction 'Save the raw response, or the raw refusal or error text, of every tool call verbatim in result.json under tool_log'. provenance.execution_correction describes (a) an initial CMP-01 predict_admet call made with a mistyped SMILES that failed on missing dependencies and was superseded by a corrected call, and (b) an accidental execute_domain_script call that failed with 'execute_domain_script requires script_path'. Neither raw output appears in tool_log; only the corrected predict_admet call for CMP-01 is logged, carrying the note 'corrected invocation with the exact input SMILES'.",
+      "fix": "Add tool_log entries for both calls with their verbatim error text (the mistyped SMILES itself should be shown), or state explicitly in provenance that the raw outputs were not retained and only the fact of the calls is known."
+    },
+    {
+      "id": "C6",
+      "item": "CMP-03",
+      "severity": "minor",
+      "issue": "The CMP-03 tool_log raw_output is not verbatim: alongside the gate's error string it contains an executor-added key, \"observed_wrapper\": \"error-only response; no result object or per-criterion output\". Presenting an annotation inside the field defined as the raw output blurs the boundary between what the tool returned and what the executor observed about it — a distinction that matters precisely because this is the one output the critic cannot reproduce (C1). Relatedly, for the four scored compounds the item-level gate_response is the inner result object with the outer {\"result\": ..., \"tool\": ...} wrapper dropped, so gate_response is verbatim in substance but not in form.",
+      "fix": "Move the observed_wrapper annotation out of raw_output into a sibling field (e.g. output_type, already used elsewhere in the log), and either include the full wrapper in gate_response or state that the wrapper is omitted."
+    },
+    {
+      "id": "C7",
+      "item": "overall",
+      "severity": "minor",
+      "issue": "The `gates` summary array uses a status vocabulary ('warn', 'fail', 'n/a', 'pass') that is defined nowhere in BRIEF.md or PLAN.md, and it is applied inconsistently: the entry named advancement_gate is labelled 'warn' with the detail that 'CMP-03 and CMP-06 instead received hERG and CYP450 refusals', while those same refusals are labelled 'fail' in the hERG and CYP450 entries of the same array. In addition, MW_gt_1200_validation is labelled 'pass' on the strength of an inference from absence (no such block in any gate response, all supplied MW below 1200 Da); the hedging appears only in the detail text ('this does not independently recompute molecular weights') and in RESULT.md's 'Pass on supplied values', not in the label itself. None of this affects any item status.",
+      "fix": "Either define the gates-array scale in one line or reuse the brief's four-status vocabulary; label the MW>1200 entry 'not triggered (supplied values)' rather than 'pass'; and make the advancement_gate entry's label consistent with the hook entries that describe the same refusals."
+    },
+    {
+      "id": "C8",
+      "item": "overall",
+      "severity": "minor",
+      "issue": "The gates.Ames summary entry contains an arithmetic error and contradicts a sibling entry in the same array. It states 'CMP-04 returned ames=1 ... the other four scored responses had ames=0'. Only four compounds received scored responses in total (CMP-01, CMP-02, CMP-04, CMP-05), per the gates.advancement_gate entry's own wording ('Four compounds received eight-criterion scored responses') and the tool_log, so the other scored responses number three, not four (CMP-01, CMP-02, CMP-05 — all ames=0, verified by grep over result.json's gate_response blocks). RESULT.md's Ames row does not repeat the error ('Other scored responses passed'). No item status is affected; the count is wrong in the summary prose only.",
+      "fix": "Change 'the other four scored responses had ames=0' to 'the other three scored responses (CMP-01, CMP-02, CMP-05) had ames=0', keeping it consistent with the advancement_gate entry and the tool_log."
+    },
+    {
+      "id": "C9",
+      "item": "overall",
+      "severity": "minor",
+      "issue": "The `unassessed_checks` key appears on only two of the six items (CMP-01 and CMP-02), and is absent from CMP-03, CMP-04, CMP-05 and CMP-06, even though the same five tool families failed for every compound (verified in tool_log: steps 2, 3, 5, 6a and 6b each contain six entries, all missing-dependency errors). The information is not lost — those four items carry it in `limitations` (e.g. CMP-04: 'hERG, CYP, PAINS and descriptor context checks were unassessed because dependencies were missing') — but the result is structurally inconsistent, and a consumer reading `unassessed_checks` alone would wrongly infer that CMP-03 to CMP-06 had no unassessed checks. Not a required PLAN field, so this is presentational.",
+      "fix": "Either populate `unassessed_checks` on all six items (the lists would be identical) or drop it from CMP-01 and CMP-02 in favour of `limitations` alone."
+    }
+  ]
+}

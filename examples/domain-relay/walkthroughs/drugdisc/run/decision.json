@@ -1,0 +1,33 @@
+{
+  "model": "Microsoft-Decision-1",
+  "questions": {
+    "needs_revision": "Do the critique findings show at least one item whose status is wrong or unsupported, so the result must be revised before it is used?",
+    "positive_despite_block": "Does any compound whose gate call was refused by a safety hook, or whose Ames result is positive, still receive advance or advance_with_caveats?",
+    "overconfident_language": "Does the result describe any compound's cardiac or interaction safety with more certainty than predicted IC50 values support?"
+  },
+  "response": {
+    "model": "microsoft-decision-1",
+    "answers": {
+      "needs_revision": {
+        "type": "noul",
+        "noul": 0.9890130634975431
+      },
+      "overconfident_language": {
+        "type": "noul",
+        "noul": 0.5621814104828132
+      },
+      "positive_despite_block": {
+        "type": "noul",
+        "noul": 0.02033249263646026
+      }
+    },
+    "usage": {
+      "input_tokens": 3260,
+      "output_tokens": 3
+    },
+    "latency_ms": 787.63,
+    "attempts": 1
+  },
+  "exit_code": 0,
+  "routing": "full-revision"
+}

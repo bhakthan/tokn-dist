@@ -1,0 +1,67 @@
+{
+  "findings": [
+    {
+      "id": "C1",
+      "item": "overall",
+      "severity": "major",
+      "issue": "result.json omits four top-level sections that PLAN.md's acceptance criteria require: 'deployment' (criterion 2: bus_count 3700, the select_model_tier result, the assess_ood result, tier_mismatch), 'verification_checks' (criterion 3), 'tools_not_run' with the screen_n1_contingencies reason (criterion 4), and 'tool_calls' listing every call with its input (criterion 6). The underlying facts are correct - my re-runs reproduce them exactly (select_model_tier({bus_count:3700}) returned tier GridSFM-Open, maxBuses 4000, scaleHeadroom 0.925, no refusal; assess_ood({bus_count:3700}) returned outOfDist=true, confidenceCap 0.3, scaleHeadroom 0.925; list_verification_checks returned powerBalancePU 0.01, thermalSlack 0, consistencyPU 0.05 and the six checks) - but they appear only inside per-item 'evidence' strings and the 'gates' array. result.json records no tool inputs at all (RESULT.md shows bus_count 3700 and the two warm-start inputs, but not the six prediction objects passed to the verifier), so the file cannot show that assess_ood was called without 'independently_verified' (PLAN Step 3) or that each prediction was passed exactly as given (BRIEF rule 1).",
+      "fix": "Add the four sections: 'deployment' {bus_count: 3700, select_model_tier: GridSFM-Open (maxBuses 4000, scaleHeadroom 0.925, no refusal), assess_ood: {outOfDist: true, ood_cap: 0.3, tier: GridSFM-Open}, tier_mismatch: none (GridSFM-Open matches every prediction 'tier' field)}; 'verification_checks' with the six checks and tolerances verbatim from list_verification_checks; 'tools_not_run': {screen_n1_contingencies: 'no contingency cases in inputs'}; and 'tool_calls' listing all 11 calls (list_verification_checks, select_model_tier, assess_ood, six verify_surrogate_solution calls, two evaluate_warm_start calls) with their exact inputs."
+    },
+    {
+      "id": "C2",
+      "item": "overall",
+      "severity": "major",
+      "issue": "None of the six item entries carries the structured fields PLAN acceptance criterion 1 enumerates: 'label' (the file uses 'id'), 'disposition', 'independently_feasible', 'violations' as an array of {kind, element, value, limit} plus 'violations_by_kind' counts, 'power_balance_residual_pu', 'warm_start' (object, or null with a not_run reason), 'prediction_cap', 'confidence_cap_applied', 'decision_rule' and 'discrepancies'. Every one of those values is present and tool-accurate - e.g. PRED-E's rationale quotes disposition=WARM_START, independentlyFeasible=false, thermal_limit at L13 (margin 0.06000000000000005), voltage_bound at B3 (margin 0.019999999999999907), powerBalancePU=-1.942890293094024e-16 and evaluate_warm_start speedup=0.9130434782608696, all of which my re-run reproduces verbatim - but only as prose inside 'rationale'/'evidence'. The plan's 'empty array if none' is also not followed: the verifier's violations=null is repeated as-is for PRED-A, PRED-B and PRED-D (disclosed in limitation 4), and the required value/limit fields are unavailable because the tool returns only kind, element, detail and margin.",
+      "fix": "Restructure each item to carry the enumerated fields as data: violations [] and violations_by_kind {} for PRED-A/B/D; PRED-C [{kind: power_balance, element: system, detail, margin 0.1400000000000001}]; PRED-E the thermal_limit/voltage_bound pair; PRED-F the generator_reactive_limit entry; power_balance_residual_pu per item; warm_start objects for PRED-E (speedup 0.9130434782608696) and PRED-F (speedup 1.75) and null + not_run reason for the rest; prediction_cap (0.9/0.9/0.5/0.9/0.5/0.5); confidence_cap_applied 0.3; decision_rule (R4/R3/R1/R4/R2/R2); discrepancies []. State per item that the verifier supplies detail/margin rather than separate value/limit fields."
+    },
+    {
+      "id": "C3",
+      "item": "overall",
+      "severity": "major",
+      "issue": "PLAN acceptance criterion 1 requires a per-item 'surrogate_self_report' {feasibility, confidence} labelled as not evidence. It is missing from all six items, and the surrogateConfidence values in inputs/predictions.json (PRED-A 0.94, PRED-B 0.41, PRED-C 0.97, PRED-D 0.88, PRED-E 0.90, PRED-F 0.86) are recorded nowhere in result.json or RESULT.md. Only PRED-B's self-report ('infeasible') is mentioned, and only via the verifier's rationale. The omission hides the case this domain exists to catch: PRED-C's surrogate self-reported 'feasible' at 0.97 confidence while verify_surrogate_solution returned REJECTED, independentlyFeasible=false and a power_balance violation at margin 0.1400000000000001 - the confident-but-infeasible contrast is stated in neither file.",
+      "fix": "Add to each item 'surrogate_self_report': {feasibility: <surrogateFeasibility from inputs/predictions.json>, confidence: <surrogateConfidence from inputs/predictions.json>, evidence: false}; e.g. PRED-C {feasibility: 'feasible', confidence: 0.97, evidence: false}."
+    },
+    {
+      "id": "C4",
+      "item": "overall",
+      "severity": "major",
+      "issue": "PLAN acceptance criterion 1 and Steps 4-9 require a per-item 'flow_voltage_consistency' field set to run/not_run 'as the verifier reports it', with the instruction to 'record what the tool actually says'. My re-run confirms the verifier output contains no field reporting whether that check ran (it returns only confidenceCap, disposition, independentlyFeasible, ood, phase, powerBalancePU, rationale, surrogateFeasibility and violations), so the honest per-item value is 'not reported by the verifier'. result.json omits the field entirely and handles the point only globally (gate G9 and limitation 3), so a reader looking at a single item cannot tell whether flow-voltage consistency was checked for that item.",
+      "fix": "Add per item 'flow_voltage_consistency': 'not_reported_by_verifier (no admittance data in inputs; consistencyPU tolerance 0.05 unused)', keeping the existing no-claim wording in G9 and the limitations."
+    },
+    {
+      "id": "C5",
+      "item": "PRED-B",
+      "severity": "minor",
+      "issue": "The PRED-B verifier output pairs disposition='REVIEW' with phase='WARM_START' - an internal inconsistency in the tool result that neither result.json nor RESULT.md records or explains. The reported status (hold_for_review under R3) and the decision not to run evaluate_warm_start are correct, because PLAN keys both on 'disposition' (Step 10: 'only items whose Step 4-9 disposition is WARM_START'), but the mismatch is silently dropped: keying on 'phase' would have made PRED-B a warm-start candidate, and inputs/warm_start_timings.json carries a row for it (baseline_seconds 5.0, warm_seconds 3.1).",
+      "fix": "Record 'phase' verbatim for every item and add a note on PRED-B that status and warm-start eligibility were keyed on 'disposition' per R3/Step 10, explicitly flagging the phase/disposition mismatch."
+    },
+    {
+      "id": "C6",
+      "item": "overall",
+      "severity": "minor",
+      "issue": "PLAN requires RESULT.md to 'present the same per-item table (status, disposition, violations by kind, residual, speedup where run)'. RESULT.md gives one section per prediction plus a gate-summary table, but no consolidated six-row per-item table, so the comparison has to be assembled by the reader.",
+      "fix": "Add a summary table with one row per item: status, disposition, violations by kind, powerBalancePU, and speedup where run (PRED-E 0.9130434782608696, PRED-F 1.75, 'not run' for PRED-A/B/C/D)."
+    },
+    {
+      "id": "C7",
+      "item": "PRED-B",
+      "severity": "minor",
+      "issue": "RESULT.md's PRED-B section writes 'the verifier explicitly described a safe-leaning disagreement' in the report's own assertive voice. The wording comes from the verifier rationale ('verifier passed but surrogate self-reported infeasible; safe-leaning disagreement - hold for human review') and the report does not call PRED-B safe, but PLAN says RESULT.md 'must not call any prediction safe', and this is the one sentence where the word 'safe' appears unquoted in the report's own voice.",
+      "fix": "Put the phrase in quotation marks as a verbatim tool quote, or rephrase to 'a fail-closed disagreement: verification passed while the surrogate self-reported infeasible'."
+    },
+    {
+      "id": "C8",
+      "item": "overall",
+      "severity": "minor",
+      "issue": "The 'gates' array introduces gate IDs G7-G10 (OOD cap, tolerances, flow-voltage evidence, N-1) that PLAN's Gates section does not define - it specifies G1-G6 plus three 'non-blocking but must be reported' items. The extra entries are accurate (my re-runs confirm G7's assess_ood output outOfDist=true/confidenceCap 0.3 and G8's tolerances powerBalancePU 0.01, thermalSlack 0, consistencyPU 0.05) and they do map onto the required reports, but a consumer matching the plan's gate vocabulary meets unknown IDs and 'warn'/'n/a' statuses the plan never defines.",
+      "fix": "Keep the content but relabel G7-G10 as 'additional reported checks' rather than gates, or state explicitly in the gates section that G7-G10 extend the plan's G1-G6 to cover the plan's non-blocking reporting items."
+    },
+    {
+      "id": "C9",
+      "item": "PRED-F",
+      "severity": "minor",
+      "issue": "PRED-F's warm_start_only status rests on a single synthetic timing sample (evaluate_warm_start scenario feeder-pocket-1200, baselineSeconds 6.3, warmSeconds 3.6, speedup 1.75, withinExpected=true), and PRED-E's reject likewise rests on one sample (4.2 vs 4.6, speedup 0.9130434782608696, withinExpected=false). PLAN requires each item's warm_start record to carry a 'flags' field, and the single-sample/no-variance caveat is exactly the flag the domain requires at the point of use; instead it appears only in the global limitations (item 5) and neither item carries a flags value.",
+      "fix": "Attach the caveat at the point of use: give each item's warm_start record a flags value such as {within_expected: true, single_sample: true, synthetic: true} for PRED-F and {within_expected: false, seed_hurt_convergence: true, single_sample: true, synthetic: true} for PRED-E, in addition to the global limitation."
+    }
+  ]
+}

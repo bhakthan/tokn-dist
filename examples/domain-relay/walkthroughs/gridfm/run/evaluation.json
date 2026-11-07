@@ -1,0 +1,78 @@
+{
+  "verdict": "PASS",
+  "checks": [
+    {
+      "name": "artifacts_present",
+      "ok": true,
+      "detail": "all 10 present"
+    },
+    {
+      "name": "result_json_valid",
+      "ok": true,
+      "detail": "final result.json parses with an items list"
+    },
+    {
+      "name": "status_vocabulary",
+      "ok": true,
+      "detail": "all statuses in vocabulary"
+    },
+    {
+      "name": "all_items_assessed",
+      "ok": true,
+      "detail": "6 items"
+    },
+    {
+      "name": "ground_truth",
+      "ok": true,
+      "detail": "final 1.0 (v1 1.0)"
+    },
+    {
+      "name": "must_mention",
+      "ok": true,
+      "detail": "all present"
+    },
+    {
+      "name": "forbidden_phrases",
+      "ok": true,
+      "detail": "none found"
+    },
+    {
+      "name": "critique_has_findings",
+      "ok": true,
+      "detail": "9 findings"
+    },
+    {
+      "name": "every_finding_answered",
+      "ok": true,
+      "detail": "9 responses"
+    },
+    {
+      "name": "decision_answered",
+      "ok": true,
+      "detail": "3/3 typed answers"
+    },
+    {
+      "name": "execute_used_domain_tools",
+      "ok": true,
+      "detail": "used ['assess_ood', 'evaluate_warm_start', 'list_verification_checks', 'select_model_tier', 'verify_surrogate_solution'] of expected ['assess_ood', 'evaluate_warm_start', 'list_verification_checks', 'select_model_tier', 'verify_surrogate_solution']"
+    },
+    {
+      "name": "critic_reran_tools",
+      "ok": true,
+      "detail": "critic used ['assess_ood', 'evaluate_warm_start', 'list_verification_checks', 'select_model_tier', 'verify_surrogate_solution']"
+    },
+    {
+      "name": "reflection_grounded",
+      "ok": true,
+      "detail": "names traced tools ['assess_ood', 'evaluate_warm_start', 'list_verification_checks', 'select_model_tier', 'verify_surrogate_solution']; has /teach rule: True"
+    }
+  ],
+  "metrics": {
+    "accuracy_v1": 1.0,
+    "accuracy_final": 1.0,
+    "findings": 9,
+    "findings_answered": 9,
+    "routing": "light-revision",
+    "execute_domain_tools": 5
+  }
+}

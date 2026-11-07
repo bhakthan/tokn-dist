@@ -39,6 +39,8 @@ Each walkthrough is a real, graded run. It includes the inputs, every stage's ar
 | [batterypass](walkthroughs/batterypass/README.md) | Gate-check six EU Battery Passport drafts before publication | PASS |
 | [climsci](walkthroughs/climsci/README.md) | Check five CMIP6 regional claims for plausibility, model independence and likelihood wording | PASS |
 | [edagent](walkthroughs/edagent/README.md) | PHI-screen and constrained-output intake QA of six synthetic ED cases | PASS |
+| [drugdisc](walkthroughs/drugdisc/README.md) | Triage six kinase hit compounds against the advancement gate and hERG, CYP450 and PAINS hooks | PASS |
+| [gridfm](walkthroughs/gridfm/README.md) | Verify six grid foundation-model OPF predictions and assign each a fail-closed trust disposition | PASS |
 <!-- walkthrough rows -->
 
 Start with **[batterypass](walkthroughs/batterypass/README.md)**. Its six drafts include one whose declared chemistry contradicts its cathode, which only a cross-section check catches.

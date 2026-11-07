@@ -1,0 +1,12 @@
+{
+  "program": "Hit-to-lead triage, kinase series KX (synthetic, de-identified)",
+  "note": "Measured or predicted properties per compound. Pass every field of a record unchanged to check_advancement_gate; the gate and its PreToolUse hooks read these exact keys.",
+  "compounds": [
+    {"id": "CMP-01", "smiles": "CC(=O)Nc1ccc(cc1)C(=O)NC2CCOCC2", "mw": 262.3, "clogp": 0.9, "hbd": 2, "hba": 4, "psa": 67.4, "qed": 0.83, "ames": 0, "solubility": -2.4, "herg_ic50_uM": 34.0},
+    {"id": "CMP-02", "smiles": "COc1ccc(cc1)C(=O)Nc2ccc(cc2)S(=O)(=O)N3CCN(CC3)c4ccccn4", "mw": 500.0, "clogp": 5.0, "hbd": 5, "hba": 10, "psa": 140.0, "qed": 0.30, "ames": 0, "solubility": -6.0, "herg_ic50_uM": 12.0},
+    {"id": "CMP-03", "smiles": "Cc1ccc(cc1)C(=O)Nc2cccc(c2)C(=O)N3CCCC3", "mw": 308.4, "clogp": 2.6, "hbd": 1, "hba": 3, "psa": 49.4, "qed": 0.91, "ames": 0, "solubility": -3.1, "herg_ic50_uM": 0.62},
+    {"id": "CMP-04", "smiles": "O=C(Nc1ccc(cc1)N(=O)=O)c2ccccc2", "mw": 242.2, "clogp": 2.2, "hbd": 1, "hba": 4, "psa": 75.0, "qed": 0.66, "ames": 1, "solubility": -3.4, "herg_ic50_uM": 41.0},
+    {"id": "CMP-05", "smiles": "CC(C)(C)c1ccc(cc1)C(=O)Nc2ccc(cc2)Oc3ccc(cc3)C(F)(F)F", "mw": 548.6, "clogp": 5.6, "hbd": 1, "hba": 5, "psa": 51.2, "qed": 0.41, "ames": 0, "solubility": -5.4, "herg_ic50_uM": 25.0},
+    {"id": "CMP-06", "smiles": "Cc1nc(sc1)C(=O)Nc2ccc(cc2)C(=O)N3CCOCC3", "mw": 331.4, "clogp": 1.8, "hbd": 1, "hba": 5, "psa": 71.5, "qed": 0.79, "ames": 0, "solubility": -2.9, "herg_ic50_uM": 28.0, "cyp3a4_ic50_uM": 0.45, "ddi_analysis_done": false}
+  ]
+}
