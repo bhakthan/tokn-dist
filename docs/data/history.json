@@ -495,6 +495,10 @@
     "2026-11-05": {
       "count": 44,
       "uniques": 21
+    },
+    "2026-11-06": {
+      "count": 17,
+      "uniques": 8
     }
   },
   "downloads_daily": {
@@ -608,7 +612,8 @@
     "2026-11-03": 6,
     "2026-11-04": 9,
     "2026-11-05": 13,
-    "2026-11-06": 24
+    "2026-11-06": 24,
+    "2026-11-07": 14
   },
   "downloads_snapshots": {
     "2026-07-18": {
@@ -1934,28 +1939,40 @@
         "tokn_windows_amd64.exe": 123
       },
       "total": 800
+    },
+    "2026-11-07": {
+      "assets": {
+        "SHA256SUMS": 123,
+        "SHA256SUMS.sig": 107,
+        "tokn_darwin_amd64": 104,
+        "tokn_darwin_arm64": 104,
+        "tokn_linux_amd64": 152,
+        "tokn_linux_arm64": 100,
+        "tokn_windows_amd64.exe": 124
+      },
+      "total": 814
     }
   },
   "downloads_state": {
     "SHA256SUMS": {
       "carry": 4,
-      "last": 117
+      "last": 119
     },
     "SHA256SUMS.sig": {
       "carry": 3,
-      "last": 103
+      "last": 104
     },
     "tokn_darwin_amd64": {
       "carry": 0,
-      "last": 102
+      "last": 104
     },
     "tokn_darwin_arm64": {
       "carry": 0,
-      "last": 103
+      "last": 104
     },
     "tokn_linux_amd64": {
       "carry": 1,
-      "last": 144
+      "last": 151
     },
     "tokn_linux_arm64": {
       "carry": 0,
@@ -1963,18 +1980,18 @@
     },
     "tokn_windows_amd64.exe": {
       "carry": 7,
-      "last": 116
+      "last": 117
     }
   },
   "paths": [
     {
-      "count": 22,
+      "count": 24,
       "path": "/bhakthan/tokn-dist",
       "title": "Overview",
-      "uniques": 4
+      "uniques": 5
     },
     {
-      "count": 20,
+      "count": 21,
       "path": "/bhakthan/tokn-dist/tree/main/examples",
       "title": "/tree/main/examples",
       "uniques": 1
@@ -2041,7 +2058,7 @@
     }
   ],
   "repo": "bhakthan/tokn-dist",
-  "updated_at": "2026-11-06T14:22:16.985568+00:00",
+  "updated_at": "2026-11-07T13:11:21.694494+00:00",
   "views_daily": {
     "2026-07-05": {
       "count": 0,
@@ -2538,6 +2555,10 @@
     "2026-11-05": {
       "count": 23,
       "uniques": 8
+    },
+    "2026-11-06": {
+      "count": 4,
+      "uniques": 2
     }
   }
 }
