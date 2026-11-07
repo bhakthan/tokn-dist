@@ -1,0 +1,12 @@
+{
+  "note": "Synthetic candidate-variant list for a teaching scenario. One variant per sample is queued for the report. HGVS strings and coordinates are written exactly as exported by the calling pipeline; do not correct them. Positions are 1-based on the assembly given.",
+  "assembly": "GRCh38",
+  "variants": {
+    "GX-01": {"hgvs": "NM_000059.4:c.5946del",   "chromosome": "chr13", "position": 32340300},
+    "GX-02": {"hgvs": "NM_000546.6:c.743G>A",    "chromosome": "chr17", "position": 7674220},
+    "GX-03": {"hgvs": "NM_007294.4:c.68_69del",  "chromosome": "17",    "position": 43124027},
+    "GX-04": {"hgvs": "NM_000251.3:c.1A>G",      "chromosome": "chr2",  "position": 47403191},
+    "GX-05": {"hgvs": "NM_000548.5:1832G>A",     "chromosome": "chr16", "position": 2081000},
+    "GX-06": {"hgvs": "NM_004333.6:c.1799T>A",   "chromosome": "chr7",  "position": 140753336}
+  }
+}
