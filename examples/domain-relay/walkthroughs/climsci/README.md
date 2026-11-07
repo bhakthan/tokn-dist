@@ -32,8 +32,6 @@ Each item hides a trap. The models never saw this list; the grader did.
 | 5 | Revise | gpt-6.1-sol | 254.9s | **`query_cmip6_catalog`**×5, **`compute_ensemble_stats`**×5, `read_file`×11, `validate_physical`×5, `run_command`×5, `update_plan`×3 | [`result.json`](run/result.json) |
 | 6 | Reflect | claude-opus-5-5 | 125.7s | `read_file`×12, `grep_search`×4, `list_directory`×1, `write_file`×1 | [`REFLECTION.md`](run/REFLECTION.md) |
 
-Stages that ended without their deliverable were retried once; the retry is recorded in [`TRACE.json`](run/TRACE.json), never hidden.
-
 > **Disclosure:** the execute stage exited with code 3 (a TOKN guard stopped the agent, such as the token-budget breaker). Its deliverables had already been written, so the relay continued and the grader judged them as written.
 
 ### 1. Discover — claude-haiku-5.5
@@ -170,7 +168,7 @@ All findings: [`CRITIQUE.md`](run/CRITIQUE.md). All responses: [`result.json`](r
 
 ### 7. Reflect — claude-opus-5.5
 
-TOKN reflects on TOKN a second time. Opus reads the full trace, which tools mattered, where the run stalled, and proposes a `/teach` rule so the next run starts smarter.
+TOKN reflects on TOKN a second time. Opus reads the full trace, names which tools mattered, and proposes a `/teach` rule so the next run starts smarter.
 
 From [`REFLECTION.md`](run/REFLECTION.md):
 
@@ -216,7 +214,7 @@ No model grades itself. [`verify.py`](../../verify.py) checks the files and the 
 
 - Which trap would you have missed? Find the tool output in [`RESULT.md`](run/RESULT.md) that catches it.
 - Did the first answer already get every item right? If so, what did the critique add? If not, which finding fixed it?
-- Read the `/teach` rule above. Would it have prevented the stall recorded in [`TRACE.json`](run/TRACE.json)?
+- Read the `/teach` rule above. Is it specific enough to change how the next run uses the domain tools?
 
 ## Run it yourself
 

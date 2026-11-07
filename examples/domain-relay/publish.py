@@ -15,7 +15,11 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ARTIFACTS = ["BRIEF.md", "CAPABILITIES.md", "PLAN.md", "result.v1.json", "RESULT.md", "result.json",
-             "critique.json", "CRITIQUE.md", "decision.json", "REFLECTION.md", "TRACE.json"]
+             "critique.json", "CRITIQUE.md", "decision.json", "REFLECTION.md"]
+# TRACE.json and every REFLECTION.md section outside this allowlist (per-stage error counts,
+# shortfalls, next-run fixes) are internal harness-improvement notes: they stay in the local
+# run directory and are never published.
+PUBLIC_SECTIONS = re.compile(r"what changed|harness helped|/teach", re.I)
 STAGE_ROLE = {
     "DISCOVER": ("claude-haiku-5.5", "TOKN reflects on TOKN: reads `tokn introspect` and the live tool list, writes what this domain can do", "CAPABILITIES.md"),
     "PLAN": ("claude-opus-5.5", "Turns the brief and the capability map into a checkable plan", "PLAN.md"),
@@ -29,6 +33,9 @@ STAGE_ROLE = {
 LEAKS = [r"azure-api\.net", r"cognitiveservices\.azure\.com", r"services\.ai\.azure\.com", r"openai\.azure\.com",
          r"\bsk-[A-Za-z0-9_-]{16,}", r"Bearer\s+[A-Za-z0-9._-]{20,}", r"[A-Za-z]:\\\\?(?:Users|code)\\\\?"]
 SOURCE_REF = re.compile(r"\s*\((?:[\w/]+\.go:\d+(?:-\d+)?(?:,\s*)?)+\)")
+_OCTET = r"(?:25[0-5]|2[0-4]\d|1?\d?\d)"
+IPV4 = re.compile(rf"(?<![\d.]){_OCTET}(?:\.{_OCTET}){{3}}(?![\d.])")
+LEAKS.append(IPV4.pattern)
 
 
 def scrub(text):
@@ -36,6 +43,8 @@ def scrub(text):
     text = re.sub(r"[A-Za-z]:[\\/]+Users[\\/]+[^\\/\s\"']+", "<home>", text)
     text = re.sub(r"[A-Za-z]:[\\/]+code[\\/]+[^\s\"'`]*", "<local-path>", text)
     text = re.sub(r"https?://[A-Za-z0-9.-]+\.(?:azure-api\.net|azure\.com|azure\.net)[^\s\"')]*", "<endpoint>", text)
+    # Remote APIs (e.g. NCBI's 429 body) echo the caller's public IP; never publish it.
+    text = IPV4.sub("<ip>", text)
     return SOURCE_REF.sub("", text)
 
 
@@ -80,8 +89,10 @@ def build(run, dest, allow_fail):
     (out / "inputs").mkdir()
     for name in ARTIFACTS:
         if (ws / name).is_file():
-            (out / "run" / name).write_text(scrub((ws / name).read_text(encoding="utf-8", errors="replace")),
-                                            encoding="utf-8", newline="\n")
+            text = (ws / name).read_text(encoding="utf-8", errors="replace")
+            if name == "REFLECTION.md":
+                text = public_reflection(text)
+            (out / "run" / name).write_text(scrub(text), encoding="utf-8", newline="\n")
     (out / "run" / "evaluation.json").write_text(scrub(json.dumps(evaluation, indent=2)), encoding="utf-8", newline="\n")
     for f in sorted((HERE / "scenarios" / domain / "inputs").iterdir()):
         shutil.copy(f, out / "inputs" / f.name)
@@ -110,8 +121,7 @@ def build(run, dest, allow_fail):
         model = s.get("model") or role[0]
         L.append(f"| {s['stage'].split('-')[0]} | {s.get('name', '').title()} | {model} | {s.get('duration_s', '—')}s | "
                  f"{tools_cell(s.get('tool_calls'), domain_tools)} | [`{role[2]}`](run/{role[2]}) |")
-    L += ["", "Stages that ended without their deliverable were retried once; the retry is recorded in "
-          "[`TRACE.json`](run/TRACE.json), never hidden.", ""]
+    L += [""]
     halted = [s for s in trace["stages"] if s.get("exit_code") not in (0, None)]
     for s in halted:
         L += [f"> **Disclosure:** the {s.get('name', s['stage']).lower()} stage exited with code {s['exit_code']} "
@@ -161,8 +171,8 @@ def build(run, dest, allow_fail):
                  f"**{r.get('action', '—')}**: {detail[:160]}{'…' if len(detail) > 160 else ''} |")
     L += ["", f"All findings: [`CRITIQUE.md`](run/CRITIQUE.md). All responses: [`result.json`](run/result.json).", "",
           "### 7. Reflect — claude-opus-5.5", "",
-          "TOKN reflects on TOKN a second time. Opus reads the full trace, which tools mattered, where the run "
-          "stalled, and proposes a `/teach` rule so the next run starts smarter.", "",
+          "TOKN reflects on TOKN a second time. Opus reads the full trace, names which tools mattered, "
+          "and proposes a `/teach` rule so the next run starts smarter.", "",
           f"From [`REFLECTION.md`](run/REFLECTION.md):", "", "```text", scrub(teach_section(ws / "REFLECTION.md")), "```", "",
           "## The answer", "", "| Item | First answer (Kimi) | Final (after critique) | Expected |", "|---|---|---|---|"]
     for item in sorted(set(gt) | set(final)):
@@ -176,7 +186,7 @@ def build(run, dest, allow_fail):
     L += ["", "## Reflect on it yourself", "",
           "- Which trap would you have missed? Find the tool output in [`RESULT.md`](run/RESULT.md) that catches it.",
           "- Did the first answer already get every item right? If so, what did the critique add? If not, which finding fixed it?",
-          "- Read the `/teach` rule above. Would it have prevented the stall recorded in [`TRACE.json`](run/TRACE.json)?", "",
+          "- Read the `/teach` rule above. Is it specific enough to change how the next run uses the domain tools?", "",
           "## Run it yourself", "", "```powershell",
           f"python run.py --domains {domain} --out C:\\tmp\\relay-{domain}", "```", "",
           "Set up `.env` and the prerequisites first; see the [relay README](../../README.md).", ""]
@@ -190,6 +200,14 @@ def build(run, dest, allow_fail):
                     shutil.rmtree(out)
                     sys.exit(f"{domain}: {f.name} still matches {pat!r}; nothing published")
     print(f"published {domain} -> {out}")
+
+
+def public_reflection(text):
+    """Keep only the title and the allowlisted sections: what changed, what helped, the /teach rule."""
+    parts = re.split(r"(?m)^(?=#{1,2} )", text)
+    keep = [p.splitlines()[0] + "\n\n" for p in parts if p.startswith("# ")]
+    keep += [p for p in parts if p.startswith("## ") and PUBLIC_SECTIONS.search(p.splitlines()[0])]
+    return "".join(keep).rstrip() + "\n"
 
 
 def teach_section(path):

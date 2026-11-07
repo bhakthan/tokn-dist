@@ -35,14 +35,12 @@ Each walkthrough is a real, graded run. It includes the inputs, every stage's ar
 
 | Domain | Problem | Verdict |
 |---|---|---|
-| [appsec](walkthroughs/appsec/README.md) | Triage six static-analysis candidates without claiming any are validated | PASS |
 | [batterypass](walkthroughs/batterypass/README.md) | Gate-check six EU Battery Passport drafts before publication | PASS |
 | [climsci](walkthroughs/climsci/README.md) | Check five CMIP6 regional claims for plausibility, model independence and likelihood wording | PASS |
 | [edagent](walkthroughs/edagent/README.md) | PHI-screen and constrained-output intake QA of six synthetic ED cases | PASS |
 | [drugdisc](walkthroughs/drugdisc/README.md) | Triage six kinase hit compounds against the advancement gate and hERG, CYP450 and PAINS hooks | PASS |
 | [gridfm](walkthroughs/gridfm/README.md) | Verify six grid foundation-model OPF predictions and assign each a fail-closed trust disposition | PASS |
 | [mobility](walkthroughs/mobility/README.md) | Gate five ADAS functions on ASIL decomposition, FMEDA hardware metrics and V&V completion before the release board | PASS |
-| [genomics](walkthroughs/genomics/README.md) | Assign report readiness to six de-identified WGS samples from coverage and call quality, coordinate validation, HGVS nomenclature and consent | PASS |
 | [energy](walkthroughs/energy/README.md) | Decide which of six energy and carbon analyses can go to the board, with provenance, scenario-disclosure and market-disclaimer gates | PASS |
 <!-- walkthrough rows -->
 
