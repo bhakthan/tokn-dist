@@ -2,6 +2,9 @@
 
 *Domain mode `gridfm` · five models and a decision model, one brief, graded by a deterministic checker. Verdict: **PASS**.*
 
+![Trust disposition for grid foundation-model OPF predictions](infographic.webp)
+*The run at a glance: why it matters, who did the work, what each item was checked for, and what it found. Click to open the full 4K image.*
+
 ## The problem
 
 Independently verify six GridSFM surrogate AC-OPF predictions and assign each a fail-closed trust disposition before it reaches the operator desk.

@@ -2,6 +2,9 @@
 
 *Domain mode `edagent` · five models and a decision model, one brief, graded by a deterministic checker. Verdict: **PASS**.*
 
+![PHI-screen and constrained-output intake QA of six synthetic ED cases](infographic.webp)
+*The run at a glance: why it matters, who did the work, what each item was checked for, and what it found. Click to open the full 4K image.*
+
 ## The problem
 
 Screen six synthetic ED case excerpts with the edagent PHI attestation, then submit each clean case's working diagnosis through the constrained-output code guard, and classify each case for entry into a sandboxed decision-support case bank.

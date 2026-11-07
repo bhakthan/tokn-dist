@@ -2,6 +2,9 @@
 
 *Domain mode `climsci` · five models and a decision model, one brief, graded by a deterministic checker. Verdict: **PASS**.*
 
+![Likelihood and plausibility check of five CMIP6 regional projection claims](infographic.webp)
+*The run at a glance: why it matters, who did the work, what each item was checked for, and what it found. Click to open the full 4K image.*
+
 ## The problem
 
 Classify five synthetic regional projection claims by physical plausibility of the field, model-family independence, and whether the stated IPCC likelihood term follows from the deduplicated ensemble agreement.

@@ -2,6 +2,9 @@
 
 *Domain mode `batterypass` · five models and a decision model, one brief, graded by a deterministic checker. Verdict: **PASS**.*
 
+![Pre-publication gate check of six Battery Passport drafts](infographic.webp)
+*The run at a glance: why it matters, who did the work, what each item was checked for, and what it found. Click to open the full 4K image.*
+
 ## The problem
 
 Run six synthetic Battery Passport drafts through the EU 2023/1542 mandatory-attribute, CF methodology, due-diligence and chemistry-consistency checks and classify each.

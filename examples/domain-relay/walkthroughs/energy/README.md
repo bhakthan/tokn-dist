@@ -2,6 +2,9 @@
 
 *Domain mode `energy` · five models and a decision model, one brief, graded by a deterministic checker. Verdict: **PASS**.*
 
+![Release gate for a quarterly energy & carbon board pack](infographic.webp)
+*The run at a glance: why it matters, who did the work, what each item was checked for, and what it found. Click to open the full 4K image.*
+
 ## The problem
 
 Run six analyst-prepared energy and carbon analyses exactly as submitted and decide which can be released to the board, with what caveats.

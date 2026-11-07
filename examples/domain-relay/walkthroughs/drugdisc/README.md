@@ -2,6 +2,9 @@
 
 *Domain mode `drugdisc` · five models and a decision model, one brief, graded by a deterministic checker. Verdict: **PASS**.*
 
+![Hit-to-lead advancement triage for a kinase series](infographic.webp)
+*The run at a glance: why it matters, who did the work, what each item was checked for, and what it found. Click to open the full 4K image.*
+
 ## The problem
 
 Triage six hit compounds against TOKN's pharmacology advancement gate and its hERG, CYP450 and PAINS safety hooks before any compound advances to lead optimisation.

@@ -2,6 +2,9 @@
 
 *Domain mode `mobility` · five models and a decision model, one brief, graded by a deterministic checker. Verdict: **PASS**.*
 
+![Functional-safety release gate for five ADAS functions](infographic.webp)
+*The run at a glance: why it matters, who did the work, what each item was checked for, and what it found. Click to open the full 4K image.*
+
 ## The problem
 
 Gate five ADAS functions on ASIL decomposition validity, FMEDA hardware metrics and V&V completion before the release board.
