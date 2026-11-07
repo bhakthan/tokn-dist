@@ -1,0 +1,105 @@
+{
+  "domain": "climsci",
+  "objective": "Review five synthetic regional CMIP6 projection claims using physical tolerance bands and model-family-deduplicated sign agreement.",
+  "items": [
+    {
+      "id": "CL-01",
+      "status": "supported",
+      "rationale": "The tas field lies inside the tolerance band of 164–356 K, and ten independent families meet the ensemble-size requirement. Nine of ten families agree with the claimed sign, giving p = 9/10 = 0.9000 and the derived term very likely (90–100 %), which matches the stated term. The required live catalog and statistics checks were unavailable because Python reported a missing intake module; those failures do not change the status under BRIEF rule 1.",
+      "evidence": [
+        "read_file: claim=\"Summer near-surface air temperature in box A rises by 2041-2060 relative to 1995-2014.\"; stated_likelihood=\"very likely\"; request tas/ssp245/Amon/r1i1p1f1/deduplicate=true; JJA; baseline 1995–2014; data_layer=L2-model-output.",
+        "query_cmip6_catalog: error=\"python (query-cmip6-catalog) exit code 1: Traceback (most recent call last):\r\n  File \"<string>\", line 3, in <module>\r\n    import intake\r\nModuleNotFoundError: No module named 'intake': python execution failed\"",
+        "compute_ensemble_stats: error=\"python (compute-ensemble-stats) exit code 1: Traceback (most recent call last):\r\n  File \"<string>\", line 3, in <module>\r\n    import intake\r\nModuleNotFoundError: No module named 'intake': python execution failed\"",
+        "validate_physical: summary mode; variable=tas; units=K; min=268.1; max=312.6; overall_status=PASS; tolerance_range=[164, 356].",
+        "input-derived band check: band=[164, 356] K; min=268.1 K; max=312.6 K; band_pass=true; decision=plausible.",
+        "run_command: family_map={ACCESS-CM2:ACCESS, CanESM5:CanESM, CESM2:CESM, EC-Earth3:EC-Earth, IPSL-CM6A-LR:IPSL, MPI-ESM1-2-LR:MPI-ESM, UKESM1-0-LL:UKESM, GFDL-ESM4:GFDL, MIROC6:MIROC, NorESM2-LM:NorESM}; inconsistent_family_votes=[]; N_fam=10; A_fam=9.",
+        "run_command: p=9/10=0.9000; derived_term=very likely (90–100 %); stated_likelihood=very likely; decision_rule_fired=4.",
+        "item gates: physical_plausibility=pass; model_family_deduplication=pass (N_fam=10 ≥ 5); ipcc_calibrated_language=pass; data_hierarchy=pass (L2-model-output; no observation or reanalysis mixed in); jet_colormap=n/a; bias_correction_provenance=n/a. Live-family discrepancy is unavailable because the catalog call failed."
+      ],
+      "tools_used": ["query_cmip6_catalog", "compute_ensemble_stats", "validate_physical", "run_command"]
+    },
+    {
+      "id": "CL-02",
+      "status": "miscalibrated",
+      "rationale": "The precipitation field lies inside the tolerance band of −0.0020011–0.0220001 kg m-2 s-1, and seven independent families meet the ensemble-size requirement. Four of seven families agree, giving p = 4/7 = 0.5714 and about as likely as not (33–66 %), whereas the claim states likely (66–100 %). The live checks were unavailable because Python reported a missing intake module, but the authoritative inputs determine the miscalibrated status.",
+      "evidence": [
+        "read_file: claim=\"Summer precipitation in box B decreases by 2041-2060 relative to 1995-2014.\"; stated_likelihood=\"likely\"; request pr/ssp245/Amon/r1i1p1f1/deduplicate=true; JJA; baseline 1995–2014; data_layer=L2-model-output.",
+        "query_cmip6_catalog: error=\"python (query-cmip6-catalog) exit code 1: Traceback (most recent call last):\r\n  File \"<string>\", line 3, in <module>\r\n    import intake\r\nModuleNotFoundError: No module named 'intake': python execution failed\"",
+        "compute_ensemble_stats: error=\"python (compute-ensemble-stats) exit code 1: Traceback (most recent call last):\r\n  File \"<string>\", line 3, in <module>\r\n    import intake\r\nModuleNotFoundError: No module named 'intake': python execution failed\"",
+        "validate_physical: summary mode; variable=pr; units=kg m-2 s-1; min=0.0; max=0.000184; overall_status=PASS; tolerance_range=[-0.0020011000000000004, 0.0220001].",
+        "input-derived band check: band=[−0.0020011, 0.0220001] kg m-2 s-1; min=0.0; max=0.000184; band_pass=true; decision=plausible.",
+        "run_command: family_map={CESM2:CESM, CESM2-WACCM:CESM, CESM2-FV2:CESM, EC-Earth3:EC-Earth, EC-Earth3-Veg:EC-Earth, EC-Earth3-CC:EC-Earth, MPI-ESM1-2-HR:MPI-ESM, MPI-ESM1-2-LR:MPI-ESM, CanESM5:CanESM, MIROC6:MIROC, GFDL-CM4:GFDL, INM-CM5-0:INM}; inconsistent_family_votes=[]; N_fam=7; A_fam=4.",
+        "run_command: p=4/7=0.5714; derived_term=about as likely as not (33–66 %); stated_likelihood=likely (66–100 %); decision_rule_fired=3.",
+        "item gates: physical_plausibility=pass; model_family_deduplication=pass (N_fam=7 ≥ 5); ipcc_calibrated_language=fail (stated term differs from derived term); data_hierarchy=pass (L2-model-output; no observation or reanalysis mixed in); jet_colormap=n/a; bias_correction_provenance=n/a. Live-family discrepancy is unavailable because the catalog call failed."
+      ],
+      "tools_used": ["query_cmip6_catalog", "compute_ensemble_stats", "validate_physical", "run_command"]
+    },
+    {
+      "id": "CL-03",
+      "status": "implausible",
+      "rationale": "The precipitation maximum of 18.4 kg m-2 s-1 exceeds the tolerance-band maximum of 0.0220001 kg m-2 s-1, so decision rule 1 applies before the other checks. Seven of eight independent families agree, giving p = 7/8 = 0.8750 and likely (66–100 %), matching the stated term, but this cannot override the physical-band failure. The validate_physical call returns FAIL, while both live catalog tools return a missing-intake-module error that does not affect the status.",
+      "evidence": [
+        "read_file: claim=\"Winter precipitation in box C increases by 2081-2100 relative to 1995-2014.\"; stated_likelihood=\"likely\"; request pr/ssp585/Amon/r1i1p1f1/deduplicate=true; DJF; baseline 1995–2014; data_layer=L2-model-output.",
+        "query_cmip6_catalog: error=\"python (query-cmip6-catalog) exit code 1: Traceback (most recent call last):\r\n  File \"<string>\", line 3, in <module>\r\n    import intake\r\nModuleNotFoundError: No module named 'intake': python execution failed\"",
+        "compute_ensemble_stats: error=\"python (compute-ensemble-stats) exit code 1: Traceback (most recent call last):\r\n  File \"<string>\", line 3, in <module>\r\n    import intake\r\nModuleNotFoundError: No module named 'intake': python execution failed\"",
+        "validate_physical: summary mode; variable=pr; units=kg m-2 s-1; min=0; max=18.4; overall_status=FAIL; tolerance_range=[-0.0020011000000000004, 0.0220001]; check detail=\"Variable 'pr' values [0, 18.4] exceed the plausible physical range [-1e-06, 0.02] kg m⁻² s⁻¹ (with 10% tolerance) [physical range violation]\".",
+        "input-derived band check: band=[−0.0020011, 0.0220001] kg m-2 s-1; min=0.0; max=18.4; band_pass=false; decision=implausible because max > 0.0220001.",
+        "run_command: family_map={ACCESS-ESM1-5:ACCESS, CanESM5:CanESM, CESM2:CESM, EC-Earth3:EC-Earth, GFDL-ESM4:GFDL, IPSL-CM6A-LR:IPSL, MIROC6:MIROC, MPI-ESM1-2-HR:MPI-ESM}; inconsistent_family_votes=[]; N_fam=8; A_fam=7.",
+        "run_command: p=7/8=0.8750; derived_term=likely (66–100 %); stated_likelihood=likely (66–100 %); decision_rule_fired=1.",
+        "item gates: physical_plausibility=fail (max=18.4 > 0.0220001); model_family_deduplication=pass (N_fam=8 ≥ 5); ipcc_calibrated_language=pass; data_hierarchy=pass (L2-model-output; no observation or reanalysis mixed in); jet_colormap=n/a; bias_correction_provenance=n/a. Live-family discrepancy is unavailable because the catalog call failed."
+      ],
+      "tools_used": ["query_cmip6_catalog", "compute_ensemble_stats", "validate_physical", "run_command"]
+    },
+    {
+      "id": "CL-04",
+      "status": "insufficient_ensemble",
+      "rationale": "The temperature field is inside the tolerance band of 164–356 K, but ten raw models collapse to only four independent families: UKESM, CNRM, IPSL and ACCESS. All four agree, so p = 4/4 = 1.0000 and virtually certain (99–100 %), matching the stated term. Decision rule 2 nevertheless assigns insufficient_ensemble because four families are fewer than five; the live checks failed on the missing intake module without affecting this decision.",
+      "evidence": [
+        "read_file: claim=\"Winter near-surface air temperature in box D rises by 2081-2100 relative to 1995-2014.\"; stated_likelihood=\"virtually certain\"; request tas/ssp585/Amon/r1i1p1f1/deduplicate=true; DJF; baseline 1995–2014; data_layer=L2-model-output.",
+        "query_cmip6_catalog: error=\"python (query-cmip6-catalog) exit code 1: Traceback (most recent call last):\r\n  File \"<string>\", line 3, in <module>\r\n    import intake\r\nModuleNotFoundError: No module named 'intake': python execution failed\"",
+        "compute_ensemble_stats: error=\"python (compute-ensemble-stats) exit code 1: Traceback (most recent call last):\r\n  File \"<string>\", line 3, in <module>\r\n    import intake\r\nModuleNotFoundError: No module named 'intake': python execution failed\"",
+        "validate_physical: summary mode; variable=tas; units=K; min=255.3; max=305.9; overall_status=PASS; tolerance_range=[164, 356].",
+        "input-derived band check: band=[164, 356] K; min=255.3 K; max=305.9 K; band_pass=true; decision=plausible.",
+        "run_command: family_map={UKESM1-0-LL:UKESM, HadGEM3-GC31-LL:UKESM, HadGEM3-GC31-MM:UKESM, CNRM-CM6-1:CNRM, CNRM-CM6-1-HR:CNRM, CNRM-ESM2-1:CNRM, IPSL-CM6A-LR:IPSL, IPSL-CM5A2-INCA:IPSL, ACCESS-CM2:ACCESS, ACCESS-ESM1-5:ACCESS}; inconsistent_family_votes=[]; N_fam=4; A_fam=4.",
+        "run_command: p=4/4=1=1.0000; derived_term=virtually certain (99–100 %); stated_likelihood=virtually certain (99–100 %); decision_rule_fired=2.",
+        "item gates: physical_plausibility=pass; model_family_deduplication=fail (N_fam=4 < 5); ipcc_calibrated_language=pass on term match; data_hierarchy=pass (L2-model-output; no observation or reanalysis mixed in); jet_colormap=n/a; bias_correction_provenance=n/a. Live-family discrepancy is unavailable because the catalog call failed."
+      ],
+      "tools_used": ["query_cmip6_catalog", "compute_ensemble_stats", "validate_physical", "run_command"]
+    },
+    {
+      "id": "CL-05",
+      "status": "supported",
+      "rationale": "The sea-surface-temperature field is inside the tolerance band of 265.5–319.5 K, and six independent families meet the ensemble-size requirement, including unmapped KIOST-ESM as its own family. Four of six agree, giving p = 2/3 = 0.6667 and likely (66–100 %), matching the stated term. The required live catalog and statistics checks failed on the missing intake module, which is recorded but has no effect on status.",
+      "evidence": [
+        "read_file: claim=\"Annual sea-surface temperature in box E rises by 2041-2060 relative to 1995-2014.\"; stated_likelihood=\"likely\"; request tos/ssp245/Omon/r1i1p1f1/deduplicate=true; ANN; baseline 1995–2014; data_layer=L2-model-output.",
+        "query_cmip6_catalog: error=\"python (query-cmip6-catalog) exit code 1: Traceback (most recent call last):\r\n  File \"<string>\", line 3, in <module>\r\n    import intake\r\nModuleNotFoundError: No module named 'intake': python execution failed\"",
+        "compute_ensemble_stats: error=\"python (compute-ensemble-stats) exit code 1: Traceback (most recent call last):\r\n  File \"<string>\", line 3, in <module>\r\n    import intake\r\nModuleNotFoundError: No module named 'intake': python execution failed\"",
+        "validate_physical: summary mode; variable=tos; units=K; min=265.8; max=305.1; overall_status=PASS; tolerance_range=[265.5, 319.5].",
+        "input-derived band check: band=[265.5, 319.5] K; min=265.8 K; max=305.1 K; band_pass=true; decision=plausible.",
+        "run_command: family_map={CanESM5:CanESM, GFDL-ESM4:GFDL, MIROC-ES2L:MIROC, NorESM2-MM:NorESM, INM-CM4-8:INM, KIOST-ESM:KIOST-ESM}; inconsistent_family_votes=[]; N_fam=6; A_fam=4; KIOST-ESM is absent from model_families and is its own family.",
+        "run_command: p=4/6=2/3=0.6667; derived_term=likely (66–100 %); stated_likelihood=likely (66–100 %); decision_rule_fired=4.",
+        "item gates: physical_plausibility=pass; model_family_deduplication=pass (N_fam=6 ≥ 5); ipcc_calibrated_language=pass; data_hierarchy=pass (L2-model-output; no observation or reanalysis mixed in); jet_colormap=n/a; bias_correction_provenance=n/a. Live-family discrepancy is unavailable because the catalog call failed."
+      ],
+      "tools_used": ["query_cmip6_catalog", "compute_ensemble_stats", "validate_physical", "run_command"]
+    }
+  ],
+  "gates": [
+    {"name": "Physical plausibility", "status": "fail", "detail": "CL-01, CL-02, CL-04 and CL-05 pass their manual tolerance-band checks; CL-03 fails because its maximum exceeds 0.0220001 kg m-2 s-1. The corrected summary-mode validate_physical verdicts agree."},
+    {"name": "Model-family deduplication", "status": "fail", "detail": "Input-map family counts are 10, 7, 8, 4 and 6 for CL-01 through CL-05, respectively. CL-04 fails the minimum of five families; all other items pass, and no family has inconsistent member votes."},
+    {"name": "IPCC calibrated-language", "status": "fail", "detail": "CL-02 uses a different stated likelihood from the derived term. CL-01 and CL-05 meet the term-match gate; CL-03 and CL-04 have higher-precedence failures despite term matches. All likelihood terms in the deliverables carry AR6 probability ranges."},
+    {"name": "Four-layer data hierarchy", "status": "pass", "detail": "data_layer=L2-model-output: all authoritative inputs are declared synthetic CMIP6 model output, and no observation or reanalysis data was provided or mixed in."},
+    {"name": "Live catalog cross-check", "status": "warn", "detail": "All query_cmip6_catalog and compute_ensemble_stats calls failed with ModuleNotFoundError: No module named 'intake'. No live models, means, percentiles or independent-model counts were returned, so these checks provided only error evidence and did not determine status."},
+    {"name": "Jet-colormap", "status": "n/a", "detail": "Not applicable: no figure was produced."},
+    {"name": "Bias-correction provenance", "status": "n/a", "detail": "Not applicable: no bias correction was performed."}
+  ],
+  "overall_verdict": "CL-01 and CL-05 are supported, CL-02 requires the revised term about as likely as not (33–66 %), CL-03 is implausible on its declared field range, and CL-04 has too few independent families for a supported claim.",
+  "confidence": 0.97,
+  "limitations": [
+    "All authoritative inputs are synthetic JSON summaries, not independently inspected NetCDF files; the units and field extrema are used exactly as declared, with no conversion.",
+    "The live Pangeo catalog and ensemble-statistics checks were unavailable because intake was not installed, so live models, means, percentiles and tool-count discrepancies cannot be reported.",
+    "The sign-agreement values and the supplied model-family map are treated as authoritative; no independent model-lineage or raw-simulation verification was performed.",
+    "Family-agreement fractions select the labels under the brief's scale and are not empirical event probabilities; AR6 probability ranges are reported alongside each likelihood term as calibrated language.",
+    "No field-native validation, regridding, bias correction or regional-statistics computation was performed beyond the supplied summaries."
+  ],
+  "critique_response": []
+}

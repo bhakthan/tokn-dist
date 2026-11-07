@@ -1,0 +1,11 @@
+{
+  "batch": "cathode-coating-screen-synthetic-01",
+  "note": "Synthetic values for a teaching scenario; not taken from any database.",
+  "candidates": [
+    {"id": "CAND-A", "formula": "Li3PO4",  "e_above_hull": 0.000, "source_db": "ICSD"},
+    {"id": "CAND-B", "formula": "LiNbO3",  "e_above_hull": 0.018, "source_db": "Materials Project"},
+    {"id": "CAND-C", "formula": "Li2ZrO3", "e_above_hull": 0.000, "source_db": "ICSD"},
+    {"id": "CAND-D", "formula": "LiAlO2",  "e_above_hull": 0.041, "source_db": "COD"},
+    {"id": "CAND-E", "formula": "Li4Ti5O12", "e_above_hull": 0.006, "source_db": "derived (substituted prototype)"}
+  ]
+}

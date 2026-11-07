@@ -1,0 +1,79 @@
+{
+  "note": "Synthetic EU Taxonomy screening submissions, one per project. Values are synthetic. Each 'payload' is the exact input for screen_eu_taxonomy and must be submitted unchanged.",
+  "screens": [
+    {
+      "id": "GH-1",
+      "payload": {
+        "nace_code": "C20.11",
+        "activity": "3.10 Manufacture of hydrogen",
+        "dnsh_objectives": {
+          "climate_mitigation": true,
+          "climate_adaptation": true,
+          "water_marine": true,
+          "circular_economy": true,
+          "pollution": true
+        }
+      }
+    },
+    {
+      "id": "GH-2",
+      "payload": {
+        "nace_code": "C20.11",
+        "activity": "3.10 Manufacture of hydrogen",
+        "dnsh_objectives": {
+          "climate_mitigation": true,
+          "climate_adaptation": true,
+          "water_marine": true,
+          "circular_economy": true,
+          "pollution": true,
+          "biodiversity": true
+        }
+      }
+    },
+    {
+      "id": "GH-3",
+      "payload": {
+        "nace_code": "C20.11",
+        "activity": "3.10 Manufacture of hydrogen",
+        "dnsh_objectives": {
+          "climate_mitigation": true,
+          "climate_adaptation": true,
+          "water_marine": true,
+          "circular_economy": true,
+          "pollution": true,
+          "biodiversity": true
+        }
+      }
+    },
+    {
+      "id": "GH-4",
+      "payload": {
+        "nace_code": "D35.11",
+        "activity": "4.1 Electricity generation using solar photovoltaic technology",
+        "dnsh_objectives": {
+          "climate_mitigation": true,
+          "climate_adaptation": true,
+          "water_marine": true,
+          "circular_economy": true,
+          "pollution": true,
+          "biodiversity": true
+        }
+      }
+    },
+    {
+      "id": "GH-5",
+      "payload": {
+        "nace_code": "D35.11",
+        "activity": "4.3 Electricity generation from wind power",
+        "dnsh_objectives": {
+          "climate_mitigation": true,
+          "climate_adaptation": true,
+          "water_marine": true,
+          "circular_economy": true,
+          "pollution": true,
+          "biodiversity": true
+        }
+      }
+    }
+  ]
+}

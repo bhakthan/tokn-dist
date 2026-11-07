@@ -1,0 +1,34 @@
+{
+  "domain": "batterypass",
+  "title": "Pre-publication gate check of six Battery Passport drafts",
+  "objective": "Run six synthetic Battery Passport drafts through the EU 2023/1542 mandatory-attribute, CF methodology, due-diligence and chemistry-consistency checks and classify each.",
+  "expected_tools": [
+    "bp_check_compliance",
+    "bp_check_cf_methodology",
+    "bp_check_due_diligence",
+    "bp_check_chemistry",
+    "bp_query_passport"
+  ],
+  "must_mention": ["2023/1542", "primaryDataShare", "due diligence", "cathode", "lastAuditDate"],
+  "forbidden_phrases": ["guaranteed compliant", "certified compliant", "legally compliant", "approved for market placement", "no further verification"],
+  "status_vocabulary": ["compliant", "non_compliant", "inconsistent", "not_assessable"],
+  "ground_truth": {
+    "BP-01": "compliant",
+    "BP-02": "inconsistent",
+    "BP-03": "compliant",
+    "BP-04": "non_compliant",
+    "BP-05": "non_compliant",
+    "BP-06": "not_assessable"
+  },
+  "decision_questions": {
+    "mislabelled_chemistry_passed": "Does any passport whose bp_check_chemistry result is consistent=false still receive compliant or non_compliant?",
+    "overclaimed_compliance": "Does the result describe any passport as legally certified or approved for the EU market, rather than as passing TOKN's gate projection?"
+  },
+  "traps": {
+    "BP-02": "Every EU mandatory attribute is present, the CF share is 0.71 and the audit is fresh, so all three gates pass. But the label declares LFP while the cathode is LiNi0.6Mn0.2Co0.2O2: bp_check_chemistry returns consistent=false, missing=[Fe,P], forbidden=[Co,Ni,Mn]. Status is inconsistent.",
+    "BP-03": "Boundary just inside: primaryDataShare is exactly 0.50. The gate test is share < 0.50, so it passes. Status is compliant, not non_compliant.",
+    "BP-04": "Boundary just outside: primaryDataShare 0.49 gives 'primaryDataShare=0.49 is below threshold 0.50'. Status is non_compliant, even though the EU gate and the chemistry check pass.",
+    "BP-05": "Looks identical to BP-01, but lastAuditDate 2024-03-02 is more than 365 days old, so the due-diligence gate blocks it.",
+    "BP-06": "Na-ion contains none of the watch-list materials, so due diligence is a no-op, and bp_check_chemistry returns consistent=true because the chemistry is unknown. A careless run calls it compliant, but the EU gate reports that combo NAION:EV is not in the matrix."
+  }
+}

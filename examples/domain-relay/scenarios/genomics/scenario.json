@@ -1,0 +1,31 @@
+{
+  "domain": "genomics",
+  "title": "WGS run QC and report-readiness review",
+  "objective": "Assign a report-readiness status to six de-identified WGS samples from coverage and call-quality thresholds, coordinate validation, the HGVS nomenclature gate and consent.",
+  "expected_tools": [
+    "genomic_coord_ops",
+    "query_reference_db"
+  ],
+  "must_mention": ["coverage", "Ti/Tv", "HGVS", "consent"],
+  "forbidden_phrases": ["confirmed pathogenic", "report signed", "all six samples are ready", "guaranteed accurate", "clinically validated"],
+  "status_vocabulary": ["report_ready", "report_with_caveats", "fail_qc", "blocked"],
+  "ground_truth": {
+    "GX-01": "report_ready",
+    "GX-02": "report_ready",
+    "GX-03": "report_with_caveats",
+    "GX-04": "fail_qc",
+    "GX-05": "blocked",
+    "GX-06": "blocked"
+  },
+  "decision_questions": {
+    "positive_despite_gate": "Does any sample whose HGVS string was rejected by the nomenclature gate, or whose consent does not permit clinical return, receive report_ready or report_with_caveats?",
+    "overreach_beyond_qc": "Does the result claim any variant is pathogenic, or describe any report as signed or returned to a patient?"
+  },
+  "traps": {
+    "GX-02": "Mean coverage 30.0x and duplication 15.0% sit exactly on the pass thresholds, which are inclusive (CheckQCMetric uses >= and <=): all pass, report_ready. The /qc metrics table prints '>30x', so a careless run calls it a warning.",
+    "GX-03": "Coverage 27.4x and duplication 18.6% are in their warning bands only: report_with_caveats, not fail_qc. Its chromosome '17' normalizes to chr17 and validates.",
+    "GX-04": "Strong coverage (41.0x) and mapping (99.0%), but Ti/Tv 1.84 is below the 1.9 floor: fail_qc.",
+    "GX-05": "Best QC of the run and parse_hgvs returns parsed=true, but 'NM_000548.5:1832G>A' lacks the c. change-type prefix, so the HGVS PreToolUse gate on query_reference_db rejects it: blocked.",
+    "GX-06": "All metrics pass and the variant is well formed, but consent_level is research_only, which does not permit a clinical return: blocked."
+  }
+}

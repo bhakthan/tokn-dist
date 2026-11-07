@@ -1,0 +1,31 @@
+{
+  "note": "Synthetic reviewer observations. Each dataflows entry (minus 'candidate') is the input of appsec_trace_dataflow; each controls entry (minus 'candidate') is the input of appsec_check_control. The booleans are the code reviewer's recorded observations.",
+  "dataflows": [
+    {"candidate": "AS-01", "source": "request.query.term", "sink": "db.rawQuery()",
+     "transformations": ["trim", "string concatenation into SELECT"], "sanitized": false},
+    {"candidate": "AS-02", "source": "profile.bio", "sink": "template.writeHTML()",
+     "transformations": ["markdownToText", "escapeHtml"], "sanitized": true},
+    {"candidate": "AS-03", "source": "archive.entry.name", "sink": "fs.writeFile()",
+     "transformations": ["path.join(extractDir, name)"], "sanitized": false},
+    {"candidate": "AS-04", "source": "webhook.callback_url", "sink": "http.get()",
+     "transformations": ["parseUrl", "allowlistHost (initial request only)", "follow redirects"], "sanitized": false},
+    {"candidate": "AS-05", "source": "request.query.returnTo", "sink": "response.redirect()",
+     "transformations": ["urlDecode"], "sanitized": false},
+    {"candidate": "AS-06", "source": "request.cookie.session", "sink": "objectDecoder.decode()",
+     "transformations": ["base64Decode"], "sanitized": false}
+  ],
+  "controls": [
+    {"candidate": "AS-01", "sink": "db.rawQuery()", "control_type": "validator", "location": "OrderRepository.Search",
+     "effective": false, "gaps": "length check only; no parameterized query"},
+    {"candidate": "AS-02", "sink": "template.writeHTML()", "control_type": "sanitizer", "location": "ProfileView.renderBio",
+     "effective": true, "gaps": ""},
+    {"candidate": "AS-03", "sink": "fs.writeFile()", "control_type": "validator", "location": "ArchiveExtractor.extractEntry",
+     "effective": false, "gaps": "no check that the resolved path stays inside extractDir"},
+    {"candidate": "AS-04", "sink": "http.get()", "control_type": "validator", "location": "WebhookClient.deliver",
+     "effective": false, "gaps": "host allowlist is not re-applied after an HTTP redirect"},
+    {"candidate": "AS-05", "sink": "response.redirect()", "control_type": "validator", "location": "LoginController.completeLogin",
+     "effective": true, "gaps": "relative-path-only check enforced before redirect"},
+    {"candidate": "AS-06", "sink": "objectDecoder.decode()", "control_type": "auth_check", "location": "SessionMiddleware",
+     "effective": false, "gaps": "no signature verification before decode"}
+  ]
+}

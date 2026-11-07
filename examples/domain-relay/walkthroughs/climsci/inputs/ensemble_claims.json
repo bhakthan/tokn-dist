@@ -1,0 +1,301 @@
+{
+  "note": "All values are synthetic, generated for a TOKN live-test scenario. No real model output, region study or institution is represented.",
+  "family_reference": "Family map copied from TOKN climsci ModelFamilies (validation.go). A source_id not in this map is its own family.",
+  "model_families": {
+    "ACCESS-CM2": "ACCESS",
+    "ACCESS-ESM1-5": "ACCESS",
+    "CanESM5": "CanESM",
+    "CanESM5-1": "CanESM",
+    "CESM2": "CESM",
+    "CESM2-WACCM": "CESM",
+    "CESM2-FV2": "CESM",
+    "EC-Earth3": "EC-Earth",
+    "EC-Earth3-CC": "EC-Earth",
+    "EC-Earth3-Veg": "EC-Earth",
+    "IPSL-CM6A-LR": "IPSL",
+    "IPSL-CM5A2-INCA": "IPSL",
+    "MPI-ESM1-2-HR": "MPI-ESM",
+    "MPI-ESM1-2-LR": "MPI-ESM",
+    "UKESM1-0-LL": "UKESM",
+    "HadGEM3-GC31-LL": "UKESM",
+    "HadGEM3-GC31-MM": "UKESM",
+    "GFDL-CM4": "GFDL",
+    "GFDL-ESM4": "GFDL",
+    "MIROC6": "MIROC",
+    "MIROC-ES2L": "MIROC",
+    "NorESM2-LM": "NorESM",
+    "NorESM2-MM": "NorESM",
+    "INM-CM4-8": "INM",
+    "INM-CM5-0": "INM",
+    "CNRM-CM6-1": "CNRM",
+    "CNRM-CM6-1-HR": "CNRM",
+    "CNRM-ESM2-1": "CNRM"
+  },
+  "claims": [
+    {
+      "item": "CL-01",
+      "claim": "Summer near-surface air temperature in box A rises by 2041-2060 relative to 1995-2014.",
+      "stated_likelihood": "very likely",
+      "models": [
+        {
+          "source_id": "ACCESS-CM2",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "CanESM5",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "CESM2",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "EC-Earth3",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "IPSL-CM6A-LR",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "MPI-ESM1-2-LR",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "UKESM1-0-LL",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "GFDL-ESM4",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "MIROC6",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "NorESM2-LM",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": false
+        }
+      ]
+    },
+    {
+      "item": "CL-02",
+      "claim": "Summer precipitation in box B decreases by 2041-2060 relative to 1995-2014.",
+      "stated_likelihood": "likely",
+      "models": [
+        {
+          "source_id": "CESM2",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "CESM2-WACCM",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "CESM2-FV2",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "EC-Earth3",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "EC-Earth3-Veg",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "EC-Earth3-CC",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "MPI-ESM1-2-HR",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "MPI-ESM1-2-LR",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "CanESM5",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "MIROC6",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": false
+        },
+        {
+          "source_id": "GFDL-CM4",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": false
+        },
+        {
+          "source_id": "INM-CM5-0",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": false
+        }
+      ]
+    },
+    {
+      "item": "CL-03",
+      "claim": "Winter precipitation in box C increases by 2081-2100 relative to 1995-2014.",
+      "stated_likelihood": "likely",
+      "models": [
+        {
+          "source_id": "ACCESS-ESM1-5",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "CanESM5",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "CESM2",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "EC-Earth3",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "GFDL-ESM4",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "IPSL-CM6A-LR",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "MIROC6",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "MPI-ESM1-2-HR",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": false
+        }
+      ]
+    },
+    {
+      "item": "CL-04",
+      "claim": "Winter near-surface air temperature in box D rises by 2081-2100 relative to 1995-2014.",
+      "stated_likelihood": "virtually certain",
+      "models": [
+        {
+          "source_id": "UKESM1-0-LL",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "HadGEM3-GC31-LL",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "HadGEM3-GC31-MM",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "CNRM-CM6-1",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "CNRM-CM6-1-HR",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "CNRM-ESM2-1",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "IPSL-CM6A-LR",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "IPSL-CM5A2-INCA",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "ACCESS-CM2",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "ACCESS-ESM1-5",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        }
+      ]
+    },
+    {
+      "item": "CL-05",
+      "claim": "Annual sea-surface temperature in box E rises by 2041-2060 relative to 1995-2014.",
+      "stated_likelihood": "likely",
+      "models": [
+        {
+          "source_id": "CanESM5",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "GFDL-ESM4",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "MIROC-ES2L",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        },
+        {
+          "source_id": "NorESM2-MM",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": false
+        },
+        {
+          "source_id": "INM-CM4-8",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": false
+        },
+        {
+          "source_id": "KIOST-ESM",
+          "member_id": "r1i1p1f1",
+          "agrees_with_claimed_sign": true
+        }
+      ]
+    }
+  ]
+}

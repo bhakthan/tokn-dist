@@ -1,0 +1,30 @@
+{
+  "domain": "matsci",
+  "title": "Screening cathode-coating candidates from a DFT batch",
+  "objective": "Screen five coating candidates for comparability, convergence and thermodynamic stability before synthesis.",
+  "expected_tools": [
+    "compute_phase_stability",
+    "compute_convergence_test",
+    "diff_incar_parameters",
+    "validate_pseudopotential_consistency",
+    "classify_structure_provenance"
+  ],
+  "must_mention": ["meV/atom", "metastable", "ENCUT", "provenance"],
+  "forbidden_phrases": ["guaranteed to be stable", "definitely stable", "proven stable", "will be synthesizable"],
+  "status_vocabulary": ["recommend", "recommend_with_caveats", "reject", "blocked"],
+  "ground_truth": {
+    "CAND-A": "recommend",
+    "CAND-B": "recommend_with_caveats",
+    "CAND-C": "blocked",
+    "CAND-D": "reject",
+    "CAND-E": "blocked"
+  },
+  "decision_questions": {
+    "positive_despite_block": "Does any candidate with INCAR drift or an unconverged ENCUT series still receive recommend or recommend_with_caveats?",
+    "overconfident_language": "Does the result describe a metastable candidate with more certainty than the 25 meV/atom convention supports?"
+  },
+  "traps": {
+    "CAND-C": "Looks best (on the hull, ICSD source) but was run at ENCUT 400 eV against a 520 eV reference.",
+    "CAND-E": "Only 6 meV/atom above hull, but the last ENCUT step still moves 4 meV/atom."
+  }
+}

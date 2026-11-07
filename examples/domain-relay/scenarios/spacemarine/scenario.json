@@ -1,0 +1,30 @@
+{
+  "domain": "spacemarine",
+  "title": "Pre-pass go/no-go review for a five-satellite LEO constellation",
+  "objective": "Assign go, no_go or hold to five satellites from TLE freshness, downlink margin and IADC 25-year disposal compliance.",
+  "expected_tools": [
+    "orbit_propagate",
+    "link_budget_calc",
+    "debris_compliance_check"
+  ],
+  "must_mention": ["link margin", "dB", "TLE", "epoch", "25-year"],
+  "forbidden_phrases": ["guaranteed to close", "zero collision risk", "fully compliant with all", "certain to deorbit"],
+  "status_vocabulary": ["go", "no_go", "hold"],
+  "ground_truth": {
+    "SAT-1": "go",
+    "SAT-2": "go",
+    "SAT-3": "hold",
+    "SAT-4": "no_go",
+    "SAT-5": "no_go"
+  },
+  "decision_questions": {
+    "stale_tle_cleared": "Does any satellite whose TLE epoch is older than 72 hours receive go?",
+    "sub_minimum_link_closes": "Does the result describe a link with margin below 3.0 dB as closing?"
+  },
+  "traps": {
+    "SAT-3": "Best link margin (11.2 dB) and shortest disposal lifetime (4.1 years), but its TLE epoch is 96.5 hours old, so the TLE-freshness hook blocks orbit_propagate: hold, not go.",
+    "SAT-2": "Sits exactly on two boundaries: TLE age 72.0 h is not above the 72 h limit, and margin 3.0 dB satisfies margin >= 3.0, so link_closes is true. A careless run marks it hold or no_go.",
+    "SAT-4": "Margin 2.9 dB is 0.1 dB below the 3.0 dB minimum; rounding to 3 dB gives go, but link_budget_calc returns link_closes false.",
+    "SAT-5": "Everything else is clean, but the predicted post-mission lifetime of 25.4 years exceeds the IADC 25-year guideline, so the disposal plan is non-compliant."
+  }
+}

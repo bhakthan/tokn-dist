@@ -1,0 +1,60 @@
+{
+  "findings": [
+    {
+      "id": "C1",
+      "item": "overall",
+      "severity": "blocking",
+      "issue": "result.json does not conform to the deliverable schema defined in PLAN.md's Acceptance criteria. The required top-level keys 'brief', 'disclaimer' and 'execution_date' are absent (result.json's actual top-level keys are domain, objective, items, gates, overall_verdict, confidence, limitations, critique_response), and every item omits the required 'chemistry', 'application', 'status_basis', 'checks' (with called/input/raw/issues/error and the passed/consistent/not_in_matrix flags), 'all_issues', 'discrepancies' and 'payload_modified' fields; each item carries only id, status, rationale, evidence, tools_used. Acceptance checklist items 2-6 therefore fail: status_basis appears only in RESULT.md's table and not in result.json, the 24 checks are not structured records, the gate keys chemistry/application are not recorded in result.json at all, there is no all_issues concatenation, and there is no payload_modified:false attestation. I re-ran all 24 gate calls with the payloads from inputs/passports.json and reproduced every reported outcome, so the missing fields can be filled without changing any status.",
+      "fix": "Rewrite result.json to the exact shape in PLAN.md's Acceptance criteria: add brief='BRIEF.md', the prescribed disclaimer string, and an ISO execution_date; for each of the six items add chemistry and application copied character-for-character from inputs/passports.json (NMC/EV, LFP/EV, NMC/Industrial, LFP/LMT, NMC/EV, NaIon/EV), status_basis (BP-01 R4, BP-02 R1, BP-03 R4, BP-04 R3, BP-05 R3, BP-06 R2), a checks object holding the four calls with called, exact input, raw response, verbatim issues, error and the pass/consistent/not_in_matrix flags, all_issues, an empty discrepancies array, and payload_modified:false. Keep the narrative prose in RESULT.md."
+    },
+    {
+      "id": "C2",
+      "item": "overall",
+      "severity": "major",
+      "issue": "No raw tool response and no exact call input is recorded for any of the 24 calls. PLAN.md's ground rules require 'keep the full raw tool response for each call', and acceptance checklist item 3 requires each check to carry its tool name, exact inputs and raw response. result.json's evidence entries are hand-written summaries (e.g. BP-01: 'bp_check_compliance: chemistry=NMC; application=EV; pass=true; error=\"\"; Issues=null') rather than the tool's returned JSON, and the body string actually sent is recorded nowhere in either deliverable. Because the serialized payload is not preserved, BRIEF rule 6 ('Do not edit any payload to make a gate pass') cannot be audited from the deliverables alone; it is only corroborated indirectly, by my re-running the gates on the unmodified inputs and obtaining identical outcomes.",
+      "fix": "Record, per check, the verbatim tool JSON in raw and the exact arguments in input, including the serialized body string that was passed to bp_check_compliance / bp_check_cf_methodology / bp_check_due_diligence and the declared_chemistry / cathode_composition pair passed to bp_check_chemistry."
+    },
+    {
+      "id": "C3",
+      "item": "BP-02",
+      "severity": "minor",
+      "issue": "The chemistry failure output for BP-02 is only partially reproduced. The tool returned error='consistency mismatch declaredChemistry=LFP cathodeActiveMaterial=LiNi0.6Mn0.2Co0.2O2 reason=chemistry element mismatch: declared=\"LFP\" cathode=\"LiNi0.6Mn0.2Co0.2O2\" missing=Fe,P forbidden=Co,Ni,Mn' plus an error_detail object (kind='consistency_mismatch', fieldA='declaredChemistry', fieldB='cathodeActiveMaterial', valueA='LFP', valueB='LiNi0.6Mn0.2Co0.2O2'). result.json and RESULT.md quote only the inner reason string and drop the error and error_detail fields, whereas for BP-04, BP-05 and BP-06 the gate error strings are quoted in full.",
+      "fix": "Quote the complete raw chemistry response for BP-02, including the error string and error_detail object, alongside the reason already quoted."
+    },
+    {
+      "id": "C4",
+      "item": "overall",
+      "severity": "minor",
+      "issue": "result.json carries fields outside the specified shape, including an empty 'critique_response' array. An empty critique_response inside the executor's own output reads as a placeholder for this critique stage and could lead a later relay stage to believe critic feedback had already been received and incorporated.",
+      "fix": "Remove critique_response from result.json (the critic writes its own critique.json/CRITIQUE.md), or leave it to be populated only after a critique has actually been returned."
+    },
+    {
+      "id": "C5",
+      "item": "overall",
+      "severity": "minor",
+      "issue": "The stated confidence (0.99 in both result.json and RESULT.md) is higher than the evidence supports for the deliverable as a whole. The six statuses are directly backed by tool output that I reproduced, but the deliverable itself omits every required evidence field (C1, C2), and PLAN.md documents unresolved gate semantics (the 365-day reference date, free-text material-trigger matching, matrix membership) that the report resolves only by deferring to tool output. Declaring 0.99 while five of the eight acceptance-checklist items fail overstates the result.",
+      "fix": "Scope the confidence claim to the six statuses (where high confidence is justified by reproduced tool output) and state separately that deliverable conformance is not met, e.g. 'status confidence 0.95; result.json does not yet satisfy the acceptance-criteria shape'."
+    },
+    {
+      "id": "C6",
+      "item": "BP-05",
+      "severity": "minor",
+      "issue": "The limitation 'the due-diligence implementation does not identify its own exact reference instant' understates the evidence actually available. The due-diligence gate's own Remediation text for BP-05 reads 'Set lastAuditDate to an ISO-8601 date within the last 365 days (e.g. \"2026-11-06\")', which is direct evidence that the gate's reference date is 2026-11-06 - the same date RESULT.md reports for the execution clock. The report presents the reference instant as wholly unknown instead of acknowledging this corroboration.",
+      "fix": "Reword the limitation to: the gate exposes no reference-date field, but its remediation text names 2026-11-06 as an example in-window date, corroborating the observed execution date; the age determination is still accepted verbatim rather than recomputed."
+    },
+    {
+      "id": "C7",
+      "item": "BP-04",
+      "severity": "minor",
+      "issue": "Input values that no gate covers were ignored without being named as residual risks. BP-04 declares batteryWeight 9.6 while retaining ratedCapacity 87.0 and absoluteCarbonFootprint 5160.0 - the same absolute footprint as the 412 kg EV packs (BP-01, BP-02, BP-03, BP-05, BP-06) - an internal implausibility that the unassessed mass-reconciliation check would be expected to catch. Separately, for all six drafts absoluteCarbonFootprint (5160.0) does not equal batteryCarbonFootprint x ratedCapacity (59.2 x 87.0 = 5150.4), a roughly 0.19 percent gap that the CF gate never examines, since it checks only the study method and primaryDataShare. RESULT.md mentions mass reconciliation only in the abstract and flags no concrete suspect value, while labelling BP-01 and BP-03 compliant.",
+      "fix": "Add these to the unassessed-scope notes in RESULT.md: name BP-04's batteryWeight/ratedCapacity/absoluteCarbonFootprint combination and the 5160.0 versus 5150.4 arithmetic as specific unchecked internal-consistency risks, so a reader of the compliant verdicts knows numeric consistency was never verified by any tool."
+    },
+    {
+      "id": "C8",
+      "item": "overall",
+      "severity": "minor",
+      "issue": "RESULT.md's wording 'no discrepancies entry is needed' invites omitting the field entirely, and result.json indeed has no discrepancies array on any item. The acceptance criteria require a per-item discrepancies array; an empty array is the correct encoding of 'none found', not an absent field. The hand cross-check itself was correct: re-evaluating BRIEF rules 4 and 5 against the payloads reproduces the gate outcomes for all six passports (BP-03 passes at exactly 0.50, BP-04 fails at 0.49, BP-05's 2024-03-02 audit is outside 365 days of 2026-11-06, and BP-06's material list names none of cobalt, lithium, nickel or natural graphite).",
+      "fix": "Add \"discrepancies\": [] to every item in result.json and reword RESULT.md to 'the discrepancies arrays are empty for all six items'."
+    }
+  ]
+}

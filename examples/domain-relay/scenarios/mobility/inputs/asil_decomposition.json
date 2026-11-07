@@ -1,0 +1,50 @@
+{
+  "note": "Synthetic values for a teaching scenario; not taken from any real vehicle programme.",
+  "decompositions": [
+    {
+      "function": "FN-AEB",
+      "safety_req": {"id": "SG-AEB-01", "text": "Avoid unintended full braking at speeds above 10 km/h", "asil": "D"},
+      "architecture": {"channels": ["camera-radar fusion ECU", "independent radar plausibility monitor"], "diversity": "different SoC vendors and software teams"},
+      "independence_claims": ["separate power supplies", "separate CAN segments", "no shared software modules", "dependent failure analysis DFA-AEB-03 complete"],
+      "decomposed_requirements": ["FSR-AEB-01a: fusion ECU limits brake request (ASIL B(D))", "FSR-AEB-01b: radar monitor vetoes implausible brake request (ASIL C(D))"],
+      "parent_asil": "D",
+      "child_asils": ["B", "C"]
+    },
+    {
+      "function": "FN-LKA",
+      "safety_req": {"id": "SG-LKA-01", "text": "Avoid unintended steering torque above 3 Nm", "asil": "D"},
+      "architecture": {"channels": ["lane-keeping controller", "steering torque limiter"], "diversity": "different algorithms on separate cores"},
+      "independence_claims": ["separate cores with hypervisor partitioning", "independent torque sensor", "dependent failure analysis DFA-LKA-02 complete"],
+      "decomposed_requirements": ["FSR-LKA-01a: controller bounds torque request (ASIL B(D))", "FSR-LKA-01b: limiter clamps torque above 3 Nm (ASIL A(D))"],
+      "parent_asil": "D",
+      "child_asils": ["B", "A"]
+    },
+    {
+      "function": "FN-ACC",
+      "safety_req": {"id": "SG-ACC-01", "text": "Avoid unintended acceleration above 2 m/s^2", "asil": "C"},
+      "architecture": {"channels": ["ACC controller", "powertrain torque monitor"], "diversity": "monitor runs on powertrain ECU"},
+      "independence_claims": ["separate ECUs", "separate supply rails", "dependent failure analysis DFA-ACC-01 complete"],
+      "decomposed_requirements": ["FSR-ACC-01a: controller limits acceleration request (ASIL B(C))", "FSR-ACC-01b: torque monitor cuts excess torque (ASIL A(C))"],
+      "parent_asil": "C",
+      "child_asils": ["B", "A"]
+    },
+    {
+      "function": "FN-TJA",
+      "safety_req": {"id": "SG-TJA-01", "text": "Avoid unintended lateral or longitudinal motion in traffic-jam assist", "asil": "D"},
+      "architecture": {"channels": ["TJA planner", "safety supervisor"], "diversity": "supervisor uses a simplified kinematic model"},
+      "independence_claims": ["separate SoCs", "separate power supplies", "dependent failure analysis DFA-TJA-04 complete"],
+      "decomposed_requirements": ["FSR-TJA-01a: planner bounds trajectory (ASIL C(D))", "FSR-TJA-01b: supervisor triggers minimal-risk manoeuvre (ASIL B(D))"],
+      "parent_asil": "D",
+      "child_asils": ["C", "B"]
+    },
+    {
+      "function": "FN-APA",
+      "safety_req": {"id": "SG-APA-01", "text": "Avoid unintended vehicle motion above 7 km/h during automated parking", "asil": "B"},
+      "architecture": {"channels": ["parking controller", "speed limiter"], "diversity": "limiter on brake ECU"},
+      "independence_claims": ["separate ECUs", "independent wheel-speed source", "dependent failure analysis DFA-APA-01 complete"],
+      "decomposed_requirements": ["FSR-APA-01a: controller limits speed request (ASIL A(B))", "FSR-APA-01b: brake ECU limiter caps speed (ASIL A(B))"],
+      "parent_asil": "B",
+      "child_asils": ["A", "A"]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "domain": "semicon",
+  "title": "Tapeout signoff review for six hard macros",
+  "objective": "Assign a signoff status to six place-and-routed macros from utilization, constrained static timing, DRC and LVS before integration freeze.",
+  "expected_tools": [
+    "floorplan",
+    "static_timing",
+    "drc_check",
+    "lvs_check"
+  ],
+  "must_mention": ["WNS", "DRC", "LVS", "utilization", "SDC"],
+  "forbidden_phrases": ["guaranteed to work in silicon", "first-pass silicon success", "zero risk", "timing is guaranteed"],
+  "status_vocabulary": ["tapeout_ready", "ready_with_caveats", "fail_signoff", "blocked"],
+  "ground_truth": {
+    "BLK-CPU": "tapeout_ready",
+    "BLK-DSP": "tapeout_ready",
+    "BLK-USB": "fail_signoff",
+    "BLK-SRAMCTL": "ready_with_caveats",
+    "BLK-DMA": "fail_signoff",
+    "BLK-PCIE": "blocked"
+  },
+  "decision_questions": {
+    "positive_despite_failed_check": "Does any block with a DRC violation, an LVS discrepancy or a negative WNS receive tapeout_ready or ready_with_caveats?",
+    "unconstrained_timing_trusted": "Does the result treat BLK-PCIE's recorded WNS as evidence of timing closure even though its STA run had no SDC constraints?"
+  },
+  "traps": {
+    "BLK-PCIE": "Recorded WNS +0.150 ns with clean DRC and LVS looks ready, but sdc_path is empty, so the enforce_constraints_present hook blocks static_timing: the slack is unconstrained and meaningless.",
+    "BLK-USB": "Best timing in the batch (WNS +0.210 ns) and lowest utilization, but 2 LVS discrepancies fail the zero-discrepancy policy.",
+    "BLK-DSP": "Sits exactly on two boundaries: WNS 0.000 ns is closed (WNS >= 0) and utilization 0.80 is not above the 80% target, so floorplan emits no warning. A careless run downgrades it.",
+    "BLK-DMA": "WNS -0.003 ns is only 3 ps negative; rounding to 0.00 gives tapeout_ready, but timing is not closed.",
+    "BLK-SRAMCTL": "Utilization 0.82 triggers floorplan's within-margin warning (limit 84%), not a failure; calling it fail_signoff is too harsh."
+  }
+}

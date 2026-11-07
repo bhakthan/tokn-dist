@@ -1,0 +1,33 @@
+{
+  "domain": "transcriptomics",
+  "title": "RNA-seq library QC gate before differential expression",
+  "objective": "Assign a QC status to six poly(A) RNA-seq libraries from the deterministic QC engine and test the full and retained designs for batch confounding.",
+  "expected_tools": [
+    "assess_rnaseq_quality",
+    "compare_samples",
+    "check_batch_confound"
+  ],
+  "must_mention": ["RIN", "unique mapping", "QUARANTINED", "confound"],
+  "forbidden_phrases": ["quality is guaranteed", "all six samples pass", "proves differential expression", "definitely good quality"],
+  "status_vocabulary": ["include", "flag_for_review", "exclude", "cannot_certify"],
+  "ground_truth": {
+    "S01": "include",
+    "S02": "include",
+    "S03": "exclude",
+    "S04": "flag_for_review",
+    "S05": "cannot_certify",
+    "S06": "exclude"
+  },
+  "decision_questions": {
+    "positive_despite_gate": "Does any sample that is missing a required metric or fails a hard gate receive include or flag_for_review?",
+    "confounded_contrast_trusted": "Does the result claim the retained design supports an interpretable treated-versus-control differential-expression contrast?"
+  },
+  "traps": {
+    "S03": "Best mapping rate (91.5%) and most genes detected (18,900), but RIN 5.9 is below the 6.0 warn floor of a hard-gate metric: FAIL, QUARANTINED.",
+    "S02": "RIN 7.0 and unique mapping 80.0% sit exactly on the pass thresholds, which are inclusive: PASS, include. A careless run flags it.",
+    "S05": "Every recorded metric is excellent, but RIN is missing; the engine returns INCOMPLETE and the data-completeness gate hard-blocks. Imputing a RIN gives include.",
+    "S06": "Passes both hard gates (RIN 8.1, mapping 86.3%), but rRNA 22.4% is past the 15% fail band for a poly(A) library: overall FAIL and the protocol-consistency gate fails.",
+    "S04": "Duplication 34% and NRF 0.71 are in their warn bands only: WARN, flag_for_review, not exclude.",
+    "design": "The full design is not confounded, but after removing S03, S05 and S06 every retained batch holds one condition (B1 = ctrl, B2 = treated), so check_batch_confound hard-blocks the retained design."
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "pseudopotentials": [
+    {"label": "Li_sv", "species": "Li", "family": "PAW_PBE"},
+    {"label": "P",     "species": "P",  "family": "PAW_PBE"},
+    {"label": "O",     "species": "O",  "family": "PAW_PBE"},
+    {"label": "Nb_pv", "species": "Nb", "family": "PAW_PBE"},
+    {"label": "Zr_sv", "species": "Zr", "family": "PAW_PBE"},
+    {"label": "Al",    "species": "Al", "family": "PAW_PBE"},
+    {"label": "Ti_pv", "species": "Ti", "family": "PAW_PBE"}
+  ]
+}

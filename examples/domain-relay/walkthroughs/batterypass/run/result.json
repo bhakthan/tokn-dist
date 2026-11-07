@@ -1,0 +1,833 @@
+{
+  "domain": "batterypass",
+  "objective": "Assess six synthetic Battery Passport drafts against the specified TOKN batterypass chemistry, EU mandatory-attribute, carbon-footprint methodology, and due-diligence gates.",
+  "items": [
+    {
+      "id": "BP-01",
+      "status": "compliant",
+      "rationale": "bp_check_chemistry returned consistent=true with canonical_chemistry=NMC, and the EU, CF methodology, and due-diligence calls returned pass=true with Issues=null. No gate reported an issue, so decision rule R4 applies: this draft passes TOKN's gate projection, not a legal certification.",
+      "evidence": [
+        "bp_check_chemistry: consistent=true; canonical_chemistry=NMC; declared_chemistry=NMC811; cathode_composition=LiNi0.8Mn0.1Co0.1O2; missing=null; forbidden=null",
+        "bp_check_compliance: chemistry=NMC; application=EV; pass=true; error=\"\"; Issues=null",
+        "bp_check_cf_methodology: pass=true; error=\"\"; Issues=null; payload primaryDataShare=0.62 and method=PEFCR",
+        "bp_check_due_diligence: pass=true; error=\"\"; Issues=null"
+      ],
+      "tools_used": [
+        "bp_check_compliance",
+        "bp_check_cf_methodology",
+        "bp_check_due_diligence",
+        "bp_check_chemistry"
+      ],
+      "chemistry": "NMC",
+      "application": "EV",
+      "status_basis": "R4",
+      "checks": {
+        "chemistry": {
+          "called": "bp_check_chemistry",
+          "input": {
+            "declared_chemistry": "NMC811",
+            "cathode_composition": "LiNi0.8Mn0.1Co0.1O2"
+          },
+          "consistent": true,
+          "issues": [],
+          "error": null,
+          "raw": {
+            "result": {
+              "declared_chemistry": "NMC811",
+              "cathode_composition": "LiNi0.8Mn0.1Co0.1O2",
+              "canonical_chemistry": "NMC",
+              "consistent": true,
+              "forbidden": null,
+              "missing": null,
+              "reason": ""
+            },
+            "tool": "bp_check_chemistry"
+          }
+        },
+        "eu_compliance": {
+          "called": "bp_check_compliance",
+          "input": {
+            "body": "{\"GeneralProductInformation\":{\"manufacturer\":{\"name\":\"SYN-MFR-01\",\"site\":\"synthetic plant A\"},\"batteryCategory\":\"EV\",\"batteryWeight\":412.0},\"Labels\":{\"separateCollectionSymbol\":true,\"ceMarking\":true,\"declaredChemistry\":\"NMC811\"},\"CarbonFootprint\":{\"carbonFootprintPerLifecycleStage\":[{\"stage\":\"raw material acquisition and pre-processing\",\"kgCO2ePerKWh\":38.2},{\"stage\":\"main product production\",\"kgCO2ePerKWh\":17.5},{\"stage\":\"distribution\",\"kgCO2ePerKWh\":1.1},{\"stage\":\"end of life and recycling\",\"kgCO2ePerKWh\":2.4}],\"absoluteCarbonFootprint\":5160.0,\"batteryCarbonFootprint\":59.2,\"carbonFootprintPerformanceClass\":\"B\",\"carbonFootprintStudyMethod\":\"PEFCR\",\"primaryDataShare\":0.62,\"systemBoundary\":\"cradle-to-grave excluding use phase\",\"functionalUnit\":\"1 kWh of total energy provided over the service life\"},\"MaterialComposition\":{\"batteryChemistry\":\"NMC811\",\"cathodeActiveMaterial\":\"LiNi0.8Mn0.1Co0.1O2\",\"batteryMaterials\":[\"lithium hexafluorophosphate electrolyte\",\"nickel manganese cobalt oxide cathode\",\"synthetic graphite anode\"]},\"Performance\":{\"ratedCapacity\":87.0,\"expectedLifetime\":3000},\"SupplyChainDueDiligence\":{\"dueDiligenceReport\":\"synthetic-dd-report-2026\",\"dueDiligencePolicyURI\":\"https://example.org/synthetic/dd-policy\",\"lastAuditDate\":\"2026-08-14\"},\"Circularity\":{\"separateCollectionRate\":0.63,\"endOfLifeInformation\":\"Return via the synthetic take-back scheme.\"}}",
+            "chemistry": "NMC",
+            "application": "EV"
+          },
+          "passed": true,
+          "issues": [],
+          "error": null,
+          "raw": {
+            "result": {
+              "error": "",
+              "pass": true,
+              "result": {
+                "Err": null,
+                "Issues": null,
+                "Remediation": null
+              }
+            },
+            "tool": "bp_check_compliance"
+          },
+          "not_in_matrix": false
+        },
+        "cf_methodology": {
+          "called": "bp_check_cf_methodology",
+          "input": {
+            "body": "{\"GeneralProductInformation\":{\"manufacturer\":{\"name\":\"SYN-MFR-01\",\"site\":\"synthetic plant A\"},\"batteryCategory\":\"EV\",\"batteryWeight\":412.0},\"Labels\":{\"separateCollectionSymbol\":true,\"ceMarking\":true,\"declaredChemistry\":\"NMC811\"},\"CarbonFootprint\":{\"carbonFootprintPerLifecycleStage\":[{\"stage\":\"raw material acquisition and pre-processing\",\"kgCO2ePerKWh\":38.2},{\"stage\":\"main product production\",\"kgCO2ePerKWh\":17.5},{\"stage\":\"distribution\",\"kgCO2ePerKWh\":1.1},{\"stage\":\"end of life and recycling\",\"kgCO2ePerKWh\":2.4}],\"absoluteCarbonFootprint\":5160.0,\"batteryCarbonFootprint\":59.2,\"carbonFootprintPerformanceClass\":\"B\",\"carbonFootprintStudyMethod\":\"PEFCR\",\"primaryDataShare\":0.62,\"systemBoundary\":\"cradle-to-grave excluding use phase\",\"functionalUnit\":\"1 kWh of total energy provided over the service life\"},\"MaterialComposition\":{\"batteryChemistry\":\"NMC811\",\"cathodeActiveMaterial\":\"LiNi0.8Mn0.1Co0.1O2\",\"batteryMaterials\":[\"lithium hexafluorophosphate electrolyte\",\"nickel manganese cobalt oxide cathode\",\"synthetic graphite anode\"]},\"Performance\":{\"ratedCapacity\":87.0,\"expectedLifetime\":3000},\"SupplyChainDueDiligence\":{\"dueDiligenceReport\":\"synthetic-dd-report-2026\",\"dueDiligencePolicyURI\":\"https://example.org/synthetic/dd-policy\",\"lastAuditDate\":\"2026-08-14\"},\"Circularity\":{\"separateCollectionRate\":0.63,\"endOfLifeInformation\":\"Return via the synthetic take-back scheme.\"}}"
+          },
+          "passed": true,
+          "issues": [],
+          "error": null,
+          "raw": {
+            "result": {
+              "error": "",
+              "pass": true,
+              "result": {
+                "Err": null,
+                "Issues": null,
+                "Remediation": null
+              }
+            },
+            "tool": "bp_check_cf_methodology"
+          }
+        },
+        "due_diligence": {
+          "called": "bp_check_due_diligence",
+          "input": {
+            "body": "{\"GeneralProductInformation\":{\"manufacturer\":{\"name\":\"SYN-MFR-01\",\"site\":\"synthetic plant A\"},\"batteryCategory\":\"EV\",\"batteryWeight\":412.0},\"Labels\":{\"separateCollectionSymbol\":true,\"ceMarking\":true,\"declaredChemistry\":\"NMC811\"},\"CarbonFootprint\":{\"carbonFootprintPerLifecycleStage\":[{\"stage\":\"raw material acquisition and pre-processing\",\"kgCO2ePerKWh\":38.2},{\"stage\":\"main product production\",\"kgCO2ePerKWh\":17.5},{\"stage\":\"distribution\",\"kgCO2ePerKWh\":1.1},{\"stage\":\"end of life and recycling\",\"kgCO2ePerKWh\":2.4}],\"absoluteCarbonFootprint\":5160.0,\"batteryCarbonFootprint\":59.2,\"carbonFootprintPerformanceClass\":\"B\",\"carbonFootprintStudyMethod\":\"PEFCR\",\"primaryDataShare\":0.62,\"systemBoundary\":\"cradle-to-grave excluding use phase\",\"functionalUnit\":\"1 kWh of total energy provided over the service life\"},\"MaterialComposition\":{\"batteryChemistry\":\"NMC811\",\"cathodeActiveMaterial\":\"LiNi0.8Mn0.1Co0.1O2\",\"batteryMaterials\":[\"lithium hexafluorophosphate electrolyte\",\"nickel manganese cobalt oxide cathode\",\"synthetic graphite anode\"]},\"Performance\":{\"ratedCapacity\":87.0,\"expectedLifetime\":3000},\"SupplyChainDueDiligence\":{\"dueDiligenceReport\":\"synthetic-dd-report-2026\",\"dueDiligencePolicyURI\":\"https://example.org/synthetic/dd-policy\",\"lastAuditDate\":\"2026-08-14\"},\"Circularity\":{\"separateCollectionRate\":0.63,\"endOfLifeInformation\":\"Return via the synthetic take-back scheme.\"}}"
+          },
+          "passed": true,
+          "issues": [],
+          "error": null,
+          "raw": {
+            "result": {
+              "error": "",
+              "pass": true,
+              "result": {
+                "Err": null,
+                "Issues": null,
+                "Remediation": null
+              }
+            },
+            "tool": "bp_check_due_diligence"
+          }
+        }
+      },
+      "all_issues": [],
+      "discrepancies": [],
+      "payload_modified": false
+    },
+    {
+      "id": "BP-02",
+      "status": "inconsistent",
+      "rationale": "bp_check_chemistry returned consistent=false and the reason \"chemistry element mismatch: declared=\\\"LFP\\\" cathode=\\\"LiNi0.6Mn0.2Co0.2O2\\\" missing=Fe,P forbidden=Co,Ni,Mn\", so rule R1 takes precedence. The EU, CF methodology, and due-diligence calls each returned pass=true with Issues=null, but their results cannot cure or displace the chemistry contradiction.",
+      "evidence": [
+        "bp_check_chemistry: consistent=false; canonical_chemistry=LFP; missing=[Fe,P]; forbidden=[Co,Ni,Mn]; reason=\"chemistry element mismatch: declared=\\\"LFP\\\" cathode=\\\"LiNi0.6Mn0.2Co0.2O2\\\" missing=Fe,P forbidden=Co,Ni,Mn\"",
+        "bp_check_compliance: chemistry=LFP; application=EV; pass=true; error=\"\"; Issues=null",
+        "bp_check_cf_methodology: pass=true; error=\"\"; Issues=null; payload primaryDataShare=0.71 and method=PEFCR",
+        "bp_check_due_diligence: pass=true; error=\"\"; Issues=null"
+      ],
+      "tools_used": [
+        "bp_check_compliance",
+        "bp_check_cf_methodology",
+        "bp_check_due_diligence",
+        "bp_check_chemistry"
+      ],
+      "chemistry": "LFP",
+      "application": "EV",
+      "status_basis": "R1",
+      "checks": {
+        "chemistry": {
+          "called": "bp_check_chemistry",
+          "input": {
+            "declared_chemistry": "LFP",
+            "cathode_composition": "LiNi0.6Mn0.2Co0.2O2"
+          },
+          "consistent": false,
+          "issues": [],
+          "error": "consistency mismatch declaredChemistry=LFP cathodeActiveMaterial=LiNi0.6Mn0.2Co0.2O2 reason=chemistry element mismatch: declared=\"LFP\" cathode=\"LiNi0.6Mn0.2Co0.2O2\" missing=Fe,P forbidden=Co,Ni,Mn",
+          "raw": {
+            "result": {
+              "declared_chemistry": "LFP",
+              "cathode_composition": "LiNi0.6Mn0.2Co0.2O2",
+              "canonical_chemistry": "LFP",
+              "consistent": false,
+              "forbidden": [
+                "Co",
+                "Ni",
+                "Mn"
+              ],
+              "missing": [
+                "Fe",
+                "P"
+              ],
+              "reason": "chemistry element mismatch: declared=\"LFP\" cathode=\"LiNi0.6Mn0.2Co0.2O2\" missing=Fe,P forbidden=Co,Ni,Mn",
+              "error": "consistency mismatch declaredChemistry=LFP cathodeActiveMaterial=LiNi0.6Mn0.2Co0.2O2 reason=chemistry element mismatch: declared=\"LFP\" cathode=\"LiNi0.6Mn0.2Co0.2O2\" missing=Fe,P forbidden=Co,Ni,Mn",
+              "error_detail": {
+                "fieldA": "declaredChemistry",
+                "fieldB": "cathodeActiveMaterial",
+                "kind": "consistency_mismatch",
+                "reason": "chemistry element mismatch: declared=\"LFP\" cathode=\"LiNi0.6Mn0.2Co0.2O2\" missing=Fe,P forbidden=Co,Ni,Mn",
+                "valueA": "LFP",
+                "valueB": "LiNi0.6Mn0.2Co0.2O2"
+              }
+            },
+            "tool": "bp_check_chemistry"
+          }
+        },
+        "eu_compliance": {
+          "called": "bp_check_compliance",
+          "input": {
+            "body": "{\"GeneralProductInformation\":{\"manufacturer\":{\"name\":\"SYN-MFR-01\",\"site\":\"synthetic plant A\"},\"batteryCategory\":\"EV\",\"batteryWeight\":412.0},\"Labels\":{\"separateCollectionSymbol\":true,\"ceMarking\":true,\"declaredChemistry\":\"LFP\"},\"CarbonFootprint\":{\"carbonFootprintPerLifecycleStage\":[{\"stage\":\"raw material acquisition and pre-processing\",\"kgCO2ePerKWh\":38.2},{\"stage\":\"main product production\",\"kgCO2ePerKWh\":17.5},{\"stage\":\"distribution\",\"kgCO2ePerKWh\":1.1},{\"stage\":\"end of life and recycling\",\"kgCO2ePerKWh\":2.4}],\"absoluteCarbonFootprint\":5160.0,\"batteryCarbonFootprint\":59.2,\"carbonFootprintPerformanceClass\":\"B\",\"carbonFootprintStudyMethod\":\"PEFCR\",\"primaryDataShare\":0.71,\"systemBoundary\":\"cradle-to-grave excluding use phase\",\"functionalUnit\":\"1 kWh of total energy provided over the service life\"},\"MaterialComposition\":{\"batteryChemistry\":\"LFP\",\"cathodeActiveMaterial\":\"LiNi0.6Mn0.2Co0.2O2\",\"batteryMaterials\":[\"lithium iron phosphate cathode\",\"synthetic graphite anode\",\"lithium hexafluorophosphate electrolyte\"]},\"Performance\":{\"ratedCapacity\":87.0,\"expectedLifetime\":3000},\"SupplyChainDueDiligence\":{\"dueDiligenceReport\":\"synthetic-dd-report-2026\",\"dueDiligencePolicyURI\":\"https://example.org/synthetic/dd-policy\",\"lastAuditDate\":\"2026-09-03\"},\"Circularity\":{\"separateCollectionRate\":0.63,\"endOfLifeInformation\":\"Return via the synthetic take-back scheme.\"}}",
+            "chemistry": "LFP",
+            "application": "EV"
+          },
+          "passed": true,
+          "issues": [],
+          "error": null,
+          "raw": {
+            "result": {
+              "error": "",
+              "pass": true,
+              "result": {
+                "Err": null,
+                "Issues": null,
+                "Remediation": null
+              }
+            },
+            "tool": "bp_check_compliance"
+          },
+          "not_in_matrix": false
+        },
+        "cf_methodology": {
+          "called": "bp_check_cf_methodology",
+          "input": {
+            "body": "{\"GeneralProductInformation\":{\"manufacturer\":{\"name\":\"SYN-MFR-01\",\"site\":\"synthetic plant A\"},\"batteryCategory\":\"EV\",\"batteryWeight\":412.0},\"Labels\":{\"separateCollectionSymbol\":true,\"ceMarking\":true,\"declaredChemistry\":\"LFP\"},\"CarbonFootprint\":{\"carbonFootprintPerLifecycleStage\":[{\"stage\":\"raw material acquisition and pre-processing\",\"kgCO2ePerKWh\":38.2},{\"stage\":\"main product production\",\"kgCO2ePerKWh\":17.5},{\"stage\":\"distribution\",\"kgCO2ePerKWh\":1.1},{\"stage\":\"end of life and recycling\",\"kgCO2ePerKWh\":2.4}],\"absoluteCarbonFootprint\":5160.0,\"batteryCarbonFootprint\":59.2,\"carbonFootprintPerformanceClass\":\"B\",\"carbonFootprintStudyMethod\":\"PEFCR\",\"primaryDataShare\":0.71,\"systemBoundary\":\"cradle-to-grave excluding use phase\",\"functionalUnit\":\"1 kWh of total energy provided over the service life\"},\"MaterialComposition\":{\"batteryChemistry\":\"LFP\",\"cathodeActiveMaterial\":\"LiNi0.6Mn0.2Co0.2O2\",\"batteryMaterials\":[\"lithium iron phosphate cathode\",\"synthetic graphite anode\",\"lithium hexafluorophosphate electrolyte\"]},\"Performance\":{\"ratedCapacity\":87.0,\"expectedLifetime\":3000},\"SupplyChainDueDiligence\":{\"dueDiligenceReport\":\"synthetic-dd-report-2026\",\"dueDiligencePolicyURI\":\"https://example.org/synthetic/dd-policy\",\"lastAuditDate\":\"2026-09-03\"},\"Circularity\":{\"separateCollectionRate\":0.63,\"endOfLifeInformation\":\"Return via the synthetic take-back scheme.\"}}"
+          },
+          "passed": true,
+          "issues": [],
+          "error": null,
+          "raw": {
+            "result": {
+              "error": "",
+              "pass": true,
+              "result": {
+                "Err": null,
+                "Issues": null,
+                "Remediation": null
+              }
+            },
+            "tool": "bp_check_cf_methodology"
+          }
+        },
+        "due_diligence": {
+          "called": "bp_check_due_diligence",
+          "input": {
+            "body": "{\"GeneralProductInformation\":{\"manufacturer\":{\"name\":\"SYN-MFR-01\",\"site\":\"synthetic plant A\"},\"batteryCategory\":\"EV\",\"batteryWeight\":412.0},\"Labels\":{\"separateCollectionSymbol\":true,\"ceMarking\":true,\"declaredChemistry\":\"LFP\"},\"CarbonFootprint\":{\"carbonFootprintPerLifecycleStage\":[{\"stage\":\"raw material acquisition and pre-processing\",\"kgCO2ePerKWh\":38.2},{\"stage\":\"main product production\",\"kgCO2ePerKWh\":17.5},{\"stage\":\"distribution\",\"kgCO2ePerKWh\":1.1},{\"stage\":\"end of life and recycling\",\"kgCO2ePerKWh\":2.4}],\"absoluteCarbonFootprint\":5160.0,\"batteryCarbonFootprint\":59.2,\"carbonFootprintPerformanceClass\":\"B\",\"carbonFootprintStudyMethod\":\"PEFCR\",\"primaryDataShare\":0.71,\"systemBoundary\":\"cradle-to-grave excluding use phase\",\"functionalUnit\":\"1 kWh of total energy provided over the service life\"},\"MaterialComposition\":{\"batteryChemistry\":\"LFP\",\"cathodeActiveMaterial\":\"LiNi0.6Mn0.2Co0.2O2\",\"batteryMaterials\":[\"lithium iron phosphate cathode\",\"synthetic graphite anode\",\"lithium hexafluorophosphate electrolyte\"]},\"Performance\":{\"ratedCapacity\":87.0,\"expectedLifetime\":3000},\"SupplyChainDueDiligence\":{\"dueDiligenceReport\":\"synthetic-dd-report-2026\",\"dueDiligencePolicyURI\":\"https://example.org/synthetic/dd-policy\",\"lastAuditDate\":\"2026-09-03\"},\"Circularity\":{\"separateCollectionRate\":0.63,\"endOfLifeInformation\":\"Return via the synthetic take-back scheme.\"}}"
+          },
+          "passed": true,
+          "issues": [],
+          "error": null,
+          "raw": {
+            "result": {
+              "error": "",
+              "pass": true,
+              "result": {
+                "Err": null,
+                "Issues": null,
+                "Remediation": null
+              }
+            },
+            "tool": "bp_check_due_diligence"
+          }
+        }
+      },
+      "all_issues": [],
+      "discrepancies": [],
+      "payload_modified": false
+    },
+    {
+      "id": "BP-03",
+      "status": "compliant",
+      "rationale": "bp_check_chemistry returned consistent=true with canonical_chemistry=NMC for the NMC622 declaration. The EU, CF methodology, and due-diligence calls returned pass=true with Issues=null, including the CF gate at primaryDataShare=0.50; therefore rule R4 applies and there is no threshold discrepancy.",
+      "evidence": [
+        "bp_check_chemistry: consistent=true; canonical_chemistry=NMC; declared_chemistry=NMC622; cathode_composition=LiNi0.6Mn0.2Co0.2O2; missing=null; forbidden=null",
+        "bp_check_compliance: chemistry=NMC; application=Industrial; pass=true; error=\"\"; Issues=null",
+        "bp_check_cf_methodology: pass=true; error=\"\"; Issues=null; payload primaryDataShare=0.50 and method=PEFCR",
+        "bp_check_due_diligence: pass=true; error=\"\"; Issues=null"
+      ],
+      "tools_used": [
+        "bp_check_compliance",
+        "bp_check_cf_methodology",
+        "bp_check_due_diligence",
+        "bp_check_chemistry"
+      ],
+      "chemistry": "NMC",
+      "application": "Industrial",
+      "status_basis": "R4",
+      "checks": {
+        "chemistry": {
+          "called": "bp_check_chemistry",
+          "input": {
+            "declared_chemistry": "NMC622",
+            "cathode_composition": "LiNi0.6Mn0.2Co0.2O2"
+          },
+          "consistent": true,
+          "issues": [],
+          "error": null,
+          "raw": {
+            "result": {
+              "declared_chemistry": "NMC622",
+              "cathode_composition": "LiNi0.6Mn0.2Co0.2O2",
+              "canonical_chemistry": "NMC",
+              "consistent": true,
+              "forbidden": null,
+              "missing": null,
+              "reason": ""
+            },
+            "tool": "bp_check_chemistry"
+          }
+        },
+        "eu_compliance": {
+          "called": "bp_check_compliance",
+          "input": {
+            "body": "{\"GeneralProductInformation\":{\"manufacturer\":{\"name\":\"SYN-MFR-01\",\"site\":\"synthetic plant A\"},\"batteryCategory\":\"industrial\",\"batteryWeight\":412.0},\"Labels\":{\"separateCollectionSymbol\":true,\"ceMarking\":true,\"declaredChemistry\":\"NMC622\"},\"CarbonFootprint\":{\"carbonFootprintPerLifecycleStage\":[{\"stage\":\"raw material acquisition and pre-processing\",\"kgCO2ePerKWh\":38.2},{\"stage\":\"main product production\",\"kgCO2ePerKWh\":17.5},{\"stage\":\"distribution\",\"kgCO2ePerKWh\":1.1},{\"stage\":\"end of life and recycling\",\"kgCO2ePerKWh\":2.4}],\"absoluteCarbonFootprint\":5160.0,\"batteryCarbonFootprint\":59.2,\"carbonFootprintPerformanceClass\":\"B\",\"carbonFootprintStudyMethod\":\"PEFCR\",\"primaryDataShare\":0.5,\"systemBoundary\":\"cradle-to-grave excluding use phase\",\"functionalUnit\":\"1 kWh of total energy provided over the service life\"},\"MaterialComposition\":{\"batteryChemistry\":\"NMC622\",\"cathodeActiveMaterial\":\"LiNi0.6Mn0.2Co0.2O2\",\"batteryMaterials\":[\"lithium hexafluorophosphate electrolyte\",\"nickel manganese cobalt oxide cathode\",\"synthetic graphite anode\"]},\"Performance\":{\"ratedCapacity\":87.0,\"expectedLifetime\":3000},\"SupplyChainDueDiligence\":{\"dueDiligenceReport\":\"synthetic-dd-report-2026\",\"dueDiligencePolicyURI\":\"https://example.org/synthetic/dd-policy\",\"lastAuditDate\":\"2026-07-22\"},\"Circularity\":{\"separateCollectionRate\":0.63,\"endOfLifeInformation\":\"Return via the synthetic take-back scheme.\"}}",
+            "chemistry": "NMC",
+            "application": "Industrial"
+          },
+          "passed": true,
+          "issues": [],
+          "error": null,
+          "raw": {
+            "result": {
+              "error": "",
+              "pass": true,
+              "result": {
+                "Err": null,
+                "Issues": null,
+                "Remediation": null
+              }
+            },
+            "tool": "bp_check_compliance"
+          },
+          "not_in_matrix": false
+        },
+        "cf_methodology": {
+          "called": "bp_check_cf_methodology",
+          "input": {
+            "body": "{\"GeneralProductInformation\":{\"manufacturer\":{\"name\":\"SYN-MFR-01\",\"site\":\"synthetic plant A\"},\"batteryCategory\":\"industrial\",\"batteryWeight\":412.0},\"Labels\":{\"separateCollectionSymbol\":true,\"ceMarking\":true,\"declaredChemistry\":\"NMC622\"},\"CarbonFootprint\":{\"carbonFootprintPerLifecycleStage\":[{\"stage\":\"raw material acquisition and pre-processing\",\"kgCO2ePerKWh\":38.2},{\"stage\":\"main product production\",\"kgCO2ePerKWh\":17.5},{\"stage\":\"distribution\",\"kgCO2ePerKWh\":1.1},{\"stage\":\"end of life and recycling\",\"kgCO2ePerKWh\":2.4}],\"absoluteCarbonFootprint\":5160.0,\"batteryCarbonFootprint\":59.2,\"carbonFootprintPerformanceClass\":\"B\",\"carbonFootprintStudyMethod\":\"PEFCR\",\"primaryDataShare\":0.5,\"systemBoundary\":\"cradle-to-grave excluding use phase\",\"functionalUnit\":\"1 kWh of total energy provided over the service life\"},\"MaterialComposition\":{\"batteryChemistry\":\"NMC622\",\"cathodeActiveMaterial\":\"LiNi0.6Mn0.2Co0.2O2\",\"batteryMaterials\":[\"lithium hexafluorophosphate electrolyte\",\"nickel manganese cobalt oxide cathode\",\"synthetic graphite anode\"]},\"Performance\":{\"ratedCapacity\":87.0,\"expectedLifetime\":3000},\"SupplyChainDueDiligence\":{\"dueDiligenceReport\":\"synthetic-dd-report-2026\",\"dueDiligencePolicyURI\":\"https://example.org/synthetic/dd-policy\",\"lastAuditDate\":\"2026-07-22\"},\"Circularity\":{\"separateCollectionRate\":0.63,\"endOfLifeInformation\":\"Return via the synthetic take-back scheme.\"}}"
+          },
+          "passed": true,
+          "issues": [],
+          "error": null,
+          "raw": {
+            "result": {
+              "error": "",
+              "pass": true,
+              "result": {
+                "Err": null,
+                "Issues": null,
+                "Remediation": null
+              }
+            },
+            "tool": "bp_check_cf_methodology"
+          }
+        },
+        "due_diligence": {
+          "called": "bp_check_due_diligence",
+          "input": {
+            "body": "{\"GeneralProductInformation\":{\"manufacturer\":{\"name\":\"SYN-MFR-01\",\"site\":\"synthetic plant A\"},\"batteryCategory\":\"industrial\",\"batteryWeight\":412.0},\"Labels\":{\"separateCollectionSymbol\":true,\"ceMarking\":true,\"declaredChemistry\":\"NMC622\"},\"CarbonFootprint\":{\"carbonFootprintPerLifecycleStage\":[{\"stage\":\"raw material acquisition and pre-processing\",\"kgCO2ePerKWh\":38.2},{\"stage\":\"main product production\",\"kgCO2ePerKWh\":17.5},{\"stage\":\"distribution\",\"kgCO2ePerKWh\":1.1},{\"stage\":\"end of life and recycling\",\"kgCO2ePerKWh\":2.4}],\"absoluteCarbonFootprint\":5160.0,\"batteryCarbonFootprint\":59.2,\"carbonFootprintPerformanceClass\":\"B\",\"carbonFootprintStudyMethod\":\"PEFCR\",\"primaryDataShare\":0.5,\"systemBoundary\":\"cradle-to-grave excluding use phase\",\"functionalUnit\":\"1 kWh of total energy provided over the service life\"},\"MaterialComposition\":{\"batteryChemistry\":\"NMC622\",\"cathodeActiveMaterial\":\"LiNi0.6Mn0.2Co0.2O2\",\"batteryMaterials\":[\"lithium hexafluorophosphate electrolyte\",\"nickel manganese cobalt oxide cathode\",\"synthetic graphite anode\"]},\"Performance\":{\"ratedCapacity\":87.0,\"expectedLifetime\":3000},\"SupplyChainDueDiligence\":{\"dueDiligenceReport\":\"synthetic-dd-report-2026\",\"dueDiligencePolicyURI\":\"https://example.org/synthetic/dd-policy\",\"lastAuditDate\":\"2026-07-22\"},\"Circularity\":{\"separateCollectionRate\":0.63,\"endOfLifeInformation\":\"Return via the synthetic take-back scheme.\"}}"
+          },
+          "passed": true,
+          "issues": [],
+          "error": null,
+          "raw": {
+            "result": {
+              "error": "",
+              "pass": true,
+              "result": {
+                "Err": null,
+                "Issues": null,
+                "Remediation": null
+              }
+            },
+            "tool": "bp_check_due_diligence"
+          }
+        }
+      },
+      "all_issues": [],
+      "discrepancies": [],
+      "payload_modified": false
+    },
+    {
+      "id": "BP-04",
+      "status": "non_compliant",
+      "rationale": "The CF gate returned pass=false with the verbatim issue \"primaryDataShare=0.49 is below threshold 0.50\". Chemistry returned consistent=true, while the EU and due-diligence calls returned pass=true with Issues=null, so rule R3 gives non_compliant.",
+      "evidence": [
+        "bp_check_chemistry: consistent=true; canonical_chemistry=LFP; declared_chemistry=LFP; cathode_composition=LiFePO4; missing=null; forbidden=null",
+        "bp_check_compliance: chemistry=LFP; application=LMT; pass=true; error=\"\"; Issues=null",
+        "bp_check_cf_methodology: pass=false; Issues=[\"primaryDataShare=0.49 is below threshold 0.50\"]; error=\"cf_methodology gate blocked: primaryDataShare=0.49 is below threshold 0.50\"",
+        "bp_check_due_diligence: pass=true; error=\"\"; Issues=null"
+      ],
+      "tools_used": [
+        "bp_check_compliance",
+        "bp_check_cf_methodology",
+        "bp_check_due_diligence",
+        "bp_check_chemistry"
+      ],
+      "chemistry": "LFP",
+      "application": "LMT",
+      "status_basis": "R3",
+      "checks": {
+        "chemistry": {
+          "called": "bp_check_chemistry",
+          "input": {
+            "declared_chemistry": "LFP",
+            "cathode_composition": "LiFePO4"
+          },
+          "consistent": true,
+          "issues": [],
+          "error": null,
+          "raw": {
+            "result": {
+              "declared_chemistry": "LFP",
+              "cathode_composition": "LiFePO4",
+              "canonical_chemistry": "LFP",
+              "consistent": true,
+              "forbidden": null,
+              "missing": null,
+              "reason": ""
+            },
+            "tool": "bp_check_chemistry"
+          }
+        },
+        "eu_compliance": {
+          "called": "bp_check_compliance",
+          "input": {
+            "body": "{\"GeneralProductInformation\":{\"manufacturer\":{\"name\":\"SYN-MFR-01\",\"site\":\"synthetic plant A\"},\"batteryCategory\":\"LMT\",\"batteryWeight\":9.6},\"Labels\":{\"separateCollectionSymbol\":true,\"ceMarking\":true,\"declaredChemistry\":\"LFP\"},\"CarbonFootprint\":{\"carbonFootprintPerLifecycleStage\":[{\"stage\":\"raw material acquisition and pre-processing\",\"kgCO2ePerKWh\":38.2},{\"stage\":\"main product production\",\"kgCO2ePerKWh\":17.5},{\"stage\":\"distribution\",\"kgCO2ePerKWh\":1.1},{\"stage\":\"end of life and recycling\",\"kgCO2ePerKWh\":2.4}],\"absoluteCarbonFootprint\":5160.0,\"batteryCarbonFootprint\":59.2,\"carbonFootprintPerformanceClass\":\"B\",\"carbonFootprintStudyMethod\":\"PEFCR\",\"primaryDataShare\":0.49,\"systemBoundary\":\"cradle-to-grave excluding use phase\",\"functionalUnit\":\"1 kWh of total energy provided over the service life\"},\"MaterialComposition\":{\"batteryChemistry\":\"LFP\",\"cathodeActiveMaterial\":\"LiFePO4\",\"batteryMaterials\":[\"lithium iron phosphate cathode\",\"synthetic graphite anode\",\"lithium hexafluorophosphate electrolyte\"]},\"Performance\":{\"ratedCapacity\":87.0,\"expectedLifetime\":3000},\"SupplyChainDueDiligence\":{\"dueDiligenceReport\":\"synthetic-dd-report-2026\",\"dueDiligencePolicyURI\":\"https://example.org/synthetic/dd-policy\",\"lastAuditDate\":\"2026-08-30\"},\"Circularity\":{\"separateCollectionRate\":0.63,\"endOfLifeInformation\":\"Return via the synthetic take-back scheme.\"}}",
+            "chemistry": "LFP",
+            "application": "LMT"
+          },
+          "passed": true,
+          "issues": [],
+          "error": null,
+          "raw": {
+            "result": {
+              "error": "",
+              "pass": true,
+              "result": {
+                "Err": null,
+                "Issues": null,
+                "Remediation": null
+              }
+            },
+            "tool": "bp_check_compliance"
+          },
+          "not_in_matrix": false
+        },
+        "cf_methodology": {
+          "called": "bp_check_cf_methodology",
+          "input": {
+            "body": "{\"GeneralProductInformation\":{\"manufacturer\":{\"name\":\"SYN-MFR-01\",\"site\":\"synthetic plant A\"},\"batteryCategory\":\"LMT\",\"batteryWeight\":9.6},\"Labels\":{\"separateCollectionSymbol\":true,\"ceMarking\":true,\"declaredChemistry\":\"LFP\"},\"CarbonFootprint\":{\"carbonFootprintPerLifecycleStage\":[{\"stage\":\"raw material acquisition and pre-processing\",\"kgCO2ePerKWh\":38.2},{\"stage\":\"main product production\",\"kgCO2ePerKWh\":17.5},{\"stage\":\"distribution\",\"kgCO2ePerKWh\":1.1},{\"stage\":\"end of life and recycling\",\"kgCO2ePerKWh\":2.4}],\"absoluteCarbonFootprint\":5160.0,\"batteryCarbonFootprint\":59.2,\"carbonFootprintPerformanceClass\":\"B\",\"carbonFootprintStudyMethod\":\"PEFCR\",\"primaryDataShare\":0.49,\"systemBoundary\":\"cradle-to-grave excluding use phase\",\"functionalUnit\":\"1 kWh of total energy provided over the service life\"},\"MaterialComposition\":{\"batteryChemistry\":\"LFP\",\"cathodeActiveMaterial\":\"LiFePO4\",\"batteryMaterials\":[\"lithium iron phosphate cathode\",\"synthetic graphite anode\",\"lithium hexafluorophosphate electrolyte\"]},\"Performance\":{\"ratedCapacity\":87.0,\"expectedLifetime\":3000},\"SupplyChainDueDiligence\":{\"dueDiligenceReport\":\"synthetic-dd-report-2026\",\"dueDiligencePolicyURI\":\"https://example.org/synthetic/dd-policy\",\"lastAuditDate\":\"2026-08-30\"},\"Circularity\":{\"separateCollectionRate\":0.63,\"endOfLifeInformation\":\"Return via the synthetic take-back scheme.\"}}"
+          },
+          "passed": false,
+          "issues": [
+            "primaryDataShare=0.49 is below threshold 0.50"
+          ],
+          "error": "cf_methodology gate blocked: primaryDataShare=0.49 is below threshold 0.50",
+          "raw": {
+            "result": {
+              "error": "cf_methodology gate blocked: primaryDataShare=0.49 is below threshold 0.50",
+              "pass": false,
+              "result": {
+                "Err": {
+                  "Gate": "cf_methodology",
+                  "Reasons": [
+                    "primaryDataShare=0.49 is below threshold 0.50"
+                  ],
+                  "Remediation": [
+                    "Populate the missing CarbonFootprint fields listed above (systemBoundary, functionalUnit, carbonFootprintPerLifecycleStage, carbonFootprintStudyMethod, primaryDataShare).",
+                    "If using PEFCR, set pefcrAligned: true as an alternative to declaring carbonFootprintStudyMethod explicitly.",
+                    "Ensure primaryDataShare ≥ 0.50; if the CF study genuinely relies on secondary data, adjust PrimaryDataShareThreshold in config."
+                  ]
+                },
+                "Issues": [
+                  "primaryDataShare=0.49 is below threshold 0.50"
+                ],
+                "Remediation": [
+                  "Populate the missing CarbonFootprint fields listed above (systemBoundary, functionalUnit, carbonFootprintPerLifecycleStage, carbonFootprintStudyMethod, primaryDataShare).",
+                  "If using PEFCR, set pefcrAligned: true as an alternative to declaring carbonFootprintStudyMethod explicitly.",
+                  "Ensure primaryDataShare ≥ 0.50; if the CF study genuinely relies on secondary data, adjust PrimaryDataShareThreshold in config."
+                ]
+              }
+            },
+            "tool": "bp_check_cf_methodology"
+          }
+        },
+        "due_diligence": {
+          "called": "bp_check_due_diligence",
+          "input": {
+            "body": "{\"GeneralProductInformation\":{\"manufacturer\":{\"name\":\"SYN-MFR-01\",\"site\":\"synthetic plant A\"},\"batteryCategory\":\"LMT\",\"batteryWeight\":9.6},\"Labels\":{\"separateCollectionSymbol\":true,\"ceMarking\":true,\"declaredChemistry\":\"LFP\"},\"CarbonFootprint\":{\"carbonFootprintPerLifecycleStage\":[{\"stage\":\"raw material acquisition and pre-processing\",\"kgCO2ePerKWh\":38.2},{\"stage\":\"main product production\",\"kgCO2ePerKWh\":17.5},{\"stage\":\"distribution\",\"kgCO2ePerKWh\":1.1},{\"stage\":\"end of life and recycling\",\"kgCO2ePerKWh\":2.4}],\"absoluteCarbonFootprint\":5160.0,\"batteryCarbonFootprint\":59.2,\"carbonFootprintPerformanceClass\":\"B\",\"carbonFootprintStudyMethod\":\"PEFCR\",\"primaryDataShare\":0.49,\"systemBoundary\":\"cradle-to-grave excluding use phase\",\"functionalUnit\":\"1 kWh of total energy provided over the service life\"},\"MaterialComposition\":{\"batteryChemistry\":\"LFP\",\"cathodeActiveMaterial\":\"LiFePO4\",\"batteryMaterials\":[\"lithium iron phosphate cathode\",\"synthetic graphite anode\",\"lithium hexafluorophosphate electrolyte\"]},\"Performance\":{\"ratedCapacity\":87.0,\"expectedLifetime\":3000},\"SupplyChainDueDiligence\":{\"dueDiligenceReport\":\"synthetic-dd-report-2026\",\"dueDiligencePolicyURI\":\"https://example.org/synthetic/dd-policy\",\"lastAuditDate\":\"2026-08-30\"},\"Circularity\":{\"separateCollectionRate\":0.63,\"endOfLifeInformation\":\"Return via the synthetic take-back scheme.\"}}"
+          },
+          "passed": true,
+          "issues": [],
+          "error": null,
+          "raw": {
+            "result": {
+              "error": "",
+              "pass": true,
+              "result": {
+                "Err": null,
+                "Issues": null,
+                "Remediation": null
+              }
+            },
+            "tool": "bp_check_due_diligence"
+          }
+        }
+      },
+      "all_issues": [
+        "primaryDataShare=0.49 is below threshold 0.50"
+      ],
+      "discrepancies": [],
+      "payload_modified": false
+    },
+    {
+      "id": "BP-05",
+      "status": "non_compliant",
+      "rationale": "The due-diligence gate returned pass=false with the verbatim issue \"lastAuditDate=\\\"2024-03-02\\\" is older than 365 days\". Chemistry returned consistent=true, while the EU and CF methodology calls returned pass=true with Issues=null, so rule R3 gives non_compliant.",
+      "evidence": [
+        "bp_check_chemistry: consistent=true; canonical_chemistry=NMC; declared_chemistry=NMC811; cathode_composition=LiNi0.8Mn0.1Co0.1O2; missing=null; forbidden=null",
+        "bp_check_compliance: chemistry=NMC; application=EV; pass=true; error=\"\"; Issues=null",
+        "bp_check_cf_methodology: pass=true; error=\"\"; Issues=null; payload primaryDataShare=0.58 and method=PEFCR",
+        "bp_check_due_diligence: pass=false; Issues=[\"lastAuditDate=\\\"2024-03-02\\\" is older than 365 days\"]; error=\"due_diligence gate blocked: lastAuditDate=\\\"2024-03-02\\\" is older than 365 days\""
+      ],
+      "tools_used": [
+        "bp_check_compliance",
+        "bp_check_cf_methodology",
+        "bp_check_due_diligence",
+        "bp_check_chemistry"
+      ],
+      "chemistry": "NMC",
+      "application": "EV",
+      "status_basis": "R3",
+      "checks": {
+        "chemistry": {
+          "called": "bp_check_chemistry",
+          "input": {
+            "declared_chemistry": "NMC811",
+            "cathode_composition": "LiNi0.8Mn0.1Co0.1O2"
+          },
+          "consistent": true,
+          "issues": [],
+          "error": null,
+          "raw": {
+            "result": {
+              "declared_chemistry": "NMC811",
+              "cathode_composition": "LiNi0.8Mn0.1Co0.1O2",
+              "canonical_chemistry": "NMC",
+              "consistent": true,
+              "forbidden": null,
+              "missing": null,
+              "reason": ""
+            },
+            "tool": "bp_check_chemistry"
+          }
+        },
+        "eu_compliance": {
+          "called": "bp_check_compliance",
+          "input": {
+            "body": "{\"GeneralProductInformation\":{\"manufacturer\":{\"name\":\"SYN-MFR-01\",\"site\":\"synthetic plant A\"},\"batteryCategory\":\"EV\",\"batteryWeight\":412.0},\"Labels\":{\"separateCollectionSymbol\":true,\"ceMarking\":true,\"declaredChemistry\":\"NMC811\"},\"CarbonFootprint\":{\"carbonFootprintPerLifecycleStage\":[{\"stage\":\"raw material acquisition and pre-processing\",\"kgCO2ePerKWh\":38.2},{\"stage\":\"main product production\",\"kgCO2ePerKWh\":17.5},{\"stage\":\"distribution\",\"kgCO2ePerKWh\":1.1},{\"stage\":\"end of life and recycling\",\"kgCO2ePerKWh\":2.4}],\"absoluteCarbonFootprint\":5160.0,\"batteryCarbonFootprint\":59.2,\"carbonFootprintPerformanceClass\":\"B\",\"carbonFootprintStudyMethod\":\"PEFCR\",\"primaryDataShare\":0.58,\"systemBoundary\":\"cradle-to-grave excluding use phase\",\"functionalUnit\":\"1 kWh of total energy provided over the service life\"},\"MaterialComposition\":{\"batteryChemistry\":\"NMC811\",\"cathodeActiveMaterial\":\"LiNi0.8Mn0.1Co0.1O2\",\"batteryMaterials\":[\"lithium hexafluorophosphate electrolyte\",\"nickel manganese cobalt oxide cathode\",\"synthetic graphite anode\"]},\"Performance\":{\"ratedCapacity\":87.0,\"expectedLifetime\":3000},\"SupplyChainDueDiligence\":{\"dueDiligenceReport\":\"synthetic-dd-report-2026\",\"dueDiligencePolicyURI\":\"https://example.org/synthetic/dd-policy\",\"lastAuditDate\":\"2024-03-02\"},\"Circularity\":{\"separateCollectionRate\":0.63,\"endOfLifeInformation\":\"Return via the synthetic take-back scheme.\"}}",
+            "chemistry": "NMC",
+            "application": "EV"
+          },
+          "passed": true,
+          "issues": [],
+          "error": null,
+          "raw": {
+            "result": {
+              "error": "",
+              "pass": true,
+              "result": {
+                "Err": null,
+                "Issues": null,
+                "Remediation": null
+              }
+            },
+            "tool": "bp_check_compliance"
+          },
+          "not_in_matrix": false
+        },
+        "cf_methodology": {
+          "called": "bp_check_cf_methodology",
+          "input": {
+            "body": "{\"GeneralProductInformation\":{\"manufacturer\":{\"name\":\"SYN-MFR-01\",\"site\":\"synthetic plant A\"},\"batteryCategory\":\"EV\",\"batteryWeight\":412.0},\"Labels\":{\"separateCollectionSymbol\":true,\"ceMarking\":true,\"declaredChemistry\":\"NMC811\"},\"CarbonFootprint\":{\"carbonFootprintPerLifecycleStage\":[{\"stage\":\"raw material acquisition and pre-processing\",\"kgCO2ePerKWh\":38.2},{\"stage\":\"main product production\",\"kgCO2ePerKWh\":17.5},{\"stage\":\"distribution\",\"kgCO2ePerKWh\":1.1},{\"stage\":\"end of life and recycling\",\"kgCO2ePerKWh\":2.4}],\"absoluteCarbonFootprint\":5160.0,\"batteryCarbonFootprint\":59.2,\"carbonFootprintPerformanceClass\":\"B\",\"carbonFootprintStudyMethod\":\"PEFCR\",\"primaryDataShare\":0.58,\"systemBoundary\":\"cradle-to-grave excluding use phase\",\"functionalUnit\":\"1 kWh of total energy provided over the service life\"},\"MaterialComposition\":{\"batteryChemistry\":\"NMC811\",\"cathodeActiveMaterial\":\"LiNi0.8Mn0.1Co0.1O2\",\"batteryMaterials\":[\"lithium hexafluorophosphate electrolyte\",\"nickel manganese cobalt oxide cathode\",\"synthetic graphite anode\"]},\"Performance\":{\"ratedCapacity\":87.0,\"expectedLifetime\":3000},\"SupplyChainDueDiligence\":{\"dueDiligenceReport\":\"synthetic-dd-report-2026\",\"dueDiligencePolicyURI\":\"https://example.org/synthetic/dd-policy\",\"lastAuditDate\":\"2024-03-02\"},\"Circularity\":{\"separateCollectionRate\":0.63,\"endOfLifeInformation\":\"Return via the synthetic take-back scheme.\"}}"
+          },
+          "passed": true,
+          "issues": [],
+          "error": null,
+          "raw": {
+            "result": {
+              "error": "",
+              "pass": true,
+              "result": {
+                "Err": null,
+                "Issues": null,
+                "Remediation": null
+              }
+            },
+            "tool": "bp_check_cf_methodology"
+          }
+        },
+        "due_diligence": {
+          "called": "bp_check_due_diligence",
+          "input": {
+            "body": "{\"GeneralProductInformation\":{\"manufacturer\":{\"name\":\"SYN-MFR-01\",\"site\":\"synthetic plant A\"},\"batteryCategory\":\"EV\",\"batteryWeight\":412.0},\"Labels\":{\"separateCollectionSymbol\":true,\"ceMarking\":true,\"declaredChemistry\":\"NMC811\"},\"CarbonFootprint\":{\"carbonFootprintPerLifecycleStage\":[{\"stage\":\"raw material acquisition and pre-processing\",\"kgCO2ePerKWh\":38.2},{\"stage\":\"main product production\",\"kgCO2ePerKWh\":17.5},{\"stage\":\"distribution\",\"kgCO2ePerKWh\":1.1},{\"stage\":\"end of life and recycling\",\"kgCO2ePerKWh\":2.4}],\"absoluteCarbonFootprint\":5160.0,\"batteryCarbonFootprint\":59.2,\"carbonFootprintPerformanceClass\":\"B\",\"carbonFootprintStudyMethod\":\"PEFCR\",\"primaryDataShare\":0.58,\"systemBoundary\":\"cradle-to-grave excluding use phase\",\"functionalUnit\":\"1 kWh of total energy provided over the service life\"},\"MaterialComposition\":{\"batteryChemistry\":\"NMC811\",\"cathodeActiveMaterial\":\"LiNi0.8Mn0.1Co0.1O2\",\"batteryMaterials\":[\"lithium hexafluorophosphate electrolyte\",\"nickel manganese cobalt oxide cathode\",\"synthetic graphite anode\"]},\"Performance\":{\"ratedCapacity\":87.0,\"expectedLifetime\":3000},\"SupplyChainDueDiligence\":{\"dueDiligenceReport\":\"synthetic-dd-report-2026\",\"dueDiligencePolicyURI\":\"https://example.org/synthetic/dd-policy\",\"lastAuditDate\":\"2024-03-02\"},\"Circularity\":{\"separateCollectionRate\":0.63,\"endOfLifeInformation\":\"Return via the synthetic take-back scheme.\"}}"
+          },
+          "passed": false,
+          "issues": [
+            "lastAuditDate=\"2024-03-02\" is older than 365 days"
+          ],
+          "error": "due_diligence gate blocked: lastAuditDate=\"2024-03-02\" is older than 365 days",
+          "raw": {
+            "result": {
+              "error": "due_diligence gate blocked: lastAuditDate=\"2024-03-02\" is older than 365 days",
+              "pass": false,
+              "result": {
+                "Err": {
+                  "Gate": "due_diligence",
+                  "Reasons": [
+                    "lastAuditDate=\"2024-03-02\" is older than 365 days"
+                  ],
+                  "Remediation": [
+                    "Ensure the SupplyChainDueDiligence payload includes dueDiligencePolicyURI (or corporatePolicyURL) linking to the published due-diligence policy.",
+                    "Set lastAuditDate to an ISO-8601 date within the last 365 days (e.g. \"2026-11-06\") and re-run the gate."
+                  ]
+                },
+                "Issues": [
+                  "lastAuditDate=\"2024-03-02\" is older than 365 days"
+                ],
+                "Remediation": [
+                  "Ensure the SupplyChainDueDiligence payload includes dueDiligencePolicyURI (or corporatePolicyURL) linking to the published due-diligence policy.",
+                  "Set lastAuditDate to an ISO-8601 date within the last 365 days (e.g. \"2026-11-06\") and re-run the gate."
+                ]
+              }
+            },
+            "tool": "bp_check_due_diligence"
+          }
+        }
+      },
+      "all_issues": [
+        "lastAuditDate=\"2024-03-02\" is older than 365 days"
+      ],
+      "discrepancies": [],
+      "payload_modified": false
+    },
+    {
+      "id": "BP-06",
+      "status": "not_assessable",
+      "rationale": "The EU gate returned pass=false with the verbatim issue \"chemistry+application combo NAION:EV not present in mandatory-field matrix; declare it in config or extend the matrix\". This is the D2 matrix signal, so rule R2 makes the draft not_assessable even though chemistry was consistent and the CF and due-diligence calls returned pass=true with Issues=null.",
+      "evidence": [
+        "bp_check_chemistry: consistent=true; canonical_chemistry=NAION; declared_chemistry=NaIon; cathode_composition=NaNi0.33Fe0.33Mn0.33O2; missing=null; forbidden=null",
+        "bp_check_compliance: chemistry=NaIon; application=EV; pass=false; Issues=[\"chemistry+application combo NAION:EV not present in mandatory-field matrix; declare it in config or extend the matrix\"]; error=\"eu_battery_reg_2023_1542 gate blocked: chemistry+application combo NAION:EV not present in mandatory-field matrix; declare it in config or extend the matrix\"",
+        "bp_check_cf_methodology: pass=true; error=\"\"; Issues=null; payload primaryDataShare=0.66 and method=PEFCR",
+        "bp_check_due_diligence: pass=true; error=\"\"; Issues=null"
+      ],
+      "tools_used": [
+        "bp_check_compliance",
+        "bp_check_cf_methodology",
+        "bp_check_due_diligence",
+        "bp_check_chemistry"
+      ],
+      "chemistry": "NaIon",
+      "application": "EV",
+      "status_basis": "R2",
+      "checks": {
+        "chemistry": {
+          "called": "bp_check_chemistry",
+          "input": {
+            "declared_chemistry": "NaIon",
+            "cathode_composition": "NaNi0.33Fe0.33Mn0.33O2"
+          },
+          "consistent": true,
+          "issues": [],
+          "error": null,
+          "raw": {
+            "result": {
+              "declared_chemistry": "NaIon",
+              "cathode_composition": "NaNi0.33Fe0.33Mn0.33O2",
+              "canonical_chemistry": "NAION",
+              "consistent": true,
+              "forbidden": null,
+              "missing": null,
+              "reason": ""
+            },
+            "tool": "bp_check_chemistry"
+          }
+        },
+        "eu_compliance": {
+          "called": "bp_check_compliance",
+          "input": {
+            "body": "{\"GeneralProductInformation\":{\"manufacturer\":{\"name\":\"SYN-MFR-01\",\"site\":\"synthetic plant A\"},\"batteryCategory\":\"EV\",\"batteryWeight\":412.0},\"Labels\":{\"separateCollectionSymbol\":true,\"ceMarking\":true,\"declaredChemistry\":\"NaIon\"},\"CarbonFootprint\":{\"carbonFootprintPerLifecycleStage\":[{\"stage\":\"raw material acquisition and pre-processing\",\"kgCO2ePerKWh\":38.2},{\"stage\":\"main product production\",\"kgCO2ePerKWh\":17.5},{\"stage\":\"distribution\",\"kgCO2ePerKWh\":1.1},{\"stage\":\"end of life and recycling\",\"kgCO2ePerKWh\":2.4}],\"absoluteCarbonFootprint\":5160.0,\"batteryCarbonFootprint\":59.2,\"carbonFootprintPerformanceClass\":\"B\",\"carbonFootprintStudyMethod\":\"PEFCR\",\"primaryDataShare\":0.66,\"systemBoundary\":\"cradle-to-grave excluding use phase\",\"functionalUnit\":\"1 kWh of total energy provided over the service life\"},\"MaterialComposition\":{\"batteryChemistry\":\"NaIon\",\"cathodeActiveMaterial\":\"NaNi0.33Fe0.33Mn0.33O2\",\"batteryMaterials\":[\"sodium hexafluorophosphate electrolyte\",\"layered sodium transition-metal oxide cathode\",\"hard carbon anode\"]},\"Performance\":{\"ratedCapacity\":87.0,\"expectedLifetime\":3000},\"SupplyChainDueDiligence\":{\"dueDiligenceReport\":\"synthetic-dd-report-2026\",\"dueDiligencePolicyURI\":\"https://example.org/synthetic/dd-policy\",\"lastAuditDate\":\"2026-09-10\"},\"Circularity\":{\"separateCollectionRate\":0.63,\"endOfLifeInformation\":\"Return via the synthetic take-back scheme.\"}}",
+            "chemistry": "NaIon",
+            "application": "EV"
+          },
+          "passed": false,
+          "issues": [
+            "chemistry+application combo NAION:EV not present in mandatory-field matrix; declare it in config or extend the matrix"
+          ],
+          "error": "eu_battery_reg_2023_1542 gate blocked: chemistry+application combo NAION:EV not present in mandatory-field matrix; declare it in config or extend the matrix",
+          "raw": {
+            "result": {
+              "error": "eu_battery_reg_2023_1542 gate blocked: chemistry+application combo NAION:EV not present in mandatory-field matrix; declare it in config or extend the matrix",
+              "pass": false,
+              "result": {
+                "Err": {
+                  "Gate": "eu_battery_reg_2023_1542",
+                  "Reasons": [
+                    "chemistry+application combo NAION:EV not present in mandatory-field matrix; declare it in config or extend the matrix"
+                  ],
+                  "Remediation": [
+                    "Populate every missing field listed above in the corresponding payload category and re-run the gate.",
+                    "If a field is genuinely inapplicable for this chemistry/application, add an exemption entry in the EUBatteryRegConfig.MandatoryByCombo matrix."
+                  ]
+                },
+                "Issues": [
+                  "chemistry+application combo NAION:EV not present in mandatory-field matrix; declare it in config or extend the matrix"
+                ],
+                "Remediation": [
+                  "Populate every missing field listed above in the corresponding payload category and re-run the gate.",
+                  "If a field is genuinely inapplicable for this chemistry/application, add an exemption entry in the EUBatteryRegConfig.MandatoryByCombo matrix."
+                ]
+              }
+            },
+            "tool": "bp_check_compliance"
+          },
+          "not_in_matrix": true
+        },
+        "cf_methodology": {
+          "called": "bp_check_cf_methodology",
+          "input": {
+            "body": "{\"GeneralProductInformation\":{\"manufacturer\":{\"name\":\"SYN-MFR-01\",\"site\":\"synthetic plant A\"},\"batteryCategory\":\"EV\",\"batteryWeight\":412.0},\"Labels\":{\"separateCollectionSymbol\":true,\"ceMarking\":true,\"declaredChemistry\":\"NaIon\"},\"CarbonFootprint\":{\"carbonFootprintPerLifecycleStage\":[{\"stage\":\"raw material acquisition and pre-processing\",\"kgCO2ePerKWh\":38.2},{\"stage\":\"main product production\",\"kgCO2ePerKWh\":17.5},{\"stage\":\"distribution\",\"kgCO2ePerKWh\":1.1},{\"stage\":\"end of life and recycling\",\"kgCO2ePerKWh\":2.4}],\"absoluteCarbonFootprint\":5160.0,\"batteryCarbonFootprint\":59.2,\"carbonFootprintPerformanceClass\":\"B\",\"carbonFootprintStudyMethod\":\"PEFCR\",\"primaryDataShare\":0.66,\"systemBoundary\":\"cradle-to-grave excluding use phase\",\"functionalUnit\":\"1 kWh of total energy provided over the service life\"},\"MaterialComposition\":{\"batteryChemistry\":\"NaIon\",\"cathodeActiveMaterial\":\"NaNi0.33Fe0.33Mn0.33O2\",\"batteryMaterials\":[\"sodium hexafluorophosphate electrolyte\",\"layered sodium transition-metal oxide cathode\",\"hard carbon anode\"]},\"Performance\":{\"ratedCapacity\":87.0,\"expectedLifetime\":3000},\"SupplyChainDueDiligence\":{\"dueDiligenceReport\":\"synthetic-dd-report-2026\",\"dueDiligencePolicyURI\":\"https://example.org/synthetic/dd-policy\",\"lastAuditDate\":\"2026-09-10\"},\"Circularity\":{\"separateCollectionRate\":0.63,\"endOfLifeInformation\":\"Return via the synthetic take-back scheme.\"}}"
+          },
+          "passed": true,
+          "issues": [],
+          "error": null,
+          "raw": {
+            "result": {
+              "error": "",
+              "pass": true,
+              "result": {
+                "Err": null,
+                "Issues": null,
+                "Remediation": null
+              }
+            },
+            "tool": "bp_check_cf_methodology"
+          }
+        },
+        "due_diligence": {
+          "called": "bp_check_due_diligence",
+          "input": {
+            "body": "{\"GeneralProductInformation\":{\"manufacturer\":{\"name\":\"SYN-MFR-01\",\"site\":\"synthetic plant A\"},\"batteryCategory\":\"EV\",\"batteryWeight\":412.0},\"Labels\":{\"separateCollectionSymbol\":true,\"ceMarking\":true,\"declaredChemistry\":\"NaIon\"},\"CarbonFootprint\":{\"carbonFootprintPerLifecycleStage\":[{\"stage\":\"raw material acquisition and pre-processing\",\"kgCO2ePerKWh\":38.2},{\"stage\":\"main product production\",\"kgCO2ePerKWh\":17.5},{\"stage\":\"distribution\",\"kgCO2ePerKWh\":1.1},{\"stage\":\"end of life and recycling\",\"kgCO2ePerKWh\":2.4}],\"absoluteCarbonFootprint\":5160.0,\"batteryCarbonFootprint\":59.2,\"carbonFootprintPerformanceClass\":\"B\",\"carbonFootprintStudyMethod\":\"PEFCR\",\"primaryDataShare\":0.66,\"systemBoundary\":\"cradle-to-grave excluding use phase\",\"functionalUnit\":\"1 kWh of total energy provided over the service life\"},\"MaterialComposition\":{\"batteryChemistry\":\"NaIon\",\"cathodeActiveMaterial\":\"NaNi0.33Fe0.33Mn0.33O2\",\"batteryMaterials\":[\"sodium hexafluorophosphate electrolyte\",\"layered sodium transition-metal oxide cathode\",\"hard carbon anode\"]},\"Performance\":{\"ratedCapacity\":87.0,\"expectedLifetime\":3000},\"SupplyChainDueDiligence\":{\"dueDiligenceReport\":\"synthetic-dd-report-2026\",\"dueDiligencePolicyURI\":\"https://example.org/synthetic/dd-policy\",\"lastAuditDate\":\"2026-09-10\"},\"Circularity\":{\"separateCollectionRate\":0.63,\"endOfLifeInformation\":\"Return via the synthetic take-back scheme.\"}}"
+          },
+          "passed": true,
+          "issues": [],
+          "error": null,
+          "raw": {
+            "result": {
+              "error": "",
+              "pass": true,
+              "result": {
+                "Err": null,
+                "Issues": null,
+                "Remediation": null
+              }
+            },
+            "tool": "bp_check_due_diligence"
+          }
+        }
+      },
+      "all_issues": [
+        "chemistry+application combo NAION:EV not present in mandatory-field matrix; declare it in config or extend the matrix"
+      ],
+      "discrepancies": [],
+      "payload_modified": false
+    }
+  ],
+  "gates": [
+    {
+      "name": "chemistry consistency",
+      "status": "inconsistent",
+      "detail": "BP-02 returned consistent=false with missing=[Fe,P] and forbidden=[Co,Ni,Mn]; BP-01, BP-03, BP-04, BP-05, and BP-06 returned consistent=true."
+    },
+    {
+      "name": "EU Battery Regulation 2023/1542 mandatory attributes",
+      "status": "not_assessable",
+      "detail": "BP-06 triggered D2: \"chemistry+application combo NAION:EV not present in mandatory-field matrix; declare it in config or extend the matrix\". The other five EU calls returned pass=true with Issues=null; BP-06's matrix absence means not assessable, not a substantive regulatory failure."
+    },
+    {
+      "name": "carbon-footprint methodology",
+      "status": "non_compliant",
+      "detail": "BP-04 failed with \"primaryDataShare=0.49 is below threshold 0.50\". The other five calls passed with Issues=null, including BP-03 at the inclusive threshold primaryDataShare=0.50."
+    },
+    {
+      "name": "supply-chain due diligence",
+      "status": "non_compliant",
+      "detail": "BP-05 failed with \"lastAuditDate=\\\"2024-03-02\\\" is older than 365 days\"; the other five calls returned pass=true with Issues=null."
+    }
+  ],
+  "overall_verdict": "BP-01 and BP-03 pass TOKN's gate projection, BP-04 and BP-05 are non-compliant, BP-02 has an overriding chemistry inconsistency, and BP-06 cannot be assessed until the NaIon/EV matrix entry is supplied; none of these outcomes is a legal certification.",
+  "confidence": 0.95,
+  "limitations": [
+    "Synthetic configured gate projection only; neither legal certification nor publication authorization.",
+    "Mass reconciliation and physical plausibility are not assessed by the four requested tools. BP-04 has batteryWeight=9.6, ratedCapacity=87.0 and absoluteCarbonFootprint=5160.0; the other five have batteryWeight=412.0 with the same capacity and absolute footprint. BP-03 is Industrial, not EV.",
+    "All six: 59.2 × 87.0 = 5150.40 versus absoluteCarbonFootprint=5160.0, a difference of 9.60 (approximately 0.186% of 5160.0). Arithmetic is verified; a dimensional or regulatory defect is not established without ratedCapacity units, lifetime-energy normalization and rounding tolerance.",
+    "The DD gate exposes no reference-date field or exact reference instant. BP-05 remediation names 2026-11-06 as an example in-window date, corroborating the observed revision date. Audit-age outcomes remain quoted verbatim.",
+    "Free-text material-trigger matching is undocumented. BP-06 names none of the four trigger materials in its material list, though its formula contains Ni; a passing response does not establish general parser semantics.",
+    "Confidence 0.95 applies only to the six statuses under the configured gates, not legal compliance or complete physical/numeric consistency. Original relay fields are preserved with the PLAN audit fields added."
+  ],
+  "critique_response": [
+    {
+      "id": "C1",
+      "action": "fixed",
+      "detail": "Confirmed missing PLAN audit fields independently. Added brief, disclaimer, execution_date, chemistry/application, status_basis, checks, all_issues, discrepancies and payload_modified. Preserved original relay fields under the user instruction to keep the existing shape; all 24 reruns reproduce the original statuses."
+    },
+    {
+      "id": "C2",
+      "action": "fixed",
+      "detail": "Each check now records exact arguments, including the compact serialized unchanged payload body for all three body-based gates, plus the complete observed raw response wrapper. Body equality is independently validated against inputs."
+    },
+    {
+      "id": "C3",
+      "action": "fixed",
+      "detail": "BP-02 chemistry rerun confirmed the full error and error_detail. Both are preserved in JSON, and the complete raw response is reproduced in RESULT.md."
+    },
+    {
+      "id": "C4",
+      "action": "fixed",
+      "detail": "Populated critique_response with one entry per finding at this reviser stage, as explicitly required. It is no longer an empty placeholder; original relay fields are retained."
+    },
+    {
+      "id": "C5",
+      "action": "fixed",
+      "detail": "Confidence reduced to 0.95 and scoped only to the six statuses under configured tools. Structural conformance is checked separately; legal compliance and physical/numeric correctness are not inferred."
+    },
+    {
+      "id": "C6",
+      "action": "fixed",
+      "detail": "BP-05 DD rerun independently confirmed remediation naming 2026-11-06 as an example in-window date, corroborating the observed execution date. The exact reference instant and a reference-date field remain unexposed."
+    },
+    {
+      "id": "C7",
+      "action": "fixed",
+      "detail": "Inputs confirm BP-04 weight 9.6, capacity 87.0 and absolute footprint 5160.0 versus weight 412.0 for the other five. Independent Decimal calculation verifies 59.2 × 87.0 = 5150.40, difference 9.60, approximately 0.186% of 5160.0. Concrete risks are noted; interpreting equality as mandatory requires capacity units, lifetime-energy normalization and rounding rules absent from inputs. No gate status was changed."
+    },
+    {
+      "id": "C8",
+      "action": "fixed",
+      "detail": "Every item explicitly contains discrepancies: []. Independent CF threshold comparison and observed-date audit ages agree with the gate outcomes; the report now states that arrays are empty rather than unnecessary."
+    }
+  ],
+  "brief": "BRIEF.md",
+  "disclaimer": "Statuses reflect TOKN batterypass gate projection of EU 2023/1542; not a legal certification. Synthetic data.",
+  "execution_date": "2026-11-06"
+}

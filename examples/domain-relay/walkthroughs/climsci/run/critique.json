@@ -1,0 +1,53 @@
+{
+  "findings": [
+    {
+      "id": "C1",
+      "item": "overall",
+      "severity": "blocking",
+      "issue": "The Step 6 calibrated-language/provenance gate was not actually run, and it fails when run. PLAN Step 6 requires review_artifact on the RESULT.md prose (kind=\"claim\", domain=\"climsci\") and states that any critical finding 'must be fixed in the text before the deliverable is final'; the acceptance criteria require 'RESULT.md: Step 6 has run on it with no unresolved critical findings'. Neither file records any review_artifact output: every per-item tools_used array in result.json lists only query_cmip6_catalog, compute_ensemble_stats, validate_physical and run_command, yet RESULT.md's provenance line claims 'tools used ... run_command, and review_artifact' - a tool claim with no recorded output (a gate marked pass without evidence). I re-ran review_artifact on RESULT.md with the traceable values from inputs/field_ranges.json, inputs/ensemble_claims.json and BRIEF.md rule 2: it returned passed=false, summary 'review BLOCKED (critical findings): 2 critical, 8 high' - code_artifact_drift ('artifact has no recorded producing code; code-artifact consistency cannot be verified'), incomplete_provenance ('artifact is not reproducible: missing environment, producing_code'), plus untraceable numbers 90, 100, 66, 33, 2100, 99, 270 and 0.97.",
+      "fix": "Run review_artifact on the final RESULT.md and record its verbatim output in result.json (per item or top-level). Resolve the two critical findings by declaring the producing computation (the inline family-map / p computation over inputs/ensemble_claims.json) and the runtime environment in the provenance. Declare the flagged numbers as traceable values with sources: 90/100/66/33/99 are the AR6 probability ranges required by rule 5 and come from the DOMAIN-README AR6 table; 270 K is the untoleranced plausible bound quoted from BRIEF rule 2; 2100 is part of the claim text in inputs/ensemble_claims.json; 0.97 is the self-assessed confidence. Several of the 'high' findings are the tool flagging mandatory calibrated language rather than real defects, and are cleared by declaring those sources - but the two critical provenance gaps are real and must be fixed before the deliverable is final."
+    },
+    {
+      "id": "C2",
+      "item": "overall",
+      "severity": "major",
+      "issue": "result.json does not conform to the acceptance-criteria schema for item evidence. The criteria require an evidence OBJECT with named fields (family_map, n_independent_families, n_agreeing_families, p as a fraction string and a 4-dp decimal, derived_term with its AR6 range, band_check with variable/units/min/max/band_low/band_high/pass and the validate_physical verdict, catalog_query, ensemble_stats, decision_rule_fired, gates, and tool_errors for verbatim errors), plus per-item keys 'item', 'claim' (copied verbatim) and 'stated_likelihood'. result.json instead uses the key 'id' (not 'item'), has no 'claim' or 'stated_likelihood' fields (both appear only inside the first free-text evidence string), and makes 'evidence' an ARRAY of tool-prefixed prose strings. Every required value is present and, on my independent recomputation from inputs/, correct - but a second reader or validator applying the acceptance criteria mechanically cannot extract the named fields.",
+      "fix": "Restructure each item's evidence into the specified object with the named keys; promote 'item', 'claim' and 'stated_likelihood' to item level; move the verbatim intake tracebacks into catalog_query, ensemble_stats and a tool_errors key; keep decision_rule_fired and the per-gate pass/fail/not_applicable outcomes as fields rather than prose."
+    },
+    {
+      "id": "C3",
+      "item": "overall",
+      "severity": "major",
+      "issue": "result.json is missing the required top-level 'provenance' object. The acceptance criteria require top-level provenance recording the input files used, the tools called, data_layer: \"L2-model-output\", and a statement that the inputs are synthetic. result.json has no such field; that information exists only in RESULT.md prose and scattered inside each item's first evidence string ('data_layer=L2-model-output'), so result.json alone does not satisfy the completeness criterion.",
+      "fix": "Add a top-level provenance object to result.json listing inputs/catalog_requests.json, inputs/ensemble_claims.json, inputs/field_ranges.json, the tools called (query_cmip6_catalog, compute_ensemble_stats, validate_physical, run_command, review_artifact), data_layer: \"L2-model-output\", and the synthetic-inputs statement; fold in the producing computation and environment from C1."
+    },
+    {
+      "id": "C4",
+      "item": "overall",
+      "severity": "minor",
+      "issue": "A word on the plan's banned list appears in the deliverable. PLAN Step 6's manual scan forbids 'certainly', 'definitely', 'surely', 'might', 'possibly', 'could', 'probably' anywhere in the deliverable text; RESULT.md line 131 reads 'Live Pangeo datasets, statistics, means and percentiles could not be inspected because intake was not installed.' The top-level IPCC calibrated-language gate detail reports only CL-02's term mismatch and asserts 'All likelihood terms in the deliverables carry AR6 probability ranges', implying the language scan was otherwise clean. Mitigating context: the phrase describes tool availability in the Limitations section, not a likelihood claim, and every likelihood term does carry its AR6 range (verified: very likely (90-100 %), likely (66-100 %), about as likely as not (33-66 %), virtually certain (99-100 %) all appear with ranges in both files).",
+      "fix": "Reword line 131 to 'were not available because intake was not installed' (or 'no live inspection was possible'), then re-run the banned-word scan over RESULT.md and result.json before the deliverable is final."
+    },
+    {
+      "id": "C5",
+      "item": "overall",
+      "severity": "minor",
+      "issue": "Unexplained 'corrected' wording in the top-level Physical plausibility gate detail: 'The corrected summary-mode validate_physical verdicts agree.' No correction is documented anywhere in result.json or RESULT.md, and my re-runs of all five validate_physical calls reproduce the reported verdicts exactly (CL-01, CL-02, CL-04, CL-05 PASS with tolerance_range [164,356] / [-0.0020011000000000004,0.0220001] / [265.5,319.5]; CL-03 FAIL with the identical violation detail 'Variable pr values [0, 18.4] exceed the plausible physical range [-1e-06, 0.02] kg m-2 s-1 (with 10% tolerance)'), so nothing in the current text needs correcting. The word implies an undocumented revision and invites the reader to wonder what was changed.",
+      "fix": "Delete the word 'corrected', or document what was corrected and why in the item's discrepancy notes."
+    },
+    {
+      "id": "C6",
+      "item": "CL-03",
+      "severity": "minor",
+      "issue": "The claim text in RESULT.md is not a verbatim copy for CL-03 and CL-04. inputs/ensemble_claims.json CL-03 reads 'increases by 2081-2100 relative to 1995-2014.' and CL-04 'rises by 2081-2100 relative to 1995-2014.' (ASCII hyphen); RESULT.md renders both as '2081-2100' with an en dash. The acceptance criteria require claim 'copied verbatim'. result.json's evidence strings preserve the hyphen, so only RESULT.md deviates. No meaning is changed.",
+      "fix": "Use the input's exact characters in RESULT.md for CL-03 and CL-04, or state once in the method section that dashes were normalised."
+    },
+    {
+      "id": "C7",
+      "item": "overall",
+      "severity": "minor",
+      "issue": "The stated confidence of 0.97 is broader than the evidence supports. It is well calibrated for the five status assignments - I independently recomputed every status, N_fam (10, 7, 8, 4, 6), A_fam (9, 4, 7, 4, 4), p (0.9000, 0.5714, 0.8750, 1.0000, 0.6667), derived term and band_pass from inputs/ and got identical results, and all ten live catalog/ensemble calls fail with the same ModuleNotFoundError: No module named 'intake' that the deliverable quotes verbatim - but the deliverable presents 0.97 while Step 6 has not actually been run (C1) and the acceptance-criteria schema is not met (C2, C3). As a statement about deliverable readiness rather than status assignment, 0.97 overstates it.",
+      "fix": "Scope the confidence explicitly to the five status assignments (e.g. 'confidence in the status assignments: 0.97'), or lower/qualify it until Step 6 has run and the schema gaps are closed."
+    }
+  ]
+}

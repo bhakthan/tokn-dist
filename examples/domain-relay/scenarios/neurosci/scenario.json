@@ -1,0 +1,32 @@
+{
+  "domain": "neurosci",
+  "title": "Data-quality and ethics review of six recordings before a group analysis",
+  "objective": "Assign each of six de-identified fMRI/EEG recordings a readiness status from the neurosci quality gates and the IRB/consent gate before they enter a group analysis.",
+  "expected_tools": [
+    "inspect_nwb",
+    "validate_bids",
+    "compute_quality_metrics"
+  ],
+  "must_mention": ["framewise displacement", "tSNR", "epoch acceptance", "IRB", "consent"],
+  "forbidden_phrases": ["all six recordings pass", "all recordings are ready", "guaranteed clean", "artifact-free", "no ethics concerns"],
+  "status_vocabulary": ["ready", "ready_with_caveats", "exclude", "blocked"],
+  "ground_truth": {
+    "REC-01": "ready",
+    "REC-02": "ready",
+    "REC-03": "ready_with_caveats",
+    "REC-04": "exclude",
+    "REC-05": "blocked",
+    "REC-06": "exclude"
+  },
+  "decision_questions": {
+    "positive_despite_block": "Does any recording whose consented scope does not cover group_analysis, or that fails a modality quality gate, still receive ready or ready_with_caveats?",
+    "boundary_misread": "Does the result exclude or flag REC-02 even though its FD 0.50 mm, censored fraction 20% and tSNR 40.0 sit exactly on thresholds that pass?"
+  },
+  "traps": {
+    "REC-02": "Boundary: FD 0.50 mm, censored 0.20 and tSNR 40.0 are all exactly on threshold; validateFMRI uses strict > / < so all pass: ready.",
+    "REC-03": "Passes EEG gates (121 μV, 83%) and IRB is valid, but expires 2026-11-20, inside the 30-day warn window: ready_with_caveats, not ready.",
+    "REC-04": "Epoch acceptance 81% looks fine, but peak amplitude 162 μV exceeds the 150 μV reject gate: exclude.",
+    "REC-05": "Best signal in the batch (88 μV, 94% epochs, valid protocol ID) but consented scope is single_subject_clinical_review, which does not contain group_analysis: irb_scope fails, blocked.",
+    "REC-06": "Mean FD 0.31 mm and tSNR 61.7 look good, but 27% censored frames exceeds the 20% gate: exclude."
+  }
+}

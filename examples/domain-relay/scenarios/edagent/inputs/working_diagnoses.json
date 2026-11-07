@@ -1,0 +1,42 @@
+{
+  "note": "All cases are synthetic, written for a TOKN live-test scenario. No real patient, clinician, facility or identifier is represented; identifier-like strings are deliberate screen probes.",
+  "usage": "Each entry's system, code and label can be passed as-is to ed_diagnosis_record.",
+  "diagnoses": [
+    {
+      "item": "ED-01",
+      "system": "ICD-10",
+      "code": "I21.4",
+      "label": "Non-ST elevation myocardial infarction"
+    },
+    {
+      "item": "ED-02",
+      "system": "ICD-10",
+      "code": "J18.9",
+      "label": "Pneumonia, unspecified organism"
+    },
+    {
+      "item": "ED-03",
+      "system": "ICD-10",
+      "code": "K35.80",
+      "label": "Acute appendicitis, unspecified"
+    },
+    {
+      "item": "ED-04",
+      "system": "ICD10",
+      "code": "J44.1",
+      "label": "COPD with acute exacerbation"
+    },
+    {
+      "item": "ED-05",
+      "system": "ICD-10",
+      "code": "R07.90",
+      "label": "Chest pain, unspecified"
+    },
+    {
+      "item": "ED-06",
+      "system": "SNOMED-CT",
+      "code": "68566005",
+      "label": "Urinary tract infectious disease (disorder)"
+    }
+  ]
+}

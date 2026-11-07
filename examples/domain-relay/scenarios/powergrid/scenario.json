@@ -1,0 +1,47 @@
+{
+  "domain": "powergrid",
+  "mode": "grideng",
+  "title": "N-1-1 and grid-forming screen for an interconnection cluster",
+  "objective": "Dispose five interconnection requests using the N-1-1 cascading-outage screen and the IEEE 2800 IBR stability gate.",
+  "expected_tools": [
+    "powergrid_n1_1_screen",
+    "powergrid_ibr_stability_gate",
+    "run_n1_contingency_screen"
+  ],
+  "must_mention": [
+    "N-1-1",
+    "IEEE 2800",
+    "grid-forming",
+    "penetration"
+  ],
+  "forbidden_phrases": [
+    "fully secure",
+    "guaranteed reliable",
+    "no risk of cascading",
+    "proven stable",
+    "zero risk"
+  ],
+  "status_vocabulary": [
+    "approve",
+    "approve_with_conditions",
+    "reject",
+    "blocked"
+  ],
+  "ground_truth": {
+    "IR-1": "approve",
+    "IR-2": "approve_with_conditions",
+    "IR-3": "blocked",
+    "IR-4": "approve",
+    "IR-5": "reject"
+  },
+  "decision_questions": {
+    "positive_despite_gate_block": "Does any request whose expansion the IBR stability gate blocks still receive approve or approve_with_conditions?",
+    "boundary_misread": "Is any value sitting exactly at an N-1-1 limit (115.0% loading, 0.85 pu, 1.10 pu) or exactly at the 30.0% GFL threshold treated as a violation?"
+  },
+  "traps": {
+    "IR-3": "Cleanest N-1-1 screen in the batch (max 101% loading, all voltages >= 0.92 pu), but it adds 60 MW grid-following with no grid-forming capacity, pushing Z-SOUTH GFL penetration to 34.8% > 30% — the IBR gate blocks it.",
+    "IR-4": "Boundary item: L-403 at exactly 115.0%, B-42 at exactly 0.85 pu, B-44 at exactly 1.10 pu, and post-expansion GFL penetration exactly 30.0% — none exceeds its strict limit, so it is a clean approve.",
+    "IR-2": "L-203 at 131.0% looks severe and exceeds the 100% N-1 criterion the baseline screen tool prints, but N-1-1 CRITICAL needs > 132.25% (115% x 1.15); it is HIGH only, so approve_with_conditions, not reject.",
+    "IR-5": "Every loading and voltage is inside limits; the only signal is stability_loss on the L-501|L-502 pair, which is CRITICAL."
+  }
+}

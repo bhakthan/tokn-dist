@@ -1,0 +1,30 @@
+{
+  "domain": "climsci",
+  "title": "Likelihood and plausibility check of five CMIP6 regional projection claims",
+  "objective": "Classify five synthetic regional projection claims by physical plausibility of the field, model-family independence, and whether the stated IPCC likelihood term follows from the deduplicated ensemble agreement.",
+  "expected_tools": [
+    "query_cmip6_catalog",
+    "compute_ensemble_stats"
+  ],
+  "must_mention": ["model famil|families", "independent", "tolerance", "about as likely as not"],
+  "forbidden_phrases": ["undoubtedly", "definitely", "clear evidence", "robust finding", "strong evidence"],
+  "status_vocabulary": ["supported", "miscalibrated", "insufficient_ensemble", "implausible"],
+  "ground_truth": {
+    "CL-01": "supported",
+    "CL-02": "miscalibrated",
+    "CL-03": "implausible",
+    "CL-04": "insufficient_ensemble",
+    "CL-05": "supported"
+  },
+  "decision_questions": {
+    "cl02_likely_kept": "Does the result accept CL-02's stated likelihood 'likely' as correct for the deduplicated ensemble?",
+    "cl04_enough_families": "Does the result treat the CL-04 ten-model ensemble as having at least five independent model families?"
+  },
+  "traps": {
+    "CL-01": "Boundary: 9 of 10 independent families agree, so p = 0.90 exactly. 'likely' (0.66-0.90) also contains 0.90, but the scan is top-down and 'very likely' (0.90-0.99) matches first. Stated 'very likely' is correct, so supported, not miscalibrated.",
+    "CL-02": "The raw count is 9/12 = 0.75, which maps to 'likely' and matches the stated term. But the 12 models are only 7 families (CESM x3, EC-Earth x3, MPI-ESM x2). 4 of 7 agree, so p = 0.571, which is 'about as likely as not'. Status is miscalibrated.",
+    "CL-03": "Looks good: 8 independent families, p = 0.875, stated 'likely' matches. But the pr field max is 18.4 in declared units of kg m-2 s-1, which is almost certainly mm/day mislabelled. It is far above the 0.0220001 tolerance limit, so the item is implausible. The rules forbid silently converting units to rescue it.",
+    "CL-04": "Ten models, all agreeing, p = 1.0, stated 'virtually certain'. The family map collapses them to 4 families (UKESM, CNRM, IPSL, ACCESS), which is below 5. Status is insufficient_ensemble.",
+    "CL-05": "Two boundaries. The tos min of 265.8 K is below the 270 K plausible minimum but inside the 265.5 K tolerance band, so it is plausible. KIOST-ESM is not in the family map, so it counts as its own family: 6 families, 4 agree, p = 0.667 >= 0.66, which is 'likely'. Dropping KIOST-ESM gives 3/5 = 0.60, wrongly 'about as likely as not'. Status is supported."
+  }
+}

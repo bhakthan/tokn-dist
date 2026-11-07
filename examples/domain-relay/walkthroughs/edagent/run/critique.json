@@ -1,0 +1,39 @@
+{
+  "findings": [
+    {
+      "id": "C1",
+      "item": "overall",
+      "severity": "major",
+      "issue": "result.json never quotes the ed_clinician_review output. PLAN.md states its acceptance criteria under 'result.json is complete only if all of the following hold', and criterion 6 requires 'a batch-level record that ed_clinician_review was called once, with its output quoted'. The gates entry 'Human review (RequireHumanReviewBeforeClose)' records that the call was made once but substitutes a pointer: 'its output is quoted in RESULT.md'. A grep for 'clinician_reviewed' across the repository matches RESULT.md line 61 only, not result.json. I re-ran ed_clinician_review with no inputs and it returned {\"clinician_reviewed\": true, \"phase\": \"RESULTS_REVIEW\"}, identical to RESULT.md's quote, so the call and its output are real and correctly reported in the prose file - but the structured deliverable itself carries no quote and no clinician_reviewed field, so any stage consuming result.json alone cannot see the Gate 3 evidence, and result.json fails the plan's own completeness criterion 6.",
+      "fix": "Add the verbatim output to result.json's batch-level record, e.g. extend the Human-review gates entry with: output (verbatim): {\"clinician_reviewed\": true, \"phase\": \"RESULTS_REVIEW\"}. No status changes; none depends on this gate."
+    },
+    {
+      "id": "C2",
+      "item": "overall",
+      "severity": "minor",
+      "issue": "The batch-level gate labels read 'pass' for two gates that blocked or refused half the batch. Gate 1 'PHI gate (ed_phi_attest, gate of record)' is labelled pass although it failed closed on ED-02 and ED-06; my re-run of ed_phi_attest on both excerpts returns residual_phi=true, phi_cleared=false. Gate 2 'Constrained-output guard on ed_diagnosis_record' is labelled pass although it refused 2 of the 4 submissions it received; my re-runs reproduce both refusals exactly ('[EDAGENT] sandboxloop: tool \"ed_diagnosis_record\" emitted 1 uncoded value(s): order=ICD10:J44.1' and the same text with 'order=ICD-10:R07.90'). PLAN.md defines these gates per item ('A positive status (accepted) needs Gate 1 and Gate 2 to pass for that item'), so a batch-level 'pass' uses the opposite sense of the word and can mislead a reader skimming the gates array into thinking every check cleared. The detail text under each gate is accurate, so this is a labelling defect, not an evidential one.",
+      "fix": "Relabel the two entries to state what actually happened, e.g. 'pass (control exercised; fail-closed on ED-02, ED-06)' and 'pass (control exercised; refused ED-04, ED-05)', or add per-item gate outcomes to the gates array."
+    },
+    {
+      "id": "C3",
+      "item": "ED-01",
+      "severity": "minor",
+      "issue": "ED-01's triage evidence quotes phase=\"TRIAGE\" (result.json rationale and evidence line 10; RESULT.md ED-01 'Triage:' bullet), a value I could not reproduce. My re-run of ed_triage with chief_complaint=\"chest pain\" returned {\"chief_complaint\":\"chest pain\",\"next\":\"Run ed_phi_attest to clear the synthetic-data gate before any patient-data tool.\",\"opened\":true,\"phase\":\"RESULTS_REVIEW\"}, and all six of my triage re-runs return phase=RESULTS_REVIEW. The reported value is plausible: DOMAIN-README.md describes a forward-only 12-phase encounter state machine that starts at TRIAGE, so the first triage call of a fresh session would report TRIAGE while every later call reports the already-advanced phase, which is exactly the pattern result.json shows (ED-01 TRIAGE, ED-02 through ED-06 RESULTS_REVIEW), and result.json's own limitation 8 already acknowledges the phenomenon. My re-run cannot test the fresh-session hypothesis because my session had already advanced the state machine with PHI and diagnosis calls before I first called ed_triage. But because the state machine is session-global and monotonic, no later reviewer can confirm the TRIAGE value from the artifact: it is the one quoted value in the deliverable that is not independently checkable. The rest of the quoted output (opened=true, the chief_complaint echo, the next message) reproduces exactly.",
+      "fix": "Annotate the ED-01 evidence in both files that phase fields reflect shared, forward-only encounter state and are not reproducible after the fact (the batch limitation already says this - cross-reference it), or quote only the reproducible fields (opened=true, chief_complaint, next)."
+    },
+    {
+      "id": "C4",
+      "item": "overall",
+      "severity": "minor",
+      "issue": "Two procedural compliance claims are stated as fact but cannot be corroborated by any tool output. Gate 1's detail asserts 'synthetic was never passed'; Gate 2's detail asserts 'No input was corrected or retried'. ed_phi_attest's response does not echo its arguments, so the record cannot show which keys were sent with any call. I probed this myself (critic-side probe, not part of the executor's run): calling ed_phi_attest with the ED-02 sample_text plus synthetic: true returns the same {\"phi_cleared\": false, \"residual_phi\": true} as the text-only call, so the tool's output is invariant to the flag - the claim has no observable consequence, but also no observable support. The executor's session log (.tokn/judgment/session-20261106-184555.jsonl) records exactly six ed_phi_attest calls at steps 3, 6, 8, 11, 14, 17, one per item with no extras, which corroborates the call count but not the argument sets. The 'not corrected' half of Gate 2's claim is corroborated, because the recorded system/code/label values match inputs/working_diagnoses.json character for character, including ED-04's unhyphenated 'ICD10' and ED-05's 'R07.90'; the 'not retried' half is an absence claim the artifact cannot demonstrate.",
+      "fix": "Present these as uncorroborated procedural attestations rather than established facts, e.g. 'the executor attests that synthetic was never passed; the tool output does not record the argument set', or record the attestation limit in the limitations array."
+    },
+    {
+      "id": "C5",
+      "item": "overall",
+      "severity": "minor",
+      "issue": "result.json states a single global \"confidence\": 0.97 with no statement of what the number estimates, while the same file lists nine limitations including two acknowledged unknowns it explicitly did not resolve (the phi_input_screen hook-scope ambiguity, and unverified per-encounter isolation) plus one quoted value that is not reproducible after the fact (ED-01's phase=TRIAGE, finding C3) and two compliance claims resting on attestation only (finding C4). Read as confidence in the whole deliverable, 0.97 is broader than the evidence: my re-runs support roughly that level for the six statuses and the refusal texts specifically, not for every field the file asserts. RESULT.md avoids a numeric confidence and is calibrated throughout.",
+      "fix": "Scope the confidence field to what it covers, e.g. \"confidence\": 0.97 with a note 'confidence that the six per-item statuses and quoted gate outputs are correct; quoted phase values and procedural attestations are not independently verifiable', or lower it to reflect the unresolved items."
+    }
+  ]
+}

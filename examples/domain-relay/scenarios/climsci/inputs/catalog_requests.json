@@ -1,0 +1,66 @@
+{
+  "note": "All values are synthetic, generated for a TOKN live-test scenario. No real model output, region study or institution is represented.",
+  "usage": "Each entry can be passed as-is to query_cmip6_catalog and compute_ensemble_stats. The live catalog is a cross-check only; the synthetic files in inputs/ are authoritative.",
+  "requests": [
+    {
+      "item": "CL-01",
+      "variable_id": "tas",
+      "experiment_id": "ssp245",
+      "table_id": "Amon",
+      "member_id": "r1i1p1f1",
+      "deduplicate": true,
+      "region": "box-A 30N-45N 10W-35E",
+      "season": "JJA",
+      "baseline_start": "1995",
+      "baseline_end": "2014"
+    },
+    {
+      "item": "CL-02",
+      "variable_id": "pr",
+      "experiment_id": "ssp245",
+      "table_id": "Amon",
+      "member_id": "r1i1p1f1",
+      "deduplicate": true,
+      "region": "box-B 35N-45N 0E-30E",
+      "season": "JJA",
+      "baseline_start": "1995",
+      "baseline_end": "2014"
+    },
+    {
+      "item": "CL-03",
+      "variable_id": "pr",
+      "experiment_id": "ssp585",
+      "table_id": "Amon",
+      "member_id": "r1i1p1f1",
+      "deduplicate": true,
+      "region": "box-C 5S-10N 95E-120E",
+      "season": "DJF",
+      "baseline_start": "1995",
+      "baseline_end": "2014"
+    },
+    {
+      "item": "CL-04",
+      "variable_id": "tas",
+      "experiment_id": "ssp585",
+      "table_id": "Amon",
+      "member_id": "r1i1p1f1",
+      "deduplicate": true,
+      "region": "box-D 50N-60N 0E-30E",
+      "season": "DJF",
+      "baseline_start": "1995",
+      "baseline_end": "2014"
+    },
+    {
+      "item": "CL-05",
+      "variable_id": "tos",
+      "experiment_id": "ssp245",
+      "table_id": "Omon",
+      "member_id": "r1i1p1f1",
+      "deduplicate": true,
+      "region": "box-E 60N-70N 20W-10E",
+      "season": "ANN",
+      "baseline_start": "1995",
+      "baseline_end": "2014"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "note": "Synthetic operating limits for a fictional onshore asset; they mirror the oil & gas domain defaults. Values are synthetic. The domain gates, not this file, are authoritative.",
+  "well_integrity": {"maasp_psi": 5000, "rule": "treating pressure above MAASP, or a failed casing test, stops a pressure operation"},
+  "well_control": {"rule": "two independent verified barriers and no kick indicators before any barrier-affecting operation"},
+  "process_safety": {"design_pressure_psi": 15000, "design_temp_f": 400},
+  "emissions_confidence_caps": {"direct_measurement": 0.95, "engineering_estimate": 0.70, "emission_factor": 0.50},
+  "mud_weight": {"trip_margin_ppg": 0.3, "kick_tolerance_margin_ppg": 0.1}
+}

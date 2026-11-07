@@ -1,0 +1,78 @@
+{
+  "verdict": "PASS",
+  "checks": [
+    {
+      "name": "artifacts_present",
+      "ok": true,
+      "detail": "all 10 present"
+    },
+    {
+      "name": "result_json_valid",
+      "ok": true,
+      "detail": "final result.json parses with an items list"
+    },
+    {
+      "name": "status_vocabulary",
+      "ok": true,
+      "detail": "all statuses in vocabulary"
+    },
+    {
+      "name": "all_items_assessed",
+      "ok": true,
+      "detail": "5 items"
+    },
+    {
+      "name": "ground_truth",
+      "ok": true,
+      "detail": "final 1.0 (v1 1.0)"
+    },
+    {
+      "name": "must_mention",
+      "ok": true,
+      "detail": "all present"
+    },
+    {
+      "name": "forbidden_phrases",
+      "ok": true,
+      "detail": "none found"
+    },
+    {
+      "name": "critique_has_findings",
+      "ok": true,
+      "detail": "7 findings"
+    },
+    {
+      "name": "every_finding_answered",
+      "ok": true,
+      "detail": "7 responses"
+    },
+    {
+      "name": "decision_answered",
+      "ok": true,
+      "detail": "3/3 typed answers"
+    },
+    {
+      "name": "execute_used_domain_tools",
+      "ok": true,
+      "detail": "used ['compute_ensemble_stats', 'query_cmip6_catalog'] of expected ['compute_ensemble_stats', 'query_cmip6_catalog']"
+    },
+    {
+      "name": "critic_reran_tools",
+      "ok": true,
+      "detail": "critic used ['compute_ensemble_stats', 'query_cmip6_catalog']"
+    },
+    {
+      "name": "reflection_grounded",
+      "ok": true,
+      "detail": "names traced tools ['compute_ensemble_stats', 'query_cmip6_catalog']; has /teach rule: True"
+    }
+  ],
+  "metrics": {
+    "accuracy_v1": 1.0,
+    "accuracy_final": 1.0,
+    "findings": 7,
+    "findings_answered": 7,
+    "routing": "full-revision",
+    "execute_domain_tools": 2
+  }
+}

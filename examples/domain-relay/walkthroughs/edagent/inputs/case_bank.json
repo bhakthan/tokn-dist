@@ -1,0 +1,36 @@
+{
+  "note": "All cases are synthetic, written for a TOKN live-test scenario. No real patient, clinician, facility or identifier is represented; identifier-like strings are deliberate screen probes.",
+  "usage": "Pass chief_complaint to ed_triage and sample_text to ed_phi_attest exactly as given.",
+  "cases": [
+    {
+      "item": "ED-01",
+      "chief_complaint": "chest pain",
+      "sample_text": "Synthetic case 01. 58-year-old presenting with two hours of pressure-like chest pain radiating to the left arm. Troponin T elevated on the sandbox panel; ECG without ST elevation."
+    },
+    {
+      "item": "ED-02",
+      "chief_complaint": "fever and cough",
+      "sample_text": "Synthetic case 02. 71-year-old with fever, productive cough and right lower lobe consolidation on plain chest X-ray. Registration note: MRN 00482913."
+    },
+    {
+      "item": "ED-03",
+      "chief_complaint": "abdominal pain",
+      "sample_text": "Synthetic case 03. 24-year-old with periumbilical pain migrating to the right iliac fossa, rebound tenderness and leukocytosis. Point-of-care reagent lot 404-17-882 logged."
+    },
+    {
+      "item": "ED-04",
+      "chief_complaint": "shortness of breath",
+      "sample_text": "Synthetic case 04. 66-year-old with known COPD, increased dyspnoea and purulent sputum over three days; SpO2 86% on room air."
+    },
+    {
+      "item": "ED-05",
+      "chief_complaint": "chest pain",
+      "sample_text": "Synthetic case 05. 45-year-old with atypical chest pain, normal serial troponins and a normal ECG; pain reproducible on palpation."
+    },
+    {
+      "item": "ED-06",
+      "chief_complaint": "dysuria",
+      "sample_text": "Synthetic case 06. 33-year-old with dysuria, frequency and suprapubic pain; urine dipstick nitrite positive. Follow-up queries to triage.desk@sandbox-ed.example."
+    }
+  ]
+}

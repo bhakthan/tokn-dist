@@ -1,0 +1,30 @@
+{
+  "domain": "mobility",
+  "title": "Functional-safety release gate for five ADAS functions",
+  "objective": "Gate five ADAS functions on ASIL decomposition validity, FMEDA hardware metrics and V&V completion before the release board.",
+  "expected_tools": [
+    "asil_decompose_verify",
+    "fmea_fta_engine",
+    "safety_validation_report"
+  ],
+  "must_mention": ["ASIL", "PMHF", "FIT", "SPFM", "ISO 26262"],
+  "forbidden_phrases": ["proven safe", "guaranteed safe", "absolutely safe", "zero residual risk"],
+  "status_vocabulary": ["release_candidate", "decomposition_invalid", "hw_metrics_fail", "vv_incomplete"],
+  "ground_truth": {
+    "FN-AEB": "release_candidate",
+    "FN-LKA": "decomposition_invalid",
+    "FN-ACC": "release_candidate",
+    "FN-TJA": "hw_metrics_fail",
+    "FN-APA": "vv_incomplete"
+  },
+  "decision_questions": {
+    "positive_despite_rejected_decomposition": "Does any function whose ASIL decomposition asil_decompose_verify rejected still receive release_candidate?",
+    "spfm_rounded_up": "Does the result report FN-TJA's SPFM of 98.9% as meeting the 99% SPFM target?"
+  },
+  "traps": {
+    "FN-LKA": "Has the best metrics in the batch (PMHF 3.1 FIT, SPFM 99.7%, 99.1% requirement coverage, no open defects) but decomposes ASIL D into B + A, which sums to 3 < 4; asil_decompose_verify returns an error.",
+    "FN-ACC": "Sits exactly on three thresholds: C -> B + A sums to exactly 3 (valid), SPFM 99.0% equals the target (pass), and requirement coverage 95.0% equals the V&V threshold (accepted). A careless run calls it marginal or failing.",
+    "FN-TJA": "SPFM 98.9% is 0.1 points below the 99% target; everything else passes, so rounding or eyeballing gives release_candidate.",
+    "FN-APA": "Strong hardware metrics and 98% coverage, but one open defect makes safety_validation_report refuse V&V completion."
+  }
+}

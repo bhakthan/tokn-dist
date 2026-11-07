@@ -1,0 +1,140 @@
+{
+  "domain": "batterypass",
+  "objective": "Assess six synthetic Battery Passport drafts against the specified TOKN batterypass chemistry, EU mandatory-attribute, carbon-footprint methodology, and due-diligence gates.",
+  "items": [
+    {
+      "id": "BP-01",
+      "status": "compliant",
+      "rationale": "bp_check_chemistry returned consistent=true with canonical_chemistry=NMC, and the EU, CF methodology, and due-diligence calls returned pass=true with Issues=null. No gate reported an issue, so decision rule R4 applies: this draft passes TOKN's gate projection, not a legal certification.",
+      "evidence": [
+        "bp_check_chemistry: consistent=true; canonical_chemistry=NMC; declared_chemistry=NMC811; cathode_composition=LiNi0.8Mn0.1Co0.1O2; missing=null; forbidden=null",
+        "bp_check_compliance: chemistry=NMC; application=EV; pass=true; error=\"\"; Issues=null",
+        "bp_check_cf_methodology: pass=true; error=\"\"; Issues=null; payload primaryDataShare=0.62 and method=PEFCR",
+        "bp_check_due_diligence: pass=true; error=\"\"; Issues=null"
+      ],
+      "tools_used": [
+        "bp_check_compliance",
+        "bp_check_cf_methodology",
+        "bp_check_due_diligence",
+        "bp_check_chemistry"
+      ]
+    },
+    {
+      "id": "BP-02",
+      "status": "inconsistent",
+      "rationale": "bp_check_chemistry returned consistent=false and the reason \"chemistry element mismatch: declared=\\\"LFP\\\" cathode=\\\"LiNi0.6Mn0.2Co0.2O2\\\" missing=Fe,P forbidden=Co,Ni,Mn\", so rule R1 takes precedence. The EU, CF methodology, and due-diligence calls each returned pass=true with Issues=null, but their results cannot cure or displace the chemistry contradiction.",
+      "evidence": [
+        "bp_check_chemistry: consistent=false; canonical_chemistry=LFP; missing=[Fe,P]; forbidden=[Co,Ni,Mn]; reason=\"chemistry element mismatch: declared=\\\"LFP\\\" cathode=\\\"LiNi0.6Mn0.2Co0.2O2\\\" missing=Fe,P forbidden=Co,Ni,Mn\"",
+        "bp_check_compliance: chemistry=LFP; application=EV; pass=true; error=\"\"; Issues=null",
+        "bp_check_cf_methodology: pass=true; error=\"\"; Issues=null; payload primaryDataShare=0.71 and method=PEFCR",
+        "bp_check_due_diligence: pass=true; error=\"\"; Issues=null"
+      ],
+      "tools_used": [
+        "bp_check_compliance",
+        "bp_check_cf_methodology",
+        "bp_check_due_diligence",
+        "bp_check_chemistry"
+      ]
+    },
+    {
+      "id": "BP-03",
+      "status": "compliant",
+      "rationale": "bp_check_chemistry returned consistent=true with canonical_chemistry=NMC for the NMC622 declaration. The EU, CF methodology, and due-diligence calls returned pass=true with Issues=null, including the CF gate at primaryDataShare=0.50; therefore rule R4 applies and there is no threshold discrepancy.",
+      "evidence": [
+        "bp_check_chemistry: consistent=true; canonical_chemistry=NMC; declared_chemistry=NMC622; cathode_composition=LiNi0.6Mn0.2Co0.2O2; missing=null; forbidden=null",
+        "bp_check_compliance: chemistry=NMC; application=Industrial; pass=true; error=\"\"; Issues=null",
+        "bp_check_cf_methodology: pass=true; error=\"\"; Issues=null; payload primaryDataShare=0.50 and method=PEFCR",
+        "bp_check_due_diligence: pass=true; error=\"\"; Issues=null"
+      ],
+      "tools_used": [
+        "bp_check_compliance",
+        "bp_check_cf_methodology",
+        "bp_check_due_diligence",
+        "bp_check_chemistry"
+      ]
+    },
+    {
+      "id": "BP-04",
+      "status": "non_compliant",
+      "rationale": "The CF gate returned pass=false with the verbatim issue \"primaryDataShare=0.49 is below threshold 0.50\". Chemistry returned consistent=true, while the EU and due-diligence calls returned pass=true with Issues=null, so rule R3 gives non_compliant.",
+      "evidence": [
+        "bp_check_chemistry: consistent=true; canonical_chemistry=LFP; declared_chemistry=LFP; cathode_composition=LiFePO4; missing=null; forbidden=null",
+        "bp_check_compliance: chemistry=LFP; application=LMT; pass=true; error=\"\"; Issues=null",
+        "bp_check_cf_methodology: pass=false; Issues=[\"primaryDataShare=0.49 is below threshold 0.50\"]; error=\"cf_methodology gate blocked: primaryDataShare=0.49 is below threshold 0.50\"",
+        "bp_check_due_diligence: pass=true; error=\"\"; Issues=null"
+      ],
+      "tools_used": [
+        "bp_check_compliance",
+        "bp_check_cf_methodology",
+        "bp_check_due_diligence",
+        "bp_check_chemistry"
+      ]
+    },
+    {
+      "id": "BP-05",
+      "status": "non_compliant",
+      "rationale": "The due-diligence gate returned pass=false with the verbatim issue \"lastAuditDate=\\\"2024-03-02\\\" is older than 365 days\". Chemistry returned consistent=true, while the EU and CF methodology calls returned pass=true with Issues=null, so rule R3 gives non_compliant.",
+      "evidence": [
+        "bp_check_chemistry: consistent=true; canonical_chemistry=NMC; declared_chemistry=NMC811; cathode_composition=LiNi0.8Mn0.1Co0.1O2; missing=null; forbidden=null",
+        "bp_check_compliance: chemistry=NMC; application=EV; pass=true; error=\"\"; Issues=null",
+        "bp_check_cf_methodology: pass=true; error=\"\"; Issues=null; payload primaryDataShare=0.58 and method=PEFCR",
+        "bp_check_due_diligence: pass=false; Issues=[\"lastAuditDate=\\\"2024-03-02\\\" is older than 365 days\"]; error=\"due_diligence gate blocked: lastAuditDate=\\\"2024-03-02\\\" is older than 365 days\""
+      ],
+      "tools_used": [
+        "bp_check_compliance",
+        "bp_check_cf_methodology",
+        "bp_check_due_diligence",
+        "bp_check_chemistry"
+      ]
+    },
+    {
+      "id": "BP-06",
+      "status": "not_assessable",
+      "rationale": "The EU gate returned pass=false with the verbatim issue \"chemistry+application combo NAION:EV not present in mandatory-field matrix; declare it in config or extend the matrix\". This is the D2 matrix signal, so rule R2 makes the draft not_assessable even though chemistry was consistent and the CF and due-diligence calls returned pass=true with Issues=null.",
+      "evidence": [
+        "bp_check_chemistry: consistent=true; canonical_chemistry=NAION; declared_chemistry=NaIon; cathode_composition=NaNi0.33Fe0.33Mn0.33O2; missing=null; forbidden=null",
+        "bp_check_compliance: chemistry=NaIon; application=EV; pass=false; Issues=[\"chemistry+application combo NAION:EV not present in mandatory-field matrix; declare it in config or extend the matrix\"]; error=\"eu_battery_reg_2023_1542 gate blocked: chemistry+application combo NAION:EV not present in mandatory-field matrix; declare it in config or extend the matrix\"",
+        "bp_check_cf_methodology: pass=true; error=\"\"; Issues=null; payload primaryDataShare=0.66 and method=PEFCR",
+        "bp_check_due_diligence: pass=true; error=\"\"; Issues=null"
+      ],
+      "tools_used": [
+        "bp_check_compliance",
+        "bp_check_cf_methodology",
+        "bp_check_due_diligence",
+        "bp_check_chemistry"
+      ]
+    }
+  ],
+  "gates": [
+    {
+      "name": "chemistry consistency",
+      "status": "fail",
+      "detail": "BP-02 returned consistent=false with missing=[Fe,P] and forbidden=[Co,Ni,Mn]; BP-01, BP-03, BP-04, BP-05, and BP-06 returned consistent=true."
+    },
+    {
+      "name": "EU Battery Regulation 2023/1542 mandatory attributes",
+      "status": "fail",
+      "detail": "BP-06 triggered D2: \"chemistry+application combo NAION:EV not present in mandatory-field matrix; declare it in config or extend the matrix\". The other five EU calls returned pass=true with Issues=null; BP-06's matrix absence means not assessable, not a substantive regulatory failure."
+    },
+    {
+      "name": "carbon-footprint methodology",
+      "status": "fail",
+      "detail": "BP-04 failed with \"primaryDataShare=0.49 is below threshold 0.50\". The other five calls passed with Issues=null, including BP-03 at the inclusive threshold primaryDataShare=0.50."
+    },
+    {
+      "name": "supply-chain due diligence",
+      "status": "fail",
+      "detail": "BP-05 failed with \"lastAuditDate=\\\"2024-03-02\\\" is older than 365 days\"; the other five calls returned pass=true with Issues=null."
+    }
+  ],
+  "overall_verdict": "BP-01 and BP-03 pass TOKN's gate projection, BP-04 and BP-05 are non-compliant, BP-02 has an overriding chemistry inconsistency, and BP-06 cannot be assessed until the NaIon/EV matrix entry is supplied; none of these outcomes is a legal certification.",
+  "confidence": 0.99,
+  "limitations": [
+    "The results apply only to the supplied synthetic payloads and TOKN's configured gate projection of EU Battery Regulation 2023/1542; they are neither legal certification nor publication authorization.",
+    "Mass reconciliation between material composition and carbon-footprint intensity was not assessed because no exposed tool covers that check.",
+    "The due-diligence tool does not expose its reference instant for the 365-day window; the execution clock read 2026-11-06T23:47:26Z, while audit-age outcomes are reported from the gate without reinterpreting them.",
+    "Material-trigger matching in free-text batteryMaterials is undocumented, so no independent matching semantics are asserted for synthetic graphite or for Ni appearing only in BP-06's cathode formula.",
+    "For BP-02, the other gate outcomes are recorded as required but cannot be trusted to override the chemistry inconsistency; for BP-06, regulatory compliance cannot be judged until the matrix covers NaIon with EV."
+  ],
+  "critique_response": []
+}

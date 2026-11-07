@@ -1,0 +1,56 @@
+{
+  "batch": "ibc-intake-screen-synthetic-01",
+  "note": "Synthetic values for a teaching scenario. Sequences are arbitrary placeholder ACGT strings built from common cloning-site motifs and encode nothing of concern. No real lab, person or project is described.",
+  "requests": [
+    {
+      "id": "REQ-01",
+      "submitted_by": "teaching-lab group A",
+      "purpose": "Multiple-cloning-site placeholder for a plasmid-assembly practical",
+      "organism": "E. coli K-12 MG1655",
+      "containment_strategy": "BSL-1 bench practice; cultures autoclaved before disposal",
+      "sequence": "ATGGCTAGCAAGGAGACCTTCGGTACCGATCCGTAACTGCAGGTCGACTCTAGAGGATCC",
+      "format": "raw",
+      "declared_length_bp": 60
+    },
+    {
+      "id": "REQ-02",
+      "submitted_by": "teaching-lab group B",
+      "purpose": "Short linker oligo for a yeast two-part assembly exercise",
+      "organism": "S. cerevisiae BY4741",
+      "containment_strategy": "BSL-1 bench practice; cultures autoclaved before disposal",
+      "sequence": "GCTAGCACTGACCTAGGTA",
+      "format": "raw",
+      "declared_length_bp": 19
+    },
+    {
+      "id": "REQ-03",
+      "submitted_by": "environmental-microbiology group",
+      "purpose": "Placeholder promoter-probe fragment for a soil-isolate reporter study",
+      "organism": "Pseudomonas putida KT2440",
+      "containment_strategy": "BSL-1 bench practice; cultures autoclaved before disposal",
+      "sequence": "ATGACCGGTTCAAGCTTGCATGCCTGCAGGTCGACGGATC",
+      "format": "raw",
+      "declared_length_bp": 40
+    },
+    {
+      "id": "REQ-04",
+      "submitted_by": "visiting anaerobe group (archived intake form)",
+      "purpose": "Placeholder cloning-site fragment; host listed on the form as received",
+      "organism": "Clostridium botulinum",
+      "containment_strategy": "BSL-2 cabinet work; cultures autoclaved before disposal",
+      "sequence": "GGATCCGCTAGCTTCGAATACGTAGCATGC",
+      "format": "raw",
+      "declared_length_bp": 30
+    },
+    {
+      "id": "REQ-05",
+      "submitted_by": "teaching-lab group C",
+      "purpose": "Minimal 20-mer primer-landing placeholder for a Bacillus transformation practical",
+      "organism": "B. subtilis 168",
+      "containment_strategy": "BSL-1 bench practice; cultures autoclaved before disposal",
+      "sequence": "ACGTTGCAAGCTTGGCACTG",
+      "format": "raw",
+      "declared_length_bp": 20
+    }
+  ]
+}

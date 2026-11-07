@@ -1,0 +1,10 @@
+{
+  "note": "Synthetic FMEDA results for a teaching scenario. pmhf_fit is in FIT (1e-9 per hour); spfm_pct and lfm_pct are percentages.",
+  "fmeda": [
+    {"function": "FN-AEB", "asil_req": "D", "architecture": {"elements": ["fusion ECU", "radar monitor", "brake actuator interface"]}, "failure_rates": {"fusion_ecu_fit": 210, "radar_monitor_fit": 95, "brake_if_fit": 40}, "pmhf_fit": 6.2, "spfm_pct": 99.4, "lfm_pct": 92.1},
+    {"function": "FN-LKA", "asil_req": "D", "architecture": {"elements": ["LKA controller", "torque limiter", "torque sensor"]}, "failure_rates": {"controller_fit": 180, "limiter_fit": 60, "sensor_fit": 35}, "pmhf_fit": 3.1, "spfm_pct": 99.7, "lfm_pct": 96.0},
+    {"function": "FN-ACC", "asil_req": "C", "architecture": {"elements": ["ACC controller", "torque monitor"]}, "failure_rates": {"controller_fit": 150, "monitor_fit": 70}, "pmhf_fit": 8.0, "spfm_pct": 99.0, "lfm_pct": 90.4},
+    {"function": "FN-TJA", "asil_req": "D", "architecture": {"elements": ["TJA planner SoC", "safety supervisor", "actuator gateway"]}, "failure_rates": {"planner_fit": 260, "supervisor_fit": 85, "gateway_fit": 45}, "pmhf_fit": 7.5, "spfm_pct": 98.9, "lfm_pct": 91.0},
+    {"function": "FN-APA", "asil_req": "B", "architecture": {"elements": ["parking controller", "brake ECU limiter"]}, "failure_rates": {"controller_fit": 120, "limiter_fit": 50}, "pmhf_fit": 4.0, "spfm_pct": 99.2, "lfm_pct": 93.5}
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "batch": "visuomotor-group-qc-synthetic-01",
+  "note": "Synthetic, de-identified values for a teaching scenario; no real participant data. Subject codes are random and carry no identifying information.",
+  "review_date": "2026-11-06",
+  "planned_analysis_scope": "group_analysis",
+  "recordings": [
+    {
+      "id": "REC-01", "subject": "sub-k7q2", "species": "Homo sapiens", "modality": "fmri",
+      "bids_path": "bids/sub-k7q2/func/sub-k7q2_task-visuomotor_bold.nii.gz",
+      "mean_framewise_displacement_mm": 0.21, "censored_frame_fraction": 0.06, "tsnr": 58.3
+    },
+    {
+      "id": "REC-02", "subject": "sub-m3x9", "species": "Homo sapiens", "modality": "fmri",
+      "bids_path": "bids/sub-m3x9/func/sub-m3x9_task-visuomotor_bold.nii.gz",
+      "mean_framewise_displacement_mm": 0.50, "censored_frame_fraction": 0.20, "tsnr": 40.0
+    },
+    {
+      "id": "REC-03", "subject": "sub-p4d1", "species": "Homo sapiens", "modality": "eeg",
+      "nwb_path": "nwb/sub-p4d1_ses-01_eeg.nwb",
+      "peak_amplitude_uv": 121.0, "epoch_acceptance_fraction": 0.83
+    },
+    {
+      "id": "REC-04", "subject": "sub-r8w5", "species": "Homo sapiens", "modality": "eeg",
+      "nwb_path": "nwb/sub-r8w5_ses-01_eeg.nwb",
+      "peak_amplitude_uv": 162.0, "epoch_acceptance_fraction": 0.81
+    },
+    {
+      "id": "REC-05", "subject": "sub-t2h6", "species": "Homo sapiens", "modality": "eeg",
+      "nwb_path": "nwb/sub-t2h6_ses-01_eeg.nwb",
+      "peak_amplitude_uv": 88.0, "epoch_acceptance_fraction": 0.94
+    },
+    {
+      "id": "REC-06", "subject": "sub-z5c3", "species": "Homo sapiens", "modality": "fmri",
+      "bids_path": "bids/sub-z5c3/func/sub-z5c3_task-visuomotor_bold.nii.gz",
+      "mean_framewise_displacement_mm": 0.31, "censored_frame_fraction": 0.27, "tsnr": 61.7
+    }
+  ]
+}

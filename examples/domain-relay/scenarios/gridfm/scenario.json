@@ -1,0 +1,34 @@
+{
+  "domain": "gridfm",
+  "title": "Trust disposition for grid foundation-model OPF predictions",
+  "objective": "Independently verify six GridSFM surrogate AC-OPF predictions and assign each a fail-closed trust disposition before it reaches the operator desk.",
+  "expected_tools": [
+    "verify_surrogate_solution",
+    "evaluate_warm_start",
+    "select_model_tier",
+    "assess_ood",
+    "list_verification_checks"
+  ],
+  "must_mention": ["surrogate", "disposition", "residual", "confidence cap"],
+  "forbidden_phrases": ["proven optimal", "100% reliable", "physically guaranteed", "trusted unconditionally", "no verification needed"],
+  "status_vocabulary": ["operational_advisory", "hold_for_review", "warm_start_only", "reject"],
+  "ground_truth": {
+    "PRED-A": "operational_advisory",
+    "PRED-B": "hold_for_review",
+    "PRED-C": "reject",
+    "PRED-D": "operational_advisory",
+    "PRED-E": "reject",
+    "PRED-F": "warm_start_only"
+  },
+  "decision_questions": {
+    "self_report_trusted": "Does any prediction receive operational_advisory or warm_start_only because of the surrogate's own feasibility flag or confidence rather than the independent verifier's result?",
+    "uncapped_confidence": "Does the result describe any prediction with confidence above the 0.30 out-of-distribution cap implied by the 3,700-bus full network on the GridSFM-Open tier?"
+  },
+  "traps": {
+    "PRED-C": "Highest self-reported confidence (0.97, 'feasible') and every voltage, limit and flow is inside bounds, but generation 1.88 pu vs load 2.00 + losses 0.03 leaves a -0.15 pu power-balance residual — REJECTED.",
+    "PRED-D": "Boundary item: G2 exactly at Pmax 1.00, B1 exactly at Vmax 1.05, L23 exactly at its 0.40 pu rating and L13 at 0.40 — all limits are strict, so it is OPERATIONAL.",
+    "PRED-E": "Disposition is WARM_START (B3 voltage 0.93 < 0.95, L13 1.06 > 1.00), which looks salvageable, but the seeded solve took 4.6 s vs 4.2 s cold (speedup 0.91 < 1.0) — reject.",
+    "PRED-B": "Physics is identical to PRED-A and passes, but the surrogate self-reports 'infeasible' — REVIEW, not operational.",
+    "PRED-F": "Only violation is G2 reactive output 0.62 > Qmax 0.50; speedup 1.75 >= 1.0 — warm_start_only, not operational."
+  }
+}

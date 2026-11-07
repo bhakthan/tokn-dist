@@ -1,0 +1,33 @@
+{
+  "model": "Microsoft-Decision-1",
+  "questions": {
+    "needs_revision": "Do the critique findings show at least one item whose status is wrong or unsupported, so the result must be revised before it is used?",
+    "mislabelled_chemistry_passed": "Does any passport whose bp_check_chemistry result is consistent=false still receive compliant or non_compliant?",
+    "overclaimed_compliance": "Does the result describe any passport as legally certified or approved for the EU market, rather than as passing TOKN's gate projection?"
+  },
+  "response": {
+    "model": "microsoft-decision-1",
+    "answers": {
+      "mislabelled_chemistry_passed": {
+        "type": "noul",
+        "noul": 0.005911094019746453
+      },
+      "needs_revision": {
+        "type": "noul",
+        "noul": 0.025957610061965324
+      },
+      "overclaimed_compliance": {
+        "type": "noul",
+        "noul": 0.0028009415343706406
+      }
+    },
+    "usage": {
+      "input_tokens": 2390,
+      "output_tokens": 3
+    },
+    "latency_ms": 806.764,
+    "attempts": 1
+  },
+  "exit_code": 0,
+  "routing": "full-revision"
+}

@@ -1,0 +1,35 @@
+{
+ "note": "Synthetic. Each entry (minus 'passport') is the exact input of bp_check_chemistry: the chemistry declared on the label versus the cathode active material reported by the cell supplier.",
+ "checks": [
+  {
+   "passport": "BP-01",
+   "declared_chemistry": "NMC811",
+   "cathode_composition": "LiNi0.8Mn0.1Co0.1O2"
+  },
+  {
+   "passport": "BP-02",
+   "declared_chemistry": "LFP",
+   "cathode_composition": "LiNi0.6Mn0.2Co0.2O2"
+  },
+  {
+   "passport": "BP-03",
+   "declared_chemistry": "NMC622",
+   "cathode_composition": "LiNi0.6Mn0.2Co0.2O2"
+  },
+  {
+   "passport": "BP-04",
+   "declared_chemistry": "LFP",
+   "cathode_composition": "LiFePO4"
+  },
+  {
+   "passport": "BP-05",
+   "declared_chemistry": "NMC811",
+   "cathode_composition": "LiNi0.8Mn0.1Co0.1O2"
+  },
+  {
+   "passport": "BP-06",
+   "declared_chemistry": "NaIon",
+   "cathode_composition": "NaNi0.33Fe0.33Mn0.33O2"
+  }
+ ]
+}

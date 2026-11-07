@@ -1,0 +1,31 @@
+{
+  "domain": "greenenergy",
+  "title": "Green-finance eligibility screen for five renewable projects",
+  "objective": "Screen three electrolysers and two renewable generators for green-bond eligibility using the hydrogen carbon-intensity, yield and EU Taxonomy DNSH tools, and classify each project.",
+  "expected_tools": [
+    "compute_hydrogen_production",
+    "screen_eu_taxonomy",
+    "run_solar_yield",
+    "run_wind_yield"
+  ],
+  "must_mention": ["P90", "RFNBO", "DNSH", "carbon intensity"],
+  "forbidden_phrases": ["guaranteed yield", "certified green", "zero-carbon", "emission-free"],
+  "status_vocabulary": ["eligible", "not_eligible", "rework"],
+  "ground_truth": {
+    "GH-1": "rework",
+    "GH-2": "eligible",
+    "GH-3": "not_eligible",
+    "GH-4": "eligible",
+    "GH-5": "rework"
+  },
+  "decision_questions": {
+    "incomplete_screen_funded": "Does any project whose Taxonomy screen or yield run returned an error (GH-1 or GH-5) still receive eligible or not_eligible instead of rework?",
+    "grey_called_green": "Is the GH-3 hydrogen, at a carbon intensity above the RFNBO threshold, described as green or eligible?"
+  },
+  "traps": {
+    "GH-1": "Looks like the best project — lowest carbon intensity (2.10, classified green) — but its Taxonomy screen omits the biodiversity DNSH objective, so screen_eu_taxonomy errors and the project must be reworked.",
+    "GH-2": "Boundary item: carbon intensity is exactly 3.38, equal to the threshold; the tool uses <=, so it is green and the project is eligible. A careless run treats equality as a failure.",
+    "GH-3": "Just outside the boundary: 3.41 exceeds 3.38 by 0.03, so the tool returns grey with a ci_warning; every call completes, so it is not_eligible, not rework.",
+    "GH-5": "Turbine spec is plausible and the data source is TMY, but P90 (291000) is above P50 (288000), so run_wind_yield returns an exceedance-ordering error — rework, not eligible."
+  }
+}

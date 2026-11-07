@@ -1,0 +1,83 @@
+{
+  "note": "Synthetic analysis requests for a fictional multi-site commercial organisation. Values are synthetic. Each request's 'payload' is the exact input object for the named energy-domain tool and must be submitted unchanged.",
+  "board_pack": "Q3 2026 energy & carbon board pack",
+  "requests": [
+    {
+      "id": "EN-1",
+      "purpose": "Site-north multi-carrier energy balance for Q3",
+      "submitted_by": "site energy manager",
+      "tool": "en_energy_balance",
+      "payload": {
+        "carriers": ["electricity", "natural_gas", "heat"],
+        "period": "2026-Q3",
+        "provenance": "metered",
+        "meter_id": "AMI-HQ-0042",
+        "region": "site-north"
+      }
+    },
+    {
+      "id": "EN-2",
+      "purpose": "20-year on-site generation and storage capacity expansion plan",
+      "submitted_by": "strategy analyst",
+      "tool": "en_capacity_expansion",
+      "payload": {
+        "horizon_years": 20,
+        "discount_rate": 0.0,
+        "assumptions": "Rooftop PV and 4-hour storage candidates; real 2026 prices; demand growth 1.8%/yr; grid import tariff escalates with CPI"
+      }
+    },
+    {
+      "id": "EN-3",
+      "purpose": "Valuation of a 12-year virtual PPA offer",
+      "submitted_by": "procurement lead",
+      "tool": "en_ppa_valuate",
+      "payload": {
+        "contract_type": "virtual/cfd",
+        "tenor_years": 12,
+        "strike_price": 41.5,
+        "volume_mwh": 180000,
+        "discount_rate": 0.07,
+        "assumptions": "Cash flows discounted at the risk-free rate plus a 350 bp project spread; P50 volume; hub-to-node basis held at the 3-year average",
+        "disclaimer_acknowledged": true
+      }
+    },
+    {
+      "id": "EN-4",
+      "purpose": "2025 Scope 1+2 GHG inventory for the annual disclosure",
+      "submitted_by": "sustainability analyst",
+      "tool": "en_carbon_inventory",
+      "payload": {
+        "ghg_scope": "scope1+2",
+        "accounting_method": "market-based",
+        "reporting_year": "2025",
+        "organization": "operational_control"
+      }
+    },
+    {
+      "id": "EN-5",
+      "purpose": "Fleet-electrification transition scenario to 2040",
+      "submitted_by": "strategy analyst",
+      "tool": "en_scenario_model",
+      "payload": {
+        "scenario_name": "electrify-fleet-2040",
+        "horizon_years": 15,
+        "discount_rate": 0.06,
+        "assumptions": "Light-duty fleet fully battery-electric by 2035; depot charging on managed tariff; carbon price starts at 85 per tCO2e",
+        "demand_growth": 0.021
+      }
+    },
+    {
+      "id": "EN-6",
+      "purpose": "Five-year monthly commercial electricity demand forecast",
+      "submitted_by": "site energy manager",
+      "tool": "en_demand_forecast",
+      "payload": {
+        "carrier": "electricity",
+        "sector": "commercial",
+        "horizon_years": 5,
+        "granularity": "monthly",
+        "provenance": "estimated"
+      }
+    }
+  ]
+}

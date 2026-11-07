@@ -1,0 +1,117 @@
+{
+  "domain": "edagent",
+  "objective": "Screen six synthetic ED excerpts with the TOKN PHI gate and check each coded working diagnosis against the edagent terminology guard, so only qualifying cases may enter the sandboxed decision-support case bank pending physician sign-off.",
+  "items": [
+    {
+      "id": "ED-01",
+      "status": "accepted",
+      "rationale": "ed_triage opened the case (opened: true, phase TRIAGE) with chief_complaint 'chest pain'. ed_phi_attest screened only the supplied sample_text and returned residual_phi: false with phi_cleared: true. ed_diagnosis_record for ICD-10 / I21.4 / 'Non-ST elevation myocardial infarction' was allowed and returned ordered: true. Acceptance means passing the two intake checks only; the case remains synthetic and awaits clinician review.",
+      "evidence": [
+        "ed_triage input: chief_complaint=\"chest pain\"; output: opened=true, phase=\"TRIAGE\", next=\"Run ed_phi_attest to clear the synthetic-data gate before any patient-data tool.\"",
+        "ed_phi_attest input (sample_text only): \"Synthetic case 01. 58-year-old presenting with two hours of pressure-like chest pain radiating to the left arm. Troponin T elevated on the sandbox panel; ECG without ST elevation.\"; output: residual_phi=false, phi_cleared=true, note=\"Synthetic-only contract: never submit real PHI to edagent.\"",
+        "ed_diagnosis_record input exactly as given: system=\"ICD-10\", code=\"I21.4\", label=\"Non-ST elevation myocardial infarction\"",
+        "ed_diagnosis_record output: ordered=true, code=\"I21.4\", system=\"ICD-10\", phase=\"RESULTS_REVIEW\", note=\"Dispatched against the SANDBOXED EHR only (decision-support).\""
+      ],
+      "tools_used": ["ed_triage", "ed_phi_attest", "ed_diagnosis_record"]
+    },
+    {
+      "id": "ED-02",
+      "status": "phi_blocked",
+      "rationale": "ed_triage opened the case with chief_complaint 'fever and cough' (opened: true). ed_phi_attest, called with only the sample_text, returned residual_phi: true with phi_cleared: false; the excerpt contains 'Registration note: MRN 00482913'. Per the brief's precedence the case is blocked whatever its clinical content, so ed_diagnosis_record was not called and no diagnosis was submitted for ICD-10 / J18.9.",
+      "evidence": [
+        "ed_triage input: chief_complaint=\"fever and cough\"; output: opened=true, phase=\"RESULTS_REVIEW\"",
+        "ed_phi_attest input (sample_text only): \"Synthetic case 02. 71-year-old with fever, productive cough and right lower lobe consolidation on plain chest X-ray. Registration note: MRN 00482913.\"; output: residual_phi=true, phi_cleared=false, note=\"Synthetic-only contract: never submit real PHI to edagent.\"",
+        "ed_diagnosis_record: NOT called, because residual_phi=true (brief rule 3, plan R1). The working diagnosis ICD-10 / J18.9 / 'Pneumonia, unspecified organism' was not submitted and its enrolment was therefore not tested."
+      ],
+      "tools_used": ["ed_triage", "ed_phi_attest"]
+    },
+    {
+      "id": "ED-03",
+      "status": "accepted",
+      "rationale": "ed_triage opened the case with chief_complaint 'abdominal pain' (opened: true). ed_phi_attest returned residual_phi: false with phi_cleared: true on the excerpt; the reagent lot string '404-17-882' did not trigger the gate and the tool's boolean was left to stand. ed_diagnosis_record for ICD-10 / K35.80 / 'Acute appendicitis, unspecified' was allowed and returned ordered: true. This is intake acceptance for the synthetic sandbox only, pending physician sign-off.",
+      "evidence": [
+        "ed_triage input: chief_complaint=\"abdominal pain\"; output: opened=true, phase=\"RESULTS_REVIEW\"",
+        "ed_phi_attest input (sample_text only): \"Synthetic case 03. 24-year-old with periumbilical pain migrating to the right iliac fossa, rebound tenderness and leukocytosis. Point-of-care reagent lot 404-17-882 logged.\"; output: residual_phi=false, phi_cleared=true, note=\"Synthetic-only contract: never submit real PHI to edagent.\"",
+        "ed_diagnosis_record input exactly as given: system=\"ICD-10\", code=\"K35.80\", label=\"Acute appendicitis, unspecified\"",
+        "ed_diagnosis_record output: ordered=true, code=\"K35.80\", system=\"ICD-10\", phase=\"RESULTS_REVIEW\", note=\"Dispatched against the SANDBOXED EHR only (decision-support).\""
+      ],
+      "tools_used": ["ed_triage", "ed_phi_attest", "ed_diagnosis_record"]
+    },
+    {
+      "id": "ED-04",
+      "status": "code_rejected",
+      "rationale": "ed_triage opened the case with chief_complaint 'shortness of breath' (opened: true) and ed_phi_attest returned residual_phi: false with phi_cleared: true, so the excerpt itself was clean. ed_diagnosis_record was submitted with the unaltered system 'ICD10' (no hyphen), code J44.1 and label 'COPD with acute exacerbation', and was refused as an uncoded value. Under R2 that constrained-output refusal makes the item code_rejected; no corrected or repeated submission was attempted.",
+      "evidence": [
+        "ed_triage input: chief_complaint=\"shortness of breath\"; output: opened=true, phase=\"RESULTS_REVIEW\"",
+        "ed_phi_attest input (sample_text only): \"Synthetic case 04. 66-year-old with known COPD, increased dyspnoea and purulent sputum over three days; SpO2 86% on room air.\"; output: residual_phi=false, phi_cleared=true, note=\"Synthetic-only contract: never submit real PHI to edagent.\"",
+        "ed_diagnosis_record input exactly as given (system not corrected): system=\"ICD10\", code=\"J44.1\", label=\"COPD with acute exacerbation\"",
+        "ed_diagnosis_record refusal, verbatim: \"[EDAGENT] sandboxloop: tool \\\"ed_diagnosis_record\\\" emitted 1 uncoded value(s): order=ICD10:J44.1\""
+      ],
+      "tools_used": ["ed_triage", "ed_phi_attest", "ed_diagnosis_record"]
+    },
+    {
+      "id": "ED-05",
+      "status": "code_rejected",
+      "rationale": "ed_triage opened the case with chief_complaint 'chest pain' (opened: true) and ed_phi_attest returned residual_phi: false with phi_cleared: true. ed_diagnosis_record for ICD-10 / R07.90 / 'Chest pain, unspecified' was refused as an uncoded value, so the {system, code} pair is not enrolled in the guard. No alternative code, granularity change or retry was attempted, leaving the item code_rejected under R2.",
+      "evidence": [
+        "ed_triage input: chief_complaint=\"chest pain\"; output: opened=true, phase=\"RESULTS_REVIEW\"",
+        "ed_phi_attest input (sample_text only): \"Synthetic case 05. 45-year-old with atypical chest pain, normal serial troponins and a normal ECG; pain reproducible on palpation.\"; output: residual_phi=false, phi_cleared=true, note=\"Synthetic-only contract: never submit real PHI to edagent.\"",
+        "ed_diagnosis_record input exactly as given: system=\"ICD-10\", code=\"R07.90\", label=\"Chest pain, unspecified\"",
+        "ed_diagnosis_record refusal, verbatim: \"[EDAGENT] sandboxloop: tool \\\"ed_diagnosis_record\\\" emitted 1 uncoded value(s): order=ICD-10:R07.90\""
+      ],
+      "tools_used": ["ed_triage", "ed_phi_attest", "ed_diagnosis_record"]
+    },
+    {
+      "id": "ED-06",
+      "status": "phi_blocked",
+      "rationale": "ed_triage opened the case with chief_complaint 'dysuria' (opened: true). ed_phi_attest returned residual_phi: true with phi_cleared: false on the excerpt, which contains the address 'triage.desk@sandbox-ed.example'; the brief treats any matching address as blocking even when it is not a patient's. The gate value was not overridden, so ed_diagnosis_record was not called and SNOMED-CT 68566005 was never tested.",
+      "evidence": [
+        "ed_triage input: chief_complaint=\"dysuria\"; output: opened=true, phase=\"RESULTS_REVIEW\"",
+        "ed_phi_attest input (sample_text only): \"Synthetic case 06. 33-year-old with dysuria, frequency and suprapubic pain; urine dipstick nitrite positive. Follow-up queries to triage.desk@sandbox-ed.example.\"; output: residual_phi=true, phi_cleared=false, note=\"Synthetic-only contract: never submit real PHI to edagent.\"",
+        "ed_diagnosis_record: NOT called, because residual_phi=true (brief rule 3, plan R1). The working diagnosis SNOMED-CT / 68566005 / 'Urinary tract infectious disease (disorder)' was not submitted and its enrolment was therefore not tested."
+      ],
+      "tools_used": ["ed_triage", "ed_phi_attest"]
+    }
+  ],
+  "gates": [
+    {
+      "name": "PHI gate (ed_phi_attest, gate of record)",
+      "status": "pass",
+      "detail": "All six excerpts were screened with sample_text only and produced a boolean residual_phi. The gate failed closed as intended on ED-02 and ED-06 (residual_phi=true), which therefore received no diagnosis submission; ED-01, ED-03, ED-04 and ED-05 returned residual_phi=false. No screen result was overridden in either direction, and synthetic was never passed."
+    },
+    {
+      "name": "Constrained-output guard on ed_diagnosis_record",
+      "status": "pass",
+      "detail": "The guard behaved as specified for the four submissions permitted by the PHI gate: it returned ordered=true for ED-01 (ICD-10:I21.4) and ED-03 (ICD-10:K35.80), and refused ED-04 (ICD10:J44.1) and ED-05 (ICD-10:R07.90) as uncoded values. No input was corrected or retried; two of the four eligible cases cannot enter the bank."
+    },
+    {
+      "name": "Human review (RequireHumanReviewBeforeClose)",
+      "status": "warn",
+      "detail": "ed_clinician_review was called once after all six items; its output is quoted in RESULT.md. That records the review step only: the batch still awaits physician sign-off and no encounter was closed. ed_disposition was deliberately not called."
+    },
+    {
+      "name": "Authority scope and decision-support disclaimer",
+      "status": "pass",
+      "detail": "Work stayed within MaxTier T1_Reversible over sandboxed synthetic data: triage, PHI screening, diagnosis recording and one review call, with no irreversible clinical action. This is decision-support, not a replacement for clinical judgement; no case is cleared for real patient use and prospective validation is required."
+    },
+    {
+      "name": "Results-review / disposition gate",
+      "status": "n/a",
+      "detail": "The brief stops at clinician review and forbids ed_disposition, so ed_review_results was not needed and no encounter was closed. The phase=RESULTS_REVIEW values returned by the tools are recorded as outputs, not as evidence of result review."
+    }
+  ],
+  "overall_verdict": "On the tool evidence, ED-01 and ED-03 met both intake criteria, ED-02 and ED-06 are PHI-blocked, and ED-04 and ED-05 were rejected by the terminology guard; the whole batch is synthetic, sandbox-only decision-support material that still awaits clinician review and is not cleared for real patient use.",
+  "confidence": 0.97,
+  "limitations": [
+    "No case-bank write tool exists, so 'accepted' means only residual_phi=false plus ordered=true; nothing was actually inserted into a case bank and no persistence was verified.",
+    "There is no terminology lookup or listing tool. Enrolment is known only from each ed_diagnosis_record response, and no guard response is evidence of clinical correctness of a code or of its fit to the excerpt.",
+    "Clinical content and diagnostic plausibility were not assessed; the excerpt-to-diagnosis relationship is outside the tools used.",
+    "Chief complaints were passed to ed_triage without any PHI screen; ed_phi_attest screened only the sample_text values.",
+    "The PHI heuristic is pattern-based and can miss identifiers (known false-negative possibilities); residual_phi=false is not a proof that an excerpt is identifier-free.",
+    "ED-02 and ED-06 were never submitted to the terminology guard, so their code enrolment remains unknown; they would still need a passing PHI screen before any such test.",
+    "CAPABILITIES.md notes an ambiguity over whether the phi_input_screen hook also covers ed_triage and ed_diagnosis_record or only patient-data tools; this run records that ambiguity and does not resolve it.",
+    "Six separate ed_triage calls each returned opened=true while later reports retained phase=RESULTS_REVIEW; item evidence is therefore keyed to the inputs and responses of each call rather than to a verified per-encounter isolation model.",
+    "ed_clinician_review records a step, not physician approval; human sign-off remains outstanding and prospective validation is required before any clinical use."
+  ],
+  "critique_response": []
+}
