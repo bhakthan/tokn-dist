@@ -43,6 +43,7 @@ Each walkthrough is a real, graded run. It includes the inputs, every stage's ar
 | [gridfm](walkthroughs/gridfm/README.md) | Verify six grid foundation-model OPF predictions and assign each a fail-closed trust disposition | PASS |
 | [mobility](walkthroughs/mobility/README.md) | Gate five ADAS functions on ASIL decomposition, FMEDA hardware metrics and V&V completion before the release board | PASS |
 | [genomics](walkthroughs/genomics/README.md) | Assign report readiness to six de-identified WGS samples from coverage and call quality, coordinate validation, HGVS nomenclature and consent | PASS |
+| [energy](walkthroughs/energy/README.md) | Decide which of six energy and carbon analyses can go to the board, with provenance, scenario-disclosure and market-disclaimer gates | PASS |
 <!-- walkthrough rows -->
 
 Start with **[batterypass](walkthroughs/batterypass/README.md)**. Its six drafts include one whose declared chemistry contradicts its cathode, which only a cross-section check catches.

@@ -1,0 +1,99 @@
+{
+  "domain": "energy",
+  "board_pack": "Q3 2026 energy & carbon board pack",
+  "objective": "Assess all six unchanged payloads using independent reviser-stage domain-tool evidence.",
+  "items": [
+    {
+      "id": "EN-1", "tool": "en_energy_balance", "status": "release",
+      "payload_submitted": {"carriers": ["electricity", "natural_gas", "heat"], "period": "2026-Q3", "provenance": "metered", "meter_id": "AMI-HQ-0042", "region": "site-north"},
+      "call_completed": true, "gate_fired": false, "rule_applied": "R5", "flags": [],
+      "provenance": "metered", "provenance_source": "payload", "confidence": null, "confidence_cap": 0.95,
+      "result_figures": {},
+      "rationale": "Completed on the payload-declared metered layer with meter ID. No numerical carrier balances or confidence returned.",
+      "evidence": ["Independent unchanged-payload en_energy_balance response preserved in raw_response."],
+      "tools_used": ["en_energy_balance"],
+      "raw_response": {"result": {"carriers": "[electricity natural_gas heat]", "note": "Multi-carrier energy balance computed. Sector coupling flows included where applicable.", "period": "2026-Q3", "provenance": "metered", "region": "site-north", "status": "balance_computed", "timestamp": "2026-11-07T03:42:34Z", "tool": "en_energy_balance", "unit": "MWh"}, "tool": "en_energy_balance"}
+    },
+    {
+      "id": "EN-2", "tool": "en_capacity_expansion", "status": "blocked",
+      "payload_submitted": {"horizon_years": 20, "discount_rate": 0.0, "assumptions": "Rooftop PV and 4-hour storage candidates; real 2026 prices; demand growth 1.8%/yr; grid import tariff escalates with CPI"},
+      "call_completed": false, "gate_fired": true, "rule_applied": "R1", "flags": [],
+      "reason": "[ENERGY] energy: scenario missing discount rate — projections are meaningless without a stated discount rate",
+      "rationale": "Observed scenario-disclosure refusal; zero discount rate also satisfies R2. No expansion result returned.",
+      "evidence": ["Independent unchanged-payload refusal preserved in raw_response."], "tools_used": ["en_capacity_expansion"],
+      "raw_response": {"error": "[ENERGY] energy: scenario missing discount rate — projections are meaningless without a stated discount rate"}
+    },
+    {
+      "id": "EN-3", "tool": "en_ppa_valuate", "status": "blocked",
+      "payload_submitted": {"contract_type": "virtual/cfd", "tenor_years": 12, "strike_price": 41.5, "volume_mwh": 180000, "discount_rate": 0.07, "assumptions": "Cash flows discounted at the risk-free rate plus a 350 bp project spread; P50 volume; hub-to-node basis held at the 3-year average", "disclaimer_acknowledged": true},
+      "call_completed": false, "gate_fired": true, "rule_applied": "R1", "flags": [],
+      "reason": "[ENERGY] energy: blocked term detected — terms like 'guaranteed return', 'risk-free', 'will definitely' are prohibited in market analysis: risk-free",
+      "rationale": "Actual input assumptions contain risk-free. Independent rerun was refused by the market blocked-term check. No completed valuation response exists for this rerun; payload strike and tenor are input parameters only.",
+      "evidence": ["Python raw-file JSON and character-codepoint inspection resolved viewer redaction to risk-free; exact-input domain refusal preserved in raw_response."], "tools_used": ["en_ppa_valuate"],
+      "raw_response": {"error": "[ENERGY] energy: blocked term detected — terms like 'guaranteed return', 'risk-free', 'will definitely' are prohibited in market analysis: risk-free"}
+    },
+    {
+      "id": "EN-4", "tool": "en_carbon_inventory", "status": "blocked",
+      "payload_submitted": {"ghg_scope": "scope1+2", "accounting_method": "market-based", "reporting_year": "2025", "organization": "operational_control"},
+      "call_completed": false, "gate_fired": true, "rule_applied": "R1", "flags": [],
+      "reason": "[ENERGY] energy: data provenance layer required — declare whether data is metered, estimated, modeled, or assumed",
+      "rationale": "Observed upstream provenance refusal. Boundary declarations exist, but carbon-boundary hook execution is not established. No inventory returned.",
+      "evidence": ["Independent unchanged-payload refusal preserved in raw_response."], "tools_used": ["en_carbon_inventory"],
+      "raw_response": {"error": "[ENERGY] energy: data provenance layer required — declare whether data is metered, estimated, modeled, or assumed"}
+    },
+    {
+      "id": "EN-5", "tool": "en_scenario_model", "status": "release_with_caveat",
+      "payload_submitted": {"scenario_name": "electrify-fleet-2040", "horizon_years": 15, "discount_rate": 0.06, "assumptions": "Light-duty fleet fully battery-electric by 2035; depot charging on managed tariff; carbon price starts at 85 per tCO2e", "demand_growth": 0.021},
+      "call_completed": true, "gate_fired": false, "rule_applied": "R6", "flags": [],
+      "provenance": "modeled", "provenance_source": "tool", "confidence": 0.45, "confidence_cap": 0.55,
+      "caveat": "Modeled and assumed results must be labelled as projections with their confidence and key assumptions stated alongside the figure.",
+      "assumptions": "Light-duty fleet fully battery-electric by 2035; depot charging on managed tariff; carbon price starts at 85 per tCO2e",
+      "result_figures": {},
+      "rationale": "Completed modeled projection; confidence is below the modeled-layer cap. Returned metadata but no technology-mix or investment figures.",
+      "evidence": ["Independent unchanged-payload en_scenario_model response preserved in raw_response."], "tools_used": ["en_scenario_model"],
+      "raw_response": {"result": {"confidence": 0.45, "discount_rate": 0.06, "horizon_years": 15, "provenance": "modeled", "scenario_name": "electrify-fleet-2040", "status": "scenario_modeled", "timestamp": "2026-11-07T03:42:34Z", "tool": "en_scenario_model"}, "tool": "en_scenario_model"}
+    },
+    {
+      "id": "EN-6", "tool": "en_demand_forecast", "status": "release",
+      "payload_submitted": {"carrier": "electricity", "sector": "commercial", "horizon_years": 5, "granularity": "monthly", "provenance": "estimated"},
+      "call_completed": true, "gate_fired": false, "rule_applied": "R5", "flags": [],
+      "provenance": "estimated", "provenance_source": "payload", "confidence": null, "confidence_cap": 0.75,
+      "result_figures": {},
+      "rationale": "Completed on payload-declared estimated layer; no numerical forecast series or confidence returned. Unit is not a demand quantity.",
+      "evidence": ["Independent unchanged-payload en_demand_forecast response preserved in raw_response."], "tools_used": ["en_demand_forecast"],
+      "raw_response": {"result": {"carrier": "electricity", "sector": "commercial", "status": "forecast_generated", "timestamp": "2026-11-07T03:42:34Z", "tool": "en_demand_forecast", "unit": "MWh"}, "tool": "en_demand_forecast"}
+    }
+  ],
+  "gates": {
+    "validate_data_provenance": {"EN-1": "passed", "EN-2": "not_applicable", "EN-3": "not_applicable", "EN-4": "refused", "EN-5": "passed", "EN-6": "passed"},
+    "enforce_scenario_disclosure": {"EN-1": "not_applicable", "EN-2": "refused", "EN-3": "passed", "EN-4": "not_applicable", "EN-5": "passed", "EN-6": "not_applicable"},
+    "enforce_carbon_boundary": {"EN-1": "not_applicable", "EN-2": "not_applicable", "EN-3": "not_applicable", "EN-4": "not_applicable", "EN-5": "not_applicable", "EN-6": "not_applicable"},
+    "enforce_market_disclaimer": {"EN-1": "not_applicable", "EN-2": "not_applicable", "EN-3": "refused", "EN-4": "not_applicable", "EN-5": "not_applicable", "EN-6": "not_applicable"},
+    "lifecycle_gates": "not_verifiable"
+  },
+  "gate_interpretation": "Passed denotes supported applicable disclosure/provenance and no refusal from that gate, not an independently observed hook trace. EN-3 has complete scenario disclosure and its refusal is market-specific. EN-5 provenance comes from the response. EN-4 carbon boundary is not_applicable here because upstream refusal prevents establishment, not because boundary is intrinsically irrelevant.",
+  "summary": {"release": 2, "release_with_caveat": 1, "blocked": 3},
+  "overall_verdict": "EN-1 and EN-6 release; EN-5 release_with_caveat; EN-2, EN-3 and EN-4 blocked by observed refusals. No underlying numerical analysis figures were returned.",
+  "confidence": null,
+  "confidence_basis": "High qualitative confidence in per-item classification from independent unchanged-payload re-runs. No calibrated overall numerical confidence is available; analytical validity and lifecycle execution remain unverified.",
+  "limitations": [
+    "Inputs are synthetic for a fictional organisation; completion does not validate real-world data.",
+    "Successful calls return metadata, not numerical balances, forecast series, technology mixes or investment figures. No missing figure was estimated.",
+    "EN-1 and EN-6 returned no confidence; no confidence was imputed.",
+    "Lifecycle states and independent hook traces are not available. EN-4 carbon-boundary execution is unestablished after provenance refusal.",
+    "Each item was submitted once unchanged in this reviser stage; this does not assert unchanged submission in earlier stages."
+  ],
+  "verification": {"stage": "reviser", "routing": "full-revision", "numeric_sources": "Domain metadata/confidence: raw_response. Layer caps: DOMAIN-README.md Four-Layer Data Hierarchy. Summary: count of revised items, subject to read-only validation. Payload numbers: submitted inputs, not results."},
+  "critique_response": [
+    {"id": "C1", "action": "fixed", "detail": "Independent exact-input en_ppa_valuate rerun refused with the preserved blocked-term message. EN-3 now records R1, call_completed=false, gate_fired=true, quoted reason and flags=[]. Removed the previous ppa_valued evidence; blocked label unchanged."},
+    {"id": "C2", "action": "fixed", "detail": "Raw-file JSON loading and character-codepoint inspection verified risk-free, resolving the viewer artefact. Exact assumptions now appear in payload_submitted and the report; the observed refusal uses the actual term."},
+    {"id": "C3", "action": "fixed", "detail": "Verified board_pack was missing; added the exact input value."},
+    {"id": "C4", "action": "fixed", "detail": "Verified all payload_submitted fields were missing; added all six exact input objects. Re-ran every item once unchanged in this stage; read-only equality validation checks the stored objects."},
+    {"id": "C5", "action": "fixed", "detail": "Verified summary was missing; added per-status counts and validate them by Counter over revised items, not as analytical figures."},
+    {"id": "C6", "action": "fixed", "detail": "Verified aggregate gate array used fail/n/a; replaced with per-item passed/refused/not_applicable mappings and lifecycle_gates=not_verifiable. EN-3 market refusal is observed. Scenario passed denotes complete disclosures/no scenario refusal, not a separate hook trace; EN-4 boundary is unestablished upstream."},
+    {"id": "C7", "action": "fixed", "detail": "Verified missing caps against DOMAIN-README.md: metered 0.95, modeled 0.55, estimated 0.75. Independently reran all released tools: EN-5 returned 0.45; others returned no confidence. Added caps and validate the no-exceedance comparison."},
+    {"id": "C8", "action": "fixed", "detail": "Exact-input rerun matched EN-3 predicted blocked status and blocked-term refusal mechanism. Removed false gate-did-not-fire claims and corrected reconciliation/limitations without inventing an error-code identifier."},
+    {"id": "C9", "action": "fixed", "detail": "Verified fields existed only in prose; added named completion/gate/rule/flags to all items, reason for blocked items, provenance/source/confidence/cap for released items, and exact caveat/assumptions for EN-5."},
+    {"id": "C10", "action": "fixed", "detail": "Removed unsupported overall 0.93 confidence and set confidence=null. Qualitative high confidence is scoped to classifications supported by current tool reruns, not analytical validity or artifact-wide calibrated certainty. EN-5 tool confidence remains 0.45."}
+  ]
+}

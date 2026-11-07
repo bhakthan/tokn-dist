@@ -1,0 +1,11 @@
+{
+  "note": "Synthetic release policy for a fictional organisation's board pack. Values are synthetic.",
+  "release_policy": {
+    "submission": "Each analysis is run exactly once per stage with its payload unchanged; analysts fix and resubmit blocked items next cycle.",
+    "data_layers": ["metered", "estimated", "modeled", "assumed"],
+    "caveat_layers": ["modeled", "assumed"],
+    "caveat_wording": "Modeled and assumed results must be labelled as projections with their confidence and key assumptions stated alongside the figure."
+  },
+  "audience": "board audit & risk committee",
+  "deadline": "2026-10-15"
+}

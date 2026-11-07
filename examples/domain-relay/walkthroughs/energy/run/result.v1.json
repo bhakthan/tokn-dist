@@ -1,0 +1,109 @@
+{
+  "domain": "energy",
+  "objective": "Assess the six submitted Q3 2026 energy and carbon analyses for release using their unchanged payloads, domain-tool evidence, and the plan's disclosure and provenance rules.",
+  "items": [
+    {
+      "id": "EN-1",
+      "status": "release",
+      "rationale": "en_energy_balance completed with status=balance_computed, period=2026-Q3, region=site-north, provenance=metered, and unit=MWh. The payload supplied meter_id=AMI-HQ-0042, so the metered-layer result qualifies for release under R5. No confidence or numerical balance figures were returned; the reported MWh unit is not itself a balance value.",
+      "evidence": [
+        "en_energy_balance raw result: {\"carriers\":\"[electricity natural_gas heat]\",\"note\":\"Multi-carrier energy balance computed. Sector coupling flows included where applicable.\",\"period\":\"2026-Q3\",\"provenance\":\"metered\",\"region\":\"site-north\",\"status\":\"balance_computed\",\"timestamp\":\"2026-11-07T03:23:36Z\",\"tool\":\"en_energy_balance\",\"unit\":\"MWh\"}",
+        "en_energy_balance binary observation: completion=success; status=balance_computed; provenance=metered; confidence=not returned; numeric balance figures=not returned",
+        "en_energy_balance decision record: rule_applied=R5; call_completed=true; gate_fired=false; flags=[]; caveat=not applicable"
+      ],
+      "tools_used": ["en_energy_balance"]
+    },
+    {
+      "id": "EN-2",
+      "status": "blocked",
+      "rationale": "en_capacity_expansion was refused with: \"[ENERGY] energy: scenario missing discount rate — projections are meaningless without a stated discount rate\". The submitted discount_rate=0.0 is undisclosed under BRIEF.md rule 4, so the tool refusal triggers R1 and R2 independently requires blocked status. The scenario-disclosure gate fired and no capacity-expansion result was returned.",
+      "evidence": [
+        "en_capacity_expansion raw response: \"[ENERGY] energy: scenario missing discount rate — projections are meaningless without a stated discount rate\"",
+        "en_capacity_expansion binary observation: completion=false; refusal=data missing discount rate; numeric expansion figures=not returned",
+        "en_capacity_expansion decision record: rule_applied=R1 (R2 also satisfied); call_completed=false; gate_fired=true; flags=[]"
+      ],
+      "tools_used": ["en_capacity_expansion"]
+    },
+    {
+      "id": "EN-3",
+      "status": "blocked",
+      "rationale": "en_ppa_valuate completed with status=ppa_valued and the disclaimer \"PPA valuation is analytical modeling, not financial advice\" but the unchanged assumptions contain the blocked certainty term \"ri[REDACTED]free\". R3 therefore blocks the item despite completion; no tool gate fired, producing flag gate_did_not_fire_policy_block. The response returned strike_price=41.5, tenor_years=12, and unit=$/MWh, but no provenance, confidence, NPV, or valuation figure.",
+      "evidence": [
+        "en_ppa_valuate raw result: {\"contract_type\":\"virtual/cfd\",\"disclaimer\":\"PPA valuation is analytical modeling, not financial advice.\",\"status\":\"ppa_valued\",\"strike_price\":41.5,\"tenor_years\":12,\"timestamp\":\"2026-11-07T03:23:36Z\",\"tool\":\"en_ppa_valuate\",\"unit\":\"$/MWh\"}",
+        "en_ppa_valuate policy evidence: submitted assumptions=\"Cash flows discounted at the ri[REDACTED]free rate plus a 350 bp project spread; P50 volume; hub-to-node basis held at the 3-year average\"; blocked_term=ri[REDACTED]free",
+        "en_ppa_valuate decision record: rule_applied=R3; call_completed=true; gate_fired=false; flags=[gate_did_not_fire_policy_block]"
+      ],
+      "tools_used": ["en_ppa_valuate"]
+    },
+    {
+      "id": "EN-4",
+      "status": "blocked",
+      "rationale": "en_carbon_inventory was refused with: \"[ENERGY] energy: data provenance layer required — declare whether data is metered, estimated, modeled, or assumed\". This is a data-provenance gate refusal under R1, notwithstanding the submitted ghg_scope=scope1+2, accounting_method=market-based, and organization=operational_control declarations. No provenance, confidence, or emissions inventory was returned.",
+      "evidence": [
+        "en_carbon_inventory raw response: \"[ENERGY] energy: data provenance layer required — declare whether data is metered, estimated, modeled, or assumed\"",
+        "en_carbon_inventory binary observation: completion=false; refusing gate=validate_data_provenance; numeric emissions figures=not returned",
+        "en_carbon_inventory decision record: rule_applied=R1; call_completed=false; gate_fired=true; flags=[]"
+      ],
+      "tools_used": ["en_carbon_inventory"]
+    },
+    {
+      "id": "EN-5",
+      "status": "release_with_caveat",
+      "rationale": "en_scenario_model completed with status=scenario_modeled, scenario_name=electrify-fleet-2040, provenance=modeled, confidence=0.45, discount_rate=0.06, and horizon_years=15. Modeled provenance requires release_with_caveat under R6, and the returned confidence is within R7's modeled-layer cap. Required caveat: Modeled and assumed results must be labelled as projections with their confidence and key assumptions stated alongside the figure. Key assumptions: Light-duty fleet fully battery-electric by 2035; depot charging on managed tariff; carbon price starts at 85 per tCO2e.",
+      "evidence": [
+        "en_scenario_model raw result: {\"confidence\":0.45,\"discount_rate\":0.06,\"horizon_years\":15,\"provenance\":\"modeled\",\"scenario_name\":\"electrify-fleet-2040\",\"status\":\"scenario_modeled\",\"timestamp\":\"2026-11-07T03:23:36Z\",\"tool\":\"en_scenario_model\"}",
+        "en_scenario_model policy evidence: provenance=modeled; confidence=0.45; caveat=\"Modeled and assumed results must be labelled as projections with their confidence and key assumptions stated alongside the figure.\"; assumptions=\"Light-duty fleet fully battery-electric by 2035; depot charging on managed tariff; carbon price starts at 85 per tCO2e\"",
+        "en_scenario_model decision record: rule_applied=R6; call_completed=true; gate_fired=false; flags=[]; technology-mix and investment figures=not returned"
+      ],
+      "tools_used": ["en_scenario_model"]
+    },
+    {
+      "id": "EN-6",
+      "status": "release",
+      "rationale": "en_demand_forecast completed with status=forecast_generated, carrier=electricity, sector=commercial, and unit=MWh. The submitted payload declares provenance=estimated, which determines the layer and permits release under R5. No confidence, numerical forecast series, or load statistics were returned, so no confidence-cap exceedance can be identified and MWh is reported only as the unit.",
+      "evidence": [
+        "en_demand_forecast raw result: {\"carrier\":\"electricity\",\"sector\":\"commercial\",\"status\":\"forecast_generated\",\"timestamp\":\"2026-11-07T03:23:36Z\",\"tool\":\"en_demand_forecast\",\"unit\":\"MWh\"}",
+        "en_demand_forecast payload-layer evidence: provenance=estimated; provenance_source=payload; confidence=not returned; numeric forecast figures=not returned",
+        "en_demand_forecast decision record: rule_applied=R5; call_completed=true; gate_fired=false; flags=[]; caveat=not applicable"
+      ],
+      "tools_used": ["en_demand_forecast"]
+    }
+  ],
+  "gates": [
+    {
+      "name": "validate_data_provenance",
+      "status": "fail",
+      "detail": "EN-4 was refused for a missing provenance layer. EN-1 and EN-6 completed using payload-declared metered and estimated layers respectively; EN-5 returned modeled provenance. EN-2 and EN-3 are blocked under the higher-precedence scenario and market rules."
+    },
+    {
+      "name": "enforce_scenario_disclosure",
+      "status": "fail",
+      "detail": "EN-2 was refused with \"[ENERGY] energy: scenario missing discount rate — projections are meaningless without a stated discount rate\"; its zero discount rate also triggers R2. EN-3 and EN-5 completed, but EN-3's separate blocked-term policy failure remains controlling."
+    },
+    {
+      "name": "enforce_carbon_boundary",
+      "status": "n/a",
+      "detail": "EN-4 declared ghg_scope=scope1+2, accounting_method=market-based, and organization=operational_control. No carbon-boundary refusal was returned, but the call was blocked by validate_data_provenance; a passed carbon-boundary hook therefore cannot be asserted from the response."
+    },
+    {
+      "name": "enforce_market_disclaimer",
+      "status": "fail",
+      "detail": "EN-3 acknowledged a market disclaimer and the tool returned \"PPA valuation is analytical modeling, not financial advice.\" However, its payload contains the listed blocked term ri[REDACTED]free; the tool call did not refuse it, so this is a policy-gate failure with gate_did_not_fire_policy_block."
+    },
+    {
+      "name": "lifecycle_gates",
+      "status": "n/a",
+      "detail": "not_verifiable: no available tool reads or advances the study-lifecycle states; none of the six tool responses cited a lifecycle error."
+    }
+  ],
+  "overall_verdict": "Under the plan's mechanical decision rules, EN-1 and EN-6 are release, EN-5 is release_with_caveat, and EN-2, EN-3, and EN-4 are blocked; the successful calls do not supply numerical balance, forecast, or portfolio figures for the board pack.",
+  "confidence": 0.93,
+  "limitations": [
+    "The inputs describe synthetic analysis requests for a fictional organisation, so the outputs are not real-world measurements or valuations.",
+    "en_energy_balance returned no numerical carrier balances or confidence; en_demand_forecast returned no numerical forecast series or confidence; en_scenario_model returned metadata but no technology-mix or investment figures.",
+    "EN-3 is blocked by the payload policy rather than by an observed gate refusal, because en_ppa_valuate completed despite the listed blocked certainty term.",
+    "Lifecycle prerequisites could not be read or advanced with the available tools and therefore remain not_verifiable; no tool response cited a lifecycle error.",
+    "No missing figures were estimated, no blocked payload was corrected or retried, and none of the released statuses should be read as supplying analysis results that the tools did not return."
+  ],
+  "critique_response": []
+}
