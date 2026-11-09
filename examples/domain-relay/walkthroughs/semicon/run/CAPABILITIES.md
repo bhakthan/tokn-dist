@@ -1,50 +1,46 @@
-# CAPABILITIES — semicon tapeout signoff review (six hard macros)
+# CAPABILITIES — semicon scout pass (tapeout signoff review, six hard macros)
 
-Scope: reading only. Items under review: BLK-CPU, BLK-DSP, BLK-USB, BLK-SRAMCTL, BLK-DMA, BLK-PCIE. No item is assessed here.
-
-Evidence base: BRIEF.md; inputs/floorplans.json, inputs/sta_runs.json, inputs/physical_verification.json; tokn-self/introspect-slice.json; tokn-self/DOMAIN-README.md; my live tool list.
+Evidence base: BRIEF.md; inputs/floorplans.json, inputs/sta_runs.json, inputs/physical_verification.json; tokn-self/introspect-slice.json; tokn-self/DOMAIN-README.md; the live semicon tool list (20 tools). Items: BLK-CPU, BLK-DSP, BLK-USB, BLK-SRAMCTL, BLK-DMA, BLK-PCIE.
 
 ## Domain tools that apply
 
-| tool (exact name) | item(s) / input file it applies to | input fields it needs, and whether present in inputs/ |
+| tool (exact name) | item(s) / input file it applies to | input fields needed and present in inputs/ |
 |---|---|---|
-| `floorplan` | Utilization check, all six blocks. Source: inputs/floorplans.json | `netlist_def` (present, path form; tool schema says string, DEF content expected, see Gaps); `lef_path` (present: pdk/sky130hd/sky130_fd_sc_hd.lef); `utilization` (present, fraction); `aspect_ratio` (present). Core dimensions or cell area are NOT present, so the tool relies on the supplied `utilization` summary. |
-| `static_timing` | WNS, all six blocks. Source: inputs/sta_runs.json | `netlist` (present); `sdc_path` (present for five blocks; EMPTY for BLK-PCIE, to be passed as given); `spef_path` (present); `wns` (present, supplied ns value). `lib_path` is present in the inputs but has no argument in this tool's schema (see Gaps). |
-| `drc_check` | DRC, all six blocks. Source: inputs/physical_verification.json, `drc` array | `gds_path` (present); `drc_rules` (present: sky130A.drc); `violations` (present, supplied count). No `shapes` or `rules` are given, so only the supplied count is evidence. |
-| `lvs_check` | LVS, all six blocks. Source: inputs/physical_verification.json, `lvs` array | `gds_path` (present); `cdl_path` (present); `discrepancies` (present, supplied count). No `layout_netlist` is given, so only the supplied count is evidence. |
+| `floorplan` | all six blocks; inputs/floorplans.json | `utilization` (fraction) — present for all six. `netlist_def`, `lef_path`, `aspect_ratio` — present. Core dimensions and `cell_area_um2` are absent; not needed if the supplied `utilization` is used. Tool reports the worse of computed and supplied utilization. |
+| `static_timing` | all six blocks; inputs/sta_runs.json | `wns` (supplied summary) — present for all six. `netlist`, `spef_path` — present. `sdc_path` — present for five blocks; **empty for BLK-PCIE** (passed through unchanged per brief rule 2). No `timing_arcs`, `endpoints`, or `clock_period_ns` are present, so only the supplied WNS can drive the result. `lib_path` is present in the record but is not a `static_timing` input field. |
+| `drc_check` | all six blocks; inputs/physical_verification.json (`drc`) | `violations` (supplied count) — present for all six. `gds_path` — present. `drc_rules` — present as a rule-deck name string ("sky130A.drc"). No `shapes` or `rules` geometry are present, so the check runs on the supplied count only. |
+| `lvs_check` | all six blocks; inputs/physical_verification.json (`lvs`) | `discrepancies` (supplied count) — present for all six. `gds_path`, `cdl_path` — present. No `layout_netlist` or `schematic_netlist` is present, so the check runs on the supplied count only. |
 
-Tools not used, and why: `route` (needs `cts_def` and `gcell_edges`, absent); `dfm_fill`, `clock_tree`, `place`, `logic_synthesize`, `formal_verify`, `rtl_lint`, `gds_export` (no matching inputs); `preflight_gate` (no destructive EDA action proposed).
+No other semicon tool has its inputs in `inputs/`. `power_analysis`, `route`, `place`, `clock_tree`, `dfm_fill`, `gds_export`, `metrics_extract` and the others need data that is not provided (logs, grids, cell lists, GDS, or routing congestion). They are not used for this brief.
 
 ## Gates and rules that will constrain the answer
 
-Brief rules (quoted):
-- Status precedence: "blocked, then fail_signoff, then ready_with_caveats, then tapeout_ready." Rule 1: a block with unconstrained timing is `blocked` "however good its recorded WNS looks."
-- Timing: "Timing closure means WNS ≥ 0 ns. A WNS of exactly 0.000 ns is closed; any negative WNS, however small, is not."
-- Utilization: target "80% target"; warning fires only when "strictly above the 80% target", with a margin "limit 84%". `fail_signoff` if "utilization above the 84% hard limit."
-- DRC: "any DRC violation" → `fail_signoff`. Policy "zero tolerance for DRC and LVS."
-- LVS: "any LVS discrepancy" → `fail_signoff`.
-- Input handling: "Pass every record to the tools exactly as given, including an empty `sdc_path`. Do not invent or substitute a constraints file."
-- Tool choice: `floorplan` for utilization, `static_timing` for WNS, `drc_check` for DRC, `lvs_check` for LVS.
-- Language: "Use calibrated language: signoff-clean is not a guarantee of working silicon."
+Quoted from the brief (BRIEF.md, Status vocabulary and Rules):
+- Precedence: `blocked`, then `fail_signoff`, then `ready_with_caveats`, then `tapeout_ready`.
+- `blocked`: "the STA run had no SDC constraints, so `static_timing` refuses it." Rule 1: "A block whose timing was never constrained is `blocked`, however good its recorded WNS looks."
+- `fail_signoff`: "any DRC violation, any LVS discrepancy, WNS < 0 ns, or utilization above the 84% hard limit."
+- `ready_with_caveats`: utilization "above the 80% target while still within the 5% margin (limit 84%)". Rule 5: "The utilization warning fires only when utilization is strictly above the 80% target."
+- `tapeout_ready`: "WNS ≥ 0 ns, DRC clean, LVS clean, and utilization at or below the 80% target."
+- Rule 4: "A WNS of exactly 0.000 ns is closed; any negative WNS, however small, is not."
+- Rule 2: "Pass every record to the tools exactly as given, including an empty `sdc_path`. Do not invent or substitute a constraints file."
+- Rule 3: signoff policy is zero tolerance for DRC and LVS.
+- Rule 6: every number must come from a tool call or the input files. Calibrated language: "signoff-clean is not a guarantee of working silicon."
 
-Tool-level gates (from tool descriptions):
-- `drc_check`: "advances to signoff_drc only when violations == 0."
-- `lvs_check`: "Advances to signoff_LVS only when discrepancies == 0." (BLOCKS tapeout if discrepancies > 0.)
-- `static_timing`: "Worst of computed and supplied WNS is recorded for the timing gate." Empty `sdc_path` "triggers the SDC warning" (per schema).
-- `floorplan`: utilization is "checked against the area limit" (numeric limit not stated in tool text).
+Quoted from tool and README descriptions:
+- `drc_check`: "BLOCKS tapeout if violations > 0" (README: "DRC: blocks tapeout when violations > 0").
+- `lvs_check`: "BLOCKS tapeout if discrepancies > 0" (README: "LVS: blocks tapeout when discrepancies > 0").
+- `static_timing`: "Worst of computed and supplied WNS is recorded for the timing gate."
+- README Tapeout gate: "requires DRC and LVS closure and timing closure (WNS ≥ 0)."
+- README: "Preflight (PreToolUse): destructive or non-allowlisted EDA commands are refused." (Not triggered by this read-only review.)
 
-Domain README gates (tokn-self/DOMAIN-README.md): Tapeout gate = "DRC+LVS+timing closure WNS≥0"; DRC gate = "zero violations"; LVS gate = "zero discrepancies". Synthesis and Placement gates cannot be evaluated from these inputs.
-
-Lifecycle caution: README lists a 14-state lifecycle (INIT → … → TAPEOUT_READY → ARCHIVED). Inputs record no per-block lifecycle state, so transition gating cannot be checked here.
+Threshold provenance: the 80% target, 84% hard limit and 5% margin come from BRIEF.md only. The `floorplan` tool description says only "checked against the area limit" and does not quote the value. Treat the 80/84 values as brief-specified, not tool-verified.
 
 ## Gaps
 
-1. **Routing-congestion risk for `ready_with_caveats`.** The brief requires naming it. `route` needs `cts_def` and `gcell_edges` (demand/capacity), which are not in inputs. Any congestion statement must be reasoned from the utilization figure alone and labelled as inference, not measurement.
-2. **Blocked status depends on a tool behaviour that conflicts across sources.** The brief says `static_timing` "refuses" an empty SDC. The tool schema says an empty `sdc_path` "triggers the SDC warning." The actual call output must be recorded and used; neither source should be assumed.
-3. **`lib_path` not consumed.** `sta_runs.json` carries `lib_path` per block, but `static_timing` has no lib argument. Whether the slow-corner library is used is unknown; it must not be claimed as applied.
-4. **Floorplan limit.** The 84% hard limit is in the brief only. The tool text says "checked against the area limit" without a number. The tool's own output must confirm the limit before it is quoted.
-5. **Floorplan input form.** `netlist_def` is a required string; inputs give file paths (`pnr/.../synth.def`), and the README says paths are "illustrative only." Whether the tool can open them is unknown until it runs.
-6. **Summary-only DRC/LVS.** Only supplied counts exist. No geometry is available for computed checks, so the signoff counts rest on the input records.
-7. **Domain self-description versus tool list.** The README and introspect slice claim 20 LLM tools, 8 hooks, 16 commands, 3 subagents. My tool list shows no `semicon`-prefixed tool and does not enumerate hooks, commands or subagents. The 20-tool count and hook/gate enforcement are unverified. Ground truth used: the tool list.
-8. **Export-control and PDK-NDA records.** README claims ITAR/EAR and PDK NDA enforcement. Inputs contain no export-control classification or NDA field, so these checks cannot be evidenced here.
-9. **Reasoning-only items.** The four-state vocabulary, precedence ordering, and the "signoff-clean is not working silicon" caveat have no tool; they are applied by reasoning against the brief.
+1. **Empty-SDC refusal is not confirmed.** The brief's `blocked` status assumes `static_timing` refuses a run with no SDC. The tool description says only that an empty `sdc_path` "triggers the SDC warning," with no refusal. The README does not mention refusal either. Handling for BLK-PCIE: call `static_timing` with the record as given and read the returned output. If the tool warns but does not refuse, the `blocked` status must be decided by reasoning from the brief's rule 1, and the answer must say so. The recorded WNS of 0.150 must not be used to override `blocked`.
+2. **README vs tool list disagreement.** The README (and introspect slice) says 8 hooks and 16 commands. Neither is in my tool list, so I cannot verify them. The 20 semicon tools in my list match the README's tool count and names. The README's "Synthesis" gate (lint-clean and formal-proven) and "Placement" gate are not checkable from these inputs.
+3. **Timing is supplied, not computed.** `static_timing` gets only the supplied `wns`. No timing arcs, endpoints or clock period are given, so the WNS values, including BLK-DMA at -0.003 ns, cannot be recomputed here. The `lib_path` (ss corner) cannot be consumed by `static_timing`. Stated as a limitation, not a defect.
+4. **DRC and LVS are count-only.** `drc_check` and `lvs_check` will run on the supplied violation and discrepancy counts. No geometry, DRC rule deck contents, or netlist comparison is available. The rule-deck name "sky130A.drc" cannot be expanded by any tool here. Zero-count results are only as good as the upstream runs.
+5. **Utilization threshold values not tool-verified.** See the threshold provenance note above. The "5% margin" and the 84% limit exist only in the brief.
+6. **Out of scope for available tools:** routing congestion risk (named by `ready_with_caveats`) — `route` requires `gcell_edges` demand/capacity, which are not in `inputs/`. So the routing-congestion risk for any caveated block must be stated by reasoning, not measured.
+7. **Calibrated-language claims** (e.g., "not a guarantee of working silicon") are a reasoning obligation; no tool checks them.

@@ -39,12 +39,12 @@
     {
       "name": "critique_has_findings",
       "ok": true,
-      "detail": "14 findings"
+      "detail": "12 findings"
     },
     {
       "name": "every_finding_answered",
       "ok": true,
-      "detail": "14 responses"
+      "detail": "12 responses"
     },
     {
       "name": "decision_answered",
@@ -70,8 +70,8 @@
   "metrics": {
     "accuracy_v1": 1.0,
     "accuracy_final": 1.0,
-    "findings": 14,
-    "findings_answered": 14,
+    "findings": 12,
+    "findings_answered": 12,
     "routing": "full-revision",
     "execute_domain_tools": 4
   }

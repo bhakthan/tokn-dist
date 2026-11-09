@@ -1,22 +1,24 @@
-# PLAN — semicon tapeout signoff review (six hard macros)
+# PLAN — semicon tapeout signoff review, six hard macros
 
-Planner stage output. Sources read: `BRIEF.md`, `CAPABILITIES.md`, `inputs/floorplans.json`, `inputs/sta_runs.json`, `inputs/physical_verification.json`, `tokn-self/DOMAIN-README.md`. Nothing has been executed. No status below is pre-decided. Every status must come from the tool outputs, using the Decision rules.
+Planner stage. Sources read: `BRIEF.md`, `CAPABILITIES.md`, `inputs/floorplans.json`, `inputs/sta_runs.json`, `inputs/physical_verification.json`. Do not execute anything except the tool calls listed below. Do not edit any file in `inputs/`.
 
 ## Objective
-
-Give each of BLK-CPU, BLK-DSP, BLK-USB, BLK-SRAMCTL, BLK-DMA and BLK-PCIE exactly one status (`tapeout_ready`, `ready_with_caveats`, `fail_signoff` or `blocked`). Base each status on four tool-backed checks per block: `floorplan`, `static_timing`, `drc_check` and `lvs_check`. Record the results in `result.json` and `RESULT.md`.
+For each of BLK-CPU, BLK-DSP, BLK-USB, BLK-SRAMCTL, BLK-DMA and BLK-PCIE, run `floorplan`, `static_timing`, `drc_check` and `lvs_check` on the records exactly as given in `inputs/`. Then assign one status per block (`tapeout_ready` | `ready_with_caveats` | `fail_signoff` | `blocked`) using the mechanical rules below, and write `result.json` and `RESULT.md`.
 
 ## Steps
 
-General instructions for the Executor:
-- Make all 24 tool calls: 4 tools × 6 blocks. Run every check for every block, including a block that is already known to be `blocked` or failing. The report must show every check.
-- Pass each value **exactly as written in `inputs/`**. Do not change paths, round numbers, fill in an empty string, or add arguments that are not listed here (Brief rule 2).
-- Copy the **raw tool output** for each call into `evidence/` (for example `evidence/<block>_<tool>.json`) or straight into `result.json`. If a tool returns an error, record the error text verbatim. Do not retry with altered inputs.
-- `lib_path` from `sta_runs.json` has **no argument** in `static_timing`, so do not pass it. Record it in `result.json` as `"lib_path_not_consumed": true` (CAPABILITIES gap 3).
-- Calls for different blocks do not depend on each other and may run in parallel.
+General instructions for every step:
+- Call the tool **once per block**. Never batch two blocks into one call.
+- Copy values exactly as they appear in the input files. Do not round, convert units, or change paths. Pass the empty string `""` where the input has one.
+- Run all four checks for **every** block, even when an earlier check already decides the status. The full evidence must be recorded.
+- Some tools say they "advance the design" to a stage, and `static_timing` says it records the worst WNS "for the timing gate". That state may be shared across calls. **Read each block's result only from that call's own output.** Never read it from accumulated or session-level gate state.
+- Save the raw output of every call (24 calls in total) for `result.json` → `tool_calls`.
+- If a call errors, analyse the error, fix only the call formatting (never the values), and retry **once**. If it still fails, record the error and apply decision rule D0.
 
-### Step 1 — Utilization (`floorplan`), all six blocks
-Items: all six. Tool: `floorplan`. Source: `inputs/floorplans.json`.
+### Step 1 — Utilization check (all six blocks)
+- **Items:** BLK-CPU, BLK-DSP, BLK-USB, BLK-SRAMCTL, BLK-DMA, BLK-PCIE
+- **Tool:** `floorplan`
+- **Inputs** (from `inputs/floorplans.json`). Pass only these four fields. Do not pass core dimensions or `cell_area_um2`, because none are given.
 
 | block | netlist_def | lef_path | utilization | aspect_ratio |
 |---|---|---|---|---|
@@ -27,28 +29,39 @@ Items: all six. Tool: `floorplan`. Source: `inputs/floorplans.json`.
 | BLK-DMA | `pnr/blk_dma/synth.def` | `pdk/sky130hd/sky130_fd_sc_hd.lef` | 0.70 | 1.0 |
 | BLK-PCIE | `pnr/blk_pcie/synth.def` | `pdk/sky130hd/sky130_fd_sc_hd.lef` | 0.74 | 1.5 |
 
-Do not pass `cell_area_um2`, core dimensions or macros, because none are given.
-Record: the returned `utilization`, `utilization_source`, any warning text, and any limit or target the tool states.
-Status effect: the utilization value U puts the block in one of the bands in Decision rules R3: OK, caveat, or fail.
+- **Record:** the tool-reported `utilization` (call it **U**), `utilization_source`, and any warning text or flag about utilization or the area limit.
+- **What changes status:**
+  - U > 0.84 → `fail_signoff` (D2)
+  - 0.80 < U ≤ 0.84 → `ready_with_caveats` candidate (D3)
+  - U ≤ 0.80 → no utilization issue
 
-### Step 2 — Timing (`static_timing`), all six blocks
-Items: all six. Tool: `static_timing`. Source: `inputs/sta_runs.json`.
+  U = 0.80 exactly is **not** above target (brief rule 5).
 
-| block | netlist | sdc_path | spef_path | wns |
+### Step 2 — Timing check (all six blocks)
+- **Items:** all six
+- **Tool:** `static_timing`
+- **Inputs** (from `inputs/sta_runs.json`). Pass `netlist`, `sdc_path`, `spef_path` and `wns`. `lib_path` is not a `static_timing` input, so do not pass it, but copy it into `result.json` as context. Do **not** pass `sdc`, `clock_period_ns`, `timing_arcs` or `endpoints`, because none are given.
+
+| block | netlist | sdc_path | spef_path | wns (ns) |
 |---|---|---|---|---|
 | BLK-CPU | `pnr/blk_cpu/final.v` | `constraints/blk_cpu.sdc` | `pnr/blk_cpu/final.spef` | 0.085 |
 | BLK-DSP | `pnr/blk_dsp/final.v` | `constraints/blk_dsp.sdc` | `pnr/blk_dsp/final.spef` | 0.000 |
 | BLK-USB | `pnr/blk_usb/final.v` | `constraints/blk_usb.sdc` | `pnr/blk_usb/final.spef` | 0.210 |
 | BLK-SRAMCTL | `pnr/blk_sramctl/final.v` | `constraints/blk_sramctl.sdc` | `pnr/blk_sramctl/final.spef` | 0.040 |
 | BLK-DMA | `pnr/blk_dma/final.v` | `constraints/blk_dma.sdc` | `pnr/blk_dma/final.spef` | -0.003 |
-| BLK-PCIE | `pnr/blk_pcie/final.v` | `""` (empty string, passed literally) | `pnr/blk_pcie/final.spef` | 0.150 |
+| BLK-PCIE | `pnr/blk_pcie/final.v` | `""` (empty string, **pass as-is**) | `pnr/blk_pcie/final.spef` | 0.150 |
 
-Do not pass `timing_arcs`, `sdc`, `clock_period_ns` or `lib_path`.
-Record: the returned `wns`, `source`, any warning, refusal or error text (especially SDC-related text), and whether the tool refused or accepted the run.
-Status effect: an empty SDC means `blocked` (R1). If the SDC is present, WNS < 0 means `fail_signoff` (R2). WNS ≥ 0 means timing is closed.
+- **Do not** substitute, invent or guess an SDC for BLK-PCIE (brief rule 2).
+- **Record:** the tool-reported `wns` (call it **W**), `source`, any SDC warning, and whether the tool refused or rejected the run.
+- **What changes status:**
+  - The tool refuses or rejects the run for missing SDC, **or** the input `sdc_path` is `""` → `blocked` (D1).
+  - Otherwise, W < 0 → `fail_signoff` (D2).
+  - W ≥ 0 means timing is closed. W = 0.000 counts as closed (brief rule 4).
 
-### Step 3 — DRC (`drc_check`), all six blocks
-Items: all six. Tool: `drc_check`. Source: `inputs/physical_verification.json` → `drc`.
+### Step 3 — DRC check (all six blocks)
+- **Items:** all six
+- **Tool:** `drc_check`
+- **Inputs** (from `inputs/physical_verification.json` → `drc`). Pass `gds_path`, `drc_rules` and `violations`. Do not pass `shapes`, `rules` or `enclosure_rules`, because none are given.
 
 | block | gds_path | drc_rules | violations |
 |---|---|---|---|
@@ -59,12 +72,13 @@ Items: all six. Tool: `drc_check`. Source: `inputs/physical_verification.json` �
 | BLK-DMA | `gds/blk_dma.gds` | `sky130A.drc` | 0 |
 | BLK-PCIE | `gds/blk_pcie.gds` | `sky130A.drc` | 0 |
 
-Do not pass `shapes`, `rules` or `enclosure_rules`.
-Record: the returned `violations`, `source`, and whether the design advanced to `signoff_drc`.
-Status effect: violations > 0 means `fail_signoff` (R2).
+- **Record:** the tool-reported `violations` (call it **V**) and `source`.
+- **What changes status:** V > 0 → `fail_signoff` (D2). V = 0 means DRC is clean.
 
-### Step 4 — LVS (`lvs_check`), all six blocks
-Items: all six. Tool: `lvs_check`. Source: `inputs/physical_verification.json` → `lvs`.
+### Step 4 — LVS check (all six blocks)
+- **Items:** all six
+- **Tool:** `lvs_check`
+- **Inputs** (from `inputs/physical_verification.json` → `lvs`). Pass `gds_path`, `cdl_path` and `discrepancies`. Do not pass `layout_netlist` or `schematic_netlist`, because none are given.
 
 | block | gds_path | cdl_path | discrepancies |
 |---|---|---|---|
@@ -75,88 +89,94 @@ Items: all six. Tool: `lvs_check`. Source: `inputs/physical_verification.json` �
 | BLK-DMA | `gds/blk_dma.gds` | `netlist/blk_dma.cdl` | 0 |
 | BLK-PCIE | `gds/blk_pcie.gds` | `netlist/blk_pcie.cdl` | 0 |
 
-Do not pass `layout_netlist`, `schematic_netlist` or `top_cell`.
-Record: the returned `discrepancies`, `source`, and whether the design advanced to `signoff_lvs`.
-Status effect: discrepancies > 0 means `fail_signoff` (R2).
+- **Record:** the tool-reported `discrepancies` (call it **L**) and `source`.
+- **What changes status:** L > 0 → `fail_signoff` (D2). L = 0 means LVS is clean.
 
-### Step 5 — Apply the decision rules (reasoning only, no tool)
-Items: all six. Apply R0–R5 below to the recorded outputs, in precedence order. No tool exists for the four-state classification or the precedence order (CAPABILITIES gap 9).
+### Step 5 — Classify and write deliverables
+- **Items:** all six
+- **Tool:** none. This step applies the decision rules below to the values recorded in Steps 1–4.
+- Write `result.json` (schema under Acceptance criteria) and `RESULT.md`. RESULT.md must contain a per-block table, the reason for each status, the gaps listed under Known limitations, and the calibrated-language statement.
+- Before finishing, cross-check your statuses against the input-derived expectation table under Decision rules. If any status differs, do not silently change it. Explain which tool output caused the difference.
 
-### Step 6 — Cross-check, then write deliverables
-For every check, compare each tool-returned value with the input value shown in the tables above. If they differ (for example, the tool reports a worse value because it computed one), **use the tool value**, as the brief requires, and add a `discrepancy_note` to that check. Then write `result.json` and `RESULT.md` as described in Acceptance criteria.
+**Not used:** no other semicon tool has its inputs in `inputs/` (per CAPABILITIES.md). This includes `route`, which would be needed to *measure* congestion. Do not call them. Do not fabricate their inputs.
 
 ## Decision rules
 
-Notation for each block: U is the utilization returned by `floorplan`. W is the WNS returned by `static_timing`. D is the violations count returned by `drc_check`. L is the discrepancies count returned by `lvs_check`. Compare U after rounding to 4 decimal places, so that floating-point noise cannot move 0.80 across the threshold. Compare W, D and L exactly as returned.
+Apply the rules in order D0 → D1 → D2 → D3 → D4. The **first** rule that matches gives the status. This follows the brief's precedence: blocked > fail_signoff > ready_with_caveats > tapeout_ready.
 
-**R0 — Tool failure (evaluate first, then fall through).** A check counts as *unevaluated* if its tool returned an error, or returned no value for U, W, D or L.
-- If any other evaluated check meets an R2 fail condition, apply R2: `fail_signoff`.
-- Otherwise the status is `blocked`, with `blocked_reason: "tool_unevaluated:<tool>"`.
+Definitions (all values come from tool outputs):
+- **U** = utilization reported by `floorplan`. The tool reports the worst of computed and supplied. If it returns no number, use the input value and note that.
+- **W** = WNS reported by `static_timing`.
+- **V** = violations reported by `drc_check`.
+- **L** = discrepancies reported by `lvs_check`.
 
-An unevaluated check can never support a positive status. This extends the brief's "not yet assessable" meaning, and it must be flagged in RESULT.md if it happens.
+| rule | condition | status |
+|---|---|---|
+| **D0** | Any of the four tool calls for this block still errors after one retry, so a required value is missing | `blocked` (reason: `tool_error:<tool>`; say explicitly in RESULT.md that this is "not yet assessable", not the SDC case) |
+| **D1** | Input `sdc_path` is `""`, **or** `static_timing` refuses/rejects the run for missing constraints | `blocked` (reason: `unconstrained_sta`). Applies **regardless of W, V, L, U**. A good-looking W must not override it (brief rule 1). |
+| **D2** | V > 0, **or** L > 0, **or** W < 0 (any negative value, even −0.001), **or** U > 0.84 | `fail_signoff`. List **every** failing check, not just the first. |
+| **D3** | 0.80 < U ≤ 0.84, with V = 0, L = 0 and W ≥ 0 | `ready_with_caveats`. The caveat must name the routing-congestion risk at high utilization, and must say that congestion was **not measured** (`route` had no inputs). |
+| **D4** | U ≤ 0.80, V = 0, L = 0, W ≥ 0 | `tapeout_ready` |
 
-Exception: an unevaluated `static_timing` call on a block whose `sdc_path` is `""` falls under R1, not R0.
+Tie-breakers and edge cases (mechanical):
+- U = 0.80 → D4, not D3. W = 0.000 → closed.
+- **D1 when the tool does not refuse:** `static_timing` may only warn on the empty SDC rather than refuse (CAPABILITIES gap 1). D1 still applies because of the input condition. In that case RESULT.md must state that `blocked` was decided from brief rule 1 and the empty `sdc_path`, not from a tool refusal. Quote the tool's actual warning text.
+- **D3 when tool warning and number disagree:** if the `floorplan` warning disagrees with the numeric thresholds (e.g. U = 0.82 but no warning, or a warning at U ≤ 0.80), classify on the number **U** against the brief's 0.80/0.84 thresholds. Record the disagreement in `result.json` → `discrepancies_noted`. The thresholds are brief-specified and not tool-verified (CAPABILITIES gap 5).
+- **Tool value differs from the input value** (W, V, L or U): use the **worse** of the two and record the difference in `discrepancies_noted`. The tools themselves report worst-of-computed-and-supplied, so this should not occur.
+- **Several D2 conditions at once:** the status is still `fail_signoff`, with all failing reasons listed.
+- **Secondary findings for a blocked block:** a `blocked` block may also show failing checks. List them as `secondary_findings`; they do not change the status.
 
-**R1 — `blocked` (highest precedence).** The block is `blocked` if its STA record has `sdc_path == ""`. Today that is true only for BLK-PCIE.
-- This applies whatever `static_timing` returns, and however good W looks (Brief rule 1).
-- Record the tool's actual response to the empty SDC (refusal, warning, or acceptance) verbatim. CAPABILITIES gap 2 notes that the brief says "refuses" while the schema says "warns". Either response leads to `blocked`.
-- If the tool *accepted* the run silently, still mark the block `blocked`, and add a note that the tool did not enforce the SDC requirement.
-- A warning that a **non-empty** sdc_path is unreadable does **not** trigger R1. Record it as a note only, because the paths are illustrative.
-- The other checks for a blocked block are still run and reported.
+Input-derived expectation (for cross-checking only; **tool outputs govern**):
 
-**R2 — `fail_signoff`.** Applies only if R1 does not. The block fails if any of these holds:
-- W < 0 (any negative value, for example -0.003)
-- D > 0
-- L > 0
-- U > 0.84
-
-List every failing check in `failed_checks`.
-
-**R3 — `ready_with_caveats`.** Applies only if neither R1 nor R2 does. All of these must hold: W ≥ 0, D == 0, L == 0, and 0.80 < U ≤ 0.84.
-- The `floorplan` warning is expected here. If the tool does not warn even though U is in this band, use the U value anyway and note that the warning is missing.
-- The caveat must name the **routing-congestion risk**. Label it as an inference from utilization alone, because `route` was not run and `gcell_edges` were not supplied (CAPABILITIES gap 1).
-
-**R4 — `tapeout_ready`.** Applies only if none of R1–R3 does. All of these must hold: W ≥ 0 (exactly 0.000 counts as closed), D == 0, L == 0, and U ≤ 0.80 (exactly 0.80 does **not** trigger the warning, per Brief rule 5).
-
-**R5 — Language.** Even for `tapeout_ready`, the wording must say "signoff-clean on the supplied records". Never say "will work in silicon". DRC and LVS evidence is summary-count only (CAPABILITIES gap 6). The STA library corner was not passed to the tool (gap 3).
+| block | U | W | V | L | expected status | deciding rule |
+|---|---|---|---|---|---|---|
+| BLK-CPU | 0.72 | 0.085 | 0 | 0 | tapeout_ready | D4 |
+| BLK-DSP | 0.80 | 0.000 | 0 | 0 | tapeout_ready | D4 (boundary: U not > 0.80; W = 0 is closed) |
+| BLK-USB | 0.65 | 0.210 | 0 | 2 | fail_signoff | D2 (LVS) |
+| BLK-SRAMCTL | 0.82 | 0.040 | 0 | 0 | ready_with_caveats | D3 (routing congestion risk) |
+| BLK-DMA | 0.70 | -0.003 | 0 | 0 | fail_signoff | D2 (WNS < 0) |
+| BLK-PCIE | 0.74 | 0.150 (untrusted) | 0 | 0 | blocked | D1 (empty sdc_path) |
 
 ## Gates
 
-Before any positive status (`tapeout_ready` or `ready_with_caveats`), all of these must hold, and each must be evidenced by a tool output:
+All of the following must pass before a block can receive any positive status (`tapeout_ready` or `ready_with_caveats`):
+1. **Timing-constraint gate:** a non-empty `sdc_path`, and `static_timing` did not refuse the run. Failing this gives `blocked`.
+2. **Timing gate:** W ≥ 0 from `static_timing` (README tapeout gate: "timing closure (WNS ≥ 0)").
+3. **DRC gate:** V == 0 from `drc_check` ("BLOCKS tapeout if violations > 0"; zero tolerance, brief rule 3).
+4. **LVS gate:** L == 0 from `lvs_check` ("BLOCKS tapeout if discrepancies > 0"; zero tolerance).
+5. **Utilization gate:** U ≤ 0.84 from `floorplan`. U ≤ 0.80 is needed for `tapeout_ready`. 0.80 < U ≤ 0.84 allows at most `ready_with_caveats`.
+6. **Evidence gate:** all four tool calls for the block returned successfully. Otherwise D0 applies.
 
-1. **SDC gate.** The STA run had a non-empty `sdc_path`, and `static_timing` did not refuse it.
-2. **Timing gate** (DOMAIN-README Tapeout gate). The `static_timing` WNS is ≥ 0 ns, and the run reached `signoff_timing` if the tool reports state.
-3. **DRC gate** (zero violations). `drc_check` violations == 0, and the run advanced to `signoff_drc`.
-4. **LVS gate** (zero discrepancies). `lvs_check` discrepancies == 0, and the run advanced to `signoff_lvs`.
-5. **Utilization gate.** `floorplan` utilization is ≤ 0.84. A value ≤ 0.80 gives `tapeout_ready`. A value in (0.80, 0.84] gives `ready_with_caveats`.
-6. **Evidence gate.** All four tool calls for the block returned a value (see R0).
-
-The Synthesis and Placement gates and the ITAR/EAR and PDK-NDA checks cannot be evaluated from these inputs (CAPABILITIES gaps 7–8). State this in RESULT.md. Do not claim they passed.
+The README's Synthesis gate (lint and formal) and Placement gate cannot be checked from these inputs. They are **not** claimed as passed. List them as unverified in RESULT.md.
 
 ## Acceptance criteria
 
-`result.json` is complete only if all of the following are true.
-
-1. It contains a top-level `items` array with **exactly six** entries, one each for BLK-CPU, BLK-DSP, BLK-USB, BLK-SRAMCTL, BLK-DMA and BLK-PCIE. There are no other entries.
-2. Each entry has these fields:
+`result.json` is complete only if:
+1. It is valid JSON with a top-level `items` array containing **exactly six** entries, one per block ID from BRIEF.md, with no duplicates and none missing.
+2. Each entry has:
    - `block`
-   - `status`: exactly one of `tapeout_ready`, `ready_with_caveats`, `fail_signoff` or `blocked`
-   - `rule_applied`: one of R0, R1, R2, R3 or R4
-   - `failed_checks`: an array, empty if there are none
-   - `caveats`: an array. For `ready_with_caveats` it must include routing-congestion risk, labelled as inference.
-   - `blocked_reason`: a string or null
-   - `checks`: an object with keys `floorplan`, `static_timing`, `drc_check` and `lvs_check`. Each key holds:
-     - `inputs_passed`: the exact arguments sent
-     - `tool_value`: U, W, D or L as returned
-     - `input_value`: the value from `inputs/`
-     - `source`: the computed or supplied tag as returned
-     - `warnings`: the tool's warnings or errors, verbatim
-     - `discrepancy_note`: present if the tool value differs from the input value
-3. Every number in the file appears either in a tool output or in `inputs/`. No numbers are invented. No SDC file is substituted.
-4. Top-level metadata:
-   - `tool_calls_made`: should be 24, plus the count of any errored calls
-   - `lib_path_not_consumed: true`
-   - `unevaluable_gates`: Synthesis, Placement, ITAR/EAR and PDK-NDA
-   - `assumptions`: the 4-decimal rounding of U, and the R0 handling of tool failure
-5. The statuses follow the precedence blocked > fail_signoff > ready_with_caveats > tapeout_ready. If a reviewer applies R0–R4 to the recorded `tool_value`s, they must reproduce every status.
-6. `RESULT.md` gives the same six statuses with a one-line justification each. It uses calibrated language (R5) and lists the gaps from CAPABILITIES that limit confidence.
+   - `status`: exactly one of `tapeout_ready`, `ready_with_caveats`, `fail_signoff`, `blocked`
+   - `deciding_rule`: one of D0–D4
+   - `reasons`: an array that lists every failing or blocking condition
+   - `caveats`: an array, required and non-empty for `ready_with_caveats`, and it must mention routing congestion as unmeasured
+   - `secondary_findings`: an array, which may be empty
+   - `checks`: an object with `floorplan`, `static_timing`, `drc_check` and `lvs_check`. For each tool:
+     - `tool` (exact name)
+     - `inputs`: the exact values passed, including `sdc_path: ""` for BLK-PCIE
+     - `result_value`: U, W, V or L as reported by the tool
+     - `source`
+     - `warnings`
+     - `refused`: boolean, for `static_timing`
+     - `pass`: boolean or null
+   - `lib_path` (context only)
+3. Every number in `result.json` and `RESULT.md` traces to a tool output or an input file (brief rule 6). No invented numbers, including congestion figures.
+4. A `tool_calls` array records all 24 calls (6 blocks × 4 tools) with their raw outputs or error text.
+5. A `discrepancies_noted` array, which may be empty, records tool-vs-input or warning-vs-threshold disagreements, and records whether `static_timing` actually refused BLK-PCIE or only warned.
+6. A `limitations` array states:
+   - timing, DRC and LVS were judged from supplied summary counts, not recomputed;
+   - the 80%/84% thresholds come from the brief;
+   - the Synthesis and Placement gates are unverified;
+   - congestion was not measured;
+   - signoff-clean is **not** a guarantee of working silicon.
+7. A `summary` object counts blocks per status, and the counts add up to 6.
+8. `RESULT.md` exists, matches `result.json` exactly, and explains every status that differs from the input-derived expectation table.

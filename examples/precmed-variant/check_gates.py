@@ -6,21 +6,27 @@ Reads ONE local file you saved from a run:
 It makes no network calls and writes nothing. `--output-format json` returns a
 single object (status, result, exit_code, steps, usage, errors), and the gate
 evidence is usually free text inside `result`. So this script searches the whole
-file for each gate name and reports where it is mentioned. A mention is NOT a
-pass: read the sentence around it.
+file for each gate name, and for the plain-language phrases a run typically uses
+instead, case-insensitively. A mention is NOT a pass: read the sentence around it.
 
 Usage:  python check_gates.py result.json
 """
 
 import json
+import re
 import sys
 
 EXPECTED = {
-    "acmg_vus_gate": "VUS must not become an actionable recommendation",
-    "pgx_critical_contraindication": "CRITICAL pharmacogenomic block",
-    "pgx_contraindication": "PGx contraindication hard block",
-    "somatic_germline": "somatic and germline kept separate",
-    "research_phi": "research/PHI gate before cohort use",
+    "acmg_vus_gate": ("VUS must not become an actionable recommendation",
+                      ["vus", "uncertain significance", "not actionable", "non-actionable"]),
+    "pgx_critical_contraindication": ("CRITICAL pharmacogenomic block",
+                                      ["critical pgx", "critical pharmacogenomic", "contraindicated"]),
+    "pgx_contraindication": ("PGx contraindication hard block",
+                             ["pgx contraindication", "pharmacogenomic contraindication", "hard block"]),
+    "somatic_germline": ("somatic and germline kept separate",
+                         ["somatic", "germline"]),
+    "research_phi": ("research/PHI gate before cohort use",
+                     ["phi", "de-identif", "deidentif", "research use", "cohort"]),
 }
 
 
@@ -49,8 +55,10 @@ def main():
 
     print(f"{'gate':<32} {'mentions':<9} what it should show")
     not_seen = []
-    for name, meaning in EXPECTED.items():
-        count = text.count(name)
+    lower = text.lower()
+    for name, (meaning, phrases) in EXPECTED.items():
+        count = lower.count(name) + sum(
+            len(re.findall(r"(?<![a-z])" + re.escape(ph), lower)) for ph in phrases)
         print(f"{name:<32} {count:<9} {meaning}")
         if count == 0:
             not_seen.append(name)

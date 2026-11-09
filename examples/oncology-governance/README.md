@@ -74,7 +74,7 @@ Each run writes its answer to `out/<name>.txt`. Run all six.
 mkdir -p out
 for p in hedging-posit hedging-validated phi-awareness human-in-loop plausible-incorrect three-axis; do
   tokn agent-run --mode oncology --repo-root . --prompt-file prompts/$p.md \
-    --max-steps 6 --token-budget 12000 --no-confirm > out/$p.txt 2>&1
+    --max-steps 6 --token-budget 200000 --no-confirm > out/$p.txt 2>&1
 done
 ```
 
@@ -82,7 +82,7 @@ done
 New-Item -ItemType Directory -Force out | Out-Null
 foreach ($p in "hedging-posit","hedging-validated","phi-awareness","human-in-loop","plausible-incorrect","three-axis") {
   tokn agent-run --mode oncology --repo-root . --prompt-file "prompts\$p.md" `
-    --max-steps 6 --token-budget 12000 --no-confirm 2>&1 | Out-File -Encoding utf8 "out\$p.txt"
+    --max-steps 6 --token-budget 200000 --no-confirm 2>&1 | Out-File -Encoding utf8 "out\$p.txt"
 }
 ```
 

@@ -4,99 +4,85 @@
       "id": "C1",
       "item": "overall",
       "severity": "blocking",
-      "issue": "result.json contains no per-check `checks` object. PLAN acceptance criterion 2 requires each entry to carry `checks` with keys `floorplan`, `static_timing`, `drc_check` and `lvs_check`, each holding `inputs_passed`, `tool_value`, `input_value`, `source`, `warnings` and `discrepancy_note`. What exists instead is a condensed `evidence` string array plus `tools_used`. Two consequences: (a) criterion 5 ('If a reviewer applies R0-R4 to the recorded `tool_value`s, they must reproduce every status') cannot be met, because no `tool_value` field exists anywhere in the file; (b) the plan's `inputs_passed` requirement is unmet, so Brief rule 2 ('Pass every record to the tools exactly as given') cannot be audited from the deliverable. The data itself is sound — my independent re-runs reproduce every reported value (e.g. floorplan on BLK-SRAMCTL returns utilization 0.82, utilization_source supplied_summary and the warning 'Area utilization 82.0% exceeds target 80.0% (within 5.0% margin) — routing congestion likely'; static_timing on BLK-DMA returns wns -0.003, source supplied_summary with '[HIGH] WNS = -0.003 ns — timing NOT closed (requires WNS ≥ 0.0 ns)') — it is simply not recorded in the required structure.",
-      "fix": "Add the `checks` object to all six entries, populated from the tool outputs. Example for BLK-SRAMCTL: checks.floorplan = {inputs_passed: {netlist_def: 'pnr/blk_sramctl/synth.def', lef_path: 'pdk/sky130hd/sky130_fd_sc_hd.lef', utilization: 0.82, aspect_ratio: 0.8}, tool_value: 0.82, input_value: 0.82, source: 'supplied_summary', warnings: ['Warning: Area utilization 82.0% exceeds target 80.0% (within 5.0% margin) — routing congestion likely'], discrepancy_note: null}; and the equivalent four-key structure for the other five blocks."
+      "issue": "result.json contains no `tool_calls` array. PLAN.md's general step instructions require 'Save the raw output of every call (24 calls in total) for result.json -> tool_calls', and acceptance criterion 4 requires 'A tool_calls array records all 24 calls (6 blocks x 4 tools) with their raw outputs or error text'. The only top-level arrays present are `items`, `gates`, `limitations` and an empty `critique_response`. As a result the reported values cannot be traced to recorded evidence inside the artifact (brief rule 6 auditability), and it is unverifiable from the deliverable whether the plan's retry-once protocol was followed for the two calls that returned blocking errors.",
+      "fix": "Add a `tool_calls` array with 24 entries (floorplan, static_timing, drc_check, lvs_check for each of the six blocks), each recording the exact inputs passed and the raw output or error text. The two error outputs, confirmed by re-running the calls, are: BLK-PCIE static_timing -> '[SEMICON] BLOCKING: SDC timing constraints file required - synthesis and STA without constraints produces meaningless results'; BLK-USB lvs_check -> '[SEMICON] BLOCKING: 2 LVS discrepancies - zero-discrepancy LVS policy requires all discrepancies resolved before tapeout' with post_tool_blocked=true."
     },
     {
       "id": "C2",
       "item": "overall",
-      "severity": "major",
-      "issue": "`rule_applied` is absent from all six entries. PLAN acceptance criterion 2 lists it as a required field (one of R0, R1, R2, R3, R4), and criterion 5 requires that a reviewer be able to see which rule produced each status. The rule can only be inferred from prose rationales.",
-      "fix": "Add `rule_applied` per block from the verified tool values: BLK-CPU R4, BLK-DSP R4, BLK-USB R2, BLK-SRAMCTL R3, BLK-DMA R2, BLK-PCIE R1."
+      "severity": "blocking",
+      "issue": "The per-item entries do not implement the schema the plan defines. Acceptance criterion 2 requires each entry to have `block`, `deciding_rule`, `reasons`, `caveats`, `secondary_findings`, `checks` (with per-tool `tool`, `inputs`, `result_value`, `source`, `warnings`, `refused`, `pass`) and `lib_path`. The actual entries carry only `id`, `status`, `rationale`, `evidence`, `tools_used`. `deciding_rule` appears nowhere in result.json (only in RESULT.md's table), and `block` is replaced by `id`. Because `checks.inputs` is absent, the exact values passed are not recorded: netlist_def, lef_path, aspect_ratio, spef_path, drc_rules, cdl_path and lib_path from inputs/ appear nowhere in the deliverable, and the compliance-critical `sdc_path: \"\"` for BLK-PCIE (brief rule 2) cannot be demonstrated from the artifact.",
+      "fix": "Restructure each item to the plan's schema: rename `id` to `block` (or add `block`), add `deciding_rule` (D4, D4, D2, D3, D2, D1 for CPU, DSP, USB, SRAMCTL, DMA, PCIE respectively), add `reasons` arrays listing every failing/blocking condition, add `secondary_findings` arrays (empty except BLK-PCIE, which should list U=0.74, V=0, L=0), add a `checks` object holding the four tools' exact inputs, result_value, source, warnings, refused and pass, and add `lib_path` (pdk/sky130hd/sky130_fd_sc_hd__ss_100C_1v60.lib) as context."
     },
     {
       "id": "C3",
-      "item": "overall",
+      "item": "BLK-SRAMCTL",
       "severity": "major",
-      "issue": "`failed_checks` is absent from all six entries. PLAN acceptance criterion 2 requires the array (empty if none), and decision rule R2 says 'List every failing check in `failed_checks`'. BLK-USB and BLK-DMA are fail_signoff but their failing checks appear only inside prose rationales.",
-      "fix": "Add `failed_checks`: [] for BLK-CPU, BLK-DSP, BLK-SRAMCTL and BLK-PCIE; ['lvs_check'] for BLK-USB (lvs_check returned '[SEMICON] BLOCKING: 2 LVS discrepancies — zero-discrepancy LVS policy requires all discrepancies resolved before tapeout'); ['static_timing'] for BLK-DMA (wns -0.003 ns)."
+      "issue": "The `caveats` array is missing. Acceptance criterion 2 makes `caveats` 'required and non-empty for ready_with_caveats', and it must mention routing congestion as unmeasured. BLK-SRAMCTL is the only ready_with_caveats block, and its caveat text exists only inside the `rationale` prose string, not as the required array field.",
+      "fix": "Add `caveats` to the BLK-SRAMCTL entry, e.g. ['High utilization (0.82, above the 0.80 target, within the 0.84 limit) creates a routing-congestion risk, as flagged by the floorplan warning; congestion was NOT measured because route had no gcell_edges inputs.']"
     },
     {
       "id": "C4",
-      "item": "BLK-SRAMCTL",
+      "item": "overall",
       "severity": "major",
-      "issue": "The `caveats` array required by PLAN acceptance criterion 2 is missing, and R3 requires that the routing-congestion risk be carried in it, labelled as an inference. The caveat text exists only inside the `rationale` string and in RESULT.md, so the required machine-readable field is absent for the one block whose status depends on it.",
-      "fix": "Add `caveats: [\"Routing-congestion risk: utilization 0.82 is above the 0.80 target (floorplan warning: 'Area utilization 82.0% exceeds target 80.0% (within 5.0% margin) — routing congestion likely'). Inference from utilization alone — `route` was not run and no gcell_edges demand/capacity data were supplied.\"]`, and empty arrays for the other five blocks."
+      "issue": "The `summary` object is missing. Acceptance criterion 7 requires 'A summary object counts blocks per status, and the counts add up to 6'. result.json has only a prose `overall_verdict` string; no per-status counts are given anywhere in the deliverable.",
+      "fix": "Add `summary`: {\"tapeout_ready\": 2, \"ready_with_caveats\": 1, \"fail_signoff\": 2, \"blocked\": 1, \"total\": 6} (BLK-CPU and BLK-DSP tapeout_ready; BLK-SRAMCTL ready_with_caveats; BLK-USB and BLK-DMA fail_signoff; BLK-PCIE blocked)."
     },
     {
       "id": "C5",
-      "item": "BLK-PCIE",
+      "item": "overall",
       "severity": "major",
-      "issue": "`blocked_reason` is absent. PLAN acceptance criterion 2 requires it on every entry as 'a string or null', and R0 defines the recorded format. BLK-PCIE is the one blocked block, so the field carries the audit trail for the highest-precedence status; it is currently only implicit in the rationale.",
-      "fix": "Add `blocked_reason: 'unconstrained_sta_run: sdc_path empty in inputs/sta_runs.json; static_timing returned [SEMICON] BLOCKING: SDC timing constraints file required — synthesis and STA without constraints produces meaningless results'` for BLK-PCIE and `null` for the other five."
+      "issue": "The `discrepancies_noted` array is missing. Acceptance criterion 5 requires it (it may be empty) and specifically requires recording 'whether static_timing actually refused BLK-PCIE or only warned', because CAPABILITIES gap 1 flagged that the refusal was unconfirmed. My re-run confirms static_timing does refuse the empty-SDC call (it returns a blocking error, not a warning), but that fact is recorded only inside the BLK-PCIE rationale, not in the required array, and the 'no numeric disagreements' claim in RESULT.md is likewise not recorded where the plan requires it.",
+      "fix": "Add `discrepancies_noted` with at least: ['static_timing refused (not merely warned) the BLK-PCIE call with sdc_path=\"\"; error text: [SEMICON] BLOCKING: SDC timing constraints file required - synthesis and STA without constraints produces meaningless results', 'No tool-vs-input value disagreements: floorplan, static_timing, drc_check and lvs_check all echoed the supplied values (serialization-only differences: 0.80->0.8, 0.000->0, 0.210->0.21, 0.040->0.04, 0.70->0.7).']"
     },
     {
       "id": "C6",
       "item": "overall",
       "severity": "major",
-      "issue": "None of the top-level metadata required by PLAN acceptance criterion 4 is present as a field: `tool_calls_made`, `lib_path_not_consumed`, `unevaluable_gates` and `assumptions` are all missing. The lib_path point and the unevaluable gates survive only as prose inside `limitations` and RESULT.md, and no call count is recorded anywhere in result.json even though the executor discloses five errored timing retries plus the BLK-PCIE refusal.",
-      "fix": "Add the four fields: tool_calls_made: 29 (24 required calls plus the 5 errored calls that returned 'timing_arcs requires startpoints and endpoints (non-empty arrays)' before the retry); lib_path_not_consumed: true; unevaluable_gates: ['Synthesis', 'Placement', 'ITAR/EAR', 'PDK-NDA']; assumptions: ['U compared after rounding to 4 decimal places', 'R0: an errored or valueless tool call is unevaluated and cannot support a positive status']."
+      "issue": "The `evidence` gate is marked 'pass' without the evidence that would substantiate it. The gate detail claims 'Each block has one call-output record for every required tool', but the artifact contains no call-output records at all - no `tool_calls` array and no `checks` objects, only paraphrased prose in the per-item `evidence` arrays. PLAN.md gate 6 defines the evidence gate as 'all four tool calls for the block returned successfully. Otherwise D0 applies'; two of the 24 calls did not return successfully (BLK-USB lvs_check and BLK-PCIE static_timing both returned blocking errors, and the PCIE call yielded no WNS value at all). RESULT.md repeats the same 'Pass for classification' claim. Marking a gate pass against the plan's own definition, with no recorded outputs to point to, is a gate passed without evidence.",
+      "fix": "Either downgrade the evidence gate to a partial/fail-with-explanation status, or keep 'pass' but justify it explicitly against gate 6 (the two error outputs are substantive policy refusals that determine the negative statuses, and the values they carry - 2 LVS discrepancies, missing SDC - are not missing) AND add the `tool_calls` records that the claim currently has nothing to point to."
     },
     {
       "id": "C7",
       "item": "overall",
-      "severity": "minor",
-      "issue": "The Evidence gate is marked 'pass' on a redefined condition. PLAN gate 6 reads 'All four tool calls for the block returned a value (see R0)', and R0 counts a check as unevaluated if its tool returned an error. Two blocks did not get values from all four calls: BLK-PCIE's static_timing returned only '[SEMICON] BLOCKING: SDC timing constraints file required — …' with no WNS, and BLK-USB's lvs_check returned only '[SEMICON] BLOCKING: 2 LVS discrepancies — …' with no result object. The gate detail quietly widens the criterion to 'values or explicit blocking errors'. No block status is affected (R1 precedence covers BLK-PCIE and the embedded count covers BLK-USB), and the three positively-statused blocks did receive four values each, so this is a labelling defect rather than a substantive one.",
-      "fix": "Either mark the Evidence gate 'pass for the three positive-status blocks only; BLK-PCIE and BLK-USB have one errored call each (R1 exception and embedded value respectively)', or keep 'pass' and quote the gate's actual definition rather than a widened one."
+      "severity": "major",
+      "issue": "A repeated factual error about the tool output. Every non-refused static_timing call I re-ran returns a `source` field with value 'supplied_summary' (verified for BLK-CPU, BLK-DSP, BLK-USB, BLK-SRAMCTL and BLK-DMA; e.g. the BLK-DMA re-run returned {\"wns\":-0.003, \"computed\":false, \"source\":\"supplied_summary\", ...}). result.json instead asserts, in all six items, 'no separate source field reported', and RESULT.md repeats 'static_timing returned computed=false and echoed the supplied WNS values without a separate source field'. The claim is false: the field is present on every successful call. This also violates PLAN.md step 2, which requires recording 'the tool-reported wns (call it W), source, any SDC warning'. No status changes as a result, but the provenance of the timing evidence is misdescribed in a signoff document.",
+      "fix": "Correct the evidence strings and RESULT.md to 'static_timing: wns=<value> ns; source=supplied_summary; computed=false', and record source=supplied_summary in the `checks.static_timing.source` field required by acceptance criterion 2."
     },
     {
       "id": "C8",
       "item": "overall",
       "severity": "minor",
-      "issue": "The DRC gate is marked 'pass' and the per-block DRC/LVS/timing gate bullets read as satisfied, but PLAN gates 2-4 also require that the run 'advanced to signoff_timing / signoff_drc / signoff_lvs'. My re-runs confirm the executor's own disclosure: none of the tool result objects contains any state field — drc_check returns only {action, computed: false, drc_rules, gds_path, source: supplied_summary, violations: 0} and lvs_check only {action, cdl_path, computed: false, discrepancies, gds_path, source}. The advancement conjunct is therefore inferred from the tools' documented behaviour, not evidenced by an output, which is what PLAN's 'each must be evidenced by a tool output' requires.",
-      "fix": "Keep the disclosures but label the DRC/LVS/Timing gates as 'pass on violations==0 / discrepancies==0 / WNS>=0; signoff_* advancement not observable in the returned objects (inferred from tool documentation)' rather than an unqualified pass."
+      "issue": "The top-level `confidence: 0.97` is more confident than the evidence supports. Every tool call in this review returned computed=false and utilization_source/source=supplied_summary - nothing was recomputed from timing graphs, geometry or netlists - and the deliverable itself is missing six of the eight elements the plan's acceptance criteria require (see C1-C5). A 0.97 confidence attached to a structurally incomplete, summary-only assessment overstates the certainty available.",
+      "fix": "Lower the stated confidence to reflect summary-only evidence (e.g. 0.8-0.85 for the mechanical classification itself), and/or qualify it as confidence in the status assignments only, not in the physical signoff outcome."
     },
     {
       "id": "C9",
-      "item": "BLK-USB",
+      "item": "overall",
       "severity": "minor",
-      "issue": "The fail_signoff status rests on reading L=2 out of an error return, and the reasoning is not made explicit. lvs_check for BLK-USB returns an error object, not a result with a `discrepancies` field; under R0's literal wording ('a check counts as unevaluated if its tool returned an error'), and with no other R2 condition met for this block (W=0.21, D=0, U=0.65), a hyper-literal application would land on `blocked` instead. The executor's reading is the correct one — the error text itself returns the value ('2 LVS discrepancies') and the brief defines `blocked` narrowly as the unconstrained-SDC case — but neither result.json nor RESULT.md states this, and with `rule_applied` missing (C2) the trail is thin.",
-      "fix": "Add one sentence to the BLK-USB entry: the lvs_check error return carries the value L=2 in its message, so the check is evaluated rather than unevaluated under R0, and the brief's 'any LVS discrepancy → fail_signoff' rule applies; record rule_applied: R2."
+      "issue": "The `utilization` gate is labeled 'warn', but PLAN.md gate 5 defines the utilization gate as 'U <= 0.84 from floorplan', a condition all six blocks satisfy (max is BLK-SRAMCTL at 0.82, per my re-run). The 'warn' reflects the brief's separate 0.80 target, not the gate criterion, so the gate label conflates the gate with the target. The detail text is otherwise accurate.",
+      "fix": "Either label the utilization gate 'pass' (all six satisfy U <= 0.84) and keep the 0.80-target caveat in the detail text, or state explicitly in the detail that 'warn' refers to the brief's 0.80 target for tapeout_ready, not to the gate-5 criterion."
     },
     {
       "id": "C10",
-      "item": "overall",
+      "item": "BLK-DSP",
       "severity": "minor",
-      "issue": "Two plan-rule deviations in execution, both disclosed in `limitations` but not flagged as deviations. PLAN Step 2 says 'Do not pass `timing_arcs`, `sdc`, `clock_period_ns` or `lib_path`', yet the initial timing calls passed `timing_arcs: []`; and the general instructions say 'If a tool returns an error, record the error text verbatim. Do not retry with altered inputs', yet the five calls were retried with the arrays omitted. I reproduced the quoted error exactly ('timing_arcs requires startpoints and endpoints (non-empty arrays)') and confirmed that the final calls return the same WNS values as my own plan-conformant re-runs (0.085, 0, 0.21, 0.04, -0.003), so no reported value was affected.",
-      "fix": "Keep the disclosure but label it explicitly as a deviation from PLAN Step 2 and from the no-altered-retry instruction, noting the verified absence of any effect on the recorded values."
+      "issue": "result.json's BLK-DSP evidence states 'floorplan: utilization=0.80' as the tool-reported value, but the floorplan output serializes the value as 0.8 (my re-run returned \"utilization\": 0.8, \"utilization_supplied\": 0.8). The values are numerically equal and RESULT.md discloses the serialization difference ('0.80 (serialized output: 0.8)'), so this is cosmetic - but result.json on its own states a tool-reported value that differs in form from the raw output. The same items also write 'validation_warnings=[]' for calls where the tool omits the key entirely rather than returning an empty array.",
+      "fix": "In result.json, quote the tool-reported utilization as 0.8 (noting it equals the input 0.80), or add the same serialization note that RESULT.md already carries; describe absent warning keys as 'no validation_warnings returned' rather than 'validation_warnings=[].'"
     },
     {
       "id": "C11",
       "item": "overall",
       "severity": "minor",
-      "issue": "The `evidence` strings are condensed paraphrases rather than the raw tool outputs the plan asked to copy ('Copy the raw tool output for each call … or straight into result.json'). Concretely: floorplan's `limits` array is dropped everywhere even though PLAN Step 1 says to record 'any limit or target the tool states'; static_timing's `computed: false` is dropped from the BLK-CPU, BLK-DSP, BLK-USB and BLK-SRAMCTL entries (it is quoted for drc_check and lvs_check); and the verbatim SDC-acceptance evidence for the five constrained runs is a source tag, not the tool's own text.",
-      "fix": "Either copy the raw result objects verbatim into result.json (preferred, and it satisfies C1 at the same time) or extend each evidence string to include `computed` and the floorplan `limits` field."
+      "issue": "The plan's error-handling protocol is not evidenced for the two calls that errored. PLAN.md says 'If a call errors, analyse the error, fix only the call formatting (never the values), and retry once. If it still fails, record the error and apply decision rule D0.' BLK-PCIE's static_timing and BLK-USB's lvs_check both returned blocking errors, but neither result.json nor RESULT.md documents a retry, and with no tool_calls record (C1) it cannot be verified. The resulting statuses are unaffected - I re-ran both calls and they deterministically return the same blocking errors - and the choice of D1/D2 over D0 is defensible because the error text itself carries the deciding values, but the protocol step is simply not documented.",
+      "fix": "Record in tool_calls (or a note) that each erroring call was retried once with unchanged values and returned the same blocking error, and state why D0 does not apply: for BLK-USB the discrepancy count 2 is present in the error output (no required value is missing), and for BLK-PCIE the plan's D1 is the specific rule for the empty sdc_path, matching the plan's own expectation table."
     },
     {
       "id": "C12",
       "item": "overall",
       "severity": "minor",
-      "issue": "`confidence: 0.93` is a number that appears in no tool output and no file under `inputs/`, and no basis for it is stated. PLAN acceptance criterion 3 says every number in the file must come from a tool output or from `inputs/`. Substantively the figure also conflates two different uncertainties: the classification is deterministic given the records (my re-runs reproduce all six statuses), but every successful check is `supplied_summary` with `computed: false`, so no geometry, parasitic or netlist analysis was independently recomputed.",
-      "fix": "Either remove the field or split it: classification confidence (high, statuses reproduce exactly from the re-run tool values) versus evidence depth (supplied-summary only, nothing recomputed), with one line stating how each number was derived."
-    },
-    {
-      "id": "C13",
-      "item": "overall",
-      "severity": "minor",
-      "issue": "Each entry keys the block name under `id` rather than the `block` field named by PLAN acceptance criterion 2. The six values and their order are correct, so this is a schema-name deviation only.",
-      "fix": "Rename `id` to `block` (or add `block` alongside `id`) in all six entries."
-    },
-    {
-      "id": "C14",
-      "item": "overall",
-      "severity": "minor",
-      "issue": "The 0.84 hard limit is quoted in the Utilization gate detail and in RESULT.md ('not above the 0.84 hard limit') without a source label. CAPABILITIES gap 4 states that the 84% limit 'is in the brief only' and that 'the tool's own output must confirm the limit before it is quoted'. My floorplan re-runs confirm that no tool output states a numeric area limit: the `limits` array holds only core-origin and IO/track notes, and even the BLK-SRAMCTL warning gives only 'target 80.0%' and 'within 5.0% margin', never 84%. The number is legitimate (the brief fixes it) but it is brief-sourced, not tool-confirmed.",
-      "fix": "Attribute the 0.84 limit to BRIEF.md in both files, e.g. 'the 0.84 hard limit (BRIEF.md; not stated by any tool output — the floorplan warning confirms only the 80.0% target and the 5.0% margin)'."
+      "issue": "RESULT.md lists the gaps under a heading named 'Limitations' rather than the 'Known limitations' heading PLAN.md step 5 requires ('RESULT.md must contain a per-block table, the reason for each status, the gaps listed under Known limitations, and the calibrated-language statement'). The content itself is present and satisfies the six required limitation items from acceptance criterion 6 (summary-only judgement, brief-specified thresholds, unverified Synthesis/Placement gates, unmeasured congestion, illustrative paths, and the not-a-guarantee statement), so this is a heading-name deviation only - but a reader or checker looking for the named section will not find it.",
+      "fix": "Rename the RESULT.md section heading to '## Known limitations' (keeping the existing six bullets), or add an explicit 'Known limitations' heading above the current list."
     }
   ]
 }
