@@ -1,0 +1,72 @@
+{
+  "note": "Synthetic N-1-1 post-contingency results for a fictional 330-bus planning model. Values are synthetic. Each request's first_contingencies and pair_results can be passed directly to powergrid_n1_1_screen; pair keys are 'firstID|secondID' in list order.",
+  "study": "Cluster 7 interconnection queue — summer peak 2029, N-1-1 (NERC TPL-001-4 P6/P7)",
+  "network_path": "models/synthetic_330bus_summer_peak_2029.raw",
+  "requests": {
+    "IR-1": {
+      "zone": "Z-NORTH",
+      "first_contingencies": [
+        {"id": "L-101", "type": "line", "zone": "Z-NORTH"},
+        {"id": "L-102", "type": "line", "zone": "Z-NORTH"},
+        {"id": "T-11", "type": "transformer", "zone": "Z-NORTH"}
+      ],
+      "pair_results": {
+        "L-101|L-102": {"branch_loading_pct": {"L-103": 98.2}, "bus_voltage_pu": {"B-12": 0.96}},
+        "L-101|T-11": {"branch_loading_pct": {"L-103": 104.5}, "bus_voltage_pu": {"B-12": 0.93}},
+        "L-102|T-11": {"branch_loading_pct": {"L-104": 88.0}, "bus_voltage_pu": {"B-14": 0.95}}
+      }
+    },
+    "IR-2": {
+      "zone": "Z-EAST",
+      "first_contingencies": [
+        {"id": "L-201", "type": "line", "zone": "Z-EAST"},
+        {"id": "L-202", "type": "line", "zone": "Z-EAST"},
+        {"id": "G-21", "type": "generator", "zone": "Z-EAST"}
+      ],
+      "pair_results": {
+        "L-201|L-202": {"branch_loading_pct": {"L-203": 131.0}, "bus_voltage_pu": {"B-22": 0.91}},
+        "L-201|G-21": {"branch_loading_pct": {"L-203": 109.0}, "bus_voltage_pu": {"B-22": 0.88}},
+        "L-202|G-21": {"branch_loading_pct": {"L-204": 97.0}, "bus_voltage_pu": {"B-24": 0.97}}
+      }
+    },
+    "IR-3": {
+      "zone": "Z-SOUTH",
+      "first_contingencies": [
+        {"id": "L-301", "type": "line", "zone": "Z-SOUTH"},
+        {"id": "L-302", "type": "line", "zone": "Z-SOUTH"},
+        {"id": "T-31", "type": "transformer", "zone": "Z-SOUTH"}
+      ],
+      "pair_results": {
+        "L-301|L-302": {"branch_loading_pct": {"L-303": 101.0}, "bus_voltage_pu": {"B-32": 0.94}},
+        "L-301|T-31": {"branch_loading_pct": {"L-303": 99.5}, "bus_voltage_pu": {"B-32": 0.92}},
+        "L-302|T-31": {"branch_loading_pct": {"L-304": 92.0}, "bus_voltage_pu": {"B-34": 0.96}}
+      }
+    },
+    "IR-4": {
+      "zone": "Z-WEST",
+      "first_contingencies": [
+        {"id": "L-401", "type": "line", "zone": "Z-WEST"},
+        {"id": "L-402", "type": "line", "zone": "Z-WEST"},
+        {"id": "T-41", "type": "transformer", "zone": "Z-WEST"}
+      ],
+      "pair_results": {
+        "L-401|L-402": {"branch_loading_pct": {"L-403": 115.0}, "bus_voltage_pu": {"B-42": 0.85}},
+        "L-401|T-41": {"branch_loading_pct": {"L-403": 112.0}, "bus_voltage_pu": {"B-42": 0.89}},
+        "L-402|T-41": {"branch_loading_pct": {"L-404": 108.0}, "bus_voltage_pu": {"B-44": 1.10}}
+      }
+    },
+    "IR-5": {
+      "zone": "Z-CENTRAL",
+      "first_contingencies": [
+        {"id": "L-501", "type": "line", "zone": "Z-CENTRAL"},
+        {"id": "L-502", "type": "line", "zone": "Z-CENTRAL"},
+        {"id": "G-51", "type": "generator", "zone": "Z-CENTRAL"}
+      ],
+      "pair_results": {
+        "L-501|L-502": {"branch_loading_pct": {"L-503": 96.0}, "bus_voltage_pu": {"B-52": 0.90}, "stability_loss": true},
+        "L-501|G-51": {"branch_loading_pct": {"L-503": 102.0}, "bus_voltage_pu": {"B-52": 0.93}},
+        "L-502|G-51": {"branch_loading_pct": {"L-504": 94.0}, "bus_voltage_pu": {"B-54": 0.95}}
+      }
+    }
+  }
+}

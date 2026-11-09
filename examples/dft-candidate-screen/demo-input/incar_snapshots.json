@@ -1,0 +1,11 @@
+{
+  "note": "First entry is the reference every candidate must match.",
+  "incar_snapshots": [
+    {"label": "REF",    "encut": 520, "kspacing": 0.22, "ediff": 1e-6, "ismear": 0, "sigma": 0.05, "functional": "PBE"},
+    {"label": "CAND-A", "encut": 520, "kspacing": 0.22, "ediff": 1e-6, "ismear": 0, "sigma": 0.05, "functional": "PBE"},
+    {"label": "CAND-B", "encut": 520, "kspacing": 0.22, "ediff": 1e-6, "ismear": 0, "sigma": 0.05, "functional": "PBE"},
+    {"label": "CAND-C", "encut": 400, "kspacing": 0.22, "ediff": 1e-6, "ismear": 0, "sigma": 0.05, "functional": "PBE"},
+    {"label": "CAND-D", "encut": 520, "kspacing": 0.22, "ediff": 1e-6, "ismear": 0, "sigma": 0.05, "functional": "PBE"},
+    {"label": "CAND-E", "encut": 520, "kspacing": 0.22, "ediff": 1e-6, "ismear": 0, "sigma": 0.05, "functional": "PBE"}
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "note": "Code-validation summary for each package's criticality calculation. mean_bias is in delta-k; negative means the code under-predicts benchmark keff. Synthetic values.",
+  "benchmark_category": "LEU-COMP-THERM",
+  "reports": [
+    {"package": "PKG-A", "report_id": "VR-2026-011", "n_cases": 26, "mean_bias": -0.0031},
+    {"package": "PKG-B", "report_id": "VR-2026-012", "n_cases": 20, "mean_bias": -0.0100},
+    {"package": "PKG-C", "report_id": "VR-2026-013", "n_cases": 31, "mean_bias": -0.0022},
+    {"package": "PKG-D", "report_id": "VR-2026-014", "n_cases": 24, "mean_bias": 0.0125},
+    {"package": "PKG-E", "report_id": "VR-2026-015", "n_cases": 28, "mean_bias": -0.0018},
+    {"package": "PKG-F", "report_id": "VR-2026-016", "n_cases": 22, "mean_bias": 0.0040}
+  ]
+}

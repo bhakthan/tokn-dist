@@ -1,0 +1,7 @@
+{
+  "note": "Synthetic deployment context. Values are synthetic. The predictions are a reduced equivalent cut from the full operating model described here; pass full_network_bus_count as bus_count to select_model_tier and assess_ood.",
+  "full_network_bus_count": 3700,
+  "surrogate_family": "GridSFM",
+  "requested_use": "hour-ahead dispatch advisory for the operator desk; any actuation stays human-approved",
+  "reduced_equivalent": "3-bus pocket (B1 slack, B2, B3) extracted per hour"
+}

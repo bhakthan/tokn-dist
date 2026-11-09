@@ -1,0 +1,5 @@
+{
+  "note": "Synthetic study design for a teaching scenario.",
+  "batches": {"S01": "B1", "S02": "B2", "S03": "B2", "S04": "B1", "S05": "B1", "S06": "B2"},
+  "conditions": {"S01": "ctrl", "S02": "treated", "S03": "ctrl", "S04": "ctrl", "S05": "treated", "S06": "treated"}
+}

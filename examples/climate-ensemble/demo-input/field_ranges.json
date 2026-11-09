@@ -1,0 +1,41 @@
+{
+  "note": "All values are synthetic, generated for a TOKN live-test scenario. No real model output, region study or institution is represented.",
+  "provenance": "Min/max of each item's regridded ensemble-mean field as recorded in the file's own attributes, in the units the file declares.",
+  "fields": [
+    {
+      "item": "CL-01",
+      "variable": "tas",
+      "units": "K",
+      "min": 268.1,
+      "max": 312.6
+    },
+    {
+      "item": "CL-02",
+      "variable": "pr",
+      "units": "kg m-2 s-1",
+      "min": 0.0,
+      "max": 0.000184
+    },
+    {
+      "item": "CL-03",
+      "variable": "pr",
+      "units": "kg m-2 s-1",
+      "min": 0.0,
+      "max": 18.4
+    },
+    {
+      "item": "CL-04",
+      "variable": "tas",
+      "units": "K",
+      "min": 255.3,
+      "max": 305.9
+    },
+    {
+      "item": "CL-05",
+      "variable": "tos",
+      "units": "K",
+      "min": 265.8,
+      "max": 305.1
+    }
+  ]
+}

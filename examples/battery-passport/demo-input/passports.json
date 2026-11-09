@@ -1,0 +1,419 @@
+{
+ "note": "Synthetic passport payloads for a teaching scenario; no real product, manufacturer or audit. Each 'payload' must be passed to bp_check_compliance / bp_check_cf_methodology / bp_check_due_diligence / bp_load_payload / bp_query_passport as the 'body' argument SERIALIZED TO A JSON STRING (the batterypass parse hooks reject an object). Pass 'chemistry' and 'application' as the matching bp_check_compliance arguments.",
+ "passports": [
+  {
+   "id": "BP-01",
+   "chemistry": "NMC",
+   "application": "EV",
+   "payload": {
+    "GeneralProductInformation": {
+     "manufacturer": {
+      "name": "SYN-MFR-01",
+      "site": "synthetic plant A"
+     },
+     "batteryCategory": "EV",
+     "batteryWeight": 412.0
+    },
+    "Labels": {
+     "separateCollectionSymbol": true,
+     "ceMarking": true,
+     "declaredChemistry": "NMC811"
+    },
+    "CarbonFootprint": {
+     "carbonFootprintPerLifecycleStage": [
+      {
+       "stage": "raw material acquisition and pre-processing",
+       "kgCO2ePerKWh": 38.2
+      },
+      {
+       "stage": "main product production",
+       "kgCO2ePerKWh": 17.5
+      },
+      {
+       "stage": "distribution",
+       "kgCO2ePerKWh": 1.1
+      },
+      {
+       "stage": "end of life and recycling",
+       "kgCO2ePerKWh": 2.4
+      }
+     ],
+     "absoluteCarbonFootprint": 5160.0,
+     "batteryCarbonFootprint": 59.2,
+     "carbonFootprintPerformanceClass": "B",
+     "carbonFootprintStudyMethod": "PEFCR",
+     "primaryDataShare": 0.62,
+     "systemBoundary": "cradle-to-grave excluding use phase",
+     "functionalUnit": "1 kWh of total energy provided over the service life"
+    },
+    "MaterialComposition": {
+     "batteryChemistry": "NMC811",
+     "cathodeActiveMaterial": "LiNi0.8Mn0.1Co0.1O2",
+     "batteryMaterials": [
+      "lithium hexafluorophosphate electrolyte",
+      "nickel manganese cobalt oxide cathode",
+      "synthetic graphite anode"
+     ]
+    },
+    "Performance": {
+     "ratedCapacity": 87.0,
+     "expectedLifetime": 3000
+    },
+    "SupplyChainDueDiligence": {
+     "dueDiligenceReport": "synthetic-dd-report-2026",
+     "dueDiligencePolicyURI": "https://example.org/synthetic/dd-policy",
+     "lastAuditDate": "2026-08-14"
+    },
+    "Circularity": {
+     "separateCollectionRate": 0.63,
+     "endOfLifeInformation": "Return via the synthetic take-back scheme."
+    }
+   }
+  },
+  {
+   "id": "BP-02",
+   "chemistry": "LFP",
+   "application": "EV",
+   "payload": {
+    "GeneralProductInformation": {
+     "manufacturer": {
+      "name": "SYN-MFR-01",
+      "site": "synthetic plant A"
+     },
+     "batteryCategory": "EV",
+     "batteryWeight": 412.0
+    },
+    "Labels": {
+     "separateCollectionSymbol": true,
+     "ceMarking": true,
+     "declaredChemistry": "LFP"
+    },
+    "CarbonFootprint": {
+     "carbonFootprintPerLifecycleStage": [
+      {
+       "stage": "raw material acquisition and pre-processing",
+       "kgCO2ePerKWh": 38.2
+      },
+      {
+       "stage": "main product production",
+       "kgCO2ePerKWh": 17.5
+      },
+      {
+       "stage": "distribution",
+       "kgCO2ePerKWh": 1.1
+      },
+      {
+       "stage": "end of life and recycling",
+       "kgCO2ePerKWh": 2.4
+      }
+     ],
+     "absoluteCarbonFootprint": 5160.0,
+     "batteryCarbonFootprint": 59.2,
+     "carbonFootprintPerformanceClass": "B",
+     "carbonFootprintStudyMethod": "PEFCR",
+     "primaryDataShare": 0.71,
+     "systemBoundary": "cradle-to-grave excluding use phase",
+     "functionalUnit": "1 kWh of total energy provided over the service life"
+    },
+    "MaterialComposition": {
+     "batteryChemistry": "LFP",
+     "cathodeActiveMaterial": "LiNi0.6Mn0.2Co0.2O2",
+     "batteryMaterials": [
+      "lithium iron phosphate cathode",
+      "synthetic graphite anode",
+      "lithium hexafluorophosphate electrolyte"
+     ]
+    },
+    "Performance": {
+     "ratedCapacity": 87.0,
+     "expectedLifetime": 3000
+    },
+    "SupplyChainDueDiligence": {
+     "dueDiligenceReport": "synthetic-dd-report-2026",
+     "dueDiligencePolicyURI": "https://example.org/synthetic/dd-policy",
+     "lastAuditDate": "2026-09-03"
+    },
+    "Circularity": {
+     "separateCollectionRate": 0.63,
+     "endOfLifeInformation": "Return via the synthetic take-back scheme."
+    }
+   }
+  },
+  {
+   "id": "BP-03",
+   "chemistry": "NMC",
+   "application": "Industrial",
+   "payload": {
+    "GeneralProductInformation": {
+     "manufacturer": {
+      "name": "SYN-MFR-01",
+      "site": "synthetic plant A"
+     },
+     "batteryCategory": "industrial",
+     "batteryWeight": 412.0
+    },
+    "Labels": {
+     "separateCollectionSymbol": true,
+     "ceMarking": true,
+     "declaredChemistry": "NMC622"
+    },
+    "CarbonFootprint": {
+     "carbonFootprintPerLifecycleStage": [
+      {
+       "stage": "raw material acquisition and pre-processing",
+       "kgCO2ePerKWh": 38.2
+      },
+      {
+       "stage": "main product production",
+       "kgCO2ePerKWh": 17.5
+      },
+      {
+       "stage": "distribution",
+       "kgCO2ePerKWh": 1.1
+      },
+      {
+       "stage": "end of life and recycling",
+       "kgCO2ePerKWh": 2.4
+      }
+     ],
+     "absoluteCarbonFootprint": 5160.0,
+     "batteryCarbonFootprint": 59.2,
+     "carbonFootprintPerformanceClass": "B",
+     "carbonFootprintStudyMethod": "PEFCR",
+     "primaryDataShare": 0.5,
+     "systemBoundary": "cradle-to-grave excluding use phase",
+     "functionalUnit": "1 kWh of total energy provided over the service life"
+    },
+    "MaterialComposition": {
+     "batteryChemistry": "NMC622",
+     "cathodeActiveMaterial": "LiNi0.6Mn0.2Co0.2O2",
+     "batteryMaterials": [
+      "lithium hexafluorophosphate electrolyte",
+      "nickel manganese cobalt oxide cathode",
+      "synthetic graphite anode"
+     ]
+    },
+    "Performance": {
+     "ratedCapacity": 87.0,
+     "expectedLifetime": 3000
+    },
+    "SupplyChainDueDiligence": {
+     "dueDiligenceReport": "synthetic-dd-report-2026",
+     "dueDiligencePolicyURI": "https://example.org/synthetic/dd-policy",
+     "lastAuditDate": "2026-07-22"
+    },
+    "Circularity": {
+     "separateCollectionRate": 0.63,
+     "endOfLifeInformation": "Return via the synthetic take-back scheme."
+    }
+   }
+  },
+  {
+   "id": "BP-04",
+   "chemistry": "LFP",
+   "application": "LMT",
+   "payload": {
+    "GeneralProductInformation": {
+     "manufacturer": {
+      "name": "SYN-MFR-01",
+      "site": "synthetic plant A"
+     },
+     "batteryCategory": "LMT",
+     "batteryWeight": 9.6
+    },
+    "Labels": {
+     "separateCollectionSymbol": true,
+     "ceMarking": true,
+     "declaredChemistry": "LFP"
+    },
+    "CarbonFootprint": {
+     "carbonFootprintPerLifecycleStage": [
+      {
+       "stage": "raw material acquisition and pre-processing",
+       "kgCO2ePerKWh": 38.2
+      },
+      {
+       "stage": "main product production",
+       "kgCO2ePerKWh": 17.5
+      },
+      {
+       "stage": "distribution",
+       "kgCO2ePerKWh": 1.1
+      },
+      {
+       "stage": "end of life and recycling",
+       "kgCO2ePerKWh": 2.4
+      }
+     ],
+     "absoluteCarbonFootprint": 5160.0,
+     "batteryCarbonFootprint": 59.2,
+     "carbonFootprintPerformanceClass": "B",
+     "carbonFootprintStudyMethod": "PEFCR",
+     "primaryDataShare": 0.49,
+     "systemBoundary": "cradle-to-grave excluding use phase",
+     "functionalUnit": "1 kWh of total energy provided over the service life"
+    },
+    "MaterialComposition": {
+     "batteryChemistry": "LFP",
+     "cathodeActiveMaterial": "LiFePO4",
+     "batteryMaterials": [
+      "lithium iron phosphate cathode",
+      "synthetic graphite anode",
+      "lithium hexafluorophosphate electrolyte"
+     ]
+    },
+    "Performance": {
+     "ratedCapacity": 87.0,
+     "expectedLifetime": 3000
+    },
+    "SupplyChainDueDiligence": {
+     "dueDiligenceReport": "synthetic-dd-report-2026",
+     "dueDiligencePolicyURI": "https://example.org/synthetic/dd-policy",
+     "lastAuditDate": "2026-08-30"
+    },
+    "Circularity": {
+     "separateCollectionRate": 0.63,
+     "endOfLifeInformation": "Return via the synthetic take-back scheme."
+    }
+   }
+  },
+  {
+   "id": "BP-05",
+   "chemistry": "NMC",
+   "application": "EV",
+   "payload": {
+    "GeneralProductInformation": {
+     "manufacturer": {
+      "name": "SYN-MFR-01",
+      "site": "synthetic plant A"
+     },
+     "batteryCategory": "EV",
+     "batteryWeight": 412.0
+    },
+    "Labels": {
+     "separateCollectionSymbol": true,
+     "ceMarking": true,
+     "declaredChemistry": "NMC811"
+    },
+    "CarbonFootprint": {
+     "carbonFootprintPerLifecycleStage": [
+      {
+       "stage": "raw material acquisition and pre-processing",
+       "kgCO2ePerKWh": 38.2
+      },
+      {
+       "stage": "main product production",
+       "kgCO2ePerKWh": 17.5
+      },
+      {
+       "stage": "distribution",
+       "kgCO2ePerKWh": 1.1
+      },
+      {
+       "stage": "end of life and recycling",
+       "kgCO2ePerKWh": 2.4
+      }
+     ],
+     "absoluteCarbonFootprint": 5160.0,
+     "batteryCarbonFootprint": 59.2,
+     "carbonFootprintPerformanceClass": "B",
+     "carbonFootprintStudyMethod": "PEFCR",
+     "primaryDataShare": 0.58,
+     "systemBoundary": "cradle-to-grave excluding use phase",
+     "functionalUnit": "1 kWh of total energy provided over the service life"
+    },
+    "MaterialComposition": {
+     "batteryChemistry": "NMC811",
+     "cathodeActiveMaterial": "LiNi0.8Mn0.1Co0.1O2",
+     "batteryMaterials": [
+      "lithium hexafluorophosphate electrolyte",
+      "nickel manganese cobalt oxide cathode",
+      "synthetic graphite anode"
+     ]
+    },
+    "Performance": {
+     "ratedCapacity": 87.0,
+     "expectedLifetime": 3000
+    },
+    "SupplyChainDueDiligence": {
+     "dueDiligenceReport": "synthetic-dd-report-2026",
+     "dueDiligencePolicyURI": "https://example.org/synthetic/dd-policy",
+     "lastAuditDate": "2024-03-02"
+    },
+    "Circularity": {
+     "separateCollectionRate": 0.63,
+     "endOfLifeInformation": "Return via the synthetic take-back scheme."
+    }
+   }
+  },
+  {
+   "id": "BP-06",
+   "chemistry": "NaIon",
+   "application": "EV",
+   "payload": {
+    "GeneralProductInformation": {
+     "manufacturer": {
+      "name": "SYN-MFR-01",
+      "site": "synthetic plant A"
+     },
+     "batteryCategory": "EV",
+     "batteryWeight": 412.0
+    },
+    "Labels": {
+     "separateCollectionSymbol": true,
+     "ceMarking": true,
+     "declaredChemistry": "NaIon"
+    },
+    "CarbonFootprint": {
+     "carbonFootprintPerLifecycleStage": [
+      {
+       "stage": "raw material acquisition and pre-processing",
+       "kgCO2ePerKWh": 38.2
+      },
+      {
+       "stage": "main product production",
+       "kgCO2ePerKWh": 17.5
+      },
+      {
+       "stage": "distribution",
+       "kgCO2ePerKWh": 1.1
+      },
+      {
+       "stage": "end of life and recycling",
+       "kgCO2ePerKWh": 2.4
+      }
+     ],
+     "absoluteCarbonFootprint": 5160.0,
+     "batteryCarbonFootprint": 59.2,
+     "carbonFootprintPerformanceClass": "B",
+     "carbonFootprintStudyMethod": "PEFCR",
+     "primaryDataShare": 0.66,
+     "systemBoundary": "cradle-to-grave excluding use phase",
+     "functionalUnit": "1 kWh of total energy provided over the service life"
+    },
+    "MaterialComposition": {
+     "batteryChemistry": "NaIon",
+     "cathodeActiveMaterial": "NaNi0.33Fe0.33Mn0.33O2",
+     "batteryMaterials": [
+      "sodium hexafluorophosphate electrolyte",
+      "layered sodium transition-metal oxide cathode",
+      "hard carbon anode"
+     ]
+    },
+    "Performance": {
+     "ratedCapacity": 87.0,
+     "expectedLifetime": 3000
+    },
+    "SupplyChainDueDiligence": {
+     "dueDiligenceReport": "synthetic-dd-report-2026",
+     "dueDiligencePolicyURI": "https://example.org/synthetic/dd-policy",
+     "lastAuditDate": "2026-09-10"
+    },
+    "Circularity": {
+     "separateCollectionRate": 0.63,
+     "endOfLifeInformation": "Return via the synthetic take-back scheme."
+    }
+   }
+  }
+ ]
+}

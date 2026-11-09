@@ -226,3 +226,5 @@ python run.py --domains mobility --out C:\tmp\relay-mobility
 ```
 
 Set up `.env` and the prerequisites first; see the [relay README](../../README.md).
+
+For a single-model version of this run that costs far less, see [adas-safety-gate](../../../adas-safety-gate/README.md).

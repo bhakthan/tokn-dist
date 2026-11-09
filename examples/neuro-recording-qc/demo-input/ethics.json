@@ -1,0 +1,13 @@
+{
+  "note": "Synthetic IRB/consent register for the six recordings. Protocol IDs are fictional.",
+  "review_date": "2026-11-06",
+  "planned_analysis_scope": "group_analysis",
+  "irb_records": [
+    {"id": "REC-01", "has_irb_approval": true, "protocol_id": "IRB-2025-0417", "expires": "2027-06-30", "consented_scope": "group_analysis; secondary_methods_research"},
+    {"id": "REC-02", "has_irb_approval": true, "protocol_id": "IRB-2025-0417", "expires": "2027-06-30", "consented_scope": "group_analysis; secondary_methods_research"},
+    {"id": "REC-03", "has_irb_approval": true, "protocol_id": "IRB-2024-0233", "expires": "2026-11-20", "consented_scope": "group_analysis"},
+    {"id": "REC-04", "has_irb_approval": true, "protocol_id": "IRB-2025-0417", "expires": "2027-06-30", "consented_scope": "group_analysis; secondary_methods_research"},
+    {"id": "REC-05", "has_irb_approval": true, "protocol_id": "IRB-2023-0088", "expires": "2027-03-31", "consented_scope": "single_subject_clinical_review"},
+    {"id": "REC-06", "has_irb_approval": true, "protocol_id": "IRB-2025-0417", "expires": "2027-06-30", "consented_scope": "group_analysis; secondary_methods_research"}
+  ]
+}

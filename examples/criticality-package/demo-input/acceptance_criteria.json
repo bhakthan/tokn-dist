@@ -1,0 +1,22 @@
+{
+  "note": "Review criteria for this teaching scenario; they mirror the nucsci domain gates.",
+  "criticality": {
+    "usl": 0.95,
+    "review_threshold": 0.90,
+    "compare": "keff_mean + 2 * keff_sigma",
+    "rule": "upper >= usl blocks; review_threshold <= upper < usl needs engineer review"
+  },
+  "benchmark_validation": {
+    "min_cases": 20,
+    "max_abs_mean_bias": 0.01,
+    "rule": "n_cases >= 20 and |mean_bias| <= 0.01 passes"
+  },
+  "burnup_pairing": {
+    "threshold_gwd_thm": 45.0,
+    "warning_band_gwd_thm": [40.0, 45.0],
+    "rule": "burnup >= 45 requires both decay-heat and shielding analyses; 40 <= burnup < 45 is a warning"
+  },
+  "sar_draft": {
+    "rule": "generate_sar_section must succeed with the package's sar_request exactly as written; a refusal for a missing benchmark reference is a failed benchmark gate"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "note": "Synthetic end-of-life disposal plans for a teaching scenario. post_mission_lifetime_years is the predicted orbital lifetime after end of mission.",
+  "disposal_plans": [
+    {"sat": "SAT-1", "orbit": {"altitude_km": 520, "inclination_deg": 97.45}, "disposal_plan": {"method": "drag-sail assisted natural decay", "post_mission_lifetime_years": 6.2}, "reference_standard": "IADC"},
+    {"sat": "SAT-2", "orbit": {"altitude_km": 515, "inclination_deg": 97.45}, "disposal_plan": {"method": "natural decay", "post_mission_lifetime_years": 11.0}, "reference_standard": "IADC"},
+    {"sat": "SAT-3", "orbit": {"altitude_km": 525, "inclination_deg": 97.45}, "disposal_plan": {"method": "propulsive perigee lowering", "post_mission_lifetime_years": 4.1}, "reference_standard": "IADC"},
+    {"sat": "SAT-4", "orbit": {"altitude_km": 510, "inclination_deg": 97.45}, "disposal_plan": {"method": "natural decay", "post_mission_lifetime_years": 9.5}, "reference_standard": "IADC"},
+    {"sat": "SAT-5", "orbit": {"altitude_km": 610, "inclination_deg": 97.60}, "disposal_plan": {"method": "natural decay", "post_mission_lifetime_years": 25.4}, "reference_standard": "IADC"}
+  ]
+}

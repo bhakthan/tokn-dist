@@ -1,0 +1,24 @@
+{
+  "service": "order-portal-synthetic-01",
+  "note": "Synthetic service description for a teaching scenario; not taken from any real codebase. Pass the four arrays below directly to appsec_build_threat_model.",
+  "assets": [
+    "customer order records",
+    "session tokens",
+    "internal metadata endpoint",
+    "uploaded archive contents"
+  ],
+  "boundaries": [
+    "internet to web tier (anonymous HTTP requests)",
+    "authenticated user to order API",
+    "web tier to internal network (outbound webhook fetches)"
+  ],
+  "attackers": [
+    "anonymous internet user",
+    "authenticated low-privilege customer"
+  ],
+  "objectives": [
+    "confidentiality of order records",
+    "integrity of stored files",
+    "no server-side access to internal network"
+  ]
+}

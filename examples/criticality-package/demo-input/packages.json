@@ -1,0 +1,78 @@
+{
+  "facility": "synthetic-spent-fuel-pool-rack-review-01",
+  "note": "Synthetic values for a teaching scenario. Civilian, low-enriched commercial fuel storage only; not taken from any licensee submittal.",
+  "packages": [
+    {
+      "id": "PKG-A",
+      "description": "Region 1 storage rack, fresh and lightly burned assemblies",
+      "enrichment_wt_pct": 4.50,
+      "max_burnup_gwd_thm": 35.0,
+      "keff_mean": 0.8712,
+      "keff_sigma": 0.0006,
+      "has_decay_heat_analysis": false,
+      "has_shielding_analysis": false,
+      "nuclear_data": {"library": "ENDF/B-VIII.0", "material": "U235", "temperature_k": 293.6},
+      "sar_request": {"section_type": "criticality", "topic": "Region 1 storage rack criticality evaluation", "benchmark_ref": "VR-2026-011 (LEU-COMP-THERM validation report)"}
+    },
+    {
+      "id": "PKG-B",
+      "description": "Region 2 storage rack, burnup-credit loading",
+      "enrichment_wt_pct": 4.95,
+      "max_burnup_gwd_thm": 30.0,
+      "keff_mean": 0.9050,
+      "keff_sigma": 0.0005,
+      "has_decay_heat_analysis": false,
+      "has_shielding_analysis": false,
+      "nuclear_data": {"library": "ENDF/B-VIII.0", "material": "U235", "temperature_k": 293.6},
+      "sar_request": {"section_type": "criticality", "topic": "Region 2 storage rack criticality evaluation", "benchmark_ref": "VR-2026-012 (LEU-COMP-THERM validation report)"}
+    },
+    {
+      "id": "PKG-C",
+      "description": "Region 2 rack, misloaded-assembly abnormal condition",
+      "enrichment_wt_pct": 4.95,
+      "max_burnup_gwd_thm": 20.0,
+      "keff_mean": 0.9400,
+      "keff_sigma": 0.0050,
+      "has_decay_heat_analysis": false,
+      "has_shielding_analysis": false,
+      "nuclear_data": {"library": "ENDF/B-VIII.0", "material": "U235", "temperature_k": 293.6},
+      "sar_request": {"section_type": "criticality", "topic": "Region 2 misloaded-assembly abnormal condition", "benchmark_ref": "VR-2026-013 (LEU-COMP-THERM validation report)"}
+    },
+    {
+      "id": "PKG-D",
+      "description": "Cask loading pit, temporary storage configuration",
+      "enrichment_wt_pct": 4.20,
+      "max_burnup_gwd_thm": 25.0,
+      "keff_mean": 0.8900,
+      "keff_sigma": 0.0006,
+      "has_decay_heat_analysis": false,
+      "has_shielding_analysis": false,
+      "nuclear_data": {"library": "ENDF/B-VIII.0", "material": "U235", "temperature_k": 293.6},
+      "sar_request": {"section_type": "criticality", "topic": "Cask loading pit temporary storage evaluation", "benchmark_ref": "VR-2026-014 (LEU-COMP-THERM validation report)"}
+    },
+    {
+      "id": "PKG-E",
+      "description": "Region 3 rack, discharged high-burnup assemblies awaiting dry storage",
+      "enrichment_wt_pct": 4.60,
+      "max_burnup_gwd_thm": 48.0,
+      "keff_mean": 0.8650,
+      "keff_sigma": 0.0007,
+      "has_decay_heat_analysis": true,
+      "has_shielding_analysis": false,
+      "nuclear_data": {"library": "ENDF/B-VIII.0", "material": "U235", "temperature_k": 293.6},
+      "sar_request": {"section_type": "criticality", "topic": "Region 3 high-burnup storage evaluation", "benchmark_ref": "VR-2026-015 (LEU-COMP-THERM validation report)"}
+    },
+    {
+      "id": "PKG-F",
+      "description": "New fuel vault, dry storage of unirradiated assemblies",
+      "enrichment_wt_pct": 4.95,
+      "max_burnup_gwd_thm": 0.0,
+      "keff_mean": 0.8800,
+      "keff_sigma": 0.0008,
+      "has_decay_heat_analysis": false,
+      "has_shielding_analysis": false,
+      "nuclear_data": {"library": "ENDF/B-VIII.0", "material": "U235", "temperature_k": 293.6},
+      "sar_request": {"section_type": "criticality", "topic": "New fuel vault criticality evaluation", "benchmark_ref": ""}
+    }
+  ]
+}

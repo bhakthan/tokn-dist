@@ -1,0 +1,39 @@
+{
+  "note": "Synthetic renewable generation project data for a fictional green-finance screening round. Values are synthetic. Each 'payload' is the exact input for the named yield tool and must be submitted unchanged. Yields are annual energy in MWh/yr.",
+  "projects": [
+    {
+      "id": "GH-4",
+      "name": "Plateau solar park, 95 MWp single-axis tracker",
+      "tool": "run_solar_yield",
+      "payload": {
+        "location": {"latitude": 38.42, "longitude": -2.87, "elevation_m": 640},
+        "system_config": {"dc_capacity_mwp": 95, "ac_capacity_mw": 80, "tracking": "single_axis", "module": "bifacial mono-PERC"},
+        "data_source": "TMY 2005-2023 satellite-derived irradiance",
+        "use_tmy": true,
+        "p10_yield": 152000,
+        "p50_yield": 141000,
+        "p90_yield": 128500,
+        "performance_ratio": 0.81,
+        "total_loss_pct": 14.2
+      }
+    },
+    {
+      "id": "GH-5",
+      "name": "Upland wind farm, 18 x 6.2 MW",
+      "tool": "run_wind_yield",
+      "payload": {
+        "location": {"latitude": 55.91, "longitude": -4.12, "elevation_m": 310},
+        "turbine_type": "generic 6.2 MW / 162 m rotor",
+        "hub_height_m": 119,
+        "rated_power_kw": 6200,
+        "rotor_diameter_m": 162,
+        "num_turbines": 18,
+        "data_source": "TMY from 14-month met mast correlated to 20-year reanalysis",
+        "use_tmy": true,
+        "p10_yield": 305000,
+        "p50_yield": 288000,
+        "p90_yield": 291000
+      }
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "note": "Synthetic consent and de-identification manifest for a teaching scenario. consent_level is one of research_only or clinical_return. A report is a clinical return of results, so it needs consent_level clinical_return plus an active IRB protocol, a DUA that permits the analysis, and a de-identified record.",
+  "protocol_id": "IRB-SYN-0042",
+  "samples": {
+    "GX-01": {"consent_level": "clinical_return", "irb_active": true, "dua_permits": true, "deidentified": true},
+    "GX-02": {"consent_level": "clinical_return", "irb_active": true, "dua_permits": true, "deidentified": true},
+    "GX-03": {"consent_level": "clinical_return", "irb_active": true, "dua_permits": true, "deidentified": true},
+    "GX-04": {"consent_level": "clinical_return", "irb_active": true, "dua_permits": true, "deidentified": true},
+    "GX-05": {"consent_level": "clinical_return", "irb_active": true, "dua_permits": true, "deidentified": true},
+    "GX-06": {"consent_level": "research_only",   "irb_active": true, "dua_permits": true, "deidentified": true}
+  }
+}

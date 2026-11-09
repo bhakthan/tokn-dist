@@ -219,3 +219,5 @@ python run.py --domains transcriptomics --out C:\tmp\relay-transcriptomics
 ```
 
 Set up `.env` and the prerequisites first; see the [relay README](../../README.md).
+
+For a single-model version of this run that costs far less, see [rnaseq-qc](../../../rnaseq-qc/README.md).

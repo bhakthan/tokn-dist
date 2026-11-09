@@ -227,3 +227,5 @@ python run.py --domains gridfm --out C:\tmp\relay-gridfm
 ```
 
 Set up `.env` and the prerequisites first; see the [relay README](../../README.md).
+
+For a single-model version of this run that costs far less, see [grid-surrogate-trust](../../../grid-surrogate-trust/README.md).

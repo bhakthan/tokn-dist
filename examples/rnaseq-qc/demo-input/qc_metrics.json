@@ -1,0 +1,12 @@
+{
+  "note": "Synthetic RNA-seq QC metrics for a teaching scenario; not from any real study. Rates are percentages; nrf is a fraction; genes_detected is a count. S05's RIN was not recorded.",
+  "protocol": "polyA",
+  "samples": {
+    "S01": {"rin": 8.4, "unique_mapping_rate": 88.2, "rrna_rate": 3.1, "duplication_rate": 14.0, "nrf": 0.86, "exonic_rate": 71.0, "genes_detected": 16850},
+    "S02": {"rin": 7.0, "unique_mapping_rate": 80.0, "rrna_rate": 4.8, "duplication_rate": 18.5, "nrf": 0.83, "exonic_rate": 68.2, "genes_detected": 16120},
+    "S03": {"rin": 5.9, "unique_mapping_rate": 91.5, "rrna_rate": 2.4, "duplication_rate": 12.0, "nrf": 0.90, "exonic_rate": 74.1, "genes_detected": 18900},
+    "S04": {"rin": 7.6, "unique_mapping_rate": 84.0, "rrna_rate": 6.2, "duplication_rate": 34.0, "nrf": 0.71, "exonic_rate": 66.0, "genes_detected": 15800},
+    "S05": {"unique_mapping_rate": 89.7, "rrna_rate": 3.0, "duplication_rate": 11.2, "nrf": 0.91, "exonic_rate": 72.5, "genes_detected": 17640},
+    "S06": {"rin": 8.1, "unique_mapping_rate": 86.3, "rrna_rate": 22.4, "duplication_rate": 16.0, "nrf": 0.84, "exonic_rate": 63.0, "genes_detected": 15400}
+  }
+}

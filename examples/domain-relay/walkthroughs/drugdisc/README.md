@@ -230,3 +230,5 @@ python run.py --domains drugdisc --out C:\tmp\relay-drugdisc
 ```
 
 Set up `.env` and the prerequisites first; see the [relay README](../../README.md).
+
+For a single-model version of this run that costs far less, see [lead-advancement](../../../lead-advancement/README.md).

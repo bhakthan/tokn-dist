@@ -221,3 +221,5 @@ python run.py --domains batterypass --out C:\tmp\relay-batterypass
 ```
 
 Set up `.env` and the prerequisites first; see the [relay README](../../README.md).
+
+For a single-model version of this run that costs far less, see [battery-passport](../../../battery-passport/README.md).

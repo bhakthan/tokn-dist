@@ -226,3 +226,5 @@ python run.py --domains climsci --out C:\tmp\relay-climsci
 ```
 
 Set up `.env` and the prerequisites first; see the [relay README](../../README.md).
+
+For a single-model version of this run that costs far less, see [climate-ensemble](../../../climate-ensemble/README.md).

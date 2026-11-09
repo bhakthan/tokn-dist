@@ -1,0 +1,51 @@
+{
+  "note": "Synthetic work orders for a fictional onshore asset. Values are synthetic. Each step's 'payload' is the exact input for the named oil & gas tool and must be submitted unchanged; 'plan' fields are the engineer's intended design and are NOT tool inputs.",
+  "asset": "onshore gas-condensate field, pad 7",
+  "work_orders": [
+    {
+      "id": "OG-1",
+      "title": "Drill 8-1/2 in. section to TD on well P7-03",
+      "steps": [
+        {"tool": "og_mud_weight", "payload": {"depth_ft": 11200, "pore_pressure_ppg": 12.4, "frac_gradient_ppg": 15.1}},
+        {"tool": "og_drill_operation", "payload": {"well_name": "P7-03", "current_depth_ft": 11200, "target_depth_ft": 12450, "mud_weight_ppg": 13.2, "pore_pressure_ppg": 12.4, "frac_gradient_ppg": 15.1, "kick_indicators": false, "primary_barrier_verified": true, "secondary_barrier_verified": true}}
+      ]
+    },
+    {
+      "id": "OG-2",
+      "title": "Perforate lower sand on well P7-01 (tubing-conveyed, underbalanced)",
+      "steps": [
+        {"tool": "og_perforate", "payload": {"depth_ft": 9850, "shot_density_spf": 6, "phasing_deg": 60, "underbalance_psi": 500, "primary_barrier_verified": true, "secondary_barrier_verified": false, "kick_indicators": false}}
+      ]
+    },
+    {
+      "id": "OG-3",
+      "title": "Hydraulic fracture design, stage 1, well P7-02",
+      "steps": [
+        {"tool": "og_frac_design", "payload": {"target_depth_ft": 10400, "closure_stress_psi": 6900, "pump_rate_bpm": 70, "proppant_type": "sand", "fluid_type": "slickwater", "proposed_pressure_psi": 5000, "casing_test_passed": true}}
+      ]
+    },
+    {
+      "id": "OG-4",
+      "title": "Booster compressor for pad 7 gathering line",
+      "plan": {"planned_stages": 1},
+      "steps": [
+        {"tool": "og_compression_design", "payload": {"suction_pressure_psi": 400, "discharge_pressure_psi": 1700, "flow_rate_mmscfd": 85, "gas_gravity": 0.68, "suction_temp_f": 95, "operating_pressure_psi": 1850, "operating_temp_f": 180}}
+      ]
+    },
+    {
+      "id": "OG-5",
+      "title": "Annual fugitive methane disclosure, pad 7 facilities",
+      "steps": [
+        {"tool": "og_emissions_report", "payload": {"source_type": "fugitive", "gas": "methane", "quantity_tonnes": 412, "measurement_method": "engineering_estimate", "confidence": 0.72, "ogmp_level": 3}}
+      ]
+    },
+    {
+      "id": "OG-6",
+      "title": "Drill 6-1/8 in. section on well P7-04 (high-pressure interval)",
+      "steps": [
+        {"tool": "og_mud_weight", "payload": {"depth_ft": 12800, "pore_pressure_ppg": 13.0, "frac_gradient_ppg": 15.6}},
+        {"tool": "og_drill_operation", "payload": {"well_name": "P7-04", "current_depth_ft": 12800, "target_depth_ft": 13600, "mud_weight_ppg": 15.55, "pore_pressure_ppg": 13.0, "frac_gradient_ppg": 15.6, "kick_indicators": false, "primary_barrier_verified": true, "secondary_barrier_verified": true}}
+      ]
+    }
+  ]
+}

@@ -217,3 +217,5 @@ python run.py --domains powergrid --out C:\tmp\relay-powergrid
 ```
 
 Set up `.env` and the prerequisites first; see the [relay README](../../README.md).
+
+For a single-model version of this run that costs far less, see [interconnection-screen](../../../interconnection-screen/README.md).

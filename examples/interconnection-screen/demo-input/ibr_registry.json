@@ -1,0 +1,33 @@
+{
+  "note": "Synthetic inverter-based resource registry for a fictional planning area. Values are synthetic. 'resources' is the existing fleet and can be passed directly as powergrid_ibr_stability_gate resources; additions[IR-x] can be passed directly as that request's additions.",
+  "threshold_pct": 30,
+  "resources": [
+    {"id": "GFM-N1", "type": "GFM", "capacity_mw": 200, "zone": "Z-NORTH", "dynamic_response_validated": true, "ieee_2800_compliant": true},
+    {"id": "GFL-N1", "type": "GFL", "capacity_mw": 50, "zone": "Z-NORTH", "dynamic_response_validated": true, "ieee_2800_compliant": true},
+    {"id": "GFM-E1", "type": "GFM", "capacity_mw": 250, "zone": "Z-EAST", "dynamic_response_validated": true, "ieee_2800_compliant": true},
+    {"id": "GFL-E1", "type": "GFL", "capacity_mw": 80, "zone": "Z-EAST", "dynamic_response_validated": true, "ieee_2800_compliant": true},
+    {"id": "GFM-S1", "type": "GFM", "capacity_mw": 300, "zone": "Z-SOUTH", "dynamic_response_validated": true, "ieee_2800_compliant": true},
+    {"id": "GFL-S1", "type": "GFL", "capacity_mw": 100, "zone": "Z-SOUTH", "dynamic_response_validated": true, "ieee_2800_compliant": true},
+    {"id": "GFM-W1", "type": "GFM", "capacity_mw": 350, "zone": "Z-WEST", "dynamic_response_validated": true, "ieee_2800_compliant": true},
+    {"id": "GFL-W1", "type": "GFL", "capacity_mw": 100, "zone": "Z-WEST", "dynamic_response_validated": true, "ieee_2800_compliant": true},
+    {"id": "GFM-C1", "type": "GFM", "capacity_mw": 200, "zone": "Z-CENTRAL", "dynamic_response_validated": true, "ieee_2800_compliant": true},
+    {"id": "GFL-C1", "type": "GFL", "capacity_mw": 60, "zone": "Z-CENTRAL", "dynamic_response_validated": true, "ieee_2800_compliant": true}
+  ],
+  "additions": {
+    "IR-1": [
+      {"id": "IR-1-BESS", "type": "GFM", "capacity_mw": 150, "zone": "Z-NORTH", "dynamic_response_validated": true, "ieee_2800_compliant": true}
+    ],
+    "IR-2": [
+      {"id": "IR-2-BESS", "type": "GFM", "capacity_mw": 120, "zone": "Z-EAST", "dynamic_response_validated": true, "ieee_2800_compliant": true}
+    ],
+    "IR-3": [
+      {"id": "IR-3-PV", "type": "GFL", "capacity_mw": 60, "zone": "Z-SOUTH", "dynamic_response_validated": true, "ieee_2800_compliant": true}
+    ],
+    "IR-4": [
+      {"id": "IR-4-WIND", "type": "GFL", "capacity_mw": 50, "zone": "Z-WEST", "dynamic_response_validated": true, "ieee_2800_compliant": true}
+    ],
+    "IR-5": [
+      {"id": "IR-5-BESS", "type": "GFM", "capacity_mw": 100, "zone": "Z-CENTRAL", "dynamic_response_validated": true, "ieee_2800_compliant": true}
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "note": "Synthetic electrolyser project data for a fictional green-finance screening round. Values are synthetic. Each 'payload' is the exact input for compute_hydrogen_production and must be submitted unchanged.",
+  "rfnbo_threshold_reference": "EU RFNBO / low-carbon hydrogen threshold as configured in the greenenergy domain",
+  "projects": [
+    {
+      "id": "GH-1",
+      "name": "Coastal port electrolyser, phase 1",
+      "payload": {
+        "electrolyzer_type": "pem",
+        "electricity_source": "co-located offshore wind PPA, hourly matched",
+        "capacity_mw": 40,
+        "ci_kgco2_per_kgh2": 2.10
+      }
+    },
+    {
+      "id": "GH-2",
+      "name": "Inland ammonia-feed electrolyser",
+      "payload": {
+        "electrolyzer_type": "ael",
+        "electricity_source": "grid plus additional solar PPA, hourly matched",
+        "capacity_mw": 60,
+        "ci_kgco2_per_kgh2": 3.38
+      }
+    },
+    {
+      "id": "GH-3",
+      "name": "Refinery-adjacent electrolyser",
+      "payload": {
+        "electrolyzer_type": "pem",
+        "electricity_source": "grid plus onshore wind PPA, monthly matched",
+        "capacity_mw": 25,
+        "ci_kgco2_per_kgh2": 3.41
+      }
+    }
+  ]
+}

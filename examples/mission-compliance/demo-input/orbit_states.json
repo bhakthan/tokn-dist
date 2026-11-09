@@ -1,0 +1,10 @@
+{
+  "note": "Synthetic two-line element sets (fictional NORAD IDs 99001-99005) for a teaching scenario; not real objects. epoch_age_hours is hours since the TLE epoch at review time.",
+  "orbits": [
+    {"sat": "SAT-1", "tle_line1": "1 99001U 25001A   25160.50000000  .00001200  00000-0  65000-4 0  9991", "tle_line2": "2 99001  97.4500 120.1000 0012000  90.0000 270.1000 15.21000000 10001", "epoch_age_hours": 18.0, "delta_v_closes": true},
+    {"sat": "SAT-2", "tle_line1": "1 99002U 25001B   25158.25000000  .00001150  00000-0  62000-4 0  9992", "tle_line2": "2 99002  97.4500 150.2000 0011000  85.0000 275.2000 15.21500000 10002", "epoch_age_hours": 72.0, "delta_v_closes": true},
+    {"sat": "SAT-3", "tle_line1": "1 99003U 25001C   25157.22916667  .00001300  00000-0  70000-4 0  9993", "tle_line2": "2 99003  97.4500 180.3000 0010000  80.0000 280.3000 15.20500000 10003", "epoch_age_hours": 96.5, "delta_v_closes": true},
+    {"sat": "SAT-4", "tle_line1": "1 99004U 25001D   25159.66666667  .00001250  00000-0  68000-4 0  9994", "tle_line2": "2 99004  97.4500 210.4000 0013000  95.0000 265.4000 15.22000000 10004", "epoch_age_hours": 20.0, "delta_v_closes": true},
+    {"sat": "SAT-5", "tle_line1": "1 99005U 25001E   25158.83333333  .00000900  00000-0  48000-4 0  9995", "tle_line2": "2 99005  97.6000 240.5000 0009000 100.0000 260.5000 14.95000000 10005", "epoch_age_hours": 40.0, "delta_v_closes": true}
+  ]
+}

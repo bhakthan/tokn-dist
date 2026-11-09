@@ -7,7 +7,9 @@ that each run one real task end to end. None of them contain real data.
 Walkthroughs that call an LLM need your own key and make paid model calls;
 offline/catalog examples explicitly say otherwise. Domain
 modes (compbio, oncology, finrisk, physai, precmed, clintrial, legalai,
-geospatial, cybersec, atmchem, quantumsci, structbio, robotics, semicon) and the premium
+geospatial, cybersec, atmchem, quantumsci, structbio, robotics, semicon, appsec,
+batterypass, climsci, drugdisc, energy, genomics, greenenergy, gridfm, grideng, matsci,
+mobility, neurosci, nucsci, oilgas, spacemarine, transcriptomics) and the premium
 critique and autodesign modes need the 14-day trial (`tokn license trial`); the
 rest are expected to run on Community too.
 
@@ -20,6 +22,22 @@ New to TOKN? Start with [first-ten-minutes](first-ten-minutes/README.md).
 | [finrisk-system-one](finrisk-system-one/README.md) | A deterministic finrisk tool plus one typed decision request, graded from the run log | trial, a decision-model key |
 | [compbio-gates](compbio-gates/README.md) | Computational-biology gates catch genome-build mixing and unpinned pipelines | trial |
 | [semicon-signoff](semicon-signoff/README.md) | Tapeout signoff for six macros: unconstrained timing is blocked, boundary slack and LVS traps are caught | trial |
+| [adas-safety-gate](adas-safety-gate/README.md) | Five ADAS functions gated on ASIL decomposition, FMEDA metrics and V&V | trial |
+| [appsec-triage](appsec-triage/README.md) | Triage a static-analysis queue before release: each candidate is reportable, suppressed or blocked | trial |
+| [battery-passport](battery-passport/README.md) | Pre-publication gate check of six Battery Passport drafts: compliance, carbon-footprint method, due diligence, chemistry | trial |
+| [climate-ensemble](climate-ensemble/README.md) | Five CMIP6 regional projection claims checked for calibrated likelihood and ensemble size | trial, optional Python deps |
+| [criticality-package](criticality-package/README.md) | Criticality-safety QA review of six spent-fuel pool storage packages | trial |
+| [dft-candidate-screen](dft-candidate-screen/README.md) | Five cathode-coating candidates from a DFT batch: convergence, pseudopotentials, phase stability | trial |
+| [energy-board-pack](energy-board-pack/README.md) | Release gate for a quarterly energy and carbon board pack | trial |
+| [green-project-screen](green-project-screen/README.md) | Green-finance eligibility screen for five solar, wind and hydrogen projects | trial |
+| [grid-surrogate-trust](grid-surrogate-trust/README.md) | Six surrogate power-flow predictions verified before an operator may use them | trial |
+| [interconnection-screen](interconnection-screen/README.md) | Five interconnection requests through an N-1-1 screen and an IBR stability gate | trial |
+| [lead-advancement](lead-advancement/README.md) | Hit-to-lead advancement triage for six compounds in a kinase series | trial, optional Python deps |
+| [mission-compliance](mission-compliance/README.md) | Pre-pass go/no-go for a five-satellite LEO constellation: orbit, link margin, debris disposal | trial |
+| [neuro-recording-qc](neuro-recording-qc/README.md) | Data-quality and ethics review of six recordings before a group analysis | trial, optional Python deps |
+| [rnaseq-qc](rnaseq-qc/README.md) | RNA-seq library QC gate before differential expression, including batch confounding | trial |
+| [well-work-orders](well-work-orders/README.md) | Pre-job safety and design review for six pad work orders | trial |
+| [wgs-report-readiness](wgs-report-readiness/README.md) | WGS run QC and report-readiness review for six samples, including consent | trial |
 | [oncology-governance](oncology-governance/README.md) | Six oncology scenarios check PHI, human-in-the-loop and decision-support framing | trial |
 | [physai-fleet](physai-fleet/README.md) | `physai` mode generates a 14-agent warehouse robot fleet | trial |
 | [science-review](science-review/README.md) | A reviewer finds three planted defects in a figure caption with `review_artifact` | — |

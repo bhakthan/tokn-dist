@@ -220,3 +220,5 @@ python run.py --domains spacemarine --out C:\tmp\relay-spacemarine
 ```
 
 Set up `.env` and the prerequisites first; see the [relay README](../../README.md).
+
+For a single-model version of this run that costs far less, see [mission-compliance](../../../mission-compliance/README.md).
