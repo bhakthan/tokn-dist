@@ -7,7 +7,7 @@ that each run one real task end to end. None of them contain real data.
 Walkthroughs that call an LLM need your own key and make paid model calls;
 offline/catalog examples explicitly say otherwise. Domain
 modes (compbio, oncology, finrisk, physai, precmed, clintrial, legalai,
-geospatial, cybersec, atmchem, quantumsci, structbio, robotics) and the premium
+geospatial, cybersec, atmchem, quantumsci, structbio, robotics, semicon) and the premium
 critique and autodesign modes need the 14-day trial (`tokn license trial`); the
 rest are expected to run on Community too.
 
@@ -19,6 +19,7 @@ New to TOKN? Start with [first-ten-minutes](first-ten-minutes/README.md).
 | [grid-screening](grid-screening/README.md) | `tokn harness evolve` improves its own harness on a substation N-1 screen | a decision-model key |
 | [finrisk-system-one](finrisk-system-one/README.md) | A deterministic finrisk tool plus one typed decision request, graded from the run log | trial, a decision-model key |
 | [compbio-gates](compbio-gates/README.md) | Computational-biology gates catch genome-build mixing and unpinned pipelines | trial |
+| [semicon-signoff](semicon-signoff/README.md) | Tapeout signoff for six macros: unconstrained timing is blocked, boundary slack and LVS traps are caught | trial |
 | [oncology-governance](oncology-governance/README.md) | Six oncology scenarios check PHI, human-in-the-loop and decision-support framing | trial |
 | [physai-fleet](physai-fleet/README.md) | `physai` mode generates a 14-agent warehouse robot fleet | trial |
 | [science-review](science-review/README.md) | A reviewer finds three planted defects in a figure caption with `review_artifact` | — |

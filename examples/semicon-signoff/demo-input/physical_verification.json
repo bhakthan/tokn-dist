@@ -1,0 +1,19 @@
+{
+  "note": "Synthetic DRC and LVS results for a teaching scenario. Paths are illustrative only.",
+  "drc": [
+    {"block": "BLK-CPU",     "gds_path": "gds/blk_cpu.gds",     "drc_rules": "sky130A.drc", "violations": 0},
+    {"block": "BLK-DSP",     "gds_path": "gds/blk_dsp.gds",     "drc_rules": "sky130A.drc", "violations": 0},
+    {"block": "BLK-USB",     "gds_path": "gds/blk_usb.gds",     "drc_rules": "sky130A.drc", "violations": 0},
+    {"block": "BLK-SRAMCTL", "gds_path": "gds/blk_sramctl.gds", "drc_rules": "sky130A.drc", "violations": 0},
+    {"block": "BLK-DMA",     "gds_path": "gds/blk_dma.gds",     "drc_rules": "sky130A.drc", "violations": 0},
+    {"block": "BLK-PCIE",    "gds_path": "gds/blk_pcie.gds",    "drc_rules": "sky130A.drc", "violations": 0}
+  ],
+  "lvs": [
+    {"block": "BLK-CPU",     "gds_path": "gds/blk_cpu.gds",     "cdl_path": "netlist/blk_cpu.cdl",     "discrepancies": 0},
+    {"block": "BLK-DSP",     "gds_path": "gds/blk_dsp.gds",     "cdl_path": "netlist/blk_dsp.cdl",     "discrepancies": 0},
+    {"block": "BLK-USB",     "gds_path": "gds/blk_usb.gds",     "cdl_path": "netlist/blk_usb.cdl",     "discrepancies": 2},
+    {"block": "BLK-SRAMCTL", "gds_path": "gds/blk_sramctl.gds", "cdl_path": "netlist/blk_sramctl.cdl", "discrepancies": 0},
+    {"block": "BLK-DMA",     "gds_path": "gds/blk_dma.gds",     "cdl_path": "netlist/blk_dma.cdl",     "discrepancies": 0},
+    {"block": "BLK-PCIE",    "gds_path": "gds/blk_pcie.gds",    "cdl_path": "netlist/blk_pcie.cdl",    "discrepancies": 0}
+  ]
+}

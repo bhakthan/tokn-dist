@@ -1,0 +1,11 @@
+{
+  "note": "Synthetic floorplan records for a teaching scenario. utilization is a fraction of core area (0.80 = 80%). Paths are illustrative only.",
+  "floorplans": [
+    {"block": "BLK-CPU",     "netlist_def": "pnr/blk_cpu/synth.def",     "lef_path": "pdk/sky130hd/sky130_fd_sc_hd.lef", "utilization": 0.72, "aspect_ratio": 1.0},
+    {"block": "BLK-DSP",     "netlist_def": "pnr/blk_dsp/synth.def",     "lef_path": "pdk/sky130hd/sky130_fd_sc_hd.lef", "utilization": 0.80, "aspect_ratio": 1.2},
+    {"block": "BLK-USB",     "netlist_def": "pnr/blk_usb/synth.def",     "lef_path": "pdk/sky130hd/sky130_fd_sc_hd.lef", "utilization": 0.65, "aspect_ratio": 1.0},
+    {"block": "BLK-SRAMCTL", "netlist_def": "pnr/blk_sramctl/synth.def", "lef_path": "pdk/sky130hd/sky130_fd_sc_hd.lef", "utilization": 0.82, "aspect_ratio": 0.8},
+    {"block": "BLK-DMA",     "netlist_def": "pnr/blk_dma/synth.def",     "lef_path": "pdk/sky130hd/sky130_fd_sc_hd.lef", "utilization": 0.70, "aspect_ratio": 1.0},
+    {"block": "BLK-PCIE",    "netlist_def": "pnr/blk_pcie/synth.def",    "lef_path": "pdk/sky130hd/sky130_fd_sc_hd.lef", "utilization": 0.74, "aspect_ratio": 1.5}
+  ]
+}

@@ -225,3 +225,5 @@ python run.py --domains semicon --out C:\tmp\relay-semicon
 ```
 
 Set up `.env` and the prerequisites first; see the [relay README](../../README.md).
+
+For a single-model version of this run that costs far less, see [semicon-signoff](../../../semicon-signoff/README.md).
