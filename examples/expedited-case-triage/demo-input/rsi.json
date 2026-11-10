@@ -1,0 +1,23 @@
+{
+  "_note": "SYNTHETIC reference safety information for fictional products SYNPRO-101 (investigational, Investigator's Brochure RSI section) and SYNPRO-202 (marketed, label adverse-reactions listing). Codes refer to the synthetic dictionary, not MedDRA.",
+  "rsi": [
+    {
+      "product": "SYNPRO-101",
+      "document": "SYN Investigator's Brochure RSI section",
+      "version": "ed. 4",
+      "listed_events": [
+        {"pt_code": "90000303", "term": "SYN-PT Skin eruption event", "max_severity_grade": 2, "fatal_outcome_listed": false},
+        {"pt_code": "90000305", "term": "SYN-PT Queasiness event", "max_severity_grade": 2, "fatal_outcome_listed": false}
+      ]
+    },
+    {
+      "product": "SYNPRO-202",
+      "document": "SYN label adverse reactions listing",
+      "version": "rev. 7",
+      "listed_events": [
+        {"pt_code": "90000301", "term": "SYN-PT Hepatic enzyme event", "max_severity_grade": 2, "fatal_outcome_listed": false},
+        {"pt_code": "90000305", "term": "SYN-PT Queasiness event", "fatal_outcome_listed": false}
+      ]
+    }
+  ]
+}

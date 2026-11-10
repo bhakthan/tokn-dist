@@ -1,0 +1,43 @@
+{
+  "synthetic": true,
+  "note": "SYNTHETIC technical criteria. Each criterion is a simplified, invented stand-in for reading a control entry; thresholds are illustrative test values, not the regulatory parameters.",
+  "criteria": [
+    {
+      "id": "CRIT-USML-XII-C",
+      "jurisdiction": "ITAR",
+      "usml": "XII(c)",
+      "applies_to": ["image_intensifier", "night_vision_device"],
+      "all": [
+        {"param": "image_intensifier_generation", "op": ">=", "value": 3},
+        {"param": "specially_designed_military", "op": "==", "value": true}
+      ]
+    },
+    {
+      "id": "CRIT-6A003-B-4",
+      "jurisdiction": "EAR",
+      "eccn": "6A003.b.4",
+      "applies_to": ["image_intensifier", "camera"],
+      "all": [
+        {"param": "image_intensifier_generation", "op": ">=", "value": 2}
+      ]
+    },
+    {
+      "id": "CRIT-3A001-A-1",
+      "jurisdiction": "EAR",
+      "eccn": "3A001.a.1",
+      "applies_to": ["integrated_circuit"],
+      "all": [
+        {"param": "total_dose_krad_si", "op": ">=", "value": 500}
+      ]
+    },
+    {
+      "id": "CRIT-3A991-A",
+      "jurisdiction": "EAR",
+      "eccn": "3A991.a",
+      "applies_to": ["microprocessor"],
+      "all": [
+        {"param": "clock_mhz", "op": ">=", "value": 25}
+      ]
+    }
+  ]
+}

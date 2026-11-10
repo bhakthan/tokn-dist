@@ -1,0 +1,33 @@
+{
+  "_synthetic": "SYNTHETIC DATA. Fictional loss triangle and reserve figures (currency units are arbitrary, in thousands).",
+  "triangles": [
+    {
+      "id": "RES-HO",
+      "line": "homeowners (synthetic)",
+      "triangle": {
+        "origins": ["2020", "2021", "2022", "2023", "2024"],
+        "ages": [12, 24, 36, 48, 60],
+        "values": [
+          [1000, 1500, 1650, 1700, 1734],
+          [1100, 1680, 1840, 1900, null],
+          [1200, 1810, 2000, null, null],
+          [1300, 1970, null, null, null],
+          [1400, null, null, null, null]
+        ]
+      },
+      "earned_premium": 2500,
+      "expected_loss_ratio": 0.85,
+      "tail_factor": 1.0,
+      "naive_selection": {"selected_ldfs": [1.40, 1.05, 1.01, 1.00], "tail_factor": 1.0},
+      "carried_reserve": 817.76,
+      "trap": "the carried reserve was set from a naive LDF selection below every computed average with a unit tail despite 1.02 development at 48-60 — it falls below the range of reasonable estimates"
+    }
+  ],
+  "reserve_figures": [
+    {"id": "RES-HO-FIG", "segment": "homeowners", "point_estimate": 1505, "low": 1348, "high": 1621, "method": "chain_ladder_volume_weighted with Bornhuetter-Ferguson cross-check", "assumptions": ["volume-weighted age-to-age factors", "tail factor 1.0 pending tail study", "a-priori ELR 0.85 for BF"]},
+    {"id": "RES-AUTO", "segment": "auto_liability", "point_estimate": 2400, "low": 2150, "high": 2700, "assumptions": ["paid development"], "trap": "no method stated — must be BLOCKED"},
+    {"id": "RES-GL", "segment": "general_liability", "point_estimate": 1800, "method": "chain_ladder_volume_weighted", "assumptions": ["incurred development", "no tail"], "trap": "point estimate without a range — WARNING"}
+  ],
+  "ratios": {"earned_premium": 10000, "written_premium": 10500, "incurred_losses": 6500, "lae": 900, "underwriting_expenses": 2800},
+  "credibility": {"claims": 600, "observed": 0.072, "complement": 0.060}
+}

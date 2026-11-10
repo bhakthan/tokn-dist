@@ -1,0 +1,20 @@
+{
+  "_note": "SYNTHETIC emission-factor registers (illustrative values). Each entry is a complete esg_factor_provenance_check input; reported_tco2e is the figure the entity's spreadsheet reported for that activity.",
+  "ENT-A": {
+    "reporting_year": 2025,
+    "gwp_set": "AR6",
+    "factors": [
+      {"id": "F-A-NG-CO2", "value": 56.1, "unit": "kg CO2/GJ", "source": "Synthetic national inventory factor set v3 (illustrative)", "year": 2024, "region": "SYN-COUNTRY-1", "activity_value": 18000, "activity_unit": "GJ", "reported_tco2e": 1009.8},
+      {"id": "F-A-GRID", "value": 0.35, "unit": "kg CO2e/kWh", "source": "Synthetic grid-average factors 2025 (illustrative)", "year": 2025, "region": "GRID-NORTH", "gwp_set": "AR6", "activity_region": "GRID-NORTH", "activity_value": 2400, "activity_unit": "MWh", "reported_tco2e": 840},
+      {"id": "F-A-RESIDUAL", "value": 0.48, "unit": "t CO2e/MWh", "source": "Synthetic residual mix 2025 (illustrative)", "year": 2025, "region": "GRID-NORTH", "gwp_set": "AR6", "activity_region": "GRID-NORTH", "activity_value": 900, "activity_unit": "MWh", "reported_tco2e": 432}
+    ]
+  },
+  "ENT-D": {
+    "reporting_year": 2025,
+    "gwp_set": "AR6",
+    "factors": [
+      {"id": "F-D-GRID", "value": 0.4, "unit": "kg CO2e/kWh", "source": "Synthetic grid-average factors 2025 (illustrative)", "year": 2025, "region": "GRID-SOUTH", "gwp_set": "AR6", "activity_region": "GRID-SOUTH", "activity_value": 4600, "activity_unit": "MWh", "reported_tco2e": 1.84},
+      {"id": "F-D-DIESEL", "value": 2.68, "unit": "kg CO2/L", "source": "Synthetic national inventory factor set v3 (illustrative)", "year": 2024, "region": "SYN-COUNTRY-2", "activity_value": 50000, "activity_unit": "L", "reported_tco2e": 134}
+    ]
+  }
+}

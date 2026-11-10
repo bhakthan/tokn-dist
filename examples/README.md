@@ -9,7 +9,8 @@ offline/catalog examples explicitly say otherwise. Domain
 modes (compbio, oncology, finrisk, physai, precmed, clintrial, legalai,
 geospatial, cybersec, atmchem, quantumsci, structbio, robotics, semicon, appsec,
 batterypass, climsci, drugdisc, energy, genomics, greenenergy, gridfm, grideng, matsci,
-mobility, neurosci, nucsci, oilgas, spacemarine, transcriptomics) and the premium
+mobility, neurosci, nucsci, oilgas, spacemarine, transcriptomics, healthrcm,
+mfgquality, esg, insurance, tradecomp, pharmacovig) and the premium
 critique and autodesign modes need the 14-day trial (`tokn license trial`); the
 rest are expected to run on Community too.
 
@@ -38,6 +39,12 @@ New to TOKN? Start with [first-ten-minutes](first-ten-minutes/README.md).
 | [rnaseq-qc](rnaseq-qc/README.md) | RNA-seq library QC gate before differential expression, including batch confounding | trial |
 | [well-work-orders](well-work-orders/README.md) | Pre-job safety and design review for six pad work orders | trial |
 | [wgs-report-readiness](wgs-report-readiness/README.md) | WGS run QC and report-readiness review for six samples, including consent | trial |
+| [claim-scrub](claim-scrub/README.md) | Six healthcare claims scrubbed before submission: code-pair edits, unit limits, medical necessity, prior authorization, PHI | trial |
+| [claims-reserving-review](claims-reserving-review/README.md) | Insurance claims, underwriting fairness and reserve items reviewed, citing policy clauses, with no final coverage determination | trial |
+| [ghg-inventory-check](ghg-inventory-check/README.md) | GHG inventories, a Scope 3 calculation and a disclosure claim checked for factor provenance, double counting and greenwashing | trial |
+| [ppap-capability-release](ppap-capability-release/README.md) | Lot release for seven characteristics from raw SPC data, gauge R&R and the PFMEA | trial |
+| [shipment-release-review](shipment-release-review/README.md) | Seven fictional export shipments: sanctions screening, export classification, licensing and end-use red flags | trial |
+| [expedited-case-triage](expedited-case-triage/README.md) | Seven synthetic safety case reports triaged for seriousness, expectedness and the expedited reporting clock | trial |
 | [oncology-governance](oncology-governance/README.md) | Six oncology scenarios check PHI, human-in-the-loop and decision-support framing | trial |
 | [physai-fleet](physai-fleet/README.md) | `physai` mode generates a 14-agent warehouse robot fleet | trial |
 | [science-review](science-review/README.md) | A reviewer finds three planted defects in a figure caption with `review_artifact` | — |

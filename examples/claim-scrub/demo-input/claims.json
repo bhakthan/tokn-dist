@@ -1,0 +1,97 @@
+{
+  "note": "SYNTHETIC teaching scenario. No real patients, providers or payers. patient_ref values are pseudonymous; NPI 1234567893 is the public check-digit example number. Payers SYN-PAYER-A, SYN-PAYER-B and SYN-MEDICARE-FFS and their rules exist only in the healthrcm synthetic payer table. CPT codes appear as numbers only. Each claim is an 837P-like JSON projection; pass each claim object to the tools exactly as given.",
+  "as_of": "2026-11-09",
+  "claims": [
+    {
+      "claim_id": "CLM-1001",
+      "frequency_code": "1",
+      "payer_id": "SYN-PAYER-A",
+      "patient_ref": "PT-SYN-0001",
+      "billing_provider": {"npi": "1234567893"},
+      "place_of_service": "11",
+      "diagnoses": ["M17.11"],
+      "service_lines": [
+        {"line": 1, "code": "99213", "modifiers": ["25"], "units": 1, "charge": 140.00, "dos_from": "2026-10-20", "dx_pointers": [1], "distinct_service_documented": true},
+        {"line": 2, "code": "20610", "modifiers": [], "units": 1, "charge": 120.00, "dos_from": "2026-10-20", "dx_pointers": [1]},
+        {"line": 3, "code": "J3301", "modifiers": [], "units": 4, "charge": 32.00, "dos_from": "2026-10-20", "dx_pointers": [1]}
+      ],
+      "as_of": "2026-11-09"
+    },
+    {
+      "claim_id": "CLM-1002",
+      "frequency_code": "1",
+      "payer_id": "SYN-MEDICARE-FFS",
+      "patient_ref": "PT-SYN-0002",
+      "billing_provider": {"npi": "1234567893"},
+      "place_of_service": "24",
+      "diagnoses": ["K63.5"],
+      "service_lines": [
+        {"line": 1, "code": "45380", "modifiers": [], "units": 1, "charge": 900.00, "dos_from": "2026-10-14", "dx_pointers": [1]},
+        {"line": 2, "code": "45378", "modifiers": ["59"], "units": 1, "charge": 700.00, "dos_from": "2026-10-14", "dx_pointers": [1], "distinct_service_documented": true}
+      ],
+      "as_of": "2026-11-09"
+    },
+    {
+      "claim_id": "CLM-1003",
+      "frequency_code": "1",
+      "payer_id": "SYN-PAYER-A",
+      "patient_ref": "PT-SYN-0003",
+      "billing_provider": {"npi": "1234567893"},
+      "place_of_service": "22",
+      "diagnoses": ["M54.16"],
+      "conservative_therapy_weeks": 8,
+      "service_lines": [
+        {"line": 1, "code": "72148", "modifiers": [], "units": 1, "charge": 1100.00, "dos_from": "2026-10-28", "dx_pointers": [1]}
+      ],
+      "prior_auth": [],
+      "as_of": "2026-11-09"
+    },
+    {
+      "claim_id": "CLM-1004",
+      "frequency_code": "1",
+      "payer_id": "SYN-PAYER-B",
+      "patient_ref": "PT-SYN-0004",
+      "billing_provider": {"npi": "1234567893"},
+      "place_of_service": "11",
+      "diagnoses": ["M54.50"],
+      "plan_of_care_certified": true,
+      "visit_number": 6,
+      "service_lines": [
+        {"line": 1, "code": "97140", "modifiers": [], "units": 2, "charge": 90.00, "dos_from": "2026-10-30", "dx_pointers": [1]},
+        {"line": 2, "code": "97530", "modifiers": ["XU"], "units": 2, "charge": 95.00, "dos_from": "2026-10-30", "dx_pointers": [1], "distinct_service_documented": false}
+      ],
+      "as_of": "2026-11-09"
+    },
+    {
+      "claim_id": "CLM-1005",
+      "frequency_code": "1",
+      "payer_id": "SYN-PAYER-A",
+      "patient_ref": "PT-SYN-0005",
+      "billing_provider": {"npi": "1234567893"},
+      "place_of_service": "11",
+      "diagnoses": ["E11.9"],
+      "service_lines": [
+        {"line": 1, "code": "36415", "modifiers": [], "units": 1, "charge": 10.00, "dos_from": "2026-08-11", "dx_pointers": [1]},
+        {"line": 2, "code": "85025", "modifiers": [], "units": 1, "charge": 25.00, "dos_from": "2026-08-11", "dx_pointers": [1]},
+        {"line": 3, "code": "80053", "modifiers": [], "units": 1, "charge": 40.00, "dos_from": "2026-08-11", "dx_pointers": [1]}
+      ],
+      "as_of": "2026-11-09"
+    },
+    {
+      "claim_id": "CLM-1006",
+      "frequency_code": "1",
+      "payer_id": "SYN-PAYER-A",
+      "patient_ref": "PT-SYN-0006",
+      "patient_name": "Pat Synthetic",
+      "dob": "1958-03-14",
+      "subscriber_ssn": "000-12-3456",
+      "billing_provider": {"npi": "1234567893"},
+      "place_of_service": "11",
+      "diagnoses": ["I10"],
+      "service_lines": [
+        {"line": 1, "code": "99213", "modifiers": [], "units": 1, "charge": 140.00, "dos_from": "2026-10-22", "dx_pointers": [1]}
+      ],
+      "as_of": "2026-11-09"
+    }
+  ]
+}

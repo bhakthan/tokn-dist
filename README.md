@@ -720,7 +720,7 @@ gates around specialized work. **Thirty-two** domain modes are selectable with
 validators, which is a genuine slice of the product rather than a mock.
 
 <details>
-<summary><strong>All 32 domain modes</strong> (one line each — full descriptions in <a href="CAPABILITIES.md#domain-harnesses">CAPABILITIES.md</a>)</summary>
+<summary><strong>All 38 domain modes</strong> (one line each — full descriptions in <a href="CAPABILITIES.md#domain-harnesses">CAPABILITIES.md</a>)</summary>
 
 | `--mode` | Field |
 |---|---|
@@ -734,19 +734,24 @@ validators, which is a genuine slice of the product rather than a mock.
 | `drugdisc` | Molecular docking, ADMET, structure–activity reasoning |
 | `edagent` | Sandbox-only emergency-department triage and disposition loop |
 | `energy` | Capacity expansion, energy markets, GHG-Protocol carbon accounting |
+| `esg` | GHG Scope 1–3, CBAM, anti-greenwashing claim checks |
 | `finrisk` | Financial risk and multi-jurisdiction regulatory compliance |
 | `genomics` | Genomic and bioinformatic analysis |
 | `geospatial` | Earth observation, CRS validation, cloud masking |
 | `greenenergy` | Solar / wind / hydrogen projects, yield and LCOE, EU Taxonomy |
 | `grideng` | Power-grid load flow and N-1 contingency |
 | `gridfm` | Independent physical checks on power-grid foundation-model predictions |
+| `healthrcm` | Medical coding, claim edits, prior authorization, PHI gate |
+| `insurance` | Claims, underwriting fairness, reserving |
 | `legalai` | Citation verification, authority hierarchy, privilege scanning |
 | `matsci` | DFT, phase diagrams, crystal structure |
+| `mfgquality` | SPC, capability, gauge R&R, PFMEA, 8D, lot release |
 | `mobility` | AV / V2X / eVTOL under ISO 26262 and ISO 21448 |
 | `neurosci` | EEG / fMRI analysis and connectome mapping |
 | `nucsci` | Reactor physics and decay chains |
 | `oilgas` | Upstream / midstream / downstream with well-control gates |
 | `oncology` | Cancer decision-support with PHI scrubbing and human-in-loop |
+| `pharmacovig` | Adverse-event cases, seriousness, expedited reporting clocks |
 | `physai` | Quantum and statistical mechanics reasoning |
 | `precmed` | Clinical genomics, pharmacogenomics, VUS classification |
 | `quantumsci` | Circuit design and error correction with a fidelity budget gate |
@@ -755,6 +760,7 @@ validators, which is a genuine slice of the product rather than a mock.
 | `spacemarine` | Orbital mechanics, link budgets, naval architecture, IMO |
 | `structbio` | Cryo-EM and AlphaFold behind an FSC-0.143 resolution gate |
 | `synbio` | Genetic circuit design with biosafety and dual-use screening |
+| `tradecomp` | Sanctions screening, export classification, end-use red flags |
 | `transcriptomics` | Bulk RNA-seq quality assessment and batch-confounding checks |
 
 Inspect the roster shipped in your binary with `tokn introspect --section modes`.
@@ -768,14 +774,14 @@ What a licence changes:
 | Surface | one validator call, printed | the domain's full tool set, callable by the agent |
 | Process | a single verdict | a lifecycle state machine with named states |
 | Gates | shown, not enforced on anything | enforced on transitions |
-| Coverage | 3 domains | 32 domain modes; availability depends on entitlement |
+| Coverage | 3 domains | 38 domain modes; availability depends on entitlement |
 
 **A licence does not bypass a domain's safety gates.** It enables entitled
 workflows, not blocked transitions or weaker evidence requirements. Outputs
 remain decision support, not clinical, legal or regulatory certification. And
 **installing instructions is not unlocking a domain** — a skill pack like
 `decision-models` is text, registers no domain tool or gate, and is not one of
-the 32 domains. Running `--mode <domain>` is what engages the harness.
+the 38 domains. Running `--mode <domain>` is what engages the harness.
 
 Full roster with one verified line per domain:
 **[CAPABILITIES.md](CAPABILITIES.md#domain-harnesses)**. Licensing availability

@@ -1,0 +1,24 @@
+{
+ "_note": "SYNTHETIC data for the TOKN mfgquality relay scenario. Supplier, part and plant are fictitious.",
+ "supplier": "Supplier S-ALPHA (synthetic)",
+ "claims": [
+  {
+   "characteristic": "CH-03",
+   "claimed_cpk": 2.6,
+   "statement": "Groove depth is highly capable (Cpk 2.6) and ready for release."
+  },
+  {
+   "characteristic": "CH-04",
+   "claimed_cpk": 1.9,
+   "statement": "Control limits set at the drawing tolerance for operator simplicity."
+  }
+ ],
+ "control_limits": {
+  "CH-04": {
+   "center": 8.0,
+   "ucl": 8.04,
+   "lcl": 7.96,
+   "source": "drawing tolerance"
+  }
+ }
+}

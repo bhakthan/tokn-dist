@@ -1,0 +1,83 @@
+{
+ "_note": "SYNTHETIC data for the TOKN mfgquality relay scenario. Supplier, part and plant are fictitious.",
+ "scale": "AIAG-VDA FMEA Handbook 1-10 S/O/D ratings (scale referenced by name only)",
+ "rows": [
+  {
+   "characteristic": "CH-01",
+   "id": "PF-01",
+   "failure_mode": "Bore oversize",
+   "effect": "Leak at valve seat",
+   "severity": 7,
+   "occurrence": 2,
+   "detection": 3,
+   "recommended_action": "",
+   "responsible": ""
+  },
+  {
+   "characteristic": "CH-02",
+   "id": "PF-02",
+   "failure_mode": "Flange too thin",
+   "effect": "Reduced clamp load",
+   "severity": 6,
+   "occurrence": 3,
+   "detection": 4,
+   "recommended_action": "",
+   "responsible": ""
+  },
+  {
+   "characteristic": "CH-03",
+   "id": "PF-03",
+   "failure_mode": "Groove too shallow",
+   "effect": "Seal extrusion",
+   "severity": 7,
+   "occurrence": 3,
+   "detection": 3,
+   "recommended_action": "",
+   "responsible": ""
+  },
+  {
+   "characteristic": "CH-04",
+   "id": "PF-04",
+   "failure_mode": "Pitch diameter out",
+   "effect": "Assembly torque failure",
+   "severity": 6,
+   "occurrence": 2,
+   "detection": 3,
+   "recommended_action": "",
+   "responsible": ""
+  },
+  {
+   "characteristic": "CH-05",
+   "id": "PF-05",
+   "failure_mode": "Face not flat",
+   "effect": "Weep leak",
+   "severity": 7,
+   "occurrence": 2,
+   "detection": 4,
+   "recommended_action": "",
+   "responsible": ""
+  },
+  {
+   "characteristic": "CH-06",
+   "id": "PF-06",
+   "failure_mode": "Undersize weld nugget",
+   "effect": "Bracket separation; loss of mounting (safety-related)",
+   "severity": 9,
+   "occurrence": 2,
+   "detection": 3,
+   "recommended_action": "",
+   "responsible": ""
+  },
+  {
+   "characteristic": "CH-07",
+   "id": "PF-07",
+   "failure_mode": "Press-fit height high",
+   "effect": "Interference with cover",
+   "severity": 5,
+   "occurrence": 3,
+   "detection": 3,
+   "recommended_action": "",
+   "responsible": ""
+  }
+ ]
+}

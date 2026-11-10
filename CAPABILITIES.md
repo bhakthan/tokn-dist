@@ -29,7 +29,7 @@ Inside the interactive session (`tokn` with no args, or `tokn agent-repl`):
 > Counts below are deliberately approximate — run the commands above for the
 > exact surface shipped in your version.
 
-> This page introduces headline capabilities and the **32 domain modes**.
+> This page introduces headline capabilities and the **38 domain modes**.
 > Use `tokn --help`, `/help`, and `/learn` to discover the commands and lessons
 > shipped in your version.
 
@@ -435,19 +435,24 @@ version; these notes describe the current release.
 | `drugdisc` | Molecular docking, ADMET prediction and structure–activity reasoning |
 | `edagent` | Emergency-department triage→diagnostics→disposition loop, sandbox-only, coded to ICD-10/LOINC/SNOMED/RxNorm |
 | `energy` | Multi-carrier energy balance, capacity expansion, market/tariff design and GHG-Protocol carbon accounting |
+| `esg` | ESG and sustainability reporting: GHG Scope 1–3 with emission-factor provenance, CBAM, double-counting and anti-greenwashing gates |
 | `finrisk` | Financial risk and multi-jurisdiction regulatory compliance with calibrated materiality language |
 | `genomics` | Genomic and bioinformatic analysis |
 | `geospatial` | Earth observation with CRS validation, cloud masking and accuracy assessment |
 | `greenenergy` | Solar / wind / hydrogen project development, yield and LCOE, EU Taxonomy DNSH, IEC 61724/61400 |
 | `grideng` | Power-grid engineering — load flow and N-1 contingency against NERC voltage limits |
 | `gridfm` | Independent physical validation of power-grid foundation-model predictions, trust classification and solver warm-start evaluation |
+| `healthrcm` | Healthcare revenue cycle: ICD-10/CPT validation, code-pair and unit edits, medical necessity, prior authorization and a PHI gate |
+| `insurance` | Insurance claims, underwriting and reserving with fairness gates and explainable denials |
 | `legalai` | Legal analysis with citation verification, authority hierarchy and privilege scanning |
 | `matsci` | Materials science — DFT, phase diagrams and crystal structure |
+| `mfgquality` | Manufacturing quality: SPC run rules, capability from raw data, gauge R&R, PFMEA, 8D and lot release |
 | `mobility` | Autonomous vehicles, V2X and eVTOL under ISO 26262 ASIL-D and ISO 21448 SOTIF |
 | `neurosci` | EEG / fMRI analysis and connectome mapping |
 | `nucsci` | Reactor physics and decay-chain analysis |
 | `oilgas` | Upstream, midstream and downstream petroleum engineering with well-control and emissions-honesty gates |
 | `oncology` | Cancer decision-support with PHI scrubbing, human-in-loop gating and paper-calibrated hedging |
+| `pharmacovig` | Pharmacovigilance: case validity, MedDRA, seriousness and expectedness, and 7/15-day reporting clocks |
 | `physai` | Quantum and statistical mechanics reasoning |
 | `precmed` | Clinical genomics, pharmacogenomics and VUS classification |
 | `quantumsci` | Quantum circuit design and error correction with a fidelity error-budget gate |
@@ -456,6 +461,7 @@ version; these notes describe the current release.
 | `spacemarine` | Orbital mechanics, link budgets, naval architecture and IMO compliance |
 | `structbio` | Cryo-EM and AlphaFold work behind a gold-standard FSC-0.143 resolution gate |
 | `synbio` | Genetic circuit design with biosafety and dual-use screening |
+| `tradecomp` | Trade compliance: sanctions screening, export and tariff classification, licensing and end-use red flags |
 | `transcriptomics` | Bulk RNA-seq quality assessment with required-evidence, batch-confounding and downstream-analysis gates |
 
 `/learn domains` explains the shared design.
@@ -484,7 +490,7 @@ A licence turns that single check into a working practice:
 | **Process** | a single verdict | a lifecycle state machine — a study moves through named states |
 | **Gates** | shown, not enforced on anything | enforced on transitions: a study cannot advance on evidence that fails |
 | **Help** | — | domain slash-commands and subagents |
-| **Coverage** | 3 domains | 32 domain modes; availability depends on entitlement |
+| **Coverage** | 3 domains | 38 domain modes; availability depends on entitlement |
 
 Two clarifications that matter more than the table:
 
@@ -495,7 +501,7 @@ Two clarifications that matter more than the table:
   `decision-models` is text — it can teach you how a domain thinks, and it needs
   no licence. It registers no domain tool, no validator and no gate. Running
   `--mode <domain>` is what engages the runtime harness. (The `decision-models`
-  pack is a skill bundle, not one of the 32 domains.)
+  pack is a skill bundle, not one of the 38 domains.)
 
 Previews compute locally, need no API key or trial, read no file you supply and
 write nothing. Walkthrough: **[GETTING_STARTED.md](GETTING_STARTED.md)**.

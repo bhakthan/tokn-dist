@@ -1,0 +1,13 @@
+{
+  "_note": "SYNTHETIC draft disclosure wording and evidence. Each entry is a complete esg_claim_language_check input.",
+  "CLAIM-1": {
+    "text": "In 2025 the group's operations were carbon neutral, achieved by retiring 12,400 tCO2e of carbon credits.\nMarket-based Scope 1 and 2 emissions were 6% below the 2019 base year.",
+    "evidence": {
+      "gross_tco2e": 12400,
+      "offsets_tco2e": 12400,
+      "removals_tco2e": 0,
+      "reduction_vs_base_pct": 6,
+      "scope3_included": false
+    }
+  }
+}

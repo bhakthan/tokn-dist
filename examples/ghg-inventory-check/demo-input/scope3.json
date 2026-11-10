@@ -1,0 +1,43 @@
+{
+  "_note": "SYNTHETIC Scope 3 data for ENT-A (illustrative factors). 'screen' is a complete esg_scope3_screen input. 'calculate' is an esg_scope3_calculate input; set scope2_includes_td_losses from location_factors_include_td_losses in ENT-A's esg_scope2_dual_report output before calling.",
+  "SC3-CAT3": {
+    "screen": {
+      "categories": [
+        {"category": 1, "status": "included", "estimated_tco2e": 500, "boundary": "all purchased goods and services, spend-based"},
+        {"category": 2, "status": "excluded", "estimated_tco2e": 15, "exclusion_reason": "below_threshold", "justification": "No capital expenditure above the capitalisation threshold in the reporting year; screened estimate below 2% of Scope 3.", "boundary": "capex ledger"},
+        {"category": 3, "status": "included", "estimated_tco2e": 252, "boundary": "well-to-tank of fuels and T&D losses of purchased electricity"},
+        {"category": 4, "status": "included", "estimated_tco2e": 240, "boundary": "inbound freight paid by ENT-A"},
+        {"category": 5, "status": "excluded", "estimated_tco2e": 8, "exclusion_reason": "below_threshold", "justification": "Office waste only; screened estimate below 1% of Scope 3 and no landfilled process waste.", "boundary": "site waste contracts"},
+        {"category": 6, "status": "included", "estimated_tco2e": 225, "boundary": "air and rail travel booked through the travel desk"},
+        {"category": 7, "status": "excluded", "estimated_tco2e": 30, "exclusion_reason": "below_threshold", "justification": "Commuting survey not run this cycle; screened estimate 2% of Scope 3, below the 5% relevance threshold.", "boundary": "headcount-based screen"},
+        {"category": 8, "status": "not_applicable", "exclusion_reason": "counted_elsewhere", "counted_in": "scope1/scope2 (owned sites)", "justification": "No upstream leased assets: all ENT-A sites are owned and already in Scope 1 and 2.", "boundary": "lease register"},
+        {"category": 9, "status": "excluded", "estimated_tco2e": 20, "exclusion_reason": "outside_boundary", "justification": "Customers collect goods ex-works; downstream transport is not paid or controlled by ENT-A.", "boundary": "sales terms"},
+        {"category": 10, "status": "not_applicable", "exclusion_reason": "no_activity", "justification": "ENT-A sells finished goods only; no intermediate products are processed by third parties.", "boundary": "product catalogue"},
+        {"category": 11, "status": "not_applicable", "exclusion_reason": "no_activity", "justification": "Products consume no energy and emit no GHG in use (passive packaging components).", "boundary": "product catalogue"},
+        {"category": 12, "status": "excluded", "estimated_tco2e": 25, "exclusion_reason": "below_threshold", "justification": "End-of-life screened with average-data factors at under 2% of Scope 3; below relevance threshold.", "boundary": "sold product mass"},
+        {"category": 13, "status": "not_applicable", "exclusion_reason": "no_activity", "justification": "ENT-A does not lease any assets to third parties.", "boundary": "lease register"},
+        {"category": 14, "status": "not_applicable", "exclusion_reason": "no_activity", "justification": "ENT-A operates no franchises.", "boundary": "legal structure"},
+        {"category": 15, "status": "not_applicable", "exclusion_reason": "no_activity", "justification": "ENT-A holds no equity investments outside the consolidation boundary.", "boundary": "investment register"}
+      ]
+    },
+    "calculate": {
+      "gwp_set": "AR6",
+      "items": [
+        {"id": "C1-SPEND", "category": 1, "method": "spend_based", "quantity": 2000000, "quantity_unit": "EUR",
+         "factor": {"value": 0.25, "unit": "kg CO2e/EUR", "source": "Synthetic EEIO table 2023 (illustrative)", "year": 2023, "region": "SYN-REGION", "gwp_set": "AR6"},
+         "data_quality": {"technology": 4, "temporal": 3, "geographical": 3, "completeness": 3, "reliability": 4}},
+        {"id": "C3-WTT-FUEL", "category": 3, "method": "average_data", "component": "wtt_fuels", "quantity": 18000, "quantity_unit": "GJ",
+         "factor": {"value": 10, "unit": "kg CO2e/GJ", "source": "Synthetic well-to-tank factors 2025 (illustrative)", "year": 2025, "region": "SYN-COUNTRY-1", "gwp_set": "AR6"},
+         "data_quality": {"technology": 2, "temporal": 1, "geographical": 2, "completeness": 1, "reliability": 2}},
+        {"id": "C3-TD-LOSS", "category": 3, "method": "average_data", "component": "td_losses", "quantity": 2400, "quantity_unit": "MWh",
+         "factor": {"value": 0.03, "unit": "t CO2e/MWh", "source": "Synthetic T&D loss factors 2025 (illustrative)", "year": 2025, "region": "GRID-NORTH", "gwp_set": "AR6"},
+         "data_quality": {"technology": 2, "temporal": 1, "geographical": 1, "completeness": 1, "reliability": 2}},
+        {"id": "C4-FREIGHT", "category": 4, "method": "supplier_specific", "supplier_emissions_tco2e": 800, "allocation_share": 0.3, "gwp_set": "AR6", "supplier_id": "SUP-LOGISTICS-01",
+         "data_quality": {"technology": 1, "temporal": 1, "geographical": 1, "completeness": 2, "reliability": 2}},
+        {"id": "C6-TRAVEL", "category": 6, "method": "average_data", "quantity": 1500000, "quantity_unit": "pkm",
+         "factor": {"value": 0.15, "unit": "kg CO2e/pkm", "source": "Synthetic travel factors 2025 (illustrative)", "year": 2025, "region": "SYN-REGION", "gwp_set": "AR6"},
+         "data_quality": {"technology": 3, "temporal": 1, "geographical": 3, "completeness": 2, "reliability": 2}}
+      ]
+    }
+  }
+}

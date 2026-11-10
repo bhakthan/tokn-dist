@@ -1,0 +1,81 @@
+{
+  "_note": "SYNTHETIC data. Entities, grids, factors and certificates are illustrative and do not describe any real company, grid operator or registry. Each scope1/scope2 block is a complete esg_scope1_calculate / esg_scope2_dual_report input; pass it as given.",
+  "ENT-A": {
+    "scope1": {
+      "gwp_set": "AR6",
+      "sources": [
+        {
+          "id": "A-BOILER-1",
+          "entity": "ENT-A",
+          "activity": 18000,
+          "activity_unit": "GJ",
+          "factors": [
+            {"value": 56.1, "unit": "kg CO2/GJ", "source": "Synthetic national inventory factor set v3 (illustrative)", "year": 2024, "region": "SYN-COUNTRY-1"},
+            {"value": 0.001, "unit": "kg CH4/GJ", "source": "Synthetic national inventory factor set v3 (illustrative)", "year": 2024, "region": "SYN-COUNTRY-1"},
+            {"value": 0.0001, "unit": "kg N2O/GJ", "source": "Synthetic national inventory factor set v3 (illustrative)", "year": 2024, "region": "SYN-COUNTRY-1"}
+          ]
+        }
+      ]
+    },
+    "scope2": {
+      "entity": "ENT-A",
+      "reporting_year": 2025,
+      "gwp_set": "AR6",
+      "sites": [
+        {
+          "id": "A-HQ",
+          "entity": "ENT-A",
+          "market": "GRID-NORTH",
+          "consumption": 2400,
+          "consumption_unit": "MWh",
+          "location_factor": {"value": 0.35, "unit": "kg CO2e/kWh", "source": "Synthetic grid-average factors 2025 (illustrative)", "year": 2025, "region": "GRID-NORTH", "gwp_set": "AR6", "includes_td_losses": true},
+          "residual_mix_factor": {"value": 0.48, "unit": "t CO2e/MWh", "source": "Synthetic residual mix 2025 (illustrative)", "year": 2025, "region": "GRID-NORTH", "gwp_set": "AR6"}
+        }
+      ],
+      "instruments": [
+        {"id": "GO-A-2025-001", "type": "GO", "mwh": 1500, "vintage_year": 2025, "market": "GRID-NORTH", "site": "A-HQ", "claimed_by": "ENT-A", "retired": true}
+      ]
+    }
+  },
+  "ENT-B": {
+    "scope2": {
+      "entity": "ENT-B",
+      "reporting_year": 2025,
+      "gwp_set": "AR6",
+      "sites": [
+        {
+          "id": "B-PLANT",
+          "entity": "ENT-B",
+          "market": "GRID-EAST",
+          "consumption": 3000,
+          "consumption_unit": "MWh",
+          "residual_mix_factor": {"value": 0.52, "unit": "t CO2e/MWh", "source": "Synthetic residual mix 2025 (illustrative)", "year": 2025, "region": "GRID-EAST", "gwp_set": "AR6"}
+        }
+      ],
+      "instruments": [
+        {"id": "GO-B-2025-014", "type": "GO", "mwh": 1000, "vintage_year": 2025, "market": "GRID-EAST", "site": "B-PLANT", "claimed_by": "ENT-B", "retired": true}
+      ]
+    }
+  },
+  "ENT-C": {
+    "scope2": {
+      "entity": "ENT-C",
+      "reporting_year": 2025,
+      "gwp_set": "AR6",
+      "sites": [
+        {
+          "id": "C-WAREHOUSE",
+          "entity": "ENT-C",
+          "market": "GRID-NORTH",
+          "consumption": 1200,
+          "consumption_unit": "MWh",
+          "location_factor": {"value": 0.35, "unit": "kg CO2e/kWh", "source": "Synthetic grid-average factors 2025 (illustrative)", "year": 2025, "region": "GRID-NORTH", "gwp_set": "AR6", "includes_td_losses": true},
+          "residual_mix_factor": {"value": 0.48, "unit": "t CO2e/MWh", "source": "Synthetic residual mix 2025 (illustrative)", "year": 2025, "region": "GRID-NORTH", "gwp_set": "AR6"}
+        }
+      ],
+      "instruments": [
+        {"id": "REC-C-2022-077", "type": "REC", "mwh": 1200, "vintage_year": 2022, "market": "GRID-WEST", "site": "C-WAREHOUSE", "claimed_by": "ENT-C", "retired": true}
+      ]
+    }
+  }
+}

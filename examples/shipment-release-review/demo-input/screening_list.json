@@ -1,0 +1,61 @@
+{
+  "list_name": "SYNTHETIC-RESTRICTED-PARTY-LIST",
+  "synthetic": true,
+  "note": "Every entry is fictional. Country codes XA-XZ are ISO 3166 user-assigned codes used here for fictional jurisdictions. This file is test data only and must never be used for real screening.",
+  "entries": [
+    {
+      "entry_id": "SYN-001",
+      "name": "Yevgrafov Mashinostroy Holding",
+      "aliases": ["YMH Industrial Group"],
+      "addresses": ["14 Lantern Quay, Port Veska"],
+      "country": "XR",
+      "list": "SYNTHETIC-RPL",
+      "program": "SYN-PROGRAM-A",
+      "type": "entity"
+    },
+    {
+      "entry_id": "SYN-002",
+      "name": "Grell Strategic Holdings",
+      "addresses": ["9 Amberline Road, Kost"],
+      "country": "XR",
+      "list": "SYNTHETIC-RPL",
+      "program": "SYN-PROGRAM-A",
+      "type": "entity"
+    },
+    {
+      "entry_id": "SYN-003",
+      "name": "Ostrova Capital Group",
+      "aliases": ["Ostrova Kapital"],
+      "country": "XR",
+      "list": "SYNTHETIC-RPL",
+      "program": "SYN-PROGRAM-A",
+      "type": "entity"
+    },
+    {
+      "entry_id": "SYN-004",
+      "name": "Kestrel Dawn Trading",
+      "addresses": ["Unit 3, Saltmarsh Free Zone"],
+      "country": "XQ",
+      "list": "SYNTHETIC-RPL",
+      "program": "SYN-PROGRAM-B",
+      "type": "entity"
+    },
+    {
+      "entry_id": "SYN-005",
+      "name": "Vantor Apex Logistics",
+      "country": "XR",
+      "list": "SYNTHETIC-RPL",
+      "program": "SYN-PROGRAM-B",
+      "type": "entity"
+    },
+    {
+      "entry_id": "SYN-006",
+      "name": "Mireth Okonde",
+      "aliases": ["M. Okonde"],
+      "country": "XQ",
+      "list": "SYNTHETIC-RPL",
+      "program": "SYN-PROGRAM-B",
+      "type": "individual"
+    }
+  ]
+}

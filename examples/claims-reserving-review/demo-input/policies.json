@@ -1,0 +1,33 @@
+{
+  "_synthetic": "SYNTHETIC DATA. Fictional insurer, fictional policy and fictional claim refs. No real person, address or company.",
+  "insurer": "Fictional Mutual Insurance Co. (synthetic)",
+  "policies": [
+    {
+      "policy_id": "POL-HO-100",
+      "form": "synthetic homeowners special form (open perils on dwelling)",
+      "period": {"clause_id": "DEC-1", "start": "2024-01-01", "end": "2025-01-01"},
+      "insuring_agreement": {"clause_id": "IA-1", "basis": "open_perils"},
+      "limits": {
+        "clause_id": "LIM-1",
+        "coverage_limit": 300000,
+        "deductible": 1000,
+        "sublimits": {"jewelry": {"clause_id": "SL-1", "amount": 1500}}
+      },
+      "exclusions": [
+        {"clause_id": "EX-1", "title": "Flood and surface water", "perils": ["flood", "surface_water"], "causes": ["flood", "surface_water"]},
+        {"clause_id": "EX-2", "title": "Earth movement", "perils": ["earthquake", "earth_movement"], "causes": ["earthquake", "earth_movement"],
+         "exceptions": [{"clause_id": "EX-2.1", "perils": ["fire", "explosion"], "causes": ["ensuing_fire"]}]},
+        {"clause_id": "EX-3", "title": "Water backup through sewers or drains", "perils": ["sewer_backup", "water_backup"], "causes": ["sewer_backup"]},
+        {"clause_id": "EX-4", "title": "Wear and tear, deterioration", "causes": ["wear_and_tear", "gradual_deterioration"]}
+      ],
+      "conditions": [
+        {"clause_id": "COND-1", "type": "notice", "days": 60},
+        {"clause_id": "COND-2", "type": "proof_of_loss", "days": 90}
+      ],
+      "endorsements": [
+        {"clause_id": "END-1", "sequence": 1, "effective": "2024-03-01", "action": "delete_exclusion", "target": "EX-3"},
+        {"clause_id": "END-2", "sequence": 2, "effective": "2024-03-01", "action": "set_sublimit", "category": "sewer_backup", "amount": 5000}
+      ]
+    }
+  ]
+}

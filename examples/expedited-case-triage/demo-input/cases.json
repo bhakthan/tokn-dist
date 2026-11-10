@@ -1,0 +1,121 @@
+{
+  "_note": "SYNTHETIC cases. Sponsor (Synthetica Therapeutics, fictional), products SYNPRO-101 / SYNPRO-202 (fictional), patients and reporters are invented; patient_ref / reporter_ref are pseudonymous. Event codes refer to inputs/synthetic_dictionary.json, which is NOT MedDRA. CASE-PV-006 deliberately carries an invented patient name and full date of birth to exercise the PHI gate.",
+  "as_of": "2026-11-09",
+  "region": "SYN-REGION-A",
+  "cases": [
+    {
+      "case_id": "CASE-PV-001",
+      "report_type": "spontaneous",
+      "region": "SYN-REGION-A",
+      "receipt_date": "2026-11-02",
+      "patient": {"patient_ref": "SYN-PT-REF-0001", "initials": "R.T.", "age": 71, "sex": "M"},
+      "reporter": null,
+      "products": [{"product": "SYNPRO-202", "role": "suspect"}],
+      "events": [
+        {"event_id": "E1", "verbatim": "liver tests went up", "llt_code": "90000401", "pt_code": "90000301", "pt_term": "SYN-PT Hepatic enzyme event",
+         "onset_date": "2026-10-25", "outcome": "unknown", "seriousness": {"hospitalization": true}, "severity_grade": 3}
+      ],
+      "awareness": [{"date": "2026-11-02", "by_role": "medical_information"}],
+      "narrative": "Anonymous web-form submission; the sender left no contact details and no qualification. A male patient in his seventies taking SYNPRO-202 reportedly had raised liver tests and an overnight hospital stay."
+    },
+    {
+      "case_id": "CASE-PV-002",
+      "report_type": "clinical_trial",
+      "region": "SYN-REGION-A",
+      "receipt_date": "2026-11-04",
+      "patient": {"patient_ref": "SYN-SUBJ-0112", "initials": "D.M.", "age": 63, "sex": "F"},
+      "reporter": {"reporter_ref": "SYN-INV-07", "qualification": "physician", "country": "SYN", "contactable": true},
+      "products": [{"product": "SYNPRO-101", "role": "suspect"}],
+      "events": [
+        {"event_id": "E1", "verbatim": "sudden collapse at home, could not be resuscitated", "llt_code": "90000402", "pt_code": "90000302", "pt_term": "SYN-PT Cardiac collapse event",
+         "onset_date": "2026-10-28", "outcome": "fatal", "seriousness": {"death": true}, "severity_grade": 5,
+         "company_causality": "possible", "reporter_causality": "possible"}
+      ],
+      "awareness": [
+        {"date": "2026-10-30", "by_role": "sales_representative", "minimum_criteria_met": true},
+        {"date": "2026-11-04", "by_role": "safety_department", "minimum_criteria_met": true}
+      ],
+      "narrative": "Study SYN-STUDY-3 subject on SYNPRO-101 collapsed at home on study day 41 and died. The site investigator mentioned the death to a company sales representative at a congress booth on 2026-10-30; the representative forwarded the note to safety, where it was logged on 2026-11-04."
+    },
+    {
+      "case_id": "CASE-PV-003",
+      "report_type": "spontaneous",
+      "region": "SYN-REGION-A",
+      "receipt_date": "2026-10-28",
+      "patient": {"patient_ref": "SYN-PT-REF-0003", "initials": "K.L.", "age": 54, "sex": "F"},
+      "reporter": {"reporter_ref": "SYN-HCP-31", "qualification": "physician", "country": "SYN", "contactable": true},
+      "products": [{"product": "SYNPRO-202", "role": "suspect"}],
+      "events": [
+        {"event_id": "E1", "verbatim": "marked rise in liver enzymes, admitted for monitoring", "llt_code": "90000401", "pt_code": "90000301", "pt_term": "SYN-PT Hepatic enzyme event",
+         "onset_date": "2026-10-20", "outcome": "recovering", "seriousness": {"hospitalization": true}, "severity_grade": 3,
+         "company_causality": "possible", "reporter_causality": "probable"}
+      ],
+      "awareness": [{"date": "2026-10-28", "by_role": "safety_department"}],
+      "narrative": "A woman in her fifties on SYNPRO-202 developed a grade 3 rise in liver enzymes and was admitted for monitoring; enzymes are improving after withdrawal."
+    },
+    {
+      "case_id": "CASE-PV-004",
+      "report_type": "clinical_trial",
+      "region": "SYN-REGION-A",
+      "receipt_date": "2026-10-25",
+      "patient": {"patient_ref": "SYN-SUBJ-0245", "initials": "P.A.", "age": 47, "sex": "M"},
+      "reporter": {"reporter_ref": "SYN-INV-12", "qualification": "physician", "country": "SYN", "contactable": true},
+      "products": [{"product": "SYNPRO-101", "role": "suspect"}],
+      "events": [
+        {"event_id": "E1", "verbatim": "neutrophil count dropped, admitted with fever", "llt_code": "90000404", "pt_code": "90000304", "pt_term": "SYN-PT Low neutrophil event",
+         "onset_date": "2026-10-19", "outcome": "recovering", "seriousness": {"hospitalization": true}, "severity_grade": 3,
+         "company_causality": "unlikely", "reporter_causality": "possible"}
+      ],
+      "awareness": [{"date": "2026-10-25", "by_role": "safety_department"}],
+      "narrative": "Study SYN-STUDY-3 subject admitted with fever and a low neutrophil count. The investigator considers a reasonable possibility of a relationship to SYNPRO-101; the company assessment considers a concurrent infection more likely."
+    },
+    {
+      "case_id": "CASE-PV-005",
+      "report_type": "spontaneous",
+      "region": "SYN-REGION-A",
+      "receipt_date": "2026-10-30",
+      "patient": {"patient_ref": "SYN-PT-REF-0005", "initials": "K.L.", "age": 54, "sex": "female"},
+      "reporter": {"reporter_ref": "SYN-PHARM-08", "qualification": "pharmacist", "country": "SYN", "contactable": true},
+      "products": [{"product": "SYNPRO-202", "role": "suspect"}],
+      "events": [
+        {"event_id": "E1", "verbatim": "liver enzymes high, hospitalised", "llt_code": "90000401", "pt_code": "90000301", "pt_term": "SYN-PT Hepatic enzyme event",
+         "onset_date": "2026-10-21", "outcome": "recovering", "seriousness": {"hospitalization": true}, "severity_grade": 3,
+         "reporter_causality": "possible"}
+      ],
+      "awareness": [{"date": "2026-10-30", "by_role": "safety_department"}],
+      "narrative": "A community pharmacist reports that a female customer in her fifties taking SYNPRO-202 was hospitalised with high liver enzymes in late October."
+    },
+    {
+      "case_id": "CASE-PV-006",
+      "report_type": "spontaneous",
+      "region": "SYN-REGION-A",
+      "receipt_date": "2026-11-03",
+      "patient": {"patient_ref": "SYN-PT-REF-0006", "initials": "M.Q.", "age": 65, "sex": "F"},
+      "reporter": {"reporter_ref": "SYN-HCP-44", "qualification": "nurse", "country": "SYN", "contactable": true},
+      "products": [{"product": "SYNPRO-202", "role": "suspect"}],
+      "events": [
+        {"event_id": "E1", "verbatim": "skin eruption over trunk, admitted", "llt_code": "90000403", "pt_code": "90000303", "pt_term": "SYN-PT Skin eruption event",
+         "onset_date": "2026-10-29", "outcome": "recovering", "seriousness": {"hospitalization": true}, "severity_grade": 3,
+         "reporter_causality": "possible"}
+      ],
+      "awareness": [{"date": "2026-11-03", "by_role": "safety_department"}],
+      "narrative": "Patient name: Marla Quintel, DOB 1961-04-12. Admitted with a widespread skin eruption two weeks after starting SYNPRO-202."
+    },
+    {
+      "case_id": "CASE-PV-007",
+      "report_type": "spontaneous",
+      "region": "SYN-REGION-A",
+      "receipt_date": "2026-11-05",
+      "patient": {"patient_ref": "SYN-PT-REF-0007", "initials": "B.N.", "age": 38, "sex": "M"},
+      "reporter": {"reporter_ref": "SYN-CONS-02", "qualification": "consumer", "country": "SYN", "contactable": true},
+      "products": [{"product": "SYNPRO-202", "role": "suspect"}],
+      "events": [
+        {"event_id": "E1", "verbatim": "felt queasy for two days", "llt_code": "90000405", "pt_code": "90000305", "pt_term": "SYN-PT Queasiness event",
+         "onset_date": "2026-11-01", "outcome": "recovered", "seriousness": {}, "severity_grade": 1,
+         "company_causality": "possible", "reporter_causality": "possible"}
+      ],
+      "awareness": [{"date": "2026-11-05", "by_role": "medical_information"}],
+      "narrative": "A consumer reports two days of mild queasiness after starting SYNPRO-202; it resolved without treatment."
+    }
+  ]
+}

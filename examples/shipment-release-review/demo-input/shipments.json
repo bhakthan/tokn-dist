@@ -1,0 +1,121 @@
+{
+  "synthetic": true,
+  "note": "Seven fictional export shipments from a fictional exporter. All company names, people, addresses and reference numbers are invented. Destination codes XN/XS/XM/XQ/XR are fictional jurisdictions defined in country_chart.json.",
+  "as_of": "2026-11-09",
+  "shipments": [
+    {
+      "shipment_id": "SHP-001",
+      "exporter": {"party_id": "EXP-1", "role": "exporter", "name": "Halvorsen Precision Devices Inc.", "country": "US"},
+      "destination_country": "XN",
+      "parties": [
+        {"party_id": "P-101", "role": "consignee", "name": "Brightmoor Instruments Ltd", "address": "22 Weir Street, Hollin", "country": "XN", "business_type": "test_equipment_manufacturer"},
+        {"party_id": "P-102", "role": "end_user", "name": "Brightmoor Instruments Ltd", "address": "22 Weir Street, Hollin", "country": "XN", "business_type": "test_equipment_manufacturer"}
+      ],
+      "items": [
+        {"item_id": "SHP-001-1", "description": "general-purpose 32-bit microprocessor", "product_type": "microprocessor", "declared_eccn": "3A991.a", "specs": {"clock_mhz": 48}, "hs_code": "8542.31.0000", "national_schedule": "US-HTS", "country_of_origin": "US", "quantity": 400, "declared_value": 12000, "currency": "USD", "reference_unit_value_range": [20, 40], "expected_business_types": ["test_equipment_manufacturer", "electronics_manufacturer"]}
+      ],
+      "end_use": {"statement": "incorporation into bench-top laboratory test instruments"},
+      "payment": {"method": "wire_transfer", "payer_party_id": "P-101"},
+      "routing": {"countries": ["US", "XN"]}
+    },
+    {
+      "shipment_id": "SHP-002",
+      "exporter": {"party_id": "EXP-1", "role": "exporter", "name": "Halvorsen Precision Devices Inc.", "country": "US"},
+      "destination_country": "XS",
+      "parties": [
+        {"party_id": "P-201", "role": "consignee", "name": "Evgrafov Mashinostroi Holding LLC", "address": "5 Furnace Row, Dalmek", "country": "XS", "business_type": "industrial_machinery"},
+        {"party_id": "P-202", "role": "end_user", "name": "Evgrafov Mashinostroi Holding LLC", "address": "5 Furnace Row, Dalmek", "country": "XS", "business_type": "industrial_machinery"}
+      ],
+      "items": [
+        {"item_id": "SHP-002-1", "description": "centrifugal coolant pump", "product_type": "pump", "declared_eccn": "EAR99", "classification_basis": "CCATS G-SYN-104412 (synthetic ruling) on file; documented self-classification CLS-SYN-0412", "specs": {}, "hs_code": "8413.70", "country_of_origin": "US", "quantity": 10, "declared_value": 8500, "currency": "USD", "expected_business_types": ["industrial_machinery"]}
+      ],
+      "end_use": {"statement": "cooling loop for a metal-stamping press line"},
+      "payment": {"method": "letter_of_credit", "payer_party_id": "P-201"},
+      "routing": {"countries": ["US", "XS"]}
+    },
+    {
+      "shipment_id": "SHP-003",
+      "exporter": {"party_id": "EXP-1", "role": "exporter", "name": "Halvorsen Precision Devices Inc.", "country": "US"},
+      "destination_country": "XN",
+      "parties": [
+        {"party_id": "P-301", "role": "consignee", "name": "Corvane Industrial Supply", "address": "88 Kiln Lane, Hollin", "country": "XN", "business_type": "industrial_distributor",
+          "owners": [
+            {"name": "Grell Strategic Holdings", "country": "XR", "percent": 30},
+            {"name": "Ostrova Capital Group", "country": "XR", "percent": 25},
+            {"name": "Fenwick Hollow Family Trust", "country": "XN", "percent": 45}
+          ]},
+        {"party_id": "P-302", "role": "end_user", "name": "Corvane Industrial Supply", "address": "88 Kiln Lane, Hollin", "country": "XN", "business_type": "industrial_distributor",
+          "owners": [
+            {"name": "Grell Strategic Holdings", "country": "XR", "percent": 30},
+            {"name": "Ostrova Capital Group", "country": "XR", "percent": 25},
+            {"name": "Fenwick Hollow Family Trust", "country": "XN", "percent": 45}
+          ]}
+      ],
+      "items": [
+        {"item_id": "SHP-003-1", "description": "stainless ball valves", "product_type": "valve", "declared_eccn": "EAR99", "classification_basis": "CCATS G-SYN-103377 (synthetic ruling) on file; documented self-classification CLS-SYN-0377", "specs": {}, "hs_code": "8481.80", "country_of_origin": "US", "quantity": 200, "declared_value": 9000, "currency": "USD", "expected_business_types": ["industrial_distributor"]}
+      ],
+      "end_use": {"statement": "resale to municipal water utilities"},
+      "payment": {"method": "wire_transfer", "payer_party_id": "P-301"},
+      "routing": {"countries": ["US", "XN"]}
+    },
+    {
+      "shipment_id": "SHP-004",
+      "exporter": {"party_id": "EXP-1", "role": "exporter", "name": "Halvorsen Precision Devices Inc.", "country": "US"},
+      "destination_country": "XN",
+      "parties": [
+        {"party_id": "P-401", "role": "consignee", "name": "Tessaro Sensor Works", "address": "3 Aster Park, Hollin", "country": "XN", "business_type": "satellite_integrator"},
+        {"party_id": "P-402", "role": "end_user", "name": "Tessaro Sensor Works", "address": "3 Aster Park, Hollin", "country": "XN", "business_type": "satellite_integrator"}
+      ],
+      "items": [
+        {"item_id": "SHP-004-1", "description": "radiation-tolerant memory integrated circuit", "product_type": "integrated_circuit", "declared_eccn": "EAR99", "classification_basis": "sales team assumption", "specs": {"total_dose_krad_si": 600, "single_event_latchup_immune": true}, "hs_code": "8542.32", "country_of_origin": "US", "quantity": 50, "declared_value": 40000, "currency": "USD", "expected_business_types": ["satellite_integrator"]}
+      ],
+      "end_use": {"statement": "payload electronics for a commercial earth-observation satellite"},
+      "payment": {"method": "wire_transfer", "payer_party_id": "P-401"},
+      "routing": {"countries": ["US", "XN"]}
+    },
+    {
+      "shipment_id": "SHP-005",
+      "exporter": {"party_id": "EXP-1", "role": "exporter", "name": "Halvorsen Precision Devices Inc.", "country": "US"},
+      "destination_country": "XN",
+      "parties": [
+        {"party_id": "P-501", "role": "consignee", "name": "Linden Ridge Optronics", "address": "41 Harbour Gate, Hollin", "country": "XN", "business_type": "optics_integrator"},
+        {"party_id": "P-502", "role": "end_user", "name": "Linden Ridge Optronics", "address": "41 Harbour Gate, Hollin", "country": "XN", "business_type": "optics_integrator"}
+      ],
+      "items": [
+        {"item_id": "SHP-005-1", "description": "image intensifier tube assembly", "product_type": "image_intensifier", "declared_eccn": "6A003.b.4", "classification_basis": "prior shipment paperwork", "specs": {"image_intensifier_generation": 3, "specially_designed_military": true}, "hs_code": "9013.80", "country_of_origin": "US", "quantity": 20, "declared_value": 60000, "currency": "USD", "expected_business_types": ["optics_integrator"]}
+      ],
+      "end_use": {"statement": "integration into port perimeter observation cameras"},
+      "payment": {"method": "wire_transfer", "payer_party_id": "P-501"},
+      "routing": {"countries": ["US", "XN"]}
+    },
+    {
+      "shipment_id": "SHP-006",
+      "exporter": {"party_id": "EXP-1", "role": "exporter", "name": "Halvorsen Precision Devices Inc.", "country": "US"},
+      "destination_country": "XN",
+      "parties": [
+        {"party_id": "P-601", "role": "consignee", "name": "Pemberton Global Forwarding", "address": "Shed 12, North Terminal, Hollin", "country": "XN", "is_freight_forwarder": true, "business_type": "freight_forwarder"}
+      ],
+      "items": [
+        {"item_id": "SHP-006-1", "description": "bench power supplies", "product_type": "power_supply", "declared_eccn": "EAR99", "classification_basis": "CCATS G-SYN-102290 (synthetic ruling) on file; documented self-classification CLS-SYN-0290", "specs": {}, "hs_code": "8504.40", "country_of_origin": "US", "quantity": 30, "declared_value": 7500, "currency": "USD"}
+      ],
+      "end_use": {"statement": "general laboratory use"},
+      "payment": {"method": "wire_transfer"},
+      "routing": {"countries": ["US", "XN"]}
+    },
+    {
+      "shipment_id": "SHP-007",
+      "exporter": {"party_id": "EXP-1", "role": "exporter", "name": "Halvorsen Precision Devices Inc.", "country": "US"},
+      "destination_country": "XN",
+      "parties": [
+        {"party_id": "P-701", "role": "consignee", "name": "Quillfield Analytics", "address": "7 Copper Mews, Hollin", "country": "XN", "business_type": "laboratory"},
+        {"party_id": "P-702", "role": "end_user", "name": "Quillfield Analytics", "address": "7 Copper Mews, Hollin", "country": "XN", "business_type": "laboratory"}
+      ],
+      "items": [
+        {"item_id": "SHP-007-1", "description": "aluminium sample trays", "product_type": "labware", "declared_eccn": "EAR99", "classification_basis": "CCATS G-SYN-105511 (synthetic ruling) on file; documented self-classification CLS-SYN-0511", "specs": {}, "hs_code": "7701.90", "country_of_origin": "US", "quantity": 500, "declared_value": 2500, "currency": "USD", "expected_business_types": ["laboratory"]}
+      ],
+      "end_use": {"statement": "sample handling in an environmental testing laboratory"},
+      "payment": {"method": "wire_transfer", "payer_party_id": "P-701"},
+      "routing": {"countries": ["US", "XN"]}
+    }
+  ]
+}

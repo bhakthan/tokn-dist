@@ -1,0 +1,64 @@
+{
+  "_synthetic": "SYNTHETIC DATA. Claimants are referenced by fictional refs only (CLMT-*). No names, SSNs, emails or addresses.",
+  "policy_id": "POL-HO-100",
+  "claims": [
+    {
+      "claim_id": "CLM-2001", "claimant_ref": "CLMT-01",
+      "loss": {"claim_id": "CLM-2001", "date_of_loss": "2024-02-14", "reported_date": "2024-02-15", "peril": "water_discharge", "causes": ["burst_pipe"],
+        "facts": [{"fact_id": "F-2001-1", "text": "A supply pipe burst in the upstairs bathroom and water discharged suddenly into the ceiling below.", "supports": ["water_discharge", "burst_pipe"]}]},
+      "loss_amount": 8200
+    },
+    {
+      "claim_id": "CLM-2002", "claimant_ref": "CLMT-02",
+      "loss": {"claim_id": "CLM-2002", "date_of_loss": "2024-04-02", "reported_date": "2024-04-03", "peril": "theft", "causes": ["burglary"],
+        "facts": [{"fact_id": "F-2002-1", "text": "Forced entry through the rear door; jewelry and a laptop were taken.", "supports": ["theft", "burglary"]}]},
+      "loss_items": [{"category": "jewelry", "amount": 12000}, {"category": "electronics", "amount": 3000}],
+      "trap": "jewelry sublimit SL-1 caps the jewelry line at 1500; naive gross-minus-deductible would be 14000"
+    },
+    {
+      "claim_id": "CLM-2003", "claimant_ref": "CLMT-03",
+      "loss": {"claim_id": "CLM-2003", "date_of_loss": "2024-05-20", "reported_date": "2024-05-21", "peril": "flood", "causes": ["surface_water"],
+        "facts": [{"fact_id": "F-2003-1", "text": "Surface water from an overflowing creek entered the basement during heavy rain.", "supports": ["flood", "surface_water"]}]},
+      "denial_draft": {"claim_id": "CLM-2003", "reasons": [{"clause_id": "EX-1", "fact_ids": ["F-2003-1"], "explanation": "The analysis indicates the flood and surface water exclusion (EX-1) applies to water that entered from an overflowing creek (F-2003-1); a denial is indicated, pending adjuster decision."}]}
+    },
+    {
+      "claim_id": "CLM-2004", "claimant_ref": "CLMT-04",
+      "loss": {"claim_id": "CLM-2004", "date_of_loss": "2024-06-01", "reported_date": "2024-06-03", "peril": "water_discharge", "causes": ["wear_and_tear"],
+        "facts": [{"fact_id": "F-2004-1", "text": "Inspection found the roof membrane deteriorated over many years, allowing slow leakage.", "supports": ["wear_and_tear", "gradual_deterioration"]}]},
+      "denial_draft": {"claim_id": "CLM-2004", "reasons": [{"explanation": "Roof was old so the claim is denied."}]},
+      "trap": "denial draft cites no policy clause and no fact — must be BLOCKED"
+    },
+    {
+      "claim_id": "CLM-2005", "claimant_ref": "CLMT-05",
+      "loss": {"claim_id": "CLM-2005", "date_of_loss": "2024-06-10", "reported_date": "2024-06-11", "peril": "sewer_backup", "causes": ["sewer_backup"],
+        "facts": [{"fact_id": "F-2005-1", "text": "Municipal sewer backed up through the basement floor drain.", "supports": ["sewer_backup"]}]},
+      "loss_items": [{"category": "sewer_backup", "amount": 12000}],
+      "trap": "base-form exclusion EX-3 is deleted by END-1 (endorsements override the base form) but END-2 sets a 5000 sewer_backup sublimit"
+    },
+    {
+      "claim_id": "CLM-2006", "claimant_ref": "CLMT-06",
+      "loss": {"claim_id": "CLM-2006", "date_of_loss": "2024-07-01", "reported_date": "2024-10-15", "peril": "windstorm", "causes": ["wind"],
+        "facts": [{"fact_id": "F-2006-1", "text": "Wind removed shingles; the loss was first reported to the insurer in mid-October.", "supports": ["windstorm", "reported", "notice"]}]},
+      "trap": "notice given 106 days after loss against a 60-day condition — a condition issue for review, not an automatic denial"
+    },
+    {
+      "claim_id": "CLM-2007", "claimant_ref": "CLMT-07",
+      "loss": {"claim_id": "CLM-2007", "date_of_loss": "2024-08-20", "reported_date": "2024-08-21", "peril": "fire", "causes": ["earthquake", "ensuing_fire"],
+        "facts": [{"fact_id": "F-2007-1", "text": "An earthquake ruptured a gas line and the ensuing fire damaged the kitchen.", "supports": ["earthquake", "ensuing_fire", "fire"]}]},
+      "trap": "earth movement exclusion EX-2 is triggered but exception EX-2.1 gives back ensuing fire"
+    }
+  ],
+  "final_reports": [
+    {
+      "id": "RPT-BAD",
+      "report": {"claim_id": "CLM-2003", "summary": "This claim is not covered. We hereby deny the claim as a final determination."},
+      "disclaimer": "For information only.",
+      "trap": "final-determination wording and an incomplete disclaimer — must be BLOCKED"
+    },
+    {
+      "id": "RPT-GOOD",
+      "report": {"claim_id": "CLM-2003", "summary": "The analysis indicates coverage is not indicated under exclusion EX-1 on fact F-2003-1, for the licensed adjuster's decision."},
+      "disclaimer": "This analysis is decision support only. It is not a final coverage, legal, underwriting, or actuarial determination. The policy wording and applicable law govern, and the policy controls in the event of any conflict. Every indication must be reviewed and decided by a licensed adjuster, qualified actuary, or credentialed underwriter as applicable. This is not legal advice."
+    }
+  ]
+}

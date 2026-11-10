@@ -1,0 +1,33 @@
+{
+  "label": "SYNTHETIC terminology dictionary for TOKN tests. NOT MedDRA: every code (9xxxxxxx) and name is invented; no licensed content is included.",
+  "version": "SYN-0.1",
+  "terms": [
+    {"code": "90000001", "level": "SOC", "name": "SYN SOC Alpha (hepatic-like)", "parents": []},
+    {"code": "90000002", "level": "SOC", "name": "SYN SOC Beta (cardiac-like)", "parents": []},
+    {"code": "90000003", "level": "SOC", "name": "SYN SOC Gamma (blood-like)", "parents": []},
+    {"code": "90000004", "level": "SOC", "name": "SYN SOC Delta (gastro-like)", "parents": []},
+
+    {"code": "90000101", "level": "HLGT", "name": "SYN HLGT Alpha-1", "parents": ["90000001"]},
+    {"code": "90000102", "level": "HLGT", "name": "SYN HLGT Beta-1", "parents": ["90000002"]},
+    {"code": "90000103", "level": "HLGT", "name": "SYN HLGT Gamma-1", "parents": ["90000003"]},
+    {"code": "90000104", "level": "HLGT", "name": "SYN HLGT Delta-1", "parents": ["90000004"]},
+
+    {"code": "90000201", "level": "HLT", "name": "SYN HLT Alpha-1-a", "parents": ["90000101"]},
+    {"code": "90000202", "level": "HLT", "name": "SYN HLT Beta-1-a", "parents": ["90000102"]},
+    {"code": "90000203", "level": "HLT", "name": "SYN HLT Gamma-1-a", "parents": ["90000103"]},
+    {"code": "90000204", "level": "HLT", "name": "SYN HLT Delta-1-a", "parents": ["90000104"]},
+
+    {"code": "90000301", "level": "PT", "name": "SYN-PT Hepatic enzyme event", "parents": ["90000201"]},
+    {"code": "90000302", "level": "PT", "name": "SYN-PT Cardiac collapse event", "parents": ["90000202"]},
+    {"code": "90000303", "level": "PT", "name": "SYN-PT Skin eruption event", "parents": ["90000201"]},
+    {"code": "90000304", "level": "PT", "name": "SYN-PT Low neutrophil event", "parents": ["90000203"]},
+    {"code": "90000305", "level": "PT", "name": "SYN-PT Queasiness event", "parents": ["90000204"]},
+
+    {"code": "90000401", "level": "LLT", "name": "SYN-LLT Hepatic enzyme raised", "parents": ["90000301"]},
+    {"code": "90000402", "level": "LLT", "name": "SYN-LLT Sudden cardiac collapse", "parents": ["90000302"]},
+    {"code": "90000403", "level": "LLT", "name": "SYN-LLT Skin eruption", "parents": ["90000303"]},
+    {"code": "90000404", "level": "LLT", "name": "SYN-LLT Neutrophils low", "parents": ["90000304"]},
+    {"code": "90000405", "level": "LLT", "name": "SYN-LLT Queasy feeling", "parents": ["90000305"]},
+    {"code": "90000499", "level": "LLT", "name": "SYN-LLT Retired queasy term", "parents": ["90000305"], "current": false}
+  ]
+}

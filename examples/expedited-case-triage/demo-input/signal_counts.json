@@ -1,0 +1,7 @@
+{
+  "_note": "SYNTHETIC 2x2 report counts from a fictional safety database. a = product AND event, b = product with other events, c = other products AND event, d = other products with other events.",
+  "pairs": [
+    {"label": "SIG-1 SYNPRO-202 / SYN-PT Hepatic enzyme event", "a": 12, "b": 388, "c": 40, "d": 9560},
+    {"label": "SIG-2 SYNPRO-202 / SYN-PT Low neutrophil event", "a": 2, "b": 398, "c": 3, "d": 9597}
+  ]
+}

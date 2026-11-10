@@ -1,0 +1,23 @@
+{
+  "synthetic": true,
+  "note": "SYNTHETIC country chart for fictional jurisdictions (XN, XS, XR, XM, XQ) plus the home country. Columns and reasons for control mirror the structure of the Commerce Country Chart (EAR Part 738) but the values are invented test data.",
+  "reasons": ["NS1", "NS2", "MT1", "NP1", "CB1", "RS1", "AT1"],
+  "countries": {
+    "US": {"name": "Home jurisdiction", "controls": {"NS1": false, "NS2": false, "MT1": false, "NP1": false, "CB1": false, "RS1": false, "AT1": false}, "country_groups": []},
+    "XN": {"name": "Norland (fictional)", "controls": {"NS1": true, "NS2": false, "MT1": true, "NP1": true, "CB1": true, "RS1": true, "AT1": false}, "country_groups": ["B"]},
+    "XS": {"name": "Sarvia (fictional)", "controls": {"NS1": true, "NS2": false, "MT1": true, "NP1": true, "CB1": true, "RS1": true, "AT1": false}, "country_groups": ["B"]},
+    "XM": {"name": "Marovia (fictional)", "controls": {"NS1": true, "NS2": true, "MT1": true, "NP1": true, "CB1": true, "RS1": true, "AT1": false}, "country_groups": ["D:1"], "military_end_use_restricted": true},
+    "XQ": {"name": "Quessa (fictional)", "controls": {"NS1": true, "NS2": true, "MT1": true, "NP1": true, "CB1": true, "RS1": true, "AT1": false}, "country_groups": ["D:1"]},
+    "XR": {"name": "Rekonia (fictional)", "controls": {"NS1": true, "NS2": true, "MT1": true, "NP1": true, "CB1": true, "RS1": true, "AT1": true}, "country_groups": ["E:1"], "embargoed": true}
+  },
+  "eccn_reasons": {
+    "3A001": ["NS1", "RS1", "AT1"],
+    "3A991": ["AT1"],
+    "6A003": ["NS2", "RS1", "AT1"],
+    "5A991": ["AT1"]
+  },
+  "license_exceptions": {
+    "LVS": {"country_groups": ["B"], "eligible_reasons": ["NS1"], "value_limit": 5000, "note": "synthetic simplified rule"},
+    "GBS": {"country_groups": ["B"], "eligible_reasons": ["NS2"], "note": "synthetic simplified rule"}
+  }
+}

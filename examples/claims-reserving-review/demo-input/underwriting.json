@@ -1,0 +1,47 @@
+{
+  "_synthetic": "SYNTHETIC DATA. Fictional rating models and cohort counts. Group labels are anonymous.",
+  "models": [
+    {
+      "model_id": "UW-MODEL-A",
+      "factors": [
+        {"name": "prior_claims_count", "weight": 0.4},
+        {"name": "construction_class", "weight": 0.3},
+        {"name": "neighborhood_index", "source_field": "applicant_ethnicity", "weight": 0.2},
+        {"name": "roof_age", "weight": 0.1}
+      ],
+      "trap": "a neutral-looking factor is sourced from a prohibited attribute — must be BLOCKED"
+    },
+    {
+      "model_id": "UW-MODEL-B",
+      "factors": [{"name": "zip_code_territory", "weight": 1.0}],
+      "trap": "ZIP-level geography used as the sole rating factor without justification or a disparate-impact test"
+    },
+    {
+      "model_id": "UW-MODEL-C",
+      "factors": [
+        {"name": "prior_claims_count", "weight": 0.5},
+        {"name": "roof_age", "weight": 0.3},
+        {"name": "protection_class", "weight": 0.2}
+      ],
+      "cohorts": [{"group": "group_1", "favorable": 450, "total": 500}, {"group": "group_2", "favorable": 292, "total": 400}]
+    }
+  ],
+  "cohort_tests": [
+    {
+      "id": "UW-COHORT-D",
+      "cohorts": [{"group": "group_1", "favorable": 450, "total": 500}, {"group": "group_2", "favorable": 274, "total": 400}],
+      "trap": "impact ratio 0.761 is below four-fifths"
+    }
+  ],
+  "decision_batches": [
+    {
+      "id": "UW-DECLINES-E",
+      "decisions": [
+        {"applicant_ref": "APP-501", "decision": "decline", "reason_codes": []},
+        {"applicant_ref": "APP-502", "decision": "decline", "reason_codes": ["UW01", "UW03"]},
+        {"applicant_ref": "APP-503", "decision": "approve"}
+      ],
+      "trap": "APP-501 declined with no reason codes — must be BLOCKED"
+    }
+  ]
+}
