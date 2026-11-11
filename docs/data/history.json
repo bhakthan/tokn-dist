@@ -511,6 +511,10 @@
     "2026-11-09": {
       "count": 22,
       "uniques": 11
+    },
+    "2026-11-10": {
+      "count": 23,
+      "uniques": 14
     }
   },
   "downloads_daily": {
@@ -628,7 +632,8 @@
     "2026-11-07": 14,
     "2026-11-08": 25,
     "2026-11-09": 15,
-    "2026-11-10": 28
+    "2026-11-10": 28,
+    "2026-11-11": 6
   },
   "downloads_snapshots": {
     "2026-07-18": {
@@ -2002,6 +2007,18 @@
         "tokn_windows_amd64.exe": 130
       },
       "total": 882
+    },
+    "2026-11-11": {
+      "assets": {
+        "SHA256SUMS": 129,
+        "SHA256SUMS.sig": 113,
+        "tokn_darwin_amd64": 109,
+        "tokn_darwin_arm64": 110,
+        "tokn_linux_amd64": 191,
+        "tokn_linux_arm64": 106,
+        "tokn_windows_amd64.exe": 130
+      },
+      "total": 888
     }
   },
   "downloads_state": {
@@ -2023,7 +2040,7 @@
     },
     "tokn_linux_amd64": {
       "carry": 1,
-      "last": 184
+      "last": 190
     },
     "tokn_linux_arm64": {
       "carry": 0,
@@ -2036,28 +2053,28 @@
   },
   "paths": [
     {
-      "count": 34,
+      "count": 31,
       "path": "/bhakthan/tokn-dist",
       "title": "Overview",
       "uniques": 6
     },
     {
-      "count": 30,
+      "count": 29,
       "path": "/bhakthan/tokn-dist/tree/main/examples",
       "title": "/tree/main/examples",
       "uniques": 1
     },
     {
-      "count": 18,
-      "path": "/bhakthan/tokn-dist/tree/main/examples/biomolecular-modeling",
-      "title": "/tree/main/examples/biomolecular-modeling",
-      "uniques": 1
-    },
-    {
-      "count": 17,
+      "count": 16,
       "path": "/bhakthan/tokn-dist/tree/main",
       "title": "/tree/main",
       "uniques": 2
+    },
+    {
+      "count": 15,
+      "path": "/bhakthan/tokn-dist/tree/main/examples/biomolecular-modeling",
+      "title": "/tree/main/examples/biomolecular-modeling",
+      "uniques": 1
     },
     {
       "count": 13,
@@ -2066,7 +2083,7 @@
       "uniques": 1
     },
     {
-      "count": 9,
+      "count": 6,
       "path": "/bhakthan/tokn-dist/releases",
       "title": "/releases",
       "uniques": 3
@@ -2098,7 +2115,7 @@
   ],
   "referrers": [
     {
-      "count": 21,
+      "count": 20,
       "referrer": "github.com",
       "uniques": 1
     },
@@ -2109,7 +2126,7 @@
     }
   ],
   "repo": "bhakthan/tokn-dist",
-  "updated_at": "2026-11-10T14:58:21.750770+00:00",
+  "updated_at": "2026-11-11T14:29:22.825409+00:00",
   "views_daily": {
     "2026-07-05": {
       "count": 0,
@@ -2622,6 +2639,10 @@
     "2026-11-09": {
       "count": 18,
       "uniques": 2
+    },
+    "2026-11-10": {
+      "count": 10,
+      "uniques": 1
     }
   }
 }
