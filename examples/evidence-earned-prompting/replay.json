@@ -1,0 +1,6 @@
+[
+  "CREATE VIEW open_claims_paid AS SELECT c.claim_id, p.product_line, cp.paid_amount AS paid_to_date FROM claims c JOIN policies p ON p.policy_id = c.policy_id JOIN claim_payments cp ON cp.claim_id = c.claim_id WHERE c.status = 'Open';",
+  "CREATE VIEW open_claims_paid AS SELECT c.claim_id, p.product_line, cp.paid_amount AS paid_to_date FROM claims c JOIN policies p ON p.policy_id = c.policy_id JOIN claim_payments cp ON cp.claim_id = c.claim_id WHERE c.claim_status = 'Open';",
+  "CREATE VIEW open_claims_paid AS SELECT c.claim_id, p.product_line, cp.paid_amount AS paid_to_date FROM claims c JOIN policies p ON p.policy_id = c.policy_id JOIN claim_payments cp ON cp.claim_id = c.claim_id WHERE c.claim_status = 'OPEN';",
+  "```sql\nCREATE VIEW open_claims_paid AS\nSELECT c.claim_id, p.product_line, COALESCE(pay.total_paid, 0) AS paid_to_date\nFROM claims c\nJOIN policies p ON p.policy_id = c.policy_id\nLEFT JOIN (SELECT claim_id, SUM(paid_amount) AS total_paid FROM claim_payments GROUP BY claim_id) pay ON pay.claim_id = c.claim_id\nWHERE c.claim_status = 'OPEN';\n```"
+]

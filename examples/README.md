@@ -82,6 +82,7 @@ New to TOKN? Start with [first-ten-minutes](first-ten-minutes/README.md).
 | [web-agent](web-agent/README.md) | The interactive `webagent` mode on a public page (compare with webwright) | Chromium |
 | [peer-collab](peer-collab/README.md) | Two people, two agents, one fictional reactor safety dashboard | — |
 | [self-improvement](self-improvement/README.md) | Improve a prompt bundle within budgets, with a sealed held-out check (`tokn rrsi`) | — |
+| [evidence-earned-prompting](evidence-earned-prompting/README.md) | Insurance-claims SQL: each failure (unknown column, wrong literal, join fan-out) earns one evidence-cited prompt patch; recurring patches become promotion candidates, never auto-promoted (`tokn earned-prompt run`) | none offline; a model provider for the optional live step |
 | [workflow-discovery](workflow-discovery/README.md) | Write, check and inspect a workflow graph the model follows step by step (`tokn procgraph`) | trial |
 | [clinical-council](clinical-council/README.md) | Several models agree a synthetic precision-medicine case, with optional infographics | trial |
 | [agent-loop-essentials](agent-loop-essentials/README.md) | Task anchor, repo map, a predictability report checked against an outcome contract | — |

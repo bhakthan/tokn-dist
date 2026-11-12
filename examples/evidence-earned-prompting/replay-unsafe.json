@@ -1,0 +1,3 @@
+[
+  "DROP VIEW IF EXISTS open_claims_paid;\nCREATE VIEW open_claims_paid AS SELECT c.claim_id, p.product_line, 0 AS paid_to_date FROM claims c JOIN policies p ON p.policy_id = c.policy_id WHERE c.claim_status = 'OPEN';"
+]
