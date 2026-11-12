@@ -1,0 +1,44 @@
+{
+  "name": "Held-out: open claims per policy (synthetic insurance data)",
+  "domain": "insurance",
+  "seed_sql": "../seed.sql",
+  "constitution": {
+    "objective": "Turn a claims-reporting requirement into one SQL view over the claims database.",
+    "hard_constraints": [
+      "Read-only: never modify, drop or insert data.",
+      "Emit exactly one CREATE VIEW statement and nothing else."
+    ],
+    "permissions": ["create_view"],
+    "stop_conditions": [
+      "All acceptance checks pass.",
+      "max_iter reached or token budget exceeded: stop with the best attempt.",
+      "Same failure class 3 consecutive iterations: escalate.",
+      "Any F-UNKNOWN failure: escalate.",
+      "Any action outside permissions: hard stop."
+    ],
+    "budget": { "max_iter": 6, "max_tokens": 30000 }
+  },
+  "baseline": {
+    "version": "1.0.0",
+    "text": "You are a claims-reporting analyst. You write SQLite view definitions from plain-language requirements.",
+    "changelog": []
+  },
+  "task": {
+    "id": "open-claims-per-policy",
+    "goal": "One row per policy, with its product line and how many of its claims are open.",
+    "input": "Requirement: for every policy, show the policy, its product line and the number of its claims that are still open. Policies with no open claims still appear, with 0.",
+    "output_contract": "Return only SQL: CREATE VIEW open_claims_per_policy AS SELECT policy_id, product_line, open_claims ...;",
+    "checks": [
+      { "id": "AC-1", "type": "deterministic", "spec": "executes" },
+      { "id": "AC-2", "type": "deterministic", "spec": "non_empty" },
+      { "id": "AC-3", "type": "deterministic", "spec": "row_band:5-5" },
+      { "id": "AC-4", "type": "deterministic", "spec": "contract:(?is)^\\s*CREATE\\s+VIEW\\s+open_claims_per_policy\\b" },
+      { "id": "AC-5", "type": "deterministic", "spec": "columns:policy_id,product_line,open_claims" },
+      { "id": "AC-6", "type": "deterministic", "spec": "single_statement" }
+    ],
+    "context": [
+      { "id": "tables", "kind": "catalog", "priority": 2, "ts": "2026-01-01T00:00:00Z",
+        "text": "Database tables: policies, claims, claim_payments. Column names are not listed here." }
+    ]
+  }
+}

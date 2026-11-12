@@ -15,7 +15,8 @@ into one of a fixed set of classes and adds one short **patch** to the prompt.
 A patch is admitted only if it cites logged evidence, such as an executor
 error or a verifier result. A patch reaches the versioned **baseline** only if
 it recurs across episodes, passes a regression gate and is approved by a
-person. This command never promotes a patch by itself.
+person. `run` never promotes a patch; `promote` does so only after the
+regression gate and your approval (step 3).
 
 | Piece | In this example |
 |---|---|
@@ -25,7 +26,8 @@ person. This command never promotes a patch by itself.
 | **Verifier** (deterministic) | `AC-1` executes · `AC-2` non-empty · `AC-3` exactly 5 rows · `AC-4` output contract · `AC-5` required columns · `AC-6` a single statement |
 | **Diagnoser** (fixed rules) | Assigns F-SCHEMA, F-LITERAL, F-GRAIN, F-FORMAT or F-SCOPE, then F-UNKNOWN, which escalates to a person |
 | **Context pack** | Built from the database: the schema, distinct values of each status column, and table grain |
-| **Episode log** | Optional append-only JSONL (`--log`) |
+| **Episode log** | Optional append-only JSONL (`--log`); rejected patch drafts are logged too |
+| **Held-out task** | `heldout/`: a second task over the same data, used only by the promotion gate |
 
 The data is fictional: five policies, ten claims (five `OPEN`) and eleven
 payments. One open claim, `C-04`, has no payments yet.
@@ -138,17 +140,60 @@ tokn earned-prompt run --scenario . --replay replay.json --episodes 3
 
 ```text
 promotion candidates (recurred in >= 3 episodes):
-  F-GRAIN  "State the expected output grain first and confirm no join multiplies rows; ..."  (3 evidence refs)
-  F-LITERAL  "Verify every filter literal against the value samples in the context pack before using it; ..."  (3 evidence refs)
-  F-SCHEMA  "Use only the entities listed in the context pack schema; ..."  (3 evidence refs)
-not promoted: promotion requires a regression gate and human approval.
+  F-GRAIN  "State the expected output grain first and confirm no join multiplies rows."  (3 evidence refs)
+  F-LITERAL  "Verify every filter literal against the value samples in the context pack before using it."  (3 evidence refs)
+  F-SCHEMA  "Use only the entities listed in the context pack schema."  (3 evidence refs)
 ```
 
-Recurring three times only makes a patch a *candidate*. To get into the
-baseline, it must also pass a regression gate on held-out tasks, with no drop
-in pass rate and token cost within tolerance. Then a person must review the
-diff. Only then does the baseline version go up, with a changelog entry that
-records the evidence IDs. Patches that don't recur are discarded.
+Recurring three times only makes a patch a *candidate*. `run` never changes
+the baseline. Patches that don't recur are discarded.
+
+**Promotion goes through a regression gate and then a person.** The
+`heldout/` folder is a different task over the same data (open claims per
+policy). `promote` runs the episodes, then checks each candidate against it:
+
+```bash
+mkdir -p scratch
+tokn earned-prompt promote --scenario . --replay replay.json \
+  --held-out heldout --baseline-out scratch/baseline.json
+```
+
+The gate runs the held-out task twice: once with the current baseline and once
+with the candidate rule added. A rule is refused if the pass rate drops or the
+token cost rises more than 10%. If there is no held-out task, the gate fails
+closed. A rule that passes is shown to you with a y/N prompt. In a script, use
+`--approve --reviewer <name>` instead. With neither, nothing is promoted.
+
+```text
+review (regression gate, then human):
+  F-GRAIN   promoted  recurred, gate passed, approved  [v1.0.0->v1.0.1 held-out=1 pass 1.00->1.00 tokens 358->377]
+  F-LITERAL promoted  recurred, gate passed, approved  [v1.0.1->v1.0.2 held-out=1 pass 1.00->1.00 tokens 377->401]
+  F-SCHEMA  promoted  recurred, gate passed, approved  [v1.0.2->v1.0.3 held-out=1 pass 1.00->1.00 tokens 401->415]
+baseline now v1.0.3
+```
+
+Each approval raises the patch version and adds a changelog entry with the
+evidence IDs and the reviewer. The baseline gets the general rule, not one
+episode's values. `scenario.json` is never edited. To use the new baseline:
+
+```bash
+tokn earned-prompt run --scenario . --replay replay.json --baseline scratch/baseline.json
+```
+
+Before you approve, ask yourself whether the rule would help on a task you
+haven't seen. One held-out task is a thin sample. Add more `--held-out`
+folders before trusting a rule for real work.
+
+**Rejected drafts are kept.** If a patch draft is refused, for example because
+it tries to weaken a check, it is logged as evidence with the reason. Nothing
+deletes these records automatically. Remove them when you choose:
+
+```bash
+tokn earned-prompt prune --log scratch/episodes.jsonl --dry-run
+tokn earned-prompt prune --log scratch/episodes.jsonl --older-than 720h
+```
+
+`prune` removes only rejected-draft records and keeps a `.bak` copy.
 
 The other stop rules work the same way. If all checks pass, the loop stops.
 If it reaches `max_iter` or the token budget, it stops and reports the best

@@ -1,0 +1,3 @@
+[
+  "CREATE VIEW open_claims_per_policy AS SELECT p.policy_id, p.product_line, COUNT(c.claim_id) AS open_claims FROM policies p LEFT JOIN claims c ON c.policy_id = p.policy_id AND c.claim_status = 'OPEN' GROUP BY p.policy_id, p.product_line;"
+]
