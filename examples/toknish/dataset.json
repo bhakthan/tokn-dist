@@ -1,0 +1,21 @@
+{
+  "name": "toknish-walkthrough",
+  "cases": [
+    {"name": "arith-mul", "input": "What is 17 * 23?", "expect_contains": ["391"]},
+    {"name": "capital-au", "input": "What is the capital city of Australia?", "expect_contains": ["Canberra"]},
+    {"name": "unit-seconds", "input": "How many seconds are in 2.5 minutes? Answer with the number.", "expect_contains": ["150"]},
+    {"name": "clock-add", "input": "A train leaves at 14:40 and the trip takes 95 minutes. At what time (HH:MM, 24-hour) does it arrive?", "expect_contains": ["16:15"]},
+    {"name": "reverse-word", "input": "Spell the word \"stressed\" backwards.", "expect_contains": ["desserts"]},
+    {"name": "next-prime", "input": "What is the smallest prime number greater than 89?", "expect_contains": ["97"]},
+    {"name": "leap-year", "input": "Is 2100 a leap year? Answer yes or no.", "expect_contains": ["no"]},
+    {"name": "triangle-sum", "input": "What is the sum of the interior angles of a triangle, in degrees?", "expect_contains": ["180"]},
+    {"name": "relay-pass-count", "input": "How many tests passed according to this summary? Answer with the number.", "expect_contains": ["41"],
+     "context": [{"id": "t1", "kind": "tool-output", "content": "SUMMARY\nPASS: 41\nFAIL: 0\nSKIP: 3\nDURATION: 2.8s"}]},
+    {"name": "relay-failed-package", "input": "Which package failed in this test run? Answer with the package path.", "expect_contains": ["pkg/parse"],
+     "context": [{"id": "t2", "kind": "tool-output", "content": "ok  \tpkg/lex\t0.004s\n--- FAIL: TestParseQuoted (0.00s)\n    parse_test.go:42: got \"a\", want \"a b\"\nFAIL\tpkg/parse\t0.012s\nok  \tpkg/eval\t0.031s"}]},
+    {"name": "relay-module-version", "input": "Which language version does this module declare? Answer with the version number.", "expect_contains": ["1.22"],
+     "context": [{"id": "f1", "kind": "file", "content": "module example.com/widget\n\ngo 1.22\n\nrequire (\n\tgithub.com/google/uuid v1.6.0\n)"}]},
+    {"name": "relay-log-port", "input": "On which port did the connection get refused, according to this log? Answer with the number.", "expect_contains": ["5433"],
+     "context": [{"id": "t3", "kind": "tool-output", "content": "2026-03-01T10:02:11Z INFO starting api on :8080\n2026-03-01T10:02:12Z ERROR db: dial tcp 127.0.0.1:5433: connect: connection refused\n2026-03-01T10:02:12Z INFO retrying in 5s"}]}
+  ]
+}

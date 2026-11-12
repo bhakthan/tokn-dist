@@ -90,6 +90,7 @@ New to TOKN? Start with [first-ten-minutes](first-ten-minutes/README.md).
 | [domain-plugin](domain-plugin/README.md) | Scaffold, validate and install your own small domain plugin | — |
 | [event-trigger](event-trigger/README.md) | Start agent runs from events: a local folder queue first, Azure Service Bus optional | your own broker (optional) |
 | [federation](federation/README.md) | A leader fans a task out to two local workers and applies the results back | — |
+| [toknish](toknish/README.md) | Federation with the toknish wire (signed, auditable results), then a compact model-answer bench (`tokn tkm bench`) | `tokn` on PATH; Ollama for the offline bench (cloud key optional) |
 | [agent-team](agent-team/README.md) | A declarative team (planner, implementer, reviewer) builds a small app | — |
 | [authority-frames](authority-frames/README.md) | When the agent acts, asks or stops: permission, ask-or-act and stuck signals | — |
 | [hands-off-run](hands-off-run/README.md) | A long autonomous run with budgets, checkpoints and a verified finish | — |
