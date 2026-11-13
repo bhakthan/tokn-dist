@@ -319,7 +319,7 @@ avoid any network use.
 
 # Remove generated output (keeps the inputs)
 rm -f run-output.txt workspace/reorder.md   # macOS / Linux
-del run-output.txt workspace\reorder.md     # Windows
+Remove-Item run-output.txt, workspace\reorder.md   # Windows PowerShell
 ```
 
 Remove `.env` as well if you do not want to keep your settings.
