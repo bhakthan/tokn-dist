@@ -1,38 +1,36 @@
 # TOKN — download & try
 
-**TOKN** is a trust-first agentic coding and reasoning harness: a single static
-binary with 32+ regulated-domain plugs, offline licensing, and in-place
-self-update. This repo hosts **the binaries only** so you can try TOKN — the
-source lives in a private repository.
+**TOKN** is the harness around your AI models: it helps them code, use tools,
+work together and check results. One downloadable binary brings **38 domain
+modes**, local or cloud models, offline licensing and in-place updates.
+This repo hosts releases, guides and examples; the source is private.
 
 ---
 
 ## Why TOKN? Value for teams running agents in production
 
 Most agents look great in a demo and get fragile in production. TOKN is the
-**harness around the model** — the part that makes an agent *reliable, safe, and
-honest about its own quality*. A few concrete ways it adds value, in plain terms:
+**harness around the model** — tools, checks and controls for turning a request
+into reviewable work. A few concrete ways it adds value, in plain terms:
 
-- **Self-improvement that can't fool itself.** Agents that tune themselves often
+- **Check improvements against the real goal.** Agents that tune themselves often
   push one number up while the real goal quietly gets worse.
   *Example: a support bot's "tickets resolved" climbs because it learned to close
-  hard tickets fast — while renewals fall.* TOKN's **Graph of Loops** wraps the
-  optimizing loop in governance loops and ties every change to **anchors** (real
-  outcomes, a frozen held-out test set, human judgment). A change ships **only if
-  every anchor agrees.** → `tokn loopgraph` · `/learn loopgraph`
+  hard tickets fast — while renewals fall.* TOKN's **Graph of Loops** lets you
+  check a proposed improvement against independent outcomes and human review,
+  rather than trusting one rising score. → `tokn loopgraph` · `/learn loopgraph`
 
 - **Measure quality, then fix it — on a loop.** You can't improve what you don't
   score. *Example: you suspect your agent "sometimes invents a citation." TOKN
   turns that worry into a countable metric, grades a batch of runs, applies a fix,
-  and re-grades — and blocks any change that regresses your baseline.*
+  and re-grades against your configured baseline.*
   → `tokn flywheel` · `/learn flywheel`
 
-- **Hard guardrails for regulated work.** In medicine, finance, or legal,
-  "usually right" isn't good enough. *Example: a precision-medicine gate blocks a
-  high-risk drug–gene recommendation from ever being emitted; a finance gate
-  enforces the required disclaimer language before an answer leaves the agent.*
-  32+ domain plugs ship these gates and validators, and you can encode your own
-  thresholds. → see **Domain harnesses** in [CAPABILITIES.md](CAPABILITIES.md)
+- **Field-specific checks.** Medicine, finance and engineering need more than a
+  plausible answer. *Example: flag missing evidence in a study, or hold a
+  financial analysis for the required review.* Domain workflows add checks and
+  gates, but remain decision support—not professional approval.
+  → see **Domain harnesses** in [CAPABILITIES.md](CAPABILITIES.md)
 
 - **Local workflows that can be prepared for an air gap.** Tabular prediction
   uses explicit local data and pre-staged model files, with no runtime model
@@ -42,9 +40,9 @@ honest about its own quality*. A few concrete ways it adds value, in plain terms
   and `TOKN_NO_UPDATE_CHECK=1`. Enforce network isolation at the host boundary
   when required; runtime settings are not an OS sandbox.
 
-- **Customize without waiting for a vendor.** Every prompt is a file, not baked-in
-  code. *Example: a new model lands that follows instructions differently — you
-  tune behavior by editing `.nospace/prompts/…`, no recompile and no release.*
+- **Customize without waiting for a vendor.** Override prompts with files.
+  *Example: a new model follows instructions differently—you tune the prompt
+  without recompiling. Workspace overrides require explicit trust.*
   → `/learn customize`
 
 **See it clearly:** `tokn config doctor` shows exactly which config files and env
@@ -74,59 +72,37 @@ version-accurate catalog.
 > Curious what it does? See **[CAPABILITIES.md](CAPABILITIES.md)** for a quick tour —
 > or just run `tokn --help` after installing.
 
-> ✨ **Graph of Loops.** A single self-improvement loop can optimize
-> the wrong thing (raise a metric while the real goal quietly degrades). TOKN lets
-> one TOKN act as an **outer-loop custodian** over another: an optimizing loop wrapped
-> by governance loops and grounded by **anchors** (real outcomes, frozen held-out
-> rules, human judgment). A win is accepted **only if every anchor agrees** —
-> improvement that can't fool itself. Try `tokn loopgraph` or `/learn loopgraph`.
+## Recent highlights
 
-> 🧾 **The Design-Loop Card.** Every `autodesign` / `autoresearch` run now
-> emits a portable card that records *how* a result emerged (bounds, evaluator
-> feedback, held-out check, rejected-candidate graveyard) — and a **fail-closed
-> verdict**. A win selected only by the in-loop evaluator is an honest
-> *unconfirmed-win*, never a contribution; **only a held-out-confirmed win is
-> reportable**. It catches the "simulator escape" (beating a benchmark by exploiting a
-> weakened evaluator) instead of shipping it.
+Updated for **[v0.3.100](https://github.com/bhakthan/tokn-dist/releases/tag/v0.3.100)**.
+These are selected capabilities, not the full command catalog:
 
-> 🆕 **New since v0.3.60 — what has landed through v0.3.80.**
-> - **Auto-ontology from tables.** `tokn ontology build|review|certify|export` proposes an evidence-scored ontology from CSV, Parquet, SQLite, PostgreSQL, MySQL, warehouse or Fabric TMDL sources and exports OWL/SKOS, R2RML, JSON-LD, Mermaid and TMDL. → [ontology-from-tables](examples/ontology-from-tables/README.md)
-> - **Grounded decisions.** `tokn system-one ground` answers typed questions against retrieved evidence (web, a local folder or TOKN memory), withholds answers it cannot support, and can save evidence packs for offline replay. → [grounded-decisions](examples/grounded-decisions/README.md)
-> - **Domain tools models call correctly.** Domain tools now advertise the arguments they read, model refusals end a run as halted instead of "success", and more domain safety gates are wired in. A seven-stage, multi-model relay shows this per domain. → [domain-relay](examples/domain-relay/README.md)
-> - **Single agent loop.** `tokn single-loop` audits a router-plus-subagents design, finds untested paths, forecasts tokens and drafts skills, all offline. → [single-agent-loop](examples/single-agent-loop/README.md)
-> - **Use TOKN from your coding CLI or editor.** Verified setup for Claude Code, Codex CLI, Copilot CLI, Gemini CLI and Antigravity (`tokn serve --mode=mcp`), and T3 Code via `tokn acp`. → [coding-clis](examples/coding-clis/README.md) · [t3code](examples/t3code/README.md)
-> - **Gemini API CLI tool.** With `gemini-api` installed, the agent can generate and analyze media and run Gemini managed agents. → [gemini-api](examples/gemini-api/README.md)
-> - **Cache-aware compaction.** `/compact --strategy=cache-policy` keeps your provider's prompt cache warm, and auto-compaction skips compactions that cost more than they save.
-> - **Docker-free containers.** Preview environments and containerised tools run on Podman or on Docker/Podman inside WSL2 (`TOKN_CONTAINER_RUNTIME`).
-> - **Guarded biomolecular modeling (experimental).** `tokn biomol` adds preflight-first protein-prediction profiles with per-job review; nothing is downloaded or run without explicit approval. → [biomolecular-modeling](examples/biomolecular-modeling/README.md)
-> - **Security:** only MCP config files in your home folder are auto-trusted; copies inside a repo need `tokn mcp trust add`.
+- **Always-on agents, with handoffs.** An inbox wakes an agent for a bounded
+  run; later events can continue the same session. Two agents can pass a case
+  between configured desks, each with its own workspace, tools and budget.
+  Approval-requiring actions are denied when unattended.
+  Start with [one intake agent](examples/always-on-claims-intake/README.md), then
+  [two collaborating desks](examples/always-on-claims-desks/README.md).
+- **TOKNish: checkable receipts for agent work.** Inspect the record behind a
+  worker's result instead of relying on "done." See the
+  [simple example below](#toknish--a-checkable-receipt-for-agent-work).
+- **Local models working together.** Combine a coding model, a vision model
+  and a small decision model on one synthetic insurance claim. They prepare
+  evidence and referrals; a human decides.
+  → [loss inspection](examples/insurance-loss-inspection/README.md) ·
+  [local llama.cpp setup](examples/local-llamacpp/README.md)
+- **Prompt changes backed by evidence.** Try a correction against recorded
+  failures, then regression-check it before human-approved promotion.
+  `tokn doctor prompts` also checks your prompt configuration without editing it.
+  → [evidence-earned prompting](examples/evidence-earned-prompting/README.md)
+- **Broader domain coverage.** The 38 modes include healthcare revenue cycle,
+  manufacturing quality, ESG, insurance, trade compliance and pharmacovigilance.
+  → [domain overview](CAPABILITIES.md#domain-harnesses)
 
-> 🆕 **New in v0.3.60 — self-organizing teams of agents, fully airgapped.**
-> - **`tokn agora org`** scales to 64 workers that claim work, share findings and hand off patches. Only the host's verifier merges anything.
-> - **Workers from anywhere:** other machines (`serve` / `join` / `work`), any MCP client, or TOKN inside another harness via `tokn acp`.
-> - **Local models at scale:** give each worker its own Ollama, llama.cpp/Unsloth GGUF or vLLM endpoint. `--airgap` refuses public endpoints.
-> - **Flint:** the trending `RecursiveSI/flint` coding model is supported as a local GGUF.
->
-> See [CAPABILITIES.md](CAPABILITIES.md#self-organizing-teams-of-agents--scale-without-a-central-orchestrator) or `/learn agora`.
-
-> 🆕 **New in v0.3.59 — goals, loops, workflows and "check your work".**
-> - **Loops:** `/loop 15m <prompt>` re-runs a prompt on a rhythm, and `/loop auto <prompt>` lets the agent pace itself.
-> - **Find-and-refute workflow:** findings are fanned out to independent skeptics, and only the survivors are reported.
-> - **`/ship-ready`** (or `tokn ship-ready`) checks your change and returns READY or NOT READY.
-> - **`/rewind`** restores your files, and the conversation where it was recorded; press Esc twice on an empty prompt to pick a checkpoint.
-> - **Keyboard shortcuts:**
->
->   | Key | Action |
->   | --- | --- |
->   | Ctrl+T | Task checklist |
->   | Shift+Tab | Cycle permission modes, including plan |
->   | Ctrl+V (Alt+V on Windows/WSL) | Paste a screenshot |
->   | Esc | Stop a run |
->   | Ctrl+B | Background a run |
->
-> - **Decisions API:** typed decisions now work with Azure OpenAI's Decisions API (`gpt-6-luna`), which is generally available.
->
-> See [CAPABILITIES.md](CAPABILITIES.md#goals-loops-and-workflows--the-right-size-for-the-job) or `/learn check-your-work`.
+Other walkthroughs cover [ontology from tables](examples/ontology-from-tables/README.md),
+[grounded decisions](examples/grounded-decisions/README.md),
+[agent teams](examples/agent-organization/README.md) and
+[your existing coding CLI or editor](examples/coding-clis/README.md).
 
 > 🔑 **Bring your own model.** TOKN needs an LLM provider (OpenAI, Azure OpenAI,
 > Anthropic/Claude, Gemini, or a local runtime). See **[SETUP.md](SETUP.md)** to
@@ -143,6 +119,36 @@ version-accurate catalog.
 > please read it.
 
 ---
+
+## TOKNish — a checkable receipt for agent work
+
+**Think of TOKNish as a receipt, not another chatbot.** When TOKN agents
+collaborate, a result should come with a record you can inspect—not just "done."
+
+For example, imagine asking a worker to check a small code change:
+
+| Without a receipt | What you want to review |
+|---|---|
+| "The checks passed." | **Result:** unit tests passed. **Evidence:** test-run log. **Not checked:** integration tests. |
+
+That is the idea behind **TOKNish federation**: a checkable record of exchanged
+messages, with evidence and uncertainty attached to claims.
+The example above is an illustration, not literal output.
+
+For an existing TOKNish session, the audit command can check the recorded
+exchange and show a plain-English reading:
+
+```sh
+tokn toknish audit <session-id> --gloss
+```
+
+Use the session ID from your run; `tokn toknish audit --help` explains log
+locations and authentication checks. **A clean audit does not prove that the
+worker's answer is correct.** You still need tests and appropriate human review.
+
+**Separate experiment: TOKNish-M** benchmarks shorter model answers against
+ordinary prose. It is a benchmark pilot, not an automatic change to live agent
+sessions or a promise of token savings.
 
 ## Local prediction — models beyond chat
 
@@ -197,23 +203,9 @@ generates a provider profile, an enforcing egress policy and a non-root image,
 then launches it. Your API key stays on the host and never enters the sandbox.
 It needs Linux or WSL 2, OpenShell and Docker or Podman.
 
-**[More walkthroughs](examples/README.md)** cover domain gates (computational
-biology, oncology, precision medicine, clinical trials, financial risk, legal,
-geospatial, cybersecurity, physical AI, air quality, quantum experiments,
-structural biology, robotics), end-to-end deliverables (a Phase 3 analysis pack
-and a diligence pack), a science reviewer, multi-role critique, autonomous
-design, the quality flywheel, governed loops, skill composition, tool-contract
-repair, custom hooks, session review, memory and checkpoints, codebase blast
-radius, building a full-stack app, workflows, local tabular prediction, the web
-agent, peer collaboration, guarded self-improvement, multi-model clinical
-councils, SDK generation, your own domain plugins, event-triggered runs,
-federated workers, declarative agent teams, long hands-off runs, meeting
-minutes to a proof of concept (optionally via WorkIQ), self-hosted computer-use
-models, RDF ontologies queried with SPARQL and reasoning, portable knowledge
-bundles, TOKN as an MCP server, code-first browser automation, auto-ontology
-from tables, grounded decisions, and seven-stage multi-model domain relays
-graded by code. All data is
-synthetic. New to TOKN? Start with
+**[More walkthroughs](examples/README.md)** cover coding, domain checks,
+browser tasks, knowledge workflows and collaborating agents. Each guide
+explains its scenario, prerequisites and limitations. New to TOKN? Start with
 [first-ten-minutes](examples/first-ten-minutes/README.md).
 
 ## Compose a solution, not just a chat
@@ -714,57 +706,13 @@ Three boundaries worth stating plainly, because they are easy to assume wrong:
 geospatial and power-grid previews. Specialized workflows retain their licensing
 and safeguards. Click for the full 4K image. [Image sources](docs/assets/README.md).*
 
-A **domain harness** adds field-specific tools, validators, lifecycle rules and
-gates around specialized work. **Thirty-two** domain modes are selectable with
-`--mode <name>`. The free tier previews three of them against the *real*
-validators, which is a genuine slice of the product rather than a mock.
+A **domain harness** adds field-specific tools, checks and review workflows.
+TOKN has **38 domain modes** across science, engineering, healthcare and business.
+Launch an entitled mode with `tokn agent-repl --mode <name>`.
+The free tier previews three domains against real validators.
 
-<details>
-<summary><strong>All 38 domain modes</strong> (one line each — full descriptions in <a href="CAPABILITIES.md#domain-harnesses">CAPABILITIES.md</a>)</summary>
-
-| `--mode` | Field |
-|---|---|
-| `appsec` | Agentic source-code security review with an introduced-only CI gate |
-| `atmchem` | Air-quality modelling against NAAQS / EU AQD / WHO thresholds |
-| `batterypass` | EU Battery Passport authoring and conformance |
-| `climsci` | CMIP6 / ERA5 climate analysis with IPCC calibrated language |
-| `clintrial` | Target-trial emulation with confounder and sensitivity analysis |
-| `compbio` | NGS pipelines with multiple-testing-gated statistics |
-| `cybersec` | Threat modelling, vulnerability analysis, incident response |
-| `drugdisc` | Molecular docking, ADMET, structure–activity reasoning |
-| `edagent` | Sandbox-only emergency-department triage and disposition loop |
-| `energy` | Capacity expansion, energy markets, GHG-Protocol carbon accounting |
-| `esg` | GHG Scope 1–3, CBAM, anti-greenwashing claim checks |
-| `finrisk` | Financial risk and multi-jurisdiction regulatory compliance |
-| `genomics` | Genomic and bioinformatic analysis |
-| `geospatial` | Earth observation, CRS validation, cloud masking |
-| `greenenergy` | Solar / wind / hydrogen projects, yield and LCOE, EU Taxonomy |
-| `grideng` | Power-grid load flow and N-1 contingency |
-| `gridfm` | Independent physical checks on power-grid foundation-model predictions |
-| `healthrcm` | Medical coding, claim edits, prior authorization, PHI gate |
-| `insurance` | Claims, underwriting fairness, reserving |
-| `legalai` | Citation verification, authority hierarchy, privilege scanning |
-| `matsci` | DFT, phase diagrams, crystal structure |
-| `mfgquality` | SPC, capability, gauge R&R, PFMEA, 8D, lot release |
-| `mobility` | AV / V2X / eVTOL under ISO 26262 and ISO 21448 |
-| `neurosci` | EEG / fMRI analysis and connectome mapping |
-| `nucsci` | Reactor physics and decay chains |
-| `oilgas` | Upstream / midstream / downstream with well-control gates |
-| `oncology` | Cancer decision-support with PHI scrubbing and human-in-loop |
-| `pharmacovig` | Adverse-event cases, seriousness, expedited reporting clocks |
-| `physai` | Quantum and statistical mechanics reasoning |
-| `precmed` | Clinical genomics, pharmacogenomics, VUS classification |
-| `quantumsci` | Circuit design and error correction with a fidelity budget gate |
-| `robotics` | Motion planning and sensor fusion behind a safety envelope |
-| `semicon` | RTL-to-GDSII with DRC / LVS / timing signoff gates |
-| `spacemarine` | Orbital mechanics, link budgets, naval architecture, IMO |
-| `structbio` | Cryo-EM and AlphaFold behind an FSC-0.143 resolution gate |
-| `synbio` | Genetic circuit design with biosafety and dual-use screening |
-| `tradecomp` | Sanctions screening, export classification, end-use red flags |
-| `transcriptomics` | Bulk RNA-seq quality assessment and batch-confounding checks |
-
-Inspect the roster shipped in your binary with `tokn introspect --section modes`.
-</details>
+Browse the [domain overview](CAPABILITIES.md#domain-harnesses), or inspect
+your installed roster with `tokn introspect --section modes`.
 
 What a licence changes:
 
@@ -781,17 +729,17 @@ workflows, not blocked transitions or weaker evidence requirements. Outputs
 remain decision support, not clinical, legal or regulatory certification. And
 **installing instructions is not unlocking a domain** — a skill pack like
 `decision-models` is text, registers no domain tool or gate, and is not one of
-the 38 domains. Running `--mode <domain>` is what engages the harness.
+the 38 domains. Running `tokn agent-repl --mode <domain>` engages the harness.
 
-Full roster with one verified line per domain:
+Full roster with a short description per domain:
 **[CAPABILITIES.md](CAPABILITIES.md#domain-harnesses)**. Licensing availability
 by platform is covered under [Platform support](#platform-support) — note in
 particular that developer-licence support is **not ready** on Apple Silicon.
 
 ## 5. Optional: start your 14-day trial
 
-TOKN runs in a free **community** tier by default. Unlock the full feature
-surface with a **14-day trial** — no account, no phone-home, fully offline:
+TOKN runs in a free **community** tier by default. Start a **14-day trial**
+for licensed features—trial issuance needs no account or internet connection:
 
 ```bash
 tokn license trial        # or: tokn trial
