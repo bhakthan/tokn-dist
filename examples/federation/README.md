@@ -6,6 +6,23 @@ This walkthrough runs two TOKN instances on one machine, then uses a third TOKN 
 
 Everything here uses a tiny synthetic repository that you create yourself.
 
+Illustrative flow; review is still your responsibility:
+
+```mermaid
+flowchart LR
+    R[Committed sample repo] --> L[Leader and work plan]
+    L --> A[Worker A: first edit]
+    L --> B[Worker B: second edit]
+    A --> C[Dependent check]
+    B --> C
+    C --> S[Collect results and stage patches]
+    S --> H[You inspect diff and run tests]
+```
+
+```text
+Commit sample -> preview plan -> run workers -> staged changes -> your review
+```
+
 ## What this example shows
 
 | Capability | What you will do | Command |
@@ -40,8 +57,11 @@ Put these in your shell before starting each worker, or in a `.env` file that TO
 ### What leaves your machine
 
 - Each worker sends its agent prompts and file contents to the model provider you configured.
-- The leader sends task prompts and, with `--seed-repo`, a copy of the **committed** files of your repo to each worker. Both workers are on `127.0.0.1` here, so nothing crosses the network.
-- Nothing is pushed or committed by these commands.
+- The leader sends task prompts and, with `--seed-repo`, a copy of the **committed** files of your repo to each worker. Worker addresses are loopback here; hosted model requests can still leave the machine.
+- The leader does not commit or push returned changes. Workers create local worktrees and run records; `--out` writes a report and `--apply-to` changes the target's index and working tree.
+- For an offline model setup, stage the local model first and set
+  `TOKN_NO_REGISTER=1` and `TOKN_NO_UPDATE_CHECK=1` to disable those startup
+  requests. Review other configured integrations too.
 
 ## 1. Create the synthetic repository
 
@@ -86,7 +106,9 @@ Set-Location ..
 
 Keep the working tree clean. `--apply-to` refuses to stage into a repo with uncommitted changes.
 
-Steps 3 to 6 assume your terminal is in the folder that **contains** `fanout-sample`.
+Start the worker terminals in the folder that **contains** `fanout-sample`.
+The leader changes into `fanout-sample` in step 5 and stays there through
+step 7.
 
 ## 2. Create a shared worker token
 
@@ -106,7 +128,8 @@ $b = New-Object byte[] 32
 $env:TOKN_WORKER_TOKEN = [Convert]::ToBase64String($b)
 ```
 
-Set the variable in **every** terminal you use below. Never write the token into a file you commit.
+Copy that same value into **every** terminal you use below; do not generate
+a fresh token in each terminal. Never write it into a file you commit.
 
 ## 3. Start two workers (two terminals)
 
@@ -258,7 +281,6 @@ Expected, not a recorded run: the leader prints progress per task, then a final 
 bash:
 
 ```bash
-cd fanout-sample
 git status --short
 git diff --staged
 ```
@@ -266,12 +288,15 @@ git diff --staged
 PowerShell:
 
 ```powershell
-Set-Location fanout-sample
 git status --short
 git diff --staged
 ```
 
 You should see one docstring added to each file, staged and not committed. Review, then commit it yourself or discard it with `git restore --staged . && git restore .`.
+
+The dependent check is an agent's report, not an independent test result.
+Inspect both diffs yourself. Stop each worker with Ctrl+C when finished;
+keep or remove the sample repo, reports and worker state deliberately.
 
 ## 8. Optional: host a worker in a cloud container service
 

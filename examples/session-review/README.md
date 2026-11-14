@@ -22,7 +22,7 @@ that drops the last item.
 |---|---|---|
 | TOKN **v0.3.57 or newer** | First release with the `/review` subcommands shown here | `tokn version` |
 | `git` | `/review` reads the working tree with `git status` and `git diff` | `git --version` |
-| Python 3 (optional) | Runs the fixture's unit tests, so you can watch them fail first | `python --version` |
+| Python 3 | Runs the fixture's unit tests before and after the agent's fix | `python --version` |
 | An LLM provider and key | Runs the agent | see [SETUP.md](../../SETUP.md) |
 
 Trial and Community tiers both run this example. The features used here are
@@ -31,16 +31,23 @@ by your own provider, not by TOKN.
 
 > **What leaves your machine.** The model provider receives the task and the
 > files the agent reads or edits. `/review` runs only local `git` commands and
-> prints; it makes no model call. Nothing is sent anywhere until step 3.
+> prints; the summary, files, diff, stubs and checklist commands make no
+> model call. TOKN startup registration and update checks are separate;
+> set `TOKN_NO_REGISTER=1` and `TOKN_NO_UPDATE_CHECK=1` to disable those.
+> Agent runs may write local session records as well as repository edits.
 
 ## 1. Copy the fixture into a scratch git repo
+
+Start from the `tokn-dist` root and use a destination that does not already
+exist. Git needs a configured commit identity (`git config user.name` and
+`git config user.email`) for the baseline commit.
 
 macOS / Linux:
 
 ```bash
 cp -r examples/session-review/fixture ~/tokn-review-demo
 cd ~/tokn-review-demo && git init -q && git add -A && git commit -qm "baseline with planted bug"
-python3 -m unittest    # optional: watch the test fail before the session
+python3 -m unittest    # expect the planted bug to fail
 ```
 
 Windows PowerShell:
@@ -48,7 +55,7 @@ Windows PowerShell:
 ```powershell
 Copy-Item examples\session-review\fixture $HOME\tokn-review-demo -Recurse
 Set-Location $HOME\tokn-review-demo; git init -q; git add -A; git commit -qm "baseline with planted bug"
-python -m unittest    # optional: watch the test fail before the session
+python -m unittest    # expect the planted bug to fail
 ```
 
 The baseline commit matters: `/review` compares the working tree with `HEAD`,
@@ -60,8 +67,8 @@ Follow [SETUP.md](../../SETUP.md) for your provider. For Anthropic, for example:
 
 ```bash
 export NOSPACE_MODEL_PROVIDER=anthropic
-export NOSPACE_MODEL_NAME=<a Claude model you have access to>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_NAME="<a Claude model you have access to>"
+export ANTHROPIC_API_KEY="<your key>"
 ```
 
 ```powershell
@@ -117,8 +124,7 @@ At the prompt, run:
 
 ## 5. Read the result
 
-Expected output, from the subcommand names and headings in
-`environment-manager/internal/agent/commands/review_cmd.go`:
+Expected output shapes (the agent's exact edit can vary):
 
 | Command | What it prints | Expected here |
 |---|---|---|
@@ -139,6 +145,8 @@ python3 -m unittest    # or: python -m unittest
 ```
 
 All tests should pass. If they do not, the review still tells you what changed.
+`/review` describes the working tree; a clean summary or an empty stub scan
+does not certify correctness or replace running the tests.
 
 ### What to look for
 
@@ -160,3 +168,6 @@ All tests should pass. If they do not, the review still tells you what changed.
 | `git status failed` | Check `git --version` and that the repo is not locked by another process |
 | The agent cannot run `python -m unittest` | Install Python 3, or change the task to ask for a different test command |
 | `/review` shows nothing new after a second session | `/review` reads the working tree against `HEAD`. Commit the first session's fix if you want to review the second session on its own |
+
+Exit the REPL before deleting the scratch repository. Keep its diff and test
+output if you want a record of what you accepted.

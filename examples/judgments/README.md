@@ -2,21 +2,34 @@
 
 This folder holds the offline judgment walkthrough. The main cases (clean and
 error runs) are described in the top-level [examples README](../README.md#judgments).
-This page adds the behaviours those cases do not show. Every command runs offline
-with the local `rules` provider, so no API key is needed.
+This page adds the behaviours those cases do not show. Every evaluation here
+uses the local `rules` provider, so no model or API key is needed. These are
+checks of supplied run evidence, not proof that an answer is correct.
 
-Run these from a scratch directory you own. The commands write files there.
-Copy the request files in with the bundle.
+Install TOKN v0.3.57 or newer (`tokn version`). No Python or model runtime is
+needed. Start from the `tokn-dist` root, then copy the requests to a new
+scratch directory you own. These commands create that directory and write
+the bundle there.
 
 ```bash
+mkdir -p ~/judgments-run
 cp examples/judgments/*.json ~/judgments-run/ && cd ~/judgments-run
 tokn judgments example > bundle.json
 ```
 
 ```powershell
+New-Item -ItemType Directory -Force $HOME\judgments-run | Out-Null
 Copy-Item examples\judgments\*.json $HOME\judgments-run\; Set-Location $HOME\judgments-run
-tokn judgments example > bundle.json
+tokn judgments example | Set-Content -Encoding ascii bundle.json
 ```
+
+The PowerShell form also works in Windows PowerShell 5.1, whose `>` operator
+would otherwise write a JSON file in the wrong encoding. Use a fresh folder
+if you need to preserve an earlier `bundle.json`.
+
+The evaluations need no network. To disable TOKN's separate startup
+registration and update checks, set `TOKN_NO_REGISTER=1` and
+`TOKN_NO_UPDATE_CHECK=1` in your shell too.
 
 ## Judgments never authorise an action
 
@@ -62,12 +75,17 @@ tokn judgments evaluate --bundle bundle.json --file request-clean.json --mode ad
 tokn judgments evaluate --bundle bundle.json --file request-clean.json --mode advisory --allow-external --air-gap; "exit=$LASTEXITCODE"
 ```
 
-Expected, not a recorded run: a non-zero exit code.
+Expected, not a recorded run: exit `0` with the local rules result. This
+bundle still selects `rules`; `--allow-external` grants permission but does
+not select a different provider. An externally configured bundle is
+required to exercise external-provider refusal.
 
-## Disabled mode needs nothing
+<a id="disabled-mode-needs-nothing"></a>
 
-`--mode disabled` skips judgment and needs no external provider. Use it to confirm
-that a configuration works before you turn judgments on.
+## Disabled mode still validates inputs
+
+`--mode disabled` skips provider evaluation. It still requires a valid bundle
+and request; it is not a test of provider credentials or answer quality.
 
 ```bash
 tokn judgments evaluate --bundle bundle.json --file request-clean.json --mode disabled --air-gap
@@ -80,8 +98,8 @@ tokn judgments evaluate --bundle bundle.json --file request-clean.json --mode di
 ## Audit files are created once and never overwritten
 
 `--audit-file` writes hashes and references, not the raw state. The path must be
-absolute and must not exist. TOKN creates the file with exclusive-create, so a
-second run against the same path fails and leaves the first record unchanged.
+absolute and must not exist. A second run against the same path fails and
+leaves the first record unchanged.
 
 ```bash
 AUDIT=/absolute/path/to/new/judgment-audit.jsonl
@@ -122,7 +140,7 @@ input key.
 | Advisory only | `"applied": false` in every envelope |
 | No enforcement | `--mode enforced` exits non-zero |
 | No silent egress | External provider refused with `--air-gap` or without `--allow-external` |
-| Audit is append-once | A second run against the same audit path exits non-zero |
+| Audit is create-once | A second run against the same audit path exits non-zero |
 | Strict input | A duplicate key is refused |
 
 ## Troubleshooting
@@ -131,4 +149,8 @@ input key.
 |---|---|
 | `--audit-file must be an absolute, new file` | Use a full path to a file that does not exist yet. Choose a new name. |
 | `tokn: command not found` | Install TOKN v0.3.57 or newer and open a new terminal. |
-| `bundle.json` is missing | Run `tokn judgments example > bundle.json` first, in the same folder. |
+| `bundle.json` is missing or unreadable | Generate it in the same folder using the setup command for your shell; Windows PowerShell 5.1 needs the explicit encoding shown above. |
+
+Keep the scratch folder if you want to inspect the results later. Otherwise
+remove it, including any audit file you explicitly created. Nothing here
+applies a recommendation to a repository or production system.

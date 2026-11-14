@@ -1,81 +1,60 @@
-# Security Policy
+# Security policy
 
-## Supported Versions
+## Supported versions
 
-| Version | Supported |
-|---------|-----------|
-| Latest release on [bhakthan/tokn-dist](https://github.com/bhakthan/tokn-dist) | ✅ |
-| Any older release | ❌ — update to latest via `tokn update` |
+Use the [latest official release](https://github.com/bhakthan/tokn-dist/releases/latest).
+TOKN does not maintain backport branches. Check your version with `tokn version`;
+`tokn update --check` contacts the release channel without installing an update.
 
-TOKN does not maintain backport branches. Security fixes ship in the next release and users are expected to update promptly. The `tokn update` mechanism is designed to make this frictionless.
+## Reporting a vulnerability
 
-## Reporting a Vulnerability
+**Use [GitHub Private Vulnerability Reporting](https://github.com/bhakthan/tokn-dist/security/advisories/new)
+in this public distribution repository.** The report itself is private.
+Do not post exploit details, credentials or sensitive files in a public issue.
 
-**Use [GitHub Private Vulnerability Reporting](https://github.com/bhakthan/tokn/security/advisories/new)** on the `bhakthan/tokn` repository.
+Include the affected version, OS/architecture, a minimal synthetic reproduction
+and the impact you observed. Redact logs and configuration before attaching them.
+If the private form is unavailable, open an issue requesting a private reporting
+channel **without describing the vulnerability**.
 
-Do **not** open a public issue for security vulnerabilities.
-
-### What to expect
-
-| Stage | Target | Notes |
-|-------|--------|-------|
-| Acknowledgement | 72 hours | Confirmation that the report was received |
-| Triage | 7 days | Assessment of severity, scope, and affected versions |
-| Fix or mitigation | 30 days | For critical/high; longer for lower severity with disclosure |
-
-These are intentions, not contractual guarantees. Complex issues may take longer; the reporter will be kept informed.
-
-### Coordinated Disclosure
-
-We ask reporters to allow 90 days from acknowledgement before public disclosure. If a fix ships sooner, disclosure can proceed immediately after the release. If we are unresponsive beyond the timelines above, the reporter is free to disclose.
+We aim to acknowledge reports within 72 hours and triage within seven days.
+For critical or high-impact issues, the target is a fix or mitigation within
+30 days. These are targets, not contractual guarantees.
+Please allow coordinated disclosure before publishing details.
 
 ## Scope
 
-### In scope
+In scope are TOKN's update verification, credential handling, tool permissions,
+workspace boundaries, integrations and domain safeguards. A flaw in TOKN's
+handling of an external tool is still relevant even if that tool is third-party.
 
-- The `tokn` CLI binary and its self-update mechanism
-- Release signing key management and update verification
-- The domain safety gates (blocking gates in `synbio/`, `precmed/`, `nucsci/`, `oncology/`, etc.)
-- Prompt injection leading to unintended tool execution
-- Data leakage through the registration/feedback telemetry path
-- MCP plugin sandbox escapes (path traversal, env injection)
+Provider-side defects should also be reported to the provider.
+TOKN cannot protect a machine or account that an attacker already controls.
 
-### Out of scope
+## What users should rely on—and what they should not
 
-- **Third-party model providers** — vulnerabilities in OpenAI, Anthropic, Azure OpenAI, etc. Report those to the respective provider.
-- **User-supplied MCP servers** — TOKN executes these as configured by the user. A malicious MCP server the user chose to install is not a TOKN vulnerability.
-- **Findings requiring an already-compromised local machine** — if the attacker already has code execution as the user, TOKN cannot meaningfully defend against them (the threat model documents this boundary explicitly).
-- **Social engineering** of the repository maintainer.
+| Area | Practical boundary |
+|---|---|
+| Download verification | Official releases publish a checksum manifest and signature; follow the [verification instructions](README.md#2-verify-what-you-downloaded) |
+| Tool execution | Permissions and trust settings restrict workflows; ordinary execution is not an OS sandbox |
+| Untrusted content | Repository files, web pages and tool results can influence a model; do not assume prompt-injection immunity |
+| Model data | Hosted models receive the context sent to them; choose approved providers and inputs |
+| Local models | Preparing local inference does not by itself disable every external tool or startup connection |
+| Domain safeguards | Checks support review; they are not professional approval or regulatory certification |
+| Licensing | Feature entitlement is not a security or data-isolation boundary |
 
-## Security Properties TOKN Does and Does Not Provide
+Use least privilege, review approvals and use host/container isolation when the
+task requires it. Never bypass a failed signature check to make an update work.
 
-### Does provide
+## Additional documentation
 
-- **Integrity-verified updates**: `tokn update` refuses to install any binary that does not match a SHA-256 checksum manifest, and (in release builds) refuses any manifest not signed by the release ed25519 key.
-- **Transport-security enforcement**: telemetry endpoints must use HTTPS (or loopback HTTP for local dev). See [`urlpolicy.go`](environment-manager/internal/urlpolicy/urlpolicy.go).
-- **Opt-out telemetry**: all anonymous data collection is disabled by `DO_NOT_TRACK=1`. The only user-authored content ever sent to TOKN infrastructure is explicit `tokn feedback` submissions.
-- **Domain safety gates**: safety-critical domains implement blocking gates that refuse to advance a workflow past defined checkpoints without passing validation.
+- [Security overview](docs/security/README.md)
+- [Threat model](docs/security/threat-model.md)
+- [Network activity and opt-outs](docs/security/telemetry-and-network.md)
+- [Update process](docs/security/update-process.md)
+- [Release-key verification](docs/security/key-management.md)
+- [macOS checks](docs/security/macos-code-signing.md)
+- [Supply-chain evidence](docs/security/supply-chain.md)
 
-### Does not provide
-
-- **Sandboxed tool execution**: TOKN executes shell commands and file edits on the user's machine with the user's permissions. There is no privilege separation between the agent and the user's session.
-- **Prompt injection resistance**: content from repositories, web fetches, or MCP tool outputs is fed to the model in a context where it can influence tool calls. This is a fundamental limitation of the architecture, not a bug to be fixed.
-- **Tamper-proof safety gates**: gates run in the same process as the agent. A local attacker who can modify the binary or its configuration can bypass them.
-- **Hardware-backed key management**: the release signing key currently resides on a general-purpose workstation. See [key-management.md](docs/security/key-management.md) for the hardening roadmap.
-
-## Additional Documentation
-
-- [Threat Model](docs/security/threat-model.md)
-- [Telemetry & Network Connections](docs/security/telemetry-and-network.md)
-- [Update Process](docs/security/update-process.md)
-- [Key Management](docs/security/key-management.md)
-- [macOS Code Signing](docs/security/macos-code-signing.md)
-- [Supply Chain](docs/security/supply-chain.md)
-
-## Note on Accessibility
-
-This repository (`bhakthan/tokn`) is currently **private**. Users who download from the public distribution repo (`bhakthan/tokn-dist`) cannot reach this file directly. This `SECURITY.md` is mirrored to `bhakthan/tokn-dist` so that vulnerability reporters can find it regardless of which repo they interact with.
-
-## Audit Status
-
-No independent third-party security audit has been performed. Audit status is tracked in [`docs/security/README.md`](docs/security/README.md).
+No independent third-party audit report is published here. These guides describe
+user-facing controls and limitations, not a security certification.

@@ -1,10 +1,22 @@
 # Getting started with TOKN — no API key, no trial
 
-This is the hands-on path. Every command below runs in the free **Community**
-tier: **no API key, no model provider, no trial activation.** None of them sends
-your code, your files or your prompts anywhere.
-The expected output is printed for each step so you can tell success from
-failure without guessing.
+This is the hands-on **Community** path. Sections 1–3 need **no API key,
+model provider or trial activation**. The optional model-backed steps are
+labelled separately and can send your supplied data to the chosen provider.
+Expected output helps you tell success from failure without guessing.
+
+Updated for **v0.3.100**. Older minimum-version notes identify when a feature
+became available; they are not recommendations to install an old release.
+
+```mermaid
+flowchart TD
+    A["Download and verify"] --> B["Try three fixed local previews"]
+    B --> C["Evaluate an offline rules judgment"]
+    C --> D{"What next?"}
+    D -->|No model| E["Explore Community commands"]
+    D -->|Optional model| F["Configure your provider and credentials"]
+    F --> G["Try an agent task or typed decision"]
+```
 
 > **What "offline" means here.** The commands themselves do the work locally.
 > TOKN's *startup* is separate: on first run it records a one-time anonymous
@@ -23,7 +35,8 @@ failure without guessing.
 > first. Startup also resolves your licence file, which is why you may see a
 > tier banner on stderr; that is local bookkeeping, not a request.
 
-Roughly fifteen minutes, start to finish.
+Allow roughly fifteen minutes for the core exercises after installation.
+Provider setup and optional downloads take additional time.
 
 For a separate **local classifier/regressor** walkthrough, see
 [Local tabular prediction](TABULAR.md). That optional workflow additionally
@@ -63,44 +76,51 @@ See the [Platform support table](README.md#platform-support) for the full matrix
 | A terminal | everything | — |
 | `gh` (GitHub CLI) | downloading the release assets | `gh --version` |
 | `openssl` 3.x | verifying the release signature | `openssl version` |
-| A TOKN binary on your `PATH` | everything after step 1 | `tokn --version` |
+| A TOKN binary on your `PATH` | everything after step 1 | `tokn version` |
 
 Two notes, because a missing tool here is the most common first-run failure:
 
-- **`openssl` must be 3.x.** Signature verification uses `-rawin`, which is how
-  OpenSSL 3 does ed25519. macOS and most Linux distributions already ship it;
-  on Windows, Git for Windows installs it at
-  `C:\Program Files\Git\usr\bin\openssl.exe`.
+- **Check for OpenSSL 3.x rather than assuming it is installed.** The verification
+  recipe uses its Ed25519 support. Git for Windows includes OpenSSL at
+  `C:\Program Files\Git\usr\bin\openssl.exe`; check that executable's version.
+  macOS's system `openssl` may be a different implementation: install
+  `brew install openssl@3` if needed and use that installation's executable.
+  On Debian/Ubuntu, install with `sudo apt install openssl`, then check
+  `openssl version` before following the recipe.
 - **`gh` is a convenience, not a requirement.** You can download the assets from
   the [releases page](https://github.com/bhakthan/tokn-dist/releases/latest) by
   hand. `gh` is recommended because it fetches the artifact rather than scraping
   a web page.
 
-Nothing else is needed for this guide. In particular: **no API key, no model
-provider, no Docker, no Python, no language toolchain.**
+Nothing else is needed for the core exercises. In particular: **no API key,
+model provider, Docker, Python or language toolchain.**
+Optional integrations have their own prerequisites.
 
 ### Where output goes
 
-Nothing in this guide writes to disk unless you redirect it yourself. When you
-do — step 3 asks you to save two small JSON files — put them somewhere you own,
-under your user account, **not** in a system directory and not inside a git
-repository you intend to commit:
+Use a fresh scratch directory for the exercises. Step 3 saves **three** JSON
+files: the bundle and two requests. Downloads and optional plugin installation
+also write files, and TOKN can maintain local startup metadata.
+Do not use a system directory or a repository you intend to commit:
 
 **Windows (PowerShell)**
 ```powershell
-$WORK = Join-Path $HOME "tokn-tryout"
-New-Item -ItemType Directory -Force -Path $WORK | Out-Null
+$WORK = Join-Path ([IO.Path]::GetTempPath()) ("tokn-tryout-" + [guid]::NewGuid().ToString("N"))
+New-Item -ItemType Directory -Path $WORK | Out-Null
 Set-Location $WORK
+Write-Output $WORK
 ```
 
 **macOS / Linux**
 ```bash
-WORK="$HOME/tokn-tryout"
-mkdir -p "$WORK" && cd "$WORK"
+WORK="$(mktemp -d "${TMPDIR:-/tmp}/tokn-tryout.XXXXXX")"
+cd "$WORK"
+printf '%s\n' "$WORK"
 ```
 
-Everything below assumes you are in that directory. To undo this guide
-completely, delete it.
+Everything below assumes you are in that directory. Keep the printed path.
+Removing that directory later cleans up the exercise files, not a separately
+installed binary or optional plugins under your TOKN home.
 
 ---
 
@@ -113,13 +133,14 @@ step; it is the layer that actually establishes authenticity.
 Then confirm the binary runs:
 
 ```text
-tokn --version
+tokn version
 ```
 
-Expected: a version line ending in `v0.3.44` or later, and a `variant:` field.
-The public download reports `variant: public`, which means the ~64 MB embedded
-documentation wiki is not compiled in. Everything in this guide is unaffected —
-the previews, the lessons and the judgment engine are all in the binary.
+Expected: the installed version, OS/architecture and a `variant:` field.
+This guide describes v0.3.100; the current public download reports
+`variant: public`. That means the embedded wiki is excluded, not the previews,
+lessons or judgment engine. The shorter `tokn --version` does not print all
+these fields.
 
 ```text
 tokn community list
@@ -271,21 +292,10 @@ tokn community list --json
 ```
 
 The JSON carries the same cases plus `"preview_only": true` and a `"scope"`
-block. Read that block for what it is — a **declaration** about the preview's
-code path, not telemetry:
-
-```json
-"scope": {
-  "kind": "declarative",
-  "preview_writes_files": false,
-  "preview_network_calls": false,
-  "excludes": "TOKN process startup, which is outside this command: licence resolution, a one-time anonymous install count (disable with TOKN_NO_REGISTER=1) and a daily update check (disable with TOKN_NO_UPDATE_CHECK=1)",
-  "evidence": "preview_writes_files is exercised by temp-directory isolation tests in community_cmd_test.go; preview_network_calls is a code-path declaration, not a runtime measurement"
-}
-```
-
-`kind: "declarative"` is the important field. If you are gating something on
-this, gate on your own observation of the process, not on TOKN's self-report.
+description. That scope describes the preview; it is not a measurement of
+every action the process takes. Startup activity is separate.
+For enforced no-egress requirements, use host-level controls and observe the
+actual process rather than treating a description as network telemetry.
 
 ---
 
@@ -319,12 +329,12 @@ tokn judgments example > bundle.json
 tokn judgments validate --bundle bundle.json
 ```
 
-Expected output of `validate`:
+Expected fields from `validate` (the digest can vary):
 
 ```json
 {
   "approval_verified": false,
-  "bundle_hash": "sha256:0229217063661521c9646383e583398a53717f8b7cf8980b4109f56a29d37d18",
+  "bundle_hash": "sha256:<bundle digest>",
   "contract": {
     "id": "coding.completion-evidence",
     "version": "1.0.0"
@@ -483,7 +493,8 @@ redacted and never echo your state back at you.
 - **Your data was not transmitted.** With the `rules` provider and `--air-gap`,
   the evaluation makes no external call: none of your state, bundle or request
   leaves your machine.
-- **Nothing was written** except the two files you saved yourself.
+- **The evaluation writes no output file unless requested.** This exercise
+  saves the bundle and two requests; startup metadata is separate.
 
 ---
 
@@ -565,7 +576,7 @@ Fireworks, or a local runtime such as Ollama or llama.cpp. TOKN is
 bring-your-own-model: **usage is billed by your provider, under your key.**
 
 ```bash
-tokn auth status        # confirms a provider is configured and ready
+tokn auth status        # reports provider credential readiness, not a successful model call
 tokn agent-repl
 ```
 
@@ -688,11 +699,11 @@ All four exit `0` offline. `--mcp-disabled` matters: without it TOKN tries to
 dial configured MCP servers, so you are inspecting the network as well as your
 tools. Add it whenever you only want to look.
 
-Expect the tool list to be **shorter than the marketing number** — around 26 in a
-plain session:
+The tool count varies with mode, plugins and configuration. This is an
+illustrative excerpt, not a fixed inventory:
 
 ```text
-TOKN Agent Tools (26 tools)
+TOKN Agent Tools (...)
 
   FILE OPERATIONS
     apply_unified_diff      Apply a single-file unified diff to an existing file …
@@ -705,7 +716,7 @@ TOKN Agent Tools (26 tools)
 ```
 
 That is the point, not a defect. Domain tools register only when you actually run
-that domain's mode, so a default session is not carrying thirty domains' worth of
+that domain's mode, so a default session is not carrying every domain's
 capability it has no reason to hold.
 
 Note that `tokn plugin list` reports everything on your machine that TOKN can

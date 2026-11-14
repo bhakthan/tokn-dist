@@ -4,15 +4,20 @@ Synthetic, non-sensitive input files referenced by
 [GETTING_STARTED.md](../GETTING_STARTED.md), plus step-by-step walkthroughs
 that each run one real task end to end. None of them contain real data.
 
-Walkthroughs that call an LLM need your own key and make paid model calls;
-offline/catalog examples explicitly say otherwise. Domain
-modes (compbio, oncology, finrisk, physai, precmed, clintrial, legalai,
-geospatial, cybersec, atmchem, quantumsci, structbio, robotics, semicon, appsec,
-batterypass, climsci, drugdisc, energy, genomics, greenenergy, gridfm, grideng, matsci,
-mobility, neurosci, nucsci, oilgas, spacemarine, transcriptomics, healthrcm,
-mfgquality, esg, insurance, tradecomp, pharmacovig) and the premium
-critique and autodesign modes need the 14-day trial (`tokn license trial`); the
-rest are expected to run on Community too.
+For the current public release, **v0.3.100**, use the requirements on each
+walkthrough rather than treating an older minimum version as obsolete.
+Hosted-model examples need your own provider access and may incur charges;
+local-model examples need a running model server and staged weights.
+Offline/catalog examples explicitly say when no model call is needed.
+Domain and premium-mode examples need an applicable licence or the
+14-day trial (`tokn license trial`); most non-domain examples also run on
+Community. In the table, “trial” means a trial or applicable licence.
+
+“Offline” describes the task's model/data path, not a promise of zero
+startup traffic or zero disk writes. For a disconnected session, stage all
+dependencies first, set `TOKN_NO_REGISTER=1` and `TOKN_NO_UPDATE_CHECK=1`,
+and review other configured integrations. Follow each page's output and
+cleanup notes; do not commit generated run records or credentials.
 
 New to TOKN? Start with [first-ten-minutes](first-ten-minutes/README.md).
 
@@ -75,10 +80,10 @@ New to TOKN? Start with [first-ten-minutes](first-ten-minutes/README.md).
 | [checkpoints](checkpoints/README.md) | Roll back a bad agent edit with checkpoints, `/undo` and `/rewind` | — |
 | [codebase-graph](codebase-graph/README.md) | Blast-radius analysis with `/codebase blast` on a small synthetic Go service | — |
 | [first-ten-minutes](first-ten-minutes/README.md) | Onboarding: version and licence checks, first `agent-run`, the REPL, offline judgments | — |
-| [judgments](judgments/README.md) | Offline governed judgments on recorded runs: no model, no network | — |
+| [judgments](judgments/README.md) | Local advisory checks on supplied run evidence, not proof of answer correctness | — |
 | [full-stack-app](full-stack-app/README.md) | Build a small full-stack task-manager app from a written spec, then check it | — |
 | [flows](flows/README.md) | Multi-step workflows started from the REPL | — |
-| [tabular-prediction](tabular-prediction/README.md) | A local, offline tabular model makes predictions on a synthetic CSV, alongside the LLM | Python + model weights |
+| [tabular-prediction](tabular-prediction/README.md) | A local tabular baseline predicts from synthetic CSVs; optional foundation-model setup | Python; weights only for optional backends |
 | [web-agent](web-agent/README.md) | The interactive `webagent` mode on a public page (compare with webwright) | Chromium |
 | [peer-collab](peer-collab/README.md) | Two people, two agents, one fictional reactor safety dashboard | — |
 | [self-improvement](self-improvement/README.md) | Improve a prompt bundle within budgets, with a sealed held-out check (`tokn rrsi`) | — |
@@ -94,7 +99,7 @@ New to TOKN? Start with [first-ten-minutes](first-ten-minutes/README.md).
 | [federation](federation/README.md) | A leader fans a task out to two local workers and applies the results back | — |
 | [local-llamacpp](local-llamacpp/README.md) | Run TOKN against a local GGUF model served by llama.cpp, offline once weights are downloaded | llama.cpp, a GGUF model |
 | [insurance-loss-inspection](insurance-loss-inspection/README.md) | Three local models on one synthetic auto claim: a coding model drives insurance mode, a vision model answers photo damage checks, a decision model triages from a summary | llama.cpp, three GGUF models, tokn v0.3.95+ |
-| [toknish](toknish/README.md) | Federation with the toknish wire (signed, auditable results), then a compact model-answer bench (`tokn tkm bench`) | `tokn` on PATH; Ollama for the offline bench (cloud key optional) |
+| [toknish](toknish/README.md) | Auditable worker exchanges, with authentication checked using the run token; a separate compact-answer pilot benchmark | `tokn` on PATH; Ollama/local model or cloud provider |
 | [agent-team](agent-team/README.md) | A declarative team (planner, implementer, reviewer) builds a small app | — |
 | [authority-frames](authority-frames/README.md) | When the agent acts, asks or stops: permission, ask-or-act and stuck signals | — |
 | [hands-off-run](hands-off-run/README.md) | A long autonomous run with budgets, checkpoints and a verified finish | — |
@@ -146,9 +151,10 @@ harness with `tokn harness evolve` (Propose–Probe–Compose), and a typed
 decision model chooses each substation's action. A deterministic rule
 overrides the model, so its output is advisory only. All data is synthetic.
 
-Unlike the rest of this folder, this example **needs your own LLM key and a
-decision-model backend**, and it makes paid model calls (about US$2–3 per
-run). It runs on both the trial and the Community tier. Start at
+This example **needs your own LLM access and a decision-model backend**,
+and it makes paid model calls. Costs depend on the models, provider prices
+and run length; no current cost is established here. It runs on both the
+trial and the Community tier. Start at
 [grid-screening/README.md](grid-screening/README.md).
 
 ## `judgments/`
@@ -163,13 +169,9 @@ needs
 | `request-clean.json` | a run that finished with no recorded tool errors or blocks | `continue` / `RUNTIME_EVIDENCE_ONLY` |
 | `request-errors.json` | the same run with 2 tool errors and 1 tool block | `revise` / `RECORDED_EXECUTION_FAILURE` |
 
-Run them (from a directory you own — the commands write `bundle.json` there):
-
-```bash
-tokn judgments example > bundle.json
-tokn judgments evaluate --bundle bundle.json --file request-clean.json  --mode advisory --air-gap
-tokn judgments evaluate --bundle bundle.json --file request-errors.json --mode advisory --air-gap
-```
+Follow [judgments/README.md](judgments/README.md) to create a scratch folder,
+copy the request files and generate `bundle.json`, including a compatible
+Windows PowerShell form.
 
 Both exit `0`. The difference is in `decision.action` — a `revise` judgment means
 the command worked and is telling you something about the run it was given.
@@ -183,8 +185,8 @@ nothing.
 ## Running all of it unattended
 
 `../scripts/community-smoke.sh` (bash) and `../scripts/community-smoke.ps1`
-(PowerShell) run the three domain previews **and** the same two judgment cases,
-asserting the expected decision for each. They do not read the files in this
+(PowerShell) check the Community on-ramp, three domain previews and the
+same two judgment cases, asserting the expected decisions. They do not read the files in this
 directory — each script writes its own inline copies (identical `state` fields,
 a different `trace_id`) into a temp directory it deletes on exit — so nothing
 here is modified and the scripts work from a bare binary download too.

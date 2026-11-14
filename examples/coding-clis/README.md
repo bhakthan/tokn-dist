@@ -10,6 +10,24 @@ TOKN works with the major coding CLIs in three ways. Pick the one you need:
 
 Requires TOKN v0.3.63 or later (`tokn version`).
 
+## Before you start
+
+- Install TOKN and **one** peer CLI; you do not need all five.
+- Check the peer executable with `claude --version`, `codex --version`,
+  `copilot --version`, `gemini --version` or `agy --version`.
+- Complete the peer's own sign-in/setup and confirm it works on a disposable
+  repo before delegating from TOKN. Model access and billing belong to the
+  peer/provider you selected.
+- npm-based installation below needs Node.js and npm first
+  (`node --version`, `npm --version`). Install the current Node.js LTS from
+  [nodejs.org](https://nodejs.org/en/download) if missing. Antigravity has
+  its own installer instead.
+
+MCP tool results can be sent to the calling CLI's model. `/conduct` sends the
+task and accessible project context to the selected peer, and can write
+local run records and repository changes. Use synthetic data for this
+walkthrough; a local MCP connection does not make the peer's model local.
+
 ## 1. Your CLI calls TOKN's tools (MCP)
 
 Register TOKN once. `--mcp-disabled` stops TOKN from starting the other MCP servers it finds in the same config files, itself included.
@@ -46,7 +64,14 @@ Expose only some tools with `--tools`, which takes names or prefixes:
 tokn serve --mcp-disabled --tools=bp_,legal_
 ```
 
-**Try it:** in your CLI, ask *"List the TOKN tools you have."*
+**Try it:** in your CLI, ask *"List the TOKN tools you have."* Expected:
+TOKN appears as an MCP server and exposes the tools allowed by your
+configuration and licence. Discovery alone does not run a domain task or
+prove that every tool's optional dependencies are installed.
+
+For a minimal first check, expose only `git_status` instead of all tools.
+See the [MCP walkthrough](../mcp-server/README.md) for the restricted config
+and a read-only task.
 
 TOKN uses the folder the CLI starts it in as the project root. On Windows, use `tokn.exe` or an absolute path.
 
@@ -66,11 +91,22 @@ TOKN never passes an auto-approve flag (`--yolo`, `--dangerously-skip-permission
 
 ```text
 /conduct list
+/conduct route Explain the files in this repository without editing them
+/conduct trust <available-peer> Explain the files in this repository without editing them
 ```
+
+Replace `<available-peer>` with a name reported by `list`, such as `codex`.
+`route` previews a recommendation without invoking a peer; `trust` invokes
+the named peer and reports a trust verdict. A verdict is not a sandbox,
+proof of task correctness or a promise to undo peer side effects. Inspect
+the working tree and relevant tests yourself. `/conduct invoke` skips the
+trust verdict and is not the path demonstrated here.
 
 ## 3. TOKN reads your CLI's project files
 
-Open the repo with `tokn`, and these are picked up as skills automatically:
+Open the repo with `tokn`. TOKN can import project guidance, skills and MCP
+configuration from these locations; they are not all treated as executable
+skills:
 
 | CLI | Files |
 |---|---|
@@ -80,23 +116,30 @@ Open the repo with `tokn`, and these are picked up as skills automatically:
 | Gemini CLI | `GEMINI.md`, `.gemini/GEMINI.md`; MCP servers in `.gemini/settings.json` |
 | Antigravity | `.agents/rules/*.md`; MCP servers in `.agents/mcp_config.json` |
 
-See what was imported:
+In the TOKN REPL, refresh imported skills and inspect skills and MCP connections:
 
 ```text
-/skill rescan
+/reload-plugins
+/skill list
 /mcp list
 ```
 
 MCP servers found in these files still need your trust before TOKN starts them.
+Read project instructions and review server commands before granting that
+trust, particularly when opening an unfamiliar repository.
 
 ## Troubleshooting
 
 | Symptom | Fix |
 |---|---|
-| The CLI lists no TOKN tools | Run `tokn serve --mcp-disabled` in a terminal; it should wait silently on stdin |
+| The CLI lists no TOKN tools | Check `tokn serve --help`, the binary path, the client's server logs and any `--tools` filter; a manual stdio server waits for input |
 | `unknown flag: --repo-root` | That flag doesn't exist; start the CLI in the project folder |
 | `/conduct` says a peer isn't available | Install it with the command shown, then retry |
 | Gemini peer exits with an untrusted-folder error | Open the folder in Gemini once and trust it |
+
+To undo registration, remove the TOKN MCP entry through your client's
+server manager or configuration file. This does not undo repository edits
+made by an earlier delegated task.
 
 ## Related
 

@@ -6,14 +6,38 @@ completion and not a replacement for business policy or human authorization.
 
 ## A complete first run
 
+Use a new scratch directory outside your repositories. `--root` must be an
+**absolute existing path**; `scaffold --dir` names a new relative child.
 Install Python 3.11+ if absent; `inspect` and `scaffold` do not need it.
 
+**PowerShell**
+```powershell
+$TABULAR_WORK = Join-Path ([IO.Path]::GetTempPath()) ("tokn-tabular-" + [guid]::NewGuid().ToString("N"))
+New-Item -ItemType Directory -Path $TABULAR_WORK | Out-Null
+$TABULAR_ROOT = Join-Path $TABULAR_WORK "delivery-demo"
+tokn tabular scaffold --root "$TABULAR_WORK" --dir delivery-demo --example delivery
+```
+
+**Bash**
+```bash
+TABULAR_WORK="$(mktemp -d "${TMPDIR:-/tmp}/tokn-tabular.XXXXXX")"
+TABULAR_ROOT="$TABULAR_WORK/delivery-demo"
+tokn tabular scaffold --root "$TABULAR_WORK" --dir delivery-demo --example delivery
+```
+
+Then, in the same terminal on either platform:
+
 ```sh
-tokn tabular scaffold --dir delivery-demo --example delivery
-tokn tabular inspect --root delivery-demo
-tokn tabular doctor --root delivery-demo
-tokn tabular evaluate --root delivery-demo
-tokn tabular predict --root delivery-demo
+tokn tabular inspect --root "$TABULAR_ROOT"
+tokn tabular doctor --root "$TABULAR_ROOT"
+tokn tabular evaluate --root "$TABULAR_ROOT"
+tokn tabular predict --root "$TABULAR_ROOT"
+```
+
+```text
+Labelled examples -> check data -> evaluate held-out rows -> predict new rows
+                                        |
+                                        +-> compare with a simple baseline
 ```
 
 All commands emit JSON on stdout. Inspection validates the problem/data;
@@ -25,6 +49,9 @@ if dependencies are missing. A failure never becomes an LLM-guessed prediction.
 The generated `run.py` and `test_pipeline.py` wrap the same TOKN executor.
 These deliberately simple teaching datasets do not demonstrate real-world
 accuracy or certify Kumo quality.
+Your project is in `$TABULAR_ROOT`. Inspect that directory when finished and
+remove only the scratch directory you created; do not commit generated models
+or runtime data.
 
 ## Your problem
 
@@ -61,7 +88,7 @@ Change the backend to `kumo` and add this **model configuration template**:
 
 The placeholder is intentionally invalid until replaced. For regression use
 `regressor.pt`. Keep the checkpoint inside the explicit project root.
-Run `tokn tabular doctor --root delivery-demo` for all missing prerequisites,
+Run `tokn tabular doctor --root "$TABULAR_ROOT"` for all missing prerequisites,
 installation and offline preparation guidance. Choose `cuda` only on a
 compatible, verified NVIDIA runtime; CPU availability/performance also depends
 on the installed dependencies and workload. No Apple Silicon acceleration is
@@ -71,6 +98,23 @@ Small-checkpoint CPU classification/regression was exercised on Windows x64
 with Python 3.11 using synthetic data, including the generated application.
 This is functional evidence, not a production accuracy benchmark. CUDA and
 medium/large-checkpoint inference have not yet been validated by TOKN.
+
+## Optional TabFM
+
+The generated project also includes a **`problem-tabfm.json` template** and
+`requirements-tabfm.txt`. TabFM is a separate backend, not a Kumo checkpoint.
+It requires explicitly staged runtime packages and local weights, plus
+acknowledgement of its **non-commercial** weights licence:
+`--tabfm-license-ack tabfm-non-commercial-v1.0`.
+
+The default 1.1.0 weights are about 820 MB per task; the older 1.0.0 large
+variant is about 6.6 GB per task and needs substantially more memory.
+Weight size is not a RAM/VRAM estimate. This guide makes no accuracy or
+hardware-performance claim for those models.
+
+Follow the [tabular walkthrough](examples/tabular-prediction/README.md#6-optional-add-a-foundation-model-backend)
+for template selection, licence acknowledgement and offline preparation.
+Use `tokn tabular --help` for the variants supported by your installed build.
 
 Weights: [nvidia/Kumo-Tabular](https://huggingface.co/nvidia/Kumo-Tabular),
 OpenMDW-1.1. Runtime:

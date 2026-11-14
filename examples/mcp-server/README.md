@@ -2,8 +2,8 @@
 
 This walkthrough starts TOKN as a Model Context Protocol (MCP) server, connects
 to it the way a desktop or IDE client does, and calls one harmless tool. It
-then shows the same exchange from a short Python script, so you can see every
-message.
+then shows the same steps from a short Python script, which prints a
+summary of each reply.
 
 > *Start TOKN as a tool server on this machine, list the tools it exposes, and
 > call `git_status` on a local repository.*
@@ -12,7 +12,7 @@ message.
 |---|---|
 | **`tokn serve`** (MCP over stdio) | Runs TOKN as a tool server. The client starts it as a child process and talks over stdin/stdout. |
 | **Tool filter** (`--tools`) | Limits which tools the server exposes. Optional, shown in step 3. |
-| **Generic MCP config** | One JSON block that works in Claude Desktop, VS Code, Cursor and Copilot CLI. |
+| **MCP config** | A common server block, with a separate VS Code form below. |
 | **Stdlib client** (`client.py`) | A short Python script that speaks JSON-RPC and nothing else. |
 
 Everything runs over stdio. The example opens no network port, so there is
@@ -35,10 +35,14 @@ nothing to bind and nothing to expose.
 tokn license features
 ```
 
-If the output does not list `core:*`, start a 14-day trial with `tokn license trial`.
+No trial is required for this core-tool example.
 
-> **What leaves your machine.** Nothing. `tokn serve` in stdio mode talks only
-> to the process that started it. No model is called in this example.
+> **What leaves your machine.** The MCP exchange uses local stdio, not a
+> listening network port. Calling `git_status` does not need a model. This
+> is not a guarantee of zero startup traffic: disable registration and
+> update checks with `TOKN_NO_REGISTER=1` and `TOKN_NO_UPDATE_CHECK=1` when
+> needed. `--mcp-disabled` prevents TOKN from connecting to other discovered
+> MCP servers. The calling client can send tool results to its own model.
 
 ## 1. Check the server starts
 
@@ -63,7 +67,7 @@ key of your client's config file.
   "mcpServers": {
     "tokn": {
       "command": "tokn",
-      "args": ["serve"]
+      "args": ["serve", "--mcp-disabled", "--tools=git_status"]
     }
   }
 }
@@ -86,13 +90,16 @@ For VS Code, the block is:
     "tokn": {
       "type": "stdio",
       "command": "tokn",
-      "args": ["serve"]
+      "args": ["serve", "--mcp-disabled", "--tools=git_status"]
     }
   }
 }
 ```
 
-Restart the client after saving. It will list `tokn` among its servers.
+Restart the client after saving. It should list `tokn` among its servers.
+Use a full binary path if the client's environment does not include TOKN
+on `PATH`. Start it in the repository you intend to inspect; `git_status`
+uses the server's working directory.
 
 ## 3. (Optional) Expose only some tools
 
@@ -104,7 +111,7 @@ prefixes, separated by commas:
   "mcpServers": {
     "tokn": {
       "command": "tokn",
-      "args": ["serve", "--tools=git_,read_file"]
+      "args": ["serve", "--mcp-disabled", "--tools=git_,read_file"]
     }
   }
 }
@@ -115,6 +122,12 @@ prefixes, separated by commas:
 `client.py` is in this folder. It starts `tokn serve` as a child process,
 performs the MCP handshake, lists the tools, and calls `git_status` on a
 repository you choose. Run it from the `tokn-dist` root.
+
+Unlike the restricted config above, this script launches plain `tokn serve`.
+It calls only `git_status`, but does not restrict the advertised tools or
+disable discovered outbound MCP connections. Review your configuration
+before running it. TOKN may also write local session logs; this is not a
+zero-artifact probe.
 
 Make a throwaway repository to point it at:
 
@@ -156,8 +169,9 @@ The script prints each step as it runs (sample output; the counts and branch nam
   `notifications/initialized`, before any other request. `client.py` does this.
 - **Tool calls are plain JSON.** `tools/call` takes a `name` and an `arguments`
   object. `git_status` takes no arguments, so `arguments` is `{}`.
-- **Failures are JSON-RPC errors.** A tool that cannot run returns an `error`
-  object with a message, not a crash.
+- **Check both kinds of failure.** Request errors can be JSON-RPC errors;
+  tool execution failures can instead return a tool result marked `isError`.
+  The script reports the latter as `tools/call git_status -> error`.
 - **Tiers do not change the protocol.** Community and Trial expose the same
   MCP surface. Only the set of licensed features differs.
 
@@ -174,20 +188,11 @@ The script prints each step as it runs (sample output; the counts and branch nam
 
 ## Stateless clients (cold probes)
 
-Some clients do not send `initialize` before they ask for the tool list. They
-probe the server cold, then decide what to do. TOKN answers those probes
-without a session:
+TOKN also supports clients that probe availability before completing a
+handshake. For this walkthrough, keep the normal initialization sequence
+used by `client.py`; do not treat successful discovery as proof that a
+particular tool is licensed or that its dependencies are installed.
 
-| Request sent without `initialize` | What TOKN returns |
-|---|---|
-| `tools/list` | The full tool catalog, non-empty and sorted by name. Each tool has a `ttlMs` value. The catalog is cached per session (`cacheScope: session`). |
-| `server/discover` | The newer protocol version `2026-07-28` and the server info. |
-| `ping` | An empty success reply. |
-
-`initialize` still negotiates the older protocol, `2025-03-26`. The server is
-dual-stack: a client that follows the classic handshake works unchanged, and a
-stateless client gets its answers on the first request.
-
-Expected, not a recorded run. To check this by hand, start `tokn serve` as in
-the steps above and send the three requests over stdin. Read each reply before
-you send the next request.
+After the Python example exits it stops its child server. Remove the
+throwaway repository when you no longer need it. GUI/IDE clients manage
+their own server lifetime; disable or remove the server entry there.

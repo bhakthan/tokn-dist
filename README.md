@@ -5,6 +5,10 @@ work together and check results. One downloadable binary brings **38 domain
 modes**, local or cloud models, offline licensing and in-place updates.
 This repo hosts releases, guides and examples; the source is private.
 
+```text
+Your goal -> TOKN + your models and tools -> checks -> reviewable result
+```
+
 ---
 
 ## Why TOKN? Value for teams running agents in production
@@ -127,6 +131,14 @@ collaborate, a result should come with a record you can inspect—not just "done
 
 For example, imagine asking a worker to check a small code change:
 
+```mermaid
+flowchart LR
+    A["Task"] --> B["Worker"]
+    B --> C["Reported result, evidence and uncertainty"]
+    C --> D["Check the exchange record"]
+    D --> E["Review tests and decide"]
+```
+
 | Without a receipt | What you want to review |
 |---|---|
 | "The checks passed." | **Result:** unit tests passed. **Evidence:** test-run log. **Not checked:** integration tests. |
@@ -155,13 +167,12 @@ sessions or a promise of token savings.
 Community users can build classifiers and regressors without a trial or API key:
 
 ```sh
-tokn tabular scaffold --dir delivery-demo --example delivery
-tokn tabular inspect --root delivery-demo
-tokn tabular doctor --root delivery-demo
-tokn tabular evaluate --root delivery-demo
-tokn tabular predict --root delivery-demo
+tokn tabular --help
 ```
 
+For a complete copy-paste run in a fresh scratch directory, follow
+**[TABULAR.md](TABULAR.md#a-complete-first-run)**. It creates a starter and runs
+inspection, diagnostics, evaluation and prediction with explicit absolute paths.
 The starter is a small **synthetic example**, not a production benchmark.
 Also try `maintenance` or `repair-cost`. Baseline execution needs Python 3.11+
 with no extra packages. Inspection and scaffolding need only TOKN.
@@ -170,6 +181,8 @@ Optional **NVIDIA Kumo-Tabular** uses locally staged dependencies and hashed
 classifier/regressor weights. Even the large checkpoints are individually under
 1 GB (~855 MB and ~863 MB); both together, dependencies and RAM/VRAM need more
 capacity. Nothing is installed or downloaded automatically.
+Optional **Google TabFM** is also supported with staged local weights and its
+required non-commercial licence acknowledgement; see the guide before choosing it.
 
 The agent can create the workflow and explain evaluation; the predictor computes
 the outputs. Probabilities and regression intervals are not proof of calibration
@@ -452,16 +465,18 @@ Microsoft's **Fara1.5** (via `tokn fara-run`, with a real coordinate browser) an
 **MagenticBrain**. Set two variables plus your key, e.g.:
 
 ```bash
-export NOSPACE_MODEL_PROVIDER=openai
-export NOSPACE_MODEL_NAME=gpt-4o
-export OPENAI_API_KEY=sk-...
-tokn auth status        # confirms the provider is configured & ready
+export NOSPACE_MODEL_PROVIDER="openai"
+export NOSPACE_MODEL_NAME="YOUR_MODEL_ID"
+export OPENAI_API_KEY="YOUR_OPENAI_API_KEY"
+tokn auth status        # reports credential readiness, not a successful model call
 tokn config doctor      # see every config file & env var TOKN picks up (secrets redacted)
 ```
 
-Prefer a file? Drop the same keys in a `.env` in your working directory (TOKN
-auto-loads it, non-overriding — just keep it out of git). **Full provider matrix,
-Azure `az login` auth, and local-model setup: [SETUP.md](SETUP.md).**
+Replace the placeholders before running. Prefer a file? The supported model
+preferences and API keys above can go in an ignored `.env`; real environment
+variables win. Endpoint overrides and authentication switches need explicit
+environment configuration. **Full setup, Azure `az login` auth and local-model
+preparation: [SETUP.md](SETUP.md).**
 
 ## Community quick start — no trial required
 

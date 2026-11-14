@@ -14,7 +14,9 @@ LLM does not predict; it only reads the typed result.
 | **`kumo` / `tabfm` backends** | Local foundation models with pinned, hash-checked weights. Optional. |
 | **Problem spec** (`problem.json`) | The explicit schema, target and features. Nothing is inferred. |
 
-No network call is made by TOKN. Weights are never downloaded at run time.
+The prediction backends do not download weights at run time or call an LLM.
+This does not disable TOKN's separate startup registration or update checks;
+set `TOKN_NO_REGISTER=1` and `TOKN_NO_UPDATE_CHECK=1` for an offline session.
 
 ---
 
@@ -40,17 +42,32 @@ No network call is made by TOKN. Weights are never downloaded at run time.
 weights are `tabfm-non-commercial-v1.0`, which permits non-commercial use only.
 TOKN refuses to run TabFM until you acknowledge that exact string.
 
-> **What leaves your machine.** Nothing. The baseline backend, `inspect`,
-> `doctor`, `evaluate` and `predict` make no network calls.
+> **What leaves your machine.** These tabular operations use local files and
+> local prediction runtimes. Optional package and weight staging needs
+> connectivity on a preparation machine. Predictions are uncalibrated
+> model output, not authorization to take an action.
 
 ## 1. Preflight: check the tools
 
-Run this from the `tokn-dist` root. It only reads your environment.
+Run this from the `tokn-dist` root. `--root` must be an **absolute** path.
+Set it once for the rest of the walkthrough:
+
+macOS / Linux:
+
+```bash
+TABULAR_ROOT="$PWD/examples/tabular-prediction"
+```
+
+PowerShell:
+
+```powershell
+$TABULAR_ROOT = (Resolve-Path examples\tabular-prediction).Path
+```
 
 bash or PowerShell (same command):
 
 ```bash
-tokn tabular doctor --root examples/tabular-prediction
+tokn tabular doctor --root "$TABULAR_ROOT"
 ```
 
 `doctor` lists every local prerequisite it finds, and installs nothing. For
@@ -61,9 +78,9 @@ the command for your OS below.
 |---|---|---|---|
 | Python 3 | `winget install Python.Python.3.12` | `brew install python@3.12` | `sudo apt-get install -y python3 python3-venv` |
 
-For `kumo` or `tabfm`, create a venv and install the pinned runtime. The pins
-are embedded in the TOKN binary. Install the versions they pin, not the latest
-releases. (The exact requirement file is not reproduced in this example.)
+The baseline needs no pip packages or weights. For `kumo` or `tabfm`, create
+a venv and use the requirement files generated in section 6. Creating the
+venv alone does not install a foundation-model runtime.
 
 Windows PowerShell:
 
@@ -90,7 +107,7 @@ system.
 |---|---|---|
 | `context.csv` | 60 labelled past deliveries | `distance_km`, `service`, `delayed` (`yes`/`no`) |
 | `query.csv` | 4 new deliveries to predict | `distance_km`, `service` |
-| `problem.json` | — | The explicit problem spec (`tokn.tabular/1`) |
+| `problem.json` | — | The explicit problem specification |
 
 `problem.json` names the target, types each feature, and sets a random 25%
 holdout for `evaluate`. Every field is explicit, so `inspect` can reject a
@@ -101,21 +118,22 @@ malformed spec before anything runs.
 bash or PowerShell (same command):
 
 ```bash
-tokn tabular inspect --root examples/tabular-prediction
+tokn tabular inspect --root "$TABULAR_ROOT"
 ```
 
 `inspect` checks the spec, the CSV columns, the target classes and the row
 limits. It never starts Python.
 
-Expected, not a recorded run: a JSON report with `"task": "classification"`,
-`"backend": "baseline"`, and `"ready": true`.
+Expected: a JSON report with `"operation": "inspect"`,
+`"task": "classification"` and `"backend": "baseline"`. Readiness is
+reported by `doctor`, not `inspect`.
 
 ## 4. Predict the four query rows
 
 bash or PowerShell (same command):
 
 ```bash
-tokn tabular predict --root examples/tabular-prediction
+tokn tabular predict --root "$TABULAR_ROOT"
 ```
 
 Expected, not a recorded run: a JSON object on stdout with `"operation": "predict"`,
@@ -129,7 +147,7 @@ Cross-validation runs on the context rows only. The query rows are never used.
 bash or PowerShell (same command):
 
 ```bash
-tokn tabular evaluate --root examples/tabular-prediction --folds 3
+tokn tabular evaluate --root "$TABULAR_ROOT" --folds 3
 ```
 
 Expected, not a recorded run: accuracy, log-loss, Brier and calibration metrics,
@@ -137,19 +155,25 @@ compared with a trivial "always the majority class" baseline. On 60 rows,
 treat the numbers as a demonstration of the pipeline, not a claim about
 delivery performance.
 
+With `--folds 3`, cross-validation replaces the problem file's single
+holdout split. Omit `--folds` to use that holdout instead. Neither evaluation
+is a substitute for testing on representative, independently held-out data.
+
 ## 6. (Optional) Add a foundation-model backend
 
-Change `"backend"` in a copy of `problem.json` to `kumo` or `tabfm`, then add a
-`model` block. `tokn tabular scaffold` writes a complete template for each
-backend, so you do not need to write the block by hand:
+`tokn tabular scaffold` creates a **new** starter directory, with a working
+baseline specification, an optional TabFM template and runtime requirement
+files. Use a separate scratch root, not the checked-in example.
 
 ```bash
-tokn tabular scaffold --dir scratch-tabfm --example delivery
+tokn tabular scaffold --root "<absolute existing scratch root>" --dir delivery-demo --example delivery
 ```
 
-Run that in a scratch folder under your `--root`, not inside this example. It
-writes `problem.json` (baseline) and `problem-tabfm.json` (TabFM). The JSON
-output's `notes` field carries the exact stage commands for the weights.
+Replace the placeholder with a directory you own; `delivery-demo` must not
+already exist. The output names the generated files and gives weight-staging
+guidance. Read those notes and the generated `requirements-tabfm.txt` or
+`requirements-kumo.txt` before installing anything. The scaffold does not
+install packages or fetch weights.
 
 ### How TOKN stages weights for offline use
 
@@ -157,16 +181,19 @@ TOKN never downloads a model at run time. Staging happens once, on a machine
 you control:
 
 1. **Build the wheelhouse online.** Download the pinned packages once:
-   `python -m pip download -d wheelhouse -r <pinned requirements file>`.
+   `python -m pip wheel --wheel-dir wheelhouse -r requirements-tabfm.txt`
+   from the generated directory, using the target OS, architecture and
+   Python version. For Kumo, use `requirements-kumo.txt`.
 2. **Install offline.** Copy `wheelhouse` to the air-gapped machine and run
-   `python -m pip install --no-index --find-links wheelhouse -r <pinned requirements file>`.
+   `python -m pip install --no-index --find-links wheelhouse -r requirements-tabfm.txt`.
    Do not move a venv between machines; rebuild it.
 3. **Fetch the weights once** with the stage commands from `scaffold`. Verify
    each file's sha256 against the value in the spec.
-4. **Point TOKN at the local folder.** Use `--tabfm-weights <dir>` (relative to
-   `--root`, or absolute), or set `model.checkpoint` in the spec. The folder
-   must hold `classification/` and `regression/` (TabFM) or the task's `.pt`
-   file (Kumo).
+4. **Point TOKN at the local files.** For TabFM, use
+   `--tabfm-weights <dir>` (relative to `--root`, or absolute), or the
+   checkpoint setting in its generated spec. The folder holds the
+   classification and regression weights. Kumo uses its own specification
+   pointing to the task's `.pt` checkpoint, not `--tabfm-weights`.
 
 TabFM variants:
 
@@ -182,11 +209,16 @@ only the task you ask for.
 To run TabFM, acknowledge the licence exactly:
 
 ```bash
-tokn tabular predict --root examples/tabular-prediction --tabfm-license-ack tabfm-non-commercial-v1.0
+tokn tabular doctor --root "<absolute scratch root>/delivery-demo" --spec problem-tabfm.json --tabfm-license-ack tabfm-non-commercial-v1.0
+tokn tabular predict --root "<absolute scratch root>/delivery-demo" --spec problem-tabfm.json --tabfm-license-ack tabfm-non-commercial-v1.0
 ```
 
 The `--tabfm-license-ack` value must match `tabfm-non-commercial-v1.0` exactly.
 Use it only for non-commercial work.
+
+Passing the acknowledgement with the original `problem.json` does **not**
+select TabFM: that file still requests `baseline`. Explicitly select
+`problem-tabfm.json` and finish its local weights setup first.
 
 ## 7. Where this sits next to the LLM
 
@@ -198,8 +230,9 @@ the prediction can be checked without a model call.
 
 - **The spec is the contract.** Unknown fields are rejected. Change the target
   or a feature type in `problem.json` and `inspect` will catch it.
-- **Predictions are typed.** Every row has a class label and the count behind
-  it, not free text.
+- **Predictions are typed.** Every row has a class label and class
+  probabilities, not free text. Probabilities are not guaranteed calibrated
+  confidence.
 - **Evaluation uses only context rows.** The query rows never leak into the
   metrics.
 - **Weights are pinned.** A changed file fails the sha256 check. TOKN does not
@@ -210,6 +243,7 @@ the prediction can be checked without a model call.
 | Symptom | Cause | Fix |
 |---|---|---|
 | `python: not found` | Python is not on `PATH` | Install it (step 1) or pass `--python <path>` |
+| `root must be an absolute path` | A relative `--root` was passed | Set `TABULAR_ROOT` as in step 1 |
 | `inspect` says a column is missing | The feature or target name does not match the CSV header | Compare `problem.json` with the first line of `context.csv` |
 | `tokn tabular predict` refuses TabFM | The licence string is missing or not exact | Pass `--tabfm-license-ack tabfm-non-commercial-v1.0` exactly |
 | `doctor` reports a checkpoint hash mismatch | The weights file differs from the pinned sha256 | Re-stage the file from the source. Do not edit the spec's hash to match. |
