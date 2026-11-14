@@ -1,0 +1,5 @@
+[
+  { "id": "suv", "path": "photos/suv-front.jpg", "view": "front" },
+  { "id": "mirror", "path": "photos/side-mirror.jpg", "view": "left" },
+  { "id": "van", "path": "photos/van-side.jpg", "view": "front-left" }
+]

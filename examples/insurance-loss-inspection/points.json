@@ -1,0 +1,11 @@
+{
+  "points": [
+    { "photo_id": "suv", "class": "windshield", "name": "windshield", "box": { "x0": 360, "y0": 110, "x1": 850, "y1": 290 } },
+    { "photo_id": "suv", "class": "hood", "name": "hood", "box": { "x0": 330, "y0": 270, "x1": 1020, "y1": 480 } },
+    { "photo_id": "suv", "class": "bumper", "name": "front bumper", "box": { "x0": 320, "y0": 540, "x1": 1075, "y1": 750 } },
+    { "photo_id": "mirror", "class": "mirror", "name": "left mirror", "box": { "x0": 680, "y0": 115, "x1": 1230, "y1": 600 } },
+    { "photo_id": "van", "class": "body panel", "name": "van rear side", "box": { "x0": 690, "y0": 260, "x1": 950, "y1": 610 } },
+    { "photo_id": "van", "class": "bumper", "name": "van front bumper", "box": { "x0": 45, "y0": 500, "x1": 330, "y1": 700 } },
+    { "photo_id": "van", "class": "windshield", "name": "van windshield", "box": { "x0": 230, "y0": 275, "x1": 500, "y1": 395 } }
+  ]
+}

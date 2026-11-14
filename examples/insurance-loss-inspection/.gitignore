@@ -1,0 +1,8 @@
+photos/
+out/
+*.log
+.env
+
+# TOKN runtime state written by the agent run (never commit)
+.nospace/
+.tokn/

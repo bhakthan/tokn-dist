@@ -91,6 +91,7 @@ New to TOKN? Start with [first-ten-minutes](first-ten-minutes/README.md).
 | [event-trigger](event-trigger/README.md) | Start agent runs from events: a local folder queue first, Azure Service Bus optional | your own broker (optional) |
 | [federation](federation/README.md) | A leader fans a task out to two local workers and applies the results back | — |
 | [local-llamacpp](local-llamacpp/README.md) | Run TOKN against a local GGUF model served by llama.cpp, offline once weights are downloaded | llama.cpp, a GGUF model |
+| [insurance-loss-inspection](insurance-loss-inspection/README.md) | Three local models on one synthetic auto claim: a coding model drives insurance mode, a vision model answers photo damage checks, a decision model triages from a summary | llama.cpp, three GGUF models, tokn v0.3.95+ |
 | [toknish](toknish/README.md) | Federation with the toknish wire (signed, auditable results), then a compact model-answer bench (`tokn tkm bench`) | `tokn` on PATH; Ollama for the offline bench (cloud key optional) |
 | [agent-team](agent-team/README.md) | A declarative team (planner, implementer, reviewer) builds a small app | — |
 | [authority-frames](authority-frames/README.md) | When the agent acts, asks or stops: permission, ask-or-act and stuck signals | — |
