@@ -1,0 +1,19 @@
+name: claims-intake
+mode: default
+model:
+  provider: azure-openai
+  model: gpt-6-astra
+  context_size: 128000
+max_steps: 20
+turn_timeout: 10m
+tools: [read_file, list_directory, file_search, grep_search]
+budget:
+  per_run_tokens: 120000
+  per_day_tokens: 800000
+handoff:
+  max_hops: 2
+  max_per_run: 1
+  peers:
+    - name: coverage-review
+      state_dir: "../state/coverage-review"
+      description: "Coverage and SIU review desk: loss history, application answers, referral guidelines. Returns proceed / proceed-with-conditions / refer-to-SIU."

@@ -1,0 +1,28 @@
+# Always-on agent config for the claims intake desk, served locally by llama.cpp.
+# Use with: .\run.ps1 -Local   or   ./run.sh --local
+# run.ps1 / run.sh copy this file to workspace/.nospace/always-on/claims-intake.yaml.
+# Not live-tested in this example yet.
+
+name: claims-intake
+
+mode: default
+
+model:
+  # gguf = a llama.cpp server speaking the OpenAI-compatible API.
+  provider: gguf
+  # Any name; llama-server answers with the model it loaded. The name must
+  # be a tool-calling model, which doctor checks (qwen3 is recognised).
+  model: qwen3-8b
+  # The llama-server address. Must be loopback when run with --airgap.
+  base_url: http://127.0.0.1:8080/v1
+  # Must match the -c value you start llama-server with (at least 8192).
+  context_size: 16384
+
+max_steps: 20
+turn_timeout: 10m
+
+tools: [read_file, list_directory, file_search, grep_search, write_file]
+
+budget:
+  per_run_tokens: 120000
+  per_day_tokens: 600000

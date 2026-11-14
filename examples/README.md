@@ -89,6 +89,8 @@ New to TOKN? Start with [first-ten-minutes](first-ten-minutes/README.md).
 | [sdk-generation](sdk-generation/README.md) | Ingest a small OpenAPI spec, generate client SDKs, validate them | language toolchains |
 | [domain-plugin](domain-plugin/README.md) | Scaffold, validate and install your own small domain plugin | — |
 | [event-trigger](event-trigger/README.md) | Start agent runs from events: a local folder queue first, Azure Service Bus optional | your own broker (optional) |
+| [always-on-claims-intake](always-on-claims-intake/README.md) | An always-on claims intake agent: events wake one worker, sessions carry over between runs, unattended writes are denied and a daily token budget is enforced (`tokn always-on`) | Python 3.10+, tokn v0.3.99+, Azure OpenAI with `az login` (or llama.cpp) |
+| [always-on-claims-desks](always-on-claims-desks/README.md) | Two always-on agents from separate instances, each with its own workspace, state, budget and tool allowlist, hand one insurance claim back and forth with `handoff` (`tokn always-on`) | Python 3.10+, git, tokn v0.3.100+, Azure OpenAI with `az login` (or llama.cpp, not live-tested) |
 | [federation](federation/README.md) | A leader fans a task out to two local workers and applies the results back | — |
 | [local-llamacpp](local-llamacpp/README.md) | Run TOKN against a local GGUF model served by llama.cpp, offline once weights are downloaded | llama.cpp, a GGUF model |
 | [insurance-loss-inspection](insurance-loss-inspection/README.md) | Three local models on one synthetic auto claim: a coding model drives insurance mode, a vision model answers photo damage checks, a decision model triages from a summary | llama.cpp, three GGUF models, tokn v0.3.95+ |

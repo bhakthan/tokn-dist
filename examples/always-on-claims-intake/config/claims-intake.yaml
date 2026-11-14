@@ -1,0 +1,32 @@
+# Always-on agent config for the claims intake desk (Azure OpenAI).
+# run.ps1 / run.sh copy this file to workspace/.nospace/always-on/claims-intake.yaml.
+
+name: claims-intake
+
+# Only the default loop is supported for always-on agents.
+mode: default
+
+model:
+  provider: azure-openai
+  # The Azure OpenAI deployment name. Must match AZURE_OPENAI_DEPLOYMENT.
+  model: gpt-6-astra
+  # Model context window in tokens. doctor requires at least 8192.
+  context_size: 128000
+
+# Model calls allowed in one run before the worker stops it.
+max_steps: 20
+
+# Longest single model call.
+turn_timeout: 10m
+
+# Every tool the agent may use. Anything else is refused on dispatch.
+# Listing write_file offers it to the model, but an unattended write is
+# still denied; the example shows that on CLM-1002.
+tools: [read_file, list_directory, file_search, grep_search, write_file]
+
+budget:
+  # Token cap for one run: min(this, what is left of today's budget).
+  per_run_tokens: 120000
+  # Token cap per local calendar day across all runs. When it is spent,
+  # events wait in the inbox until the day resets.
+  per_day_tokens: 600000

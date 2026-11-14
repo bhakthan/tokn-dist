@@ -1,0 +1,19 @@
+name: coverage-review
+mode: default
+model:
+  provider: azure-openai
+  model: gpt-6-astra
+  context_size: 128000
+max_steps: 20
+turn_timeout: 10m
+tools: [read_file, list_directory, file_search, grep_search]
+budget:
+  per_run_tokens: 240000
+  per_day_tokens: 800000
+handoff:
+  max_hops: 2
+  max_per_run: 1
+  peers:
+    - name: claims-intake
+      state_dir: "../state/claims-intake"
+      description: "Claims intake desk: owns the claim conversation, the adjuster note and the policyholder message."

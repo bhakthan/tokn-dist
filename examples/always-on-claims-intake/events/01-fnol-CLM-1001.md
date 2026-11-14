@@ -1,0 +1,1 @@
+New first notice of loss: claims/CLM-1001.md. Read it and the policy it names in policies/. Reply with: (1) the relevant clause ids, (2) a coverage indication for the adjuster (an indication only, not a decision), (3) the deductible that would apply, and (4) up to three questions the adjuster should ask the policyholder.

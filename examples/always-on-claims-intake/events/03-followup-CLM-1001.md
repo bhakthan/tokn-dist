@@ -1,0 +1,1 @@
+Update from the adjuster on this claim: the plumber now reports that the supply line had been leaking slowly for about three weeks before it burst. Does this change your earlier indication? Answer in terms of the clause ids you cited before.

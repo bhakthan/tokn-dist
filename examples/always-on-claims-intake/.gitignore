@@ -1,0 +1,7 @@
+.env
+state/
+workspace/.nospace/
+.nospace/
+.tokn/
+__pycache__/
+results/

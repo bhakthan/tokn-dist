@@ -1,0 +1,11 @@
+.env
+state/
+intake/.nospace/
+review/.nospace/
+intake/.git/
+review/.git/
+intake/.gitignore
+review/.gitignore
+.tokn/
+__pycache__/
+results/
