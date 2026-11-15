@@ -2,3 +2,12 @@
 __pycache__/
 *.pyc
 
+# Auto-ontology walkthrough: local secrets, generated output, and the original-sample clone
+.env
+!.env.example
+.nospace/
+.tokn/
+/examples/postgresql-auto-ontology/out/
+/examples/postgresql-auto-ontology/csv-demo/
+/examples/postgresql-auto-ontology/sql-server-samples/
+

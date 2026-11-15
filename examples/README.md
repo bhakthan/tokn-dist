@@ -24,6 +24,7 @@ New to TOKN? Start with [first-ten-minutes](first-ten-minutes/README.md).
 | Walkthrough | What it shows | Extra requirements |
 |---|---|---|
 | [decision-council](decision-council/README.md) | Several decision models vote in parallel; a council escalates disagreements to an LLM | 2+ decision-model keys |
+| [postgresql-auto-ontology](postgresql-auto-ontology/README.md) | Infer an OWL/RDFS ontology from PostgreSQL tables, then review it by explicit ID | Azure PostgreSQL you control; optional Azure OpenAI or decision-model access (billed) |
 | [grid-screening](grid-screening/README.md) | `tokn harness evolve` improves its own harness on a substation N-1 screen | a decision-model key |
 | [finrisk-system-one](finrisk-system-one/README.md) | A deterministic finrisk tool plus one typed decision request, graded from the run log | trial, a decision-model key |
 | [compbio-gates](compbio-gates/README.md) | Computational-biology gates catch genome-build mixing and unpinned pipelines | trial |

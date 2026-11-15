@@ -1,0 +1,9 @@
+.env
+.nospace/
+.tokn/
+.venv/
+__pycache__/
+*.pyc
+out/
+csv-demo/
+sql-server-samples/

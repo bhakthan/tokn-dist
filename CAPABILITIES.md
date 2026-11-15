@@ -4,7 +4,7 @@
 task, use tools, collaborate and check its work. Bring a cloud model or prepare
 a local setup; choose the workflows and controls your task needs.
 
-Updated for **[v0.3.100](https://github.com/bhakthan/tokn-dist/releases/tag/v0.3.100)**.
+Updated for **[v0.3.101](https://github.com/bhakthan/tokn-dist/releases/tag/v0.3.101)**.
 This is a selected product overview; use the commands below for your installed build.
 Availability depends on your platform, licence, model and installed tools.
 See [platform support](README.md#platform-support) before starting a trial.
@@ -239,6 +239,7 @@ browser, and prepare reusable knowledge artifacts.
 | Screenshot-guided browser actions | [Computer-use models](examples/computer-use-models/README.md) |
 | Photo damage checks with human referrals | [Loss inspection](examples/insurance-loss-inspection/README.md) |
 | Draft a reviewable ontology from tables | [Ontology from tables](examples/ontology-from-tables/README.md) |
+| PostgreSQL and CSV ontologies, model enrichment, shared-state decision batches and external RDF-row SHACL checks | [PostgreSQL + Excel-exported CSV](examples/postgresql-auto-ontology/README.md) |
 | Query and reason over RDF | [Ontology and SPARQL](examples/ontology-sparql/README.md) |
 | Move a portable knowledge bundle | [Knowledge bundles](examples/knowledge-bundles/README.md) |
 

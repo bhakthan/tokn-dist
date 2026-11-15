@@ -78,9 +78,14 @@ version-accurate catalog.
 
 ## Recent highlights
 
-Updated for **[v0.3.100](https://github.com/bhakthan/tokn-dist/releases/tag/v0.3.100)**.
+Updated for **[v0.3.101](https://github.com/bhakthan/tokn-dist/releases/tag/v0.3.101)**.
 These are selected capabilities, not the full command catalog:
 
+- **Reviewable database and CSV ontologies.** Map source types and relationships,
+  optionally enrich descriptions, then batch advisory decision questions.
+  Generated SHACL shapes can be checked against actual RDF rows with external
+  tools. Database constraints remain distinct from CSV inferences.
+  → [PostgreSQL and an Excel-exported CSV](examples/postgresql-auto-ontology/README.md)
 - **Always-on agents, with handoffs.** An inbox wakes an agent for a bounded
   run; later events can continue the same session. Two agents can pass a case
   between configured desks, each with its own workspace, tools and budget.

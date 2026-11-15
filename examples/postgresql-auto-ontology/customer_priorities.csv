@@ -1,0 +1,6 @@
+PriorityID,CustomerID,PriorityBand,ReviewScore,RequiresReview,SnapshotDate,AnalystNote
+1,1,Standard,0.20,false,2026-11-15,Normal follow-up
+2,1,High,0.85,true,2026-11-15,Review new request
+3,2,Standard,0.35,false,2026-11-15,
+4,3,High,0.90,true,2026-11-15,Confirm priority with operator
+5,4,Standard,0.10,false,2026-11-15,
