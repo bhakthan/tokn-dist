@@ -4,7 +4,7 @@ Synthetic, non-sensitive input files referenced by
 [GETTING_STARTED.md](../GETTING_STARTED.md), plus step-by-step walkthroughs
 that each run one real task end to end. None of them contain real data.
 
-For the current public release, **v0.3.100**, use the requirements on each
+For the current public release, **v0.3.102**, use the requirements on each
 walkthrough rather than treating an older minimum version as obsolete.
 Hosted-model examples need your own provider access and may incur charges;
 local-model examples need a running model server and staged weights.
@@ -31,6 +31,7 @@ New to TOKN? Start with [first-ten-minutes](first-ten-minutes/README.md).
 | [semicon-signoff](semicon-signoff/README.md) | Tapeout signoff for six macros: unconstrained timing is blocked, boundary slack and LVS traps are caught | trial |
 | [adas-safety-gate](adas-safety-gate/README.md) | Five ADAS functions gated on ASIL decomposition, FMEDA metrics and V&V | trial |
 | [appsec-triage](appsec-triage/README.md) | Triage a static-analysis queue before release: each candidate is reportable, suppressed or blocked | trial |
+| [auto-route-grid](auto-route-grid/README.md) | `--auto-route` moves one grid-engineering task between OpenAI model rungs step by step | trial, Azure OpenAI |
 | [battery-passport](battery-passport/README.md) | Pre-publication gate check of six Battery Passport drafts: compliance, carbon-footprint method, due diligence, chemistry | trial |
 | [climate-ensemble](climate-ensemble/README.md) | Five CMIP6 regional projection claims checked for calibrated likelihood and ensemble size | trial, optional Python deps |
 | [criticality-package](criticality-package/README.md) | Criticality-safety QA review of six spent-fuel pool storage packages | trial |

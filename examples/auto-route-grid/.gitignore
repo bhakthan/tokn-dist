@@ -1,0 +1,9 @@
+.env
+.nospace/
+.tokn/
+workspace/.nospace/
+workspace/.tokn/
+workspace/__pycache__/
+workspace/dcflow.py
+workspace/GRID_REPORT.md
+workspace/dcflow_results.json

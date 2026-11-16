@@ -1,0 +1,7 @@
+bus,type,gen_mw,load_mw
+1,slack,0,0
+2,pv,180,20
+3,pq,0,110
+4,pq,0,90
+5,pv,120,30
+6,pq,0,130
