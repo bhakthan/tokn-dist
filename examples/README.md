@@ -33,6 +33,7 @@ New to TOKN? Start with [first-ten-minutes](first-ten-minutes/README.md).
 | [appsec-triage](appsec-triage/README.md) | Triage a static-analysis queue before release: each candidate is reportable, suppressed or blocked | trial |
 | [auto-route-grid](auto-route-grid/README.md) | `--auto-route` moves one grid-engineering task between OpenAI model rungs step by step | trial, Azure OpenAI |
 | [auto-route-transcriptomics](auto-route-transcriptomics/README.md) | `--auto-route` moves a TOKN-authored RNA-seq case between Claude Haiku, Sonnet and Opus by step | trial, Anthropic API or compatible gateway, Python 3 + numpy |
+| [rnaseq-goal-engineering](rnaseq-goal-engineering/README.md) | Goal scopes: a reviewer's correction on one RNA-seq run becomes a verified lesson that every later run in the scope applies | trial, Anthropic API or compatible gateway, Python 3 + numpy |
 | [battery-passport](battery-passport/README.md) | Pre-publication gate check of six Battery Passport drafts: compliance, carbon-footprint method, due diligence, chemistry | trial |
 | [climate-ensemble](climate-ensemble/README.md) | Five CMIP6 regional projection claims checked for calibrated likelihood and ensemble size | trial, optional Python deps |
 | [criticality-package](criticality-package/README.md) | Criticality-safety QA review of six spent-fuel pool storage packages | trial |

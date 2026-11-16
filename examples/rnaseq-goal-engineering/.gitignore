@@ -1,0 +1,8 @@
+.env
+.nospace/
+.tokn/
+__pycache__/
+solution/
+work/
+solve-*/
+instance-*/
