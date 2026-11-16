@@ -7,10 +7,9 @@ and unique-visitor counts. This script captures:
 
   * traffic/clones  — daily clone count + uniques (last 14 days, then erased)
   * traffic/views   — daily view count + uniques  (last 14 days, then erased)
-  * releases assets — download_count per asset. NOTE: this counter resets to 0
-    whenever an asset is re-uploaded (e.g. `gh release upload --clobber`), so we
-    keep a per-asset carry offset (downloads_state) to make the effective total
-    monotonic across clobbered releases.
+  * releases assets — download_count per release asset. Counts are tracked per
+    release (downloads_state_v2) so pruned releases are banked once, and a
+    re-uploaded asset (counter reset to 0) banks only the drop.
   * popular/referrers + popular/paths — top-10 sources (last 14 days)
 
 and merges them into docs/data/history.json (upsert by date), computing a daily
@@ -79,7 +78,6 @@ def load_history() -> dict:
         "views_daily": {},
         "downloads_snapshots": {},
         "downloads_daily": {},
-        "downloads_state": {},
         "referrers": [],
         "paths": [],
     }
@@ -94,11 +92,11 @@ def merge_traffic(dst: dict, series, key: str):
 
 
 def collect_downloads():
-    """Return {asset_name: raw_download_count} summed across all releases.
+    """Return {"<tag>/<asset_name>": raw_download_count} across all releases.
 
-    The raw count is what GitHub currently reports; it resets to 0 when an asset
-    is replaced via --clobber. reconcile_downloads() turns these raw values into
-    a monotonic effective total.
+    Counts are keyed per release, not per asset name: old releases are pruned,
+    and a per-name sum would drop on every prune. reconcile_downloads() turns
+    these raw values into a monotonic effective total.
     """
     raw = {}
     page = 1
@@ -107,9 +105,9 @@ def collect_downloads():
         if not rels:
             break
         for rel in rels:
+            tag = rel.get("tag_name") or str(rel.get("id"))
             for a in rel.get("assets", []):
-                c = a.get("download_count", 0)
-                raw[a["name"]] = raw.get(a["name"], 0) + c
+                raw[f"{tag}/{a['name']}"] = a.get("download_count", 0)
         if len(rels) < 100:
             break
         page += 1
@@ -117,42 +115,40 @@ def collect_downloads():
 
 
 def reconcile_downloads(hist: dict, raw: dict):
-    """Fold raw per-asset counts into a clobber-proof effective total.
+    """Fold raw per-release asset counts into a monotonic effective total.
 
-    For each asset we persist {last, carry} in hist["downloads_state"]:
-      * `last`  — the previous raw download_count we saw.
-      * `carry` — downloads accumulated from prior asset resets (clobbers).
-    A drop (raw < last) means the asset was re-uploaded, so we bank `last` into
-    `carry`. The effective per-asset count is always carry + raw, which never
-    decreases. On first run under this scheme we seed `carry` from the historical
-    high-water mark so pre-existing snapshots aren't lost.
+    hist["downloads_state_v2"] = {"keys": {"<tag>/<asset>": {last, carry}},
+    "banked": N}:
+      * a key whose count drops was re-uploaded: bank only the drop into carry;
+      * a key that disappears belongs to a pruned release: bank carry + last.
+    Total = banked + sum(carry + last). The first run seeds `banked` from
+    hist["downloads_banked"] (written by rebuild_download_history.py: the
+    rebuilt total minus the live counts at that time).
     """
-    state = hist.setdefault("downloads_state", {})
+    state = hist.get("downloads_state_v2")
+    if state is None:
+        state = {"keys": {}, "banked": max(0, int(hist.pop("downloads_banked", 0)))}
+        hist["downloads_state_v2"] = state
+    keys = state["keys"]
 
-    # historical high-water per asset (max ever recorded in a snapshot)
-    hi = {}
-    for snap in hist.get("downloads_snapshots", {}).values():
-        for name, cnt in (snap.get("assets") or {}).items():
-            hi[name] = max(hi.get(name, 0), cnt)
-
-    total = 0
-    effective_assets = {}
-    for name, c in raw.items():
-        st = state.get(name)
+    for key, c in raw.items():
+        st = keys.get(key)
         if st is None:
-            # first observation under the carry scheme: recover any pre-reset
-            # downloads only if the current raw already fell below the old high.
-            seed_carry = hi.get(name, 0) if c < hi.get(name, 0) else 0
-            st = {"last": c, "carry": seed_carry}
-        else:
-            if c < st["last"]:  # asset was clobbered/re-uploaded -> bank the old total
-                st["carry"] += st["last"]
-            st["last"] = c
-        state[name] = st
-        eff = st["carry"] + c
-        effective_assets[name] = eff
-        total += eff
-    return total, effective_assets
+            keys[key] = {"last": c, "carry": 0}
+            continue
+        if c < st["last"]:
+            st["carry"] += st["last"] - c
+        st["last"] = c
+    for key in [k for k in keys if k not in raw]:
+        st = keys.pop(key)
+        state["banked"] += st["carry"] + st["last"]
+
+    by_name = {}
+    for key, st in keys.items():
+        name = key.split("/", 1)[1]
+        by_name[name] = by_name.get(name, 0) + st["carry"] + st["last"]
+    total = state["banked"] + sum(by_name.values())
+    return total, by_name
 
 
 def main() -> int:

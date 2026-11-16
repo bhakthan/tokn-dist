@@ -533,6 +533,7 @@
       "uniques": 17
     }
   },
+  "downloads_banked": 943,
   "downloads_daily": {
     "2026-07-19": 0,
     "2026-07-20": 0,
@@ -654,7 +655,7 @@
     "2026-11-13": 31,
     "2026-11-14": 37,
     "2026-11-15": 22,
-    "2026-11-16": 77
+    "2026-11-16": 0
   },
   "downloads_snapshots": {
     "2026-07-18": {
@@ -703,9 +704,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 0,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 0
+        "tokn_windows_amd64.exe": 1
       },
-      "total": 0
+      "total": 1
     },
     "2026-07-23": {
       "assets": {
@@ -713,41 +714,11 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 0,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 0
+        "tokn_windows_amd64.exe": 1
       },
-      "total": 0
+      "total": 1
     },
     "2026-07-24": {
-      "assets": {
-        "tokn_darwin_amd64": 0,
-        "tokn_darwin_arm64": 0,
-        "tokn_linux_amd64": 0,
-        "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 2
-      },
-      "total": 2
-    },
-    "2026-07-25": {
-      "assets": {
-        "tokn_darwin_amd64": 0,
-        "tokn_darwin_arm64": 0,
-        "tokn_linux_amd64": 0,
-        "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 2
-      },
-      "total": 2
-    },
-    "2026-07-26": {
-      "assets": {
-        "tokn_darwin_amd64": 0,
-        "tokn_darwin_arm64": 0,
-        "tokn_linux_amd64": 0,
-        "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 2
-      },
-      "total": 2
-    },
-    "2026-07-27": {
       "assets": {
         "tokn_darwin_amd64": 0,
         "tokn_darwin_arm64": 0,
@@ -757,6 +728,36 @@
       },
       "total": 3
     },
+    "2026-07-25": {
+      "assets": {
+        "tokn_darwin_amd64": 0,
+        "tokn_darwin_arm64": 0,
+        "tokn_linux_amd64": 0,
+        "tokn_linux_arm64": 0,
+        "tokn_windows_amd64.exe": 3
+      },
+      "total": 3
+    },
+    "2026-07-26": {
+      "assets": {
+        "tokn_darwin_amd64": 0,
+        "tokn_darwin_arm64": 0,
+        "tokn_linux_amd64": 0,
+        "tokn_linux_arm64": 0,
+        "tokn_windows_amd64.exe": 3
+      },
+      "total": 3
+    },
+    "2026-07-27": {
+      "assets": {
+        "tokn_darwin_amd64": 0,
+        "tokn_darwin_arm64": 0,
+        "tokn_linux_amd64": 0,
+        "tokn_linux_arm64": 0,
+        "tokn_windows_amd64.exe": 4
+      },
+      "total": 4
+    },
     "2026-07-28": {
       "assets": {
         "SHA256SUMS": 1,
@@ -765,9 +766,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 0,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 4
+        "tokn_windows_amd64.exe": 5
       },
-      "total": 6
+      "total": 7
     },
     "2026-07-29": {
       "assets": {
@@ -777,9 +778,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 0,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 4
+        "tokn_windows_amd64.exe": 5
       },
-      "total": 6
+      "total": 7
     },
     "2026-07-30": {
       "assets": {
@@ -789,9 +790,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 0,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 4
+        "tokn_windows_amd64.exe": 5
       },
-      "total": 6
+      "total": 7
     },
     "2026-07-31": {
       "assets": {
@@ -801,9 +802,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 0,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 4
+        "tokn_windows_amd64.exe": 5
       },
-      "total": 6
+      "total": 7
     },
     "2026-08-01": {
       "assets": {
@@ -813,9 +814,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 0,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 4
+        "tokn_windows_amd64.exe": 5
       },
-      "total": 6
+      "total": 7
     },
     "2026-08-02": {
       "assets": {
@@ -825,9 +826,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 0,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 5
+        "tokn_windows_amd64.exe": 6
       },
-      "total": 9
+      "total": 10
     },
     "2026-08-03": {
       "assets": {
@@ -837,9 +838,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 0,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 5
+        "tokn_windows_amd64.exe": 6
       },
-      "total": 9
+      "total": 10
     },
     "2026-08-04": {
       "assets": {
@@ -849,9 +850,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 0,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 5
+        "tokn_windows_amd64.exe": 6
       },
-      "total": 9
+      "total": 10
     },
     "2026-08-05": {
       "assets": {
@@ -861,9 +862,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 0,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 5
+        "tokn_windows_amd64.exe": 6
       },
-      "total": 9
+      "total": 10
     },
     "2026-08-06": {
       "assets": {
@@ -873,9 +874,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 0,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 5
+        "tokn_windows_amd64.exe": 6
       },
-      "total": 9
+      "total": 10
     },
     "2026-08-07": {
       "assets": {
@@ -885,9 +886,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 0,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 5
+        "tokn_windows_amd64.exe": 6
       },
-      "total": 9
+      "total": 10
     },
     "2026-08-08": {
       "assets": {
@@ -897,9 +898,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 0,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 6
+        "tokn_windows_amd64.exe": 7
       },
-      "total": 11
+      "total": 12
     },
     "2026-08-09": {
       "assets": {
@@ -909,9 +910,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 0,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 6
+        "tokn_windows_amd64.exe": 7
       },
-      "total": 11
+      "total": 12
     },
     "2026-08-10": {
       "assets": {
@@ -921,9 +922,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 0,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 7
+        "tokn_windows_amd64.exe": 8
       },
-      "total": 13
+      "total": 14
     },
     "2026-08-11": {
       "assets": {
@@ -933,9 +934,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 0,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 7
+        "tokn_windows_amd64.exe": 8
       },
-      "total": 13
+      "total": 14
     },
     "2026-08-12": {
       "assets": {
@@ -945,9 +946,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 1,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 7
+        "tokn_windows_amd64.exe": 8
       },
-      "total": 15
+      "total": 16
     },
     "2026-08-13": {
       "assets": {
@@ -957,9 +958,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 1,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 7
+        "tokn_windows_amd64.exe": 8
       },
-      "total": 15
+      "total": 16
     },
     "2026-08-14": {
       "assets": {
@@ -969,9 +970,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 1,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 7
+        "tokn_windows_amd64.exe": 8
       },
-      "total": 15
+      "total": 16
     },
     "2026-08-15": {
       "assets": {
@@ -981,9 +982,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 1,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 8
+        "tokn_windows_amd64.exe": 9
       },
-      "total": 19
+      "total": 20
     },
     "2026-08-16": {
       "assets": {
@@ -993,9 +994,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 1,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 8
+        "tokn_windows_amd64.exe": 9
       },
-      "total": 19
+      "total": 20
     },
     "2026-08-17": {
       "assets": {
@@ -1005,9 +1006,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 1,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 8
+        "tokn_windows_amd64.exe": 9
       },
-      "total": 19
+      "total": 20
     },
     "2026-08-18": {
       "assets": {
@@ -1017,9 +1018,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 2,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 8
+        "tokn_windows_amd64.exe": 9
       },
-      "total": 22
+      "total": 23
     },
     "2026-08-19": {
       "assets": {
@@ -1029,9 +1030,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 2,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 8
+        "tokn_windows_amd64.exe": 9
       },
-      "total": 22
+      "total": 23
     },
     "2026-08-20": {
       "assets": {
@@ -1041,9 +1042,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 2,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 8
+        "tokn_windows_amd64.exe": 9
       },
-      "total": 22
+      "total": 23
     },
     "2026-08-21": {
       "assets": {
@@ -1053,9 +1054,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 3,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 8
+        "tokn_windows_amd64.exe": 9
       },
-      "total": 25
+      "total": 26
     },
     "2026-08-22": {
       "assets": {
@@ -1065,9 +1066,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 3,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 8
+        "tokn_windows_amd64.exe": 9
       },
-      "total": 25
+      "total": 26
     },
     "2026-08-23": {
       "assets": {
@@ -1077,9 +1078,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 3,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 8
+        "tokn_windows_amd64.exe": 9
       },
-      "total": 25
+      "total": 26
     },
     "2026-08-24": {
       "assets": {
@@ -1089,9 +1090,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 4,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 8
+        "tokn_windows_amd64.exe": 9
       },
-      "total": 28
+      "total": 29
     },
     "2026-08-25": {
       "assets": {
@@ -1101,9 +1102,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 4,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 8
+        "tokn_windows_amd64.exe": 9
       },
-      "total": 28
+      "total": 29
     },
     "2026-08-26": {
       "assets": {
@@ -1113,9 +1114,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 4,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 8
+        "tokn_windows_amd64.exe": 9
       },
-      "total": 28
+      "total": 29
     },
     "2026-08-27": {
       "assets": {
@@ -1125,9 +1126,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 4,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 8
+        "tokn_windows_amd64.exe": 9
       },
-      "total": 28
+      "total": 29
     },
     "2026-08-28": {
       "assets": {
@@ -1137,9 +1138,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 4,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 8
+        "tokn_windows_amd64.exe": 9
       },
-      "total": 28
+      "total": 29
     },
     "2026-08-29": {
       "assets": {
@@ -1149,9 +1150,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 4,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 8
+        "tokn_windows_amd64.exe": 9
       },
-      "total": 28
+      "total": 29
     },
     "2026-08-30": {
       "assets": {
@@ -1161,9 +1162,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 4,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 8
+        "tokn_windows_amd64.exe": 9
       },
-      "total": 28
+      "total": 29
     },
     "2026-08-31": {
       "assets": {
@@ -1173,9 +1174,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 4,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 8
+        "tokn_windows_amd64.exe": 9
       },
-      "total": 28
+      "total": 29
     },
     "2026-09-01": {
       "assets": {
@@ -1185,9 +1186,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 4,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 8
+        "tokn_windows_amd64.exe": 9
       },
-      "total": 28
+      "total": 29
     },
     "2026-09-02": {
       "assets": {
@@ -1197,9 +1198,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 4,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 8
+        "tokn_windows_amd64.exe": 9
       },
-      "total": 28
+      "total": 29
     },
     "2026-09-03": {
       "assets": {
@@ -1209,9 +1210,9 @@
         "tokn_darwin_arm64": 0,
         "tokn_linux_amd64": 4,
         "tokn_linux_arm64": 0,
-        "tokn_windows_amd64.exe": 8
+        "tokn_windows_amd64.exe": 9
       },
-      "total": 28
+      "total": 29
     },
     "2026-09-04": {
       "assets": {
@@ -1221,9 +1222,9 @@
         "tokn_darwin_arm64": 1,
         "tokn_linux_amd64": 5,
         "tokn_linux_arm64": 1,
-        "tokn_windows_amd64.exe": 9
+        "tokn_windows_amd64.exe": 10
       },
-      "total": 35
+      "total": 36
     },
     "2026-09-05": {
       "assets": {
@@ -1233,9 +1234,9 @@
         "tokn_darwin_arm64": 2,
         "tokn_linux_amd64": 7,
         "tokn_linux_arm64": 2,
-        "tokn_windows_amd64.exe": 13
+        "tokn_windows_amd64.exe": 14
       },
-      "total": 50
+      "total": 51
     },
     "2026-09-06": {
       "assets": {
@@ -1245,9 +1246,9 @@
         "tokn_darwin_arm64": 2,
         "tokn_linux_amd64": 7,
         "tokn_linux_arm64": 2,
-        "tokn_windows_amd64.exe": 13
+        "tokn_windows_amd64.exe": 14
       },
-      "total": 50
+      "total": 51
     },
     "2026-09-07": {
       "assets": {
@@ -1257,9 +1258,9 @@
         "tokn_darwin_arm64": 3,
         "tokn_linux_amd64": 8,
         "tokn_linux_arm64": 3,
-        "tokn_windows_amd64.exe": 14
+        "tokn_windows_amd64.exe": 15
       },
-      "total": 57
+      "total": 58
     },
     "2026-09-08": {
       "assets": {
@@ -1269,9 +1270,9 @@
         "tokn_darwin_arm64": 3,
         "tokn_linux_amd64": 9,
         "tokn_linux_arm64": 3,
-        "tokn_windows_amd64.exe": 14
+        "tokn_windows_amd64.exe": 15
       },
-      "total": 58
+      "total": 59
     },
     "2026-09-09": {
       "assets": {
@@ -1281,9 +1282,9 @@
         "tokn_darwin_arm64": 3,
         "tokn_linux_amd64": 10,
         "tokn_linux_arm64": 3,
-        "tokn_windows_amd64.exe": 14
+        "tokn_windows_amd64.exe": 15
       },
-      "total": 59
+      "total": 60
     },
     "2026-09-10": {
       "assets": {
@@ -1293,9 +1294,9 @@
         "tokn_darwin_arm64": 3,
         "tokn_linux_amd64": 10,
         "tokn_linux_arm64": 3,
-        "tokn_windows_amd64.exe": 15
+        "tokn_windows_amd64.exe": 16
       },
-      "total": 61
+      "total": 62
     },
     "2026-09-11": {
       "assets": {
@@ -1305,9 +1306,9 @@
         "tokn_darwin_arm64": 7,
         "tokn_linux_amd64": 14,
         "tokn_linux_arm64": 8,
-        "tokn_windows_amd64.exe": 20
+        "tokn_windows_amd64.exe": 21
       },
-      "total": 94
+      "total": 95
     },
     "2026-09-12": {
       "assets": {
@@ -1317,9 +1318,9 @@
         "tokn_darwin_arm64": 8,
         "tokn_linux_amd64": 16,
         "tokn_linux_arm64": 10,
-        "tokn_windows_amd64.exe": 20
+        "tokn_windows_amd64.exe": 21
       },
-      "total": 99
+      "total": 100
     },
     "2026-09-13": {
       "assets": {
@@ -1329,9 +1330,9 @@
         "tokn_darwin_arm64": 10,
         "tokn_linux_amd64": 18,
         "tokn_linux_arm64": 10,
-        "tokn_windows_amd64.exe": 23
+        "tokn_windows_amd64.exe": 24
       },
-      "total": 109
+      "total": 110
     },
     "2026-09-14": {
       "assets": {
@@ -1341,9 +1342,9 @@
         "tokn_darwin_arm64": 10,
         "tokn_linux_amd64": 18,
         "tokn_linux_arm64": 11,
-        "tokn_windows_amd64.exe": 24
+        "tokn_windows_amd64.exe": 25
       },
-      "total": 112
+      "total": 113
     },
     "2026-09-15": {
       "assets": {
@@ -1353,9 +1354,9 @@
         "tokn_darwin_arm64": 11,
         "tokn_linux_amd64": 18,
         "tokn_linux_arm64": 11,
-        "tokn_windows_amd64.exe": 24
+        "tokn_windows_amd64.exe": 25
       },
-      "total": 113
+      "total": 114
     },
     "2026-09-16": {
       "assets": {
@@ -1365,9 +1366,9 @@
         "tokn_darwin_arm64": 11,
         "tokn_linux_amd64": 18,
         "tokn_linux_arm64": 11,
-        "tokn_windows_amd64.exe": 24
+        "tokn_windows_amd64.exe": 25
       },
-      "total": 114
+      "total": 115
     },
     "2026-09-17": {
       "assets": {
@@ -1377,9 +1378,9 @@
         "tokn_darwin_arm64": 11,
         "tokn_linux_amd64": 18,
         "tokn_linux_arm64": 11,
-        "tokn_windows_amd64.exe": 24
+        "tokn_windows_amd64.exe": 25
       },
-      "total": 115
+      "total": 116
     },
     "2026-09-18": {
       "assets": {
@@ -1389,9 +1390,9 @@
         "tokn_darwin_arm64": 11,
         "tokn_linux_amd64": 18,
         "tokn_linux_arm64": 11,
-        "tokn_windows_amd64.exe": 24
+        "tokn_windows_amd64.exe": 25
       },
-      "total": 115
+      "total": 116
     },
     "2026-09-19": {
       "assets": {
@@ -1401,9 +1402,9 @@
         "tokn_darwin_arm64": 11,
         "tokn_linux_amd64": 18,
         "tokn_linux_arm64": 11,
-        "tokn_windows_amd64.exe": 24
+        "tokn_windows_amd64.exe": 25
       },
-      "total": 115
+      "total": 116
     },
     "2026-09-20": {
       "assets": {
@@ -1413,9 +1414,9 @@
         "tokn_darwin_arm64": 11,
         "tokn_linux_amd64": 18,
         "tokn_linux_arm64": 11,
-        "tokn_windows_amd64.exe": 24
+        "tokn_windows_amd64.exe": 25
       },
-      "total": 115
+      "total": 116
     },
     "2026-09-21": {
       "assets": {
@@ -1425,9 +1426,9 @@
         "tokn_darwin_arm64": 11,
         "tokn_linux_amd64": 19,
         "tokn_linux_arm64": 11,
-        "tokn_windows_amd64.exe": 25
+        "tokn_windows_amd64.exe": 26
       },
-      "total": 120
+      "total": 121
     },
     "2026-09-22": {
       "assets": {
@@ -1437,9 +1438,9 @@
         "tokn_darwin_arm64": 12,
         "tokn_linux_amd64": 20,
         "tokn_linux_arm64": 12,
-        "tokn_windows_amd64.exe": 26
+        "tokn_windows_amd64.exe": 27
       },
-      "total": 127
+      "total": 128
     },
     "2026-09-23": {
       "assets": {
@@ -1449,9 +1450,9 @@
         "tokn_darwin_arm64": 12,
         "tokn_linux_amd64": 20,
         "tokn_linux_arm64": 12,
-        "tokn_windows_amd64.exe": 26
+        "tokn_windows_amd64.exe": 27
       },
-      "total": 127
+      "total": 128
     },
     "2026-09-24": {
       "assets": {
@@ -1461,9 +1462,9 @@
         "tokn_darwin_arm64": 12,
         "tokn_linux_amd64": 20,
         "tokn_linux_arm64": 12,
-        "tokn_windows_amd64.exe": 26
+        "tokn_windows_amd64.exe": 27
       },
-      "total": 127
+      "total": 128
     },
     "2026-09-25": {
       "assets": {
@@ -1473,9 +1474,9 @@
         "tokn_darwin_arm64": 12,
         "tokn_linux_amd64": 21,
         "tokn_linux_arm64": 12,
-        "tokn_windows_amd64.exe": 27
+        "tokn_windows_amd64.exe": 28
       },
-      "total": 132
+      "total": 133
     },
     "2026-09-26": {
       "assets": {
@@ -1485,9 +1486,9 @@
         "tokn_darwin_arm64": 12,
         "tokn_linux_amd64": 21,
         "tokn_linux_arm64": 12,
-        "tokn_windows_amd64.exe": 27
+        "tokn_windows_amd64.exe": 28
       },
-      "total": 132
+      "total": 133
     },
     "2026-09-27": {
       "assets": {
@@ -1497,9 +1498,9 @@
         "tokn_darwin_arm64": 12,
         "tokn_linux_amd64": 21,
         "tokn_linux_arm64": 12,
-        "tokn_windows_amd64.exe": 27
+        "tokn_windows_amd64.exe": 28
       },
-      "total": 132
+      "total": 133
     },
     "2026-09-28": {
       "assets": {
@@ -1509,9 +1510,9 @@
         "tokn_darwin_arm64": 12,
         "tokn_linux_amd64": 22,
         "tokn_linux_arm64": 12,
-        "tokn_windows_amd64.exe": 28
+        "tokn_windows_amd64.exe": 29
       },
-      "total": 138
+      "total": 139
     },
     "2026-09-29": {
       "assets": {
@@ -1521,9 +1522,9 @@
         "tokn_darwin_arm64": 12,
         "tokn_linux_amd64": 22,
         "tokn_linux_arm64": 12,
-        "tokn_windows_amd64.exe": 28
+        "tokn_windows_amd64.exe": 29
       },
-      "total": 138
+      "total": 139
     },
     "2026-09-30": {
       "assets": {
@@ -1533,9 +1534,9 @@
         "tokn_darwin_arm64": 12,
         "tokn_linux_amd64": 22,
         "tokn_linux_arm64": 12,
-        "tokn_windows_amd64.exe": 28
+        "tokn_windows_amd64.exe": 29
       },
-      "total": 138
+      "total": 139
     },
     "2026-10-01": {
       "assets": {
@@ -1545,9 +1546,9 @@
         "tokn_darwin_arm64": 12,
         "tokn_linux_amd64": 22,
         "tokn_linux_arm64": 12,
-        "tokn_windows_amd64.exe": 28
+        "tokn_windows_amd64.exe": 29
       },
-      "total": 138
+      "total": 139
     },
     "2026-10-02": {
       "assets": {
@@ -1557,9 +1558,9 @@
         "tokn_darwin_arm64": 12,
         "tokn_linux_amd64": 22,
         "tokn_linux_arm64": 12,
-        "tokn_windows_amd64.exe": 28
+        "tokn_windows_amd64.exe": 29
       },
-      "total": 138
+      "total": 139
     },
     "2026-10-03": {
       "assets": {
@@ -1569,9 +1570,9 @@
         "tokn_darwin_arm64": 12,
         "tokn_linux_amd64": 22,
         "tokn_linux_arm64": 12,
-        "tokn_windows_amd64.exe": 28
+        "tokn_windows_amd64.exe": 29
       },
-      "total": 138
+      "total": 139
     },
     "2026-10-04": {
       "assets": {
@@ -1581,9 +1582,9 @@
         "tokn_darwin_arm64": 12,
         "tokn_linux_amd64": 22,
         "tokn_linux_arm64": 12,
-        "tokn_windows_amd64.exe": 28
+        "tokn_windows_amd64.exe": 29
       },
-      "total": 138
+      "total": 139
     },
     "2026-10-05": {
       "assets": {
@@ -1593,9 +1594,9 @@
         "tokn_darwin_arm64": 12,
         "tokn_linux_amd64": 22,
         "tokn_linux_arm64": 12,
-        "tokn_windows_amd64.exe": 28
+        "tokn_windows_amd64.exe": 29
       },
-      "total": 138
+      "total": 139
     },
     "2026-10-06": {
       "assets": {
@@ -1605,9 +1606,9 @@
         "tokn_darwin_arm64": 12,
         "tokn_linux_amd64": 22,
         "tokn_linux_arm64": 12,
-        "tokn_windows_amd64.exe": 28
+        "tokn_windows_amd64.exe": 29
       },
-      "total": 138
+      "total": 139
     },
     "2026-10-07": {
       "assets": {
@@ -1617,9 +1618,9 @@
         "tokn_darwin_arm64": 12,
         "tokn_linux_amd64": 22,
         "tokn_linux_arm64": 12,
-        "tokn_windows_amd64.exe": 28
+        "tokn_windows_amd64.exe": 29
       },
-      "total": 138
+      "total": 139
     },
     "2026-10-08": {
       "assets": {
@@ -1629,9 +1630,9 @@
         "tokn_darwin_arm64": 12,
         "tokn_linux_amd64": 22,
         "tokn_linux_arm64": 12,
-        "tokn_windows_amd64.exe": 28
+        "tokn_windows_amd64.exe": 29
       },
-      "total": 138
+      "total": 139
     },
     "2026-10-09": {
       "assets": {
@@ -1641,9 +1642,9 @@
         "tokn_darwin_arm64": 12,
         "tokn_linux_amd64": 22,
         "tokn_linux_arm64": 13,
-        "tokn_windows_amd64.exe": 28
+        "tokn_windows_amd64.exe": 29
       },
-      "total": 139
+      "total": 140
     },
     "2026-10-10": {
       "assets": {
@@ -1653,9 +1654,9 @@
         "tokn_darwin_arm64": 12,
         "tokn_linux_amd64": 22,
         "tokn_linux_arm64": 13,
-        "tokn_windows_amd64.exe": 28
+        "tokn_windows_amd64.exe": 29
       },
-      "total": 140
+      "total": 141
     },
     "2026-10-11": {
       "assets": {
@@ -1665,9 +1666,9 @@
         "tokn_darwin_arm64": 14,
         "tokn_linux_amd64": 23,
         "tokn_linux_arm64": 14,
-        "tokn_windows_amd64.exe": 29
+        "tokn_windows_amd64.exe": 30
       },
-      "total": 147
+      "total": 148
     },
     "2026-10-12": {
       "assets": {
@@ -1677,9 +1678,9 @@
         "tokn_darwin_arm64": 14,
         "tokn_linux_amd64": 24,
         "tokn_linux_arm64": 14,
-        "tokn_windows_amd64.exe": 30
+        "tokn_windows_amd64.exe": 31
       },
-      "total": 150
+      "total": 151
     },
     "2026-10-13": {
       "assets": {
@@ -1689,9 +1690,9 @@
         "tokn_darwin_arm64": 14,
         "tokn_linux_amd64": 24,
         "tokn_linux_arm64": 14,
-        "tokn_windows_amd64.exe": 30
+        "tokn_windows_amd64.exe": 31
       },
-      "total": 151
+      "total": 152
     },
     "2026-10-14": {
       "assets": {
@@ -1701,9 +1702,9 @@
         "tokn_darwin_arm64": 14,
         "tokn_linux_amd64": 25,
         "tokn_linux_arm64": 14,
-        "tokn_windows_amd64.exe": 31
+        "tokn_windows_amd64.exe": 32
       },
-      "total": 153
+      "total": 154
     },
     "2026-10-15": {
       "assets": {
@@ -1713,9 +1714,9 @@
         "tokn_darwin_arm64": 15,
         "tokn_linux_amd64": 25,
         "tokn_linux_arm64": 14,
-        "tokn_windows_amd64.exe": 33
+        "tokn_windows_amd64.exe": 34
       },
-      "total": 156
+      "total": 157
     },
     "2026-10-16": {
       "assets": {
@@ -1725,9 +1726,9 @@
         "tokn_darwin_arm64": 15,
         "tokn_linux_amd64": 25,
         "tokn_linux_arm64": 14,
-        "tokn_windows_amd64.exe": 33
+        "tokn_windows_amd64.exe": 34
       },
-      "total": 156
+      "total": 157
     },
     "2026-10-17": {
       "assets": {
@@ -1737,9 +1738,9 @@
         "tokn_darwin_arm64": 15,
         "tokn_linux_amd64": 25,
         "tokn_linux_arm64": 15,
-        "tokn_windows_amd64.exe": 33
+        "tokn_windows_amd64.exe": 34
       },
-      "total": 158
+      "total": 159
     },
     "2026-10-18": {
       "assets": {
@@ -1749,9 +1750,9 @@
         "tokn_darwin_arm64": 15,
         "tokn_linux_amd64": 25,
         "tokn_linux_arm64": 15,
-        "tokn_windows_amd64.exe": 33
+        "tokn_windows_amd64.exe": 34
       },
-      "total": 158
+      "total": 159
     },
     "2026-10-19": {
       "assets": {
@@ -1761,9 +1762,9 @@
         "tokn_darwin_arm64": 16,
         "tokn_linux_amd64": 26,
         "tokn_linux_arm64": 15,
-        "tokn_windows_amd64.exe": 33
+        "tokn_windows_amd64.exe": 34
       },
-      "total": 161
+      "total": 162
     },
     "2026-10-20": {
       "assets": {
@@ -1773,9 +1774,9 @@
         "tokn_darwin_arm64": 17,
         "tokn_linux_amd64": 27,
         "tokn_linux_arm64": 16,
-        "tokn_windows_amd64.exe": 33
+        "tokn_windows_amd64.exe": 34
       },
-      "total": 165
+      "total": 166
     },
     "2026-10-21": {
       "assets": {
@@ -1785,9 +1786,9 @@
         "tokn_darwin_arm64": 17,
         "tokn_linux_amd64": 27,
         "tokn_linux_arm64": 17,
-        "tokn_windows_amd64.exe": 33
+        "tokn_windows_amd64.exe": 34
       },
-      "total": 166
+      "total": 167
     },
     "2026-10-22": {
       "assets": {
@@ -1797,9 +1798,9 @@
         "tokn_darwin_arm64": 17,
         "tokn_linux_amd64": 27,
         "tokn_linux_arm64": 17,
-        "tokn_windows_amd64.exe": 34
+        "tokn_windows_amd64.exe": 35
       },
-      "total": 171
+      "total": 172
     },
     "2026-10-23": {
       "assets": {
@@ -1809,9 +1810,9 @@
         "tokn_darwin_arm64": 17,
         "tokn_linux_amd64": 27,
         "tokn_linux_arm64": 17,
-        "tokn_windows_amd64.exe": 34
+        "tokn_windows_amd64.exe": 35
       },
-      "total": 171
+      "total": 172
     },
     "2026-10-24": {
       "assets": {
@@ -1821,9 +1822,9 @@
         "tokn_darwin_arm64": 17,
         "tokn_linux_amd64": 27,
         "tokn_linux_arm64": 17,
-        "tokn_windows_amd64.exe": 34
+        "tokn_windows_amd64.exe": 35
       },
-      "total": 171
+      "total": 172
     },
     "2026-10-25": {
       "assets": {
@@ -1833,9 +1834,9 @@
         "tokn_darwin_arm64": 17,
         "tokn_linux_amd64": 27,
         "tokn_linux_arm64": 17,
-        "tokn_windows_amd64.exe": 34
+        "tokn_windows_amd64.exe": 35
       },
-      "total": 171
+      "total": 172
     },
     "2026-10-26": {
       "assets": {
@@ -1845,9 +1846,9 @@
         "tokn_darwin_arm64": 17,
         "tokn_linux_amd64": 27,
         "tokn_linux_arm64": 17,
-        "tokn_windows_amd64.exe": 34
+        "tokn_windows_amd64.exe": 35
       },
-      "total": 171
+      "total": 172
     },
     "2026-10-27": {
       "assets": {
@@ -1857,9 +1858,9 @@
         "tokn_darwin_arm64": 17,
         "tokn_linux_amd64": 27,
         "tokn_linux_arm64": 17,
-        "tokn_windows_amd64.exe": 34
+        "tokn_windows_amd64.exe": 35
       },
-      "total": 171
+      "total": 172
     },
     "2026-10-28": {
       "assets": {
@@ -1869,9 +1870,9 @@
         "tokn_darwin_arm64": 17,
         "tokn_linux_amd64": 27,
         "tokn_linux_arm64": 17,
-        "tokn_windows_amd64.exe": 34
+        "tokn_windows_amd64.exe": 35
       },
-      "total": 171
+      "total": 172
     },
     "2026-10-29": {
       "assets": {
@@ -1881,9 +1882,9 @@
         "tokn_darwin_arm64": 17,
         "tokn_linux_amd64": 27,
         "tokn_linux_arm64": 17,
-        "tokn_windows_amd64.exe": 34
+        "tokn_windows_amd64.exe": 35
       },
-      "total": 171
+      "total": 172
     },
     "2026-10-30": {
       "assets": {
@@ -1893,9 +1894,9 @@
         "tokn_darwin_arm64": 93,
         "tokn_linux_amd64": 107,
         "tokn_linux_arm64": 93,
-        "tokn_windows_amd64.exe": 113
+        "tokn_windows_amd64.exe": 114
       },
-      "total": 714
+      "total": 715
     },
     "2026-10-31": {
       "assets": {
@@ -1905,9 +1906,9 @@
         "tokn_darwin_arm64": 98,
         "tokn_linux_amd64": 114,
         "tokn_linux_arm64": 95,
-        "tokn_windows_amd64.exe": 118
+        "tokn_windows_amd64.exe": 119
       },
-      "total": 741
+      "total": 742
     },
     "2026-11-01": {
       "assets": {
@@ -1917,9 +1918,9 @@
         "tokn_darwin_arm64": 99,
         "tokn_linux_amd64": 115,
         "tokn_linux_arm64": 96,
-        "tokn_windows_amd64.exe": 119
+        "tokn_windows_amd64.exe": 120
       },
-      "total": 748
+      "total": 749
     },
     "2026-11-02": {
       "assets": {
@@ -1929,9 +1930,9 @@
         "tokn_darwin_arm64": 99,
         "tokn_linux_amd64": 115,
         "tokn_linux_arm64": 96,
-        "tokn_windows_amd64.exe": 119
+        "tokn_windows_amd64.exe": 120
       },
-      "total": 748
+      "total": 749
     },
     "2026-11-03": {
       "assets": {
@@ -1941,9 +1942,9 @@
         "tokn_darwin_arm64": 99,
         "tokn_linux_amd64": 121,
         "tokn_linux_arm64": 96,
-        "tokn_windows_amd64.exe": 119
+        "tokn_windows_amd64.exe": 120
       },
-      "total": 754
+      "total": 755
     },
     "2026-11-04": {
       "assets": {
@@ -1953,9 +1954,9 @@
         "tokn_darwin_arm64": 99,
         "tokn_linux_amd64": 130,
         "tokn_linux_arm64": 96,
-        "tokn_windows_amd64.exe": 119
+        "tokn_windows_amd64.exe": 120
       },
-      "total": 763
+      "total": 764
     },
     "2026-11-05": {
       "assets": {
@@ -1965,9 +1966,9 @@
         "tokn_darwin_arm64": 101,
         "tokn_linux_amd64": 133,
         "tokn_linux_arm64": 98,
-        "tokn_windows_amd64.exe": 121
+        "tokn_windows_amd64.exe": 122
       },
-      "total": 776
+      "total": 777
     },
     "2026-11-06": {
       "assets": {
@@ -1977,9 +1978,9 @@
         "tokn_darwin_arm64": 103,
         "tokn_linux_amd64": 145,
         "tokn_linux_arm64": 100,
-        "tokn_windows_amd64.exe": 123
+        "tokn_windows_amd64.exe": 124
       },
-      "total": 800
+      "total": 801
     },
     "2026-11-07": {
       "assets": {
@@ -1989,9 +1990,9 @@
         "tokn_darwin_arm64": 104,
         "tokn_linux_amd64": 152,
         "tokn_linux_arm64": 100,
-        "tokn_windows_amd64.exe": 124
+        "tokn_windows_amd64.exe": 125
       },
-      "total": 814
+      "total": 815
     },
     "2026-11-08": {
       "assets": {
@@ -2001,9 +2002,9 @@
         "tokn_darwin_arm64": 106,
         "tokn_linux_amd64": 168,
         "tokn_linux_arm64": 102,
-        "tokn_windows_amd64.exe": 126
+        "tokn_windows_amd64.exe": 127
       },
-      "total": 839
+      "total": 840
     },
     "2026-11-09": {
       "assets": {
@@ -2013,9 +2014,9 @@
         "tokn_darwin_arm64": 107,
         "tokn_linux_amd64": 175,
         "tokn_linux_arm64": 103,
-        "tokn_windows_amd64.exe": 127
+        "tokn_windows_amd64.exe": 128
       },
-      "total": 854
+      "total": 855
     },
     "2026-11-10": {
       "assets": {
@@ -2025,9 +2026,9 @@
         "tokn_darwin_arm64": 110,
         "tokn_linux_amd64": 185,
         "tokn_linux_arm64": 106,
-        "tokn_windows_amd64.exe": 130
+        "tokn_windows_amd64.exe": 131
       },
-      "total": 882
+      "total": 883
     },
     "2026-11-11": {
       "assets": {
@@ -2037,9 +2038,9 @@
         "tokn_darwin_arm64": 110,
         "tokn_linux_amd64": 191,
         "tokn_linux_arm64": 106,
-        "tokn_windows_amd64.exe": 130
+        "tokn_windows_amd64.exe": 131
       },
-      "total": 888
+      "total": 889
     },
     "2026-11-12": {
       "assets": {
@@ -2049,9 +2050,9 @@
         "tokn_darwin_arm64": 115,
         "tokn_linux_amd64": 202,
         "tokn_linux_arm64": 111,
-        "tokn_windows_amd64.exe": 135
+        "tokn_windows_amd64.exe": 136
       },
-      "total": 929
+      "total": 930
     },
     "2026-11-13": {
       "assets": {
@@ -2061,9 +2062,9 @@
         "tokn_darwin_arm64": 118,
         "tokn_linux_amd64": 207,
         "tokn_linux_arm64": 114,
-        "tokn_windows_amd64.exe": 140
+        "tokn_windows_amd64.exe": 141
       },
-      "total": 960
+      "total": 961
     },
     "2026-11-14": {
       "assets": {
@@ -2073,9 +2074,9 @@
         "tokn_darwin_arm64": 123,
         "tokn_linux_amd64": 214,
         "tokn_linux_arm64": 119,
-        "tokn_windows_amd64.exe": 145
+        "tokn_windows_amd64.exe": 146
       },
-      "total": 997
+      "total": 998
     },
     "2026-11-15": {
       "assets": {
@@ -2085,51 +2086,21 @@
         "tokn_darwin_arm64": 126,
         "tokn_linux_amd64": 218,
         "tokn_linux_arm64": 122,
-        "tokn_windows_amd64.exe": 148
+        "tokn_windows_amd64.exe": 149
       },
-      "total": 1019
+      "total": 1020
     },
     "2026-11-16": {
       "assets": {
-        "SHA256SUMS": 160,
-        "SHA256SUMS.sig": 144,
-        "tokn_darwin_amd64": 135,
-        "tokn_darwin_arm64": 136,
-        "tokn_linux_amd64": 230,
-        "tokn_linux_arm64": 132,
-        "tokn_windows_amd64.exe": 159
+        "SHA256SUMS": 148,
+        "SHA256SUMS.sig": 132,
+        "tokn_darwin_amd64": 125,
+        "tokn_darwin_arm64": 126,
+        "tokn_linux_amd64": 218,
+        "tokn_linux_arm64": 122,
+        "tokn_windows_amd64.exe": 149
       },
-      "total": 1096
-    }
-  },
-  "downloads_state": {
-    "SHA256SUMS": {
-      "carry": 148,
-      "last": 12
-    },
-    "SHA256SUMS.sig": {
-      "carry": 132,
-      "last": 12
-    },
-    "tokn_darwin_amd64": {
-      "carry": 125,
-      "last": 10
-    },
-    "tokn_darwin_arm64": {
-      "carry": 126,
-      "last": 10
-    },
-    "tokn_linux_amd64": {
-      "carry": 218,
-      "last": 12
-    },
-    "tokn_linux_arm64": {
-      "carry": 122,
-      "last": 10
-    },
-    "tokn_windows_amd64.exe": {
-      "carry": 148,
-      "last": 11
+      "total": 1020
     }
   },
   "paths": [
