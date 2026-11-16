@@ -1,0 +1,7 @@
+.env
+.nospace/
+.tokn/
+__pycache__/
+solution/
+author-run/
+solve-run/
