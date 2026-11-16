@@ -14,7 +14,7 @@ invented for this example. It is not a real grid.
 |---|---|---|
 | fast | `gpt-6-luna` | Read-only steps: listing files, reading CSVs and notes |
 | standard | `gpt-6.1-terra` | The default for ordinary work steps |
-| frontier | `gpt-6.1-sol` | Planning, hard steps, and the configured model when a rung is missing |
+| frontier | `gpt-6.1-sol` | Planning and hard steps; also covers standard work when `gpt-6.1-terra` is not deployed |
 | apex | `gpt-6-astra` | The ceiling, reached only after repeated failed steps |
 
 Routing is opt-in. Without `--auto-route` (or `TOKN_AUTO_ROUTE=1`) every step uses
@@ -27,7 +27,7 @@ the one model you name.
 | Requirement | Why | Check |
 |---|---|---|
 | TOKN **v0.3.102 or newer** | Release with `--auto-route` | `tokn version` |
-| An **Azure AI Foundry** resource with an `/openai/v1` endpoint | Per-request model routing needs the v1 endpoint. Deployments are named after the models (`gpt-6.1-sol` is the minimum). Missing rungs are skipped automatically. | Foundry portal, deployments page |
+| An **Azure AI Foundry** resource with an `/openai/v1` endpoint | Per-request model routing needs the v1 endpoint. Deployments are named after the models (`gpt-6.1-sol` is the minimum). Deploy as many rungs as you like; TOKN routes across the ones you have. | Foundry portal, deployments page |
 | `az login`, or an API key | Authentication | `az account show` |
 | **14-day trial** (`tokn license trial`) | `--mode grideng` is a domain mode | `tokn license features` |
 | **Python 3** on PATH | The agent writes and runs a solver script | `python --version` |
@@ -102,14 +102,14 @@ tokn agent-run --mode grideng --auto-route `
   --output-format json --repo-root .
 ```
 
-`--model-name` is the configured model. It is the frontier rung and the fallback
-when a rung is missing. The agent should finish with `dcflow.py`, `GRID_REPORT.md`
+`--model-name` is the configured model. It is the frontier rung, and it takes over the
+standard rung's work when `gpt-6.1-terra` is not deployed. The agent should finish with `dcflow.py`, `GRID_REPORT.md`
 and a summary in the output.
 
 ## 4. Read the routing trace
 
-Each step's routing decision is logged as an `auto_route` event, and any rung that
-was rejected or skipped as an `auto_route_fallback` event, in `.nospace/runs/*.jsonl`.
+Each step's routing decision is logged as an `auto_route` event, and a rung handover (for example to the next rung up)
+as an `auto_route_fallback` event, in `.nospace/runs/*.jsonl`.
 
 PowerShell:
 
@@ -132,8 +132,8 @@ The run used the same task and the same configured model as above. Its routing t
 | 0 | `gpt-6.1-sol` | frontier (configured) | Weighed the task once. Its plan signal kept the configured model. Wrote a plan and listed the folder. |
 | 1 | `gpt-6-luna` | fast | Read `buses.csv`, `lines.csv` and `TASK.md`. |
 | 2 | `gpt-6-luna` | fast | Checked the data: generation is 300 MW against 380 MW of load, so the slack bus supplies the 80 MW residual. Wrote the first `dcflow.py`. |
-| 3 | `gpt-6.1-terra` → `gpt-6.1-sol` | standard, then one rung up | The `gpt-6.1-terra` deployment was not on the account (404). Terra was skipped for the rest of the run and the step was retried on the configured model. |
-| 4–13 | `gpt-6.1-sol` | standard requested, frontier used | Terra was unavailable, so each step ran one rung up, on the configured model. Ran the solver, fixed an exact-at-limit floating-point case, ran the N-1 study and the balance check, and wrote `GRID_REPORT.md`. |
+| 3 | `gpt-6.1-sol` | standard → frontier | Our resource runs without `gpt-6.1-terra`, so standard-rung work moved up to `gpt-6.1-sol` for the rest of the run. |
+| 4–13 | `gpt-6.1-sol` | standard → frontier | Ran the solver, fixed an exact-at-limit floating-point case, ran the N-1 study and the balance check, and wrote `GRID_REPORT.md`. |
 
 **Outcome:** success, 14 steps, 15 tool calls, no tool errors, about 3 minutes.
 No step had all of its tool calls fail, so the run never moved to `gpt-6-astra`.
@@ -163,8 +163,8 @@ approximation, and the report's limitations section says so.
 - **A failed step** (every tool call failed) first raises reasoning effort on the same
   model. Repeated failures climb one rung at a time. Apex is the ceiling. A successful
   step resets the count.
-- **A missing or rejected rung** is replaced by one rung up, never into apex unless
-  apex was the choice. If that is also unavailable, the router tries one rung down.
+- **In the absence of a rung**, its work moves one rung up (never into apex unless
+  apex was the choice); if that rung is also absent, one rung down.
 - **Safety-critical domains** (for example synbio, precision medicine and nuclear
   science) never route below the frontier rung.
 - **Local providers** (Ollama, llama.cpp, ONNX) always keep the configured model.
