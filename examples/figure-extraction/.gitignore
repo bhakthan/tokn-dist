@@ -1,0 +1,7 @@
+.env
+.nospace/
+.tokn/
+out/
+__pycache__/
+chart.json
+fsc.png
