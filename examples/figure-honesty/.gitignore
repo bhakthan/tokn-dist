@@ -1,0 +1,8 @@
+.env
+.nospace/
+.tokn/
+__pycache__/
+*.png
+make_fsc.py
+report.md
+fsc_curve.txt
