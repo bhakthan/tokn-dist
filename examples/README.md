@@ -67,6 +67,7 @@ New to TOKN? Start with [first-ten-minutes](first-ten-minutes/README.md).
 | [dataflow](dataflow/README.md) | Skills are ordered by what they consume and produce; a broken chain is flagged | — |
 | [tool-contract](tool-contract/README.md) | An off-contract tool call is repaired instead of failing | — |
 | [mcp-server](mcp-server/README.md) | `tokn serve` as an MCP server for Claude Desktop, VS Code or any MCP client | — |
+| [rnaseq-mcp-server](rnaseq-mcp-server/README.md) | TOKN writes a standalone RNA-seq QC MCP server (read-only annotations, structured output, paging, actionable errors), checked by an independent MCP client | Anthropic API or compatible gateway, Python 3.10+ |
 | [webwright](webwright/README.md) | Code-first browser automation: the agent writes one re-runnable Playwright script | Python + Playwright |
 | [precmed-variant](precmed-variant/README.md) | Precision-medicine safety gates on a synthetic tumour-board variant case (VUS, PGx, somatic–germline) | trial |
 | [clintrial](clintrial/README.md) | AI-in-clinical-trials gates on a synthetic cohort and target-trial spec | trial |

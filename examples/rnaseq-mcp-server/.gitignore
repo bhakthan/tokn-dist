@@ -1,0 +1,6 @@
+.env
+.nospace/
+.tokn/
+__pycache__/
+work/
+data/
