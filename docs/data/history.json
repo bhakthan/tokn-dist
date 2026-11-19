@@ -543,6 +543,10 @@
     "2026-11-17": {
       "count": 14,
       "uniques": 8
+    },
+    "2026-11-18": {
+      "count": 48,
+      "uniques": 23
     }
   },
   "downloads_daily": {
@@ -668,7 +672,8 @@
     "2026-11-15": 22,
     "2026-11-16": 9,
     "2026-11-17": 7,
-    "2026-11-18": 43
+    "2026-11-18": 43,
+    "2026-11-19": 26
   },
   "downloads_snapshots": {
     "2026-07-18": {
@@ -2138,6 +2143,18 @@
         "tokn_windows_amd64.exe": 21
       },
       "total": 1079
+    },
+    "2026-11-19": {
+      "assets": {
+        "SHA256SUMS": 24,
+        "SHA256SUMS.sig": 24,
+        "tokn_darwin_amd64": 21,
+        "tokn_darwin_arm64": 21,
+        "tokn_linux_amd64": 24,
+        "tokn_linux_arm64": 22,
+        "tokn_windows_amd64.exe": 26
+      },
+      "total": 1105
     }
   },
   "downloads_state_v2": {
@@ -2421,7 +2438,91 @@
       },
       "v0.3.109/tokn_windows_amd64.exe": {
         "carry": 0,
+        "last": 2
+      },
+      "v0.3.110/SHA256SUMS": {
+        "carry": 0,
         "last": 1
+      },
+      "v0.3.110/SHA256SUMS.sig": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.110/tokn_darwin_amd64": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.110/tokn_darwin_arm64": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.110/tokn_linux_amd64": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.110/tokn_linux_arm64": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.110/tokn_windows_amd64.exe": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.111/SHA256SUMS": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.111/SHA256SUMS.sig": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.111/tokn_darwin_amd64": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.111/tokn_darwin_arm64": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.111/tokn_linux_amd64": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.111/tokn_linux_arm64": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.111/tokn_windows_amd64.exe": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.112/SHA256SUMS": {
+        "carry": 0,
+        "last": 2
+      },
+      "v0.3.112/SHA256SUMS.sig": {
+        "carry": 0,
+        "last": 2
+      },
+      "v0.3.112/tokn_darwin_amd64": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.112/tokn_darwin_arm64": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.112/tokn_linux_amd64": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.112/tokn_linux_arm64": {
+        "carry": 0,
+        "last": 2
+      },
+      "v0.3.112/tokn_windows_amd64.exe": {
+        "carry": 0,
+        "last": 2
       },
       "v0.3.92/SHA256SUMS": {
         "carry": 0,
@@ -2675,7 +2776,7 @@
       "uniques": 1
     },
     {
-      "count": 6,
+      "count": 7,
       "path": "/bhakthan/tokn-dist/releases",
       "title": "/releases",
       "uniques": 2
@@ -2693,6 +2794,12 @@
       "uniques": 1
     },
     {
+      "count": 5,
+      "path": "/bhakthan/tokn-dist/pulse",
+      "title": "/pulse",
+      "uniques": 1
+    },
+    {
       "count": 4,
       "path": "/bhakthan/tokn-dist/tree/main/examples/postgresql-auto-ontology",
       "title": "/tree/main/examples/postgresql-auto-ontology",
@@ -2700,12 +2807,6 @@
     },
     {
       "count": 4,
-      "path": "/bhakthan/tokn-dist/releases/tag/v0.3.101",
-      "title": "/releases/tag/v0.3.101",
-      "uniques": 1
-    },
-    {
-      "count": 3,
       "path": "/bhakthan/tokn-dist/graphs/traffic",
       "title": "/graphs/traffic",
       "uniques": 1
@@ -2724,7 +2825,7 @@
     }
   ],
   "repo": "bhakthan/tokn-dist",
-  "updated_at": "2026-11-18T15:45:30.305368+00:00",
+  "updated_at": "2026-11-19T15:50:21.253073+00:00",
   "views_daily": {
     "2026-07-05": {
       "count": 0,
@@ -3268,6 +3369,10 @@
     },
     "2026-11-17": {
       "count": 21,
+      "uniques": 1
+    },
+    "2026-11-18": {
+      "count": 14,
       "uniques": 1
     }
   }
