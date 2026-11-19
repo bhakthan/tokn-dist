@@ -1,0 +1,5 @@
+.env
+.nospace/
+.tokn/
+__pycache__/
+*.pyc
