@@ -1,0 +1,10 @@
+[project]
+name = "rnaseq-de"
+version = "0.1.0"
+description = "SYNTHETIC RNA-seq differential-expression fixture for the TOKN Agent Factory live test"
+requires-python = ">=3.10"
+dependencies = ["numpy", "pandas", "scipy"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

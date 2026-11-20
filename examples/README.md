@@ -4,7 +4,7 @@ Synthetic, non-sensitive input files referenced by
 [GETTING_STARTED.md](../GETTING_STARTED.md), plus step-by-step walkthroughs
 that each run one real task end to end. None of them contain real data.
 
-For the current public release, **v0.3.102**, use the requirements on each
+For the current public release, **v0.3.115**, use the requirements on each
 walkthrough rather than treating an older minimum version as obsolete.
 Hosted-model examples need your own provider access and may incur charges;
 local-model examples need a running model server and staged weights.
@@ -23,6 +23,7 @@ New to TOKN? Start with [first-ten-minutes](first-ten-minutes/README.md).
 
 | Walkthrough | What it shows | Extra requirements |
 |---|---|---|
+| [rnaseq-software-factory](rnaseq-software-factory/README.md) | A gated agent pipeline turns RNA-seq CI failures and incidents into reviewed, tested, human-approved releases, mixing frontier, open-weights and local models per role | TOKN v0.3.115+, Python 3.10+ + numpy/pandas/scipy/pytest/pyyaml, Git; live profiles: trial, model keys |
 | [decision-council](decision-council/README.md) | Several decision models vote in parallel; a council escalates disagreements to an LLM | 2+ decision-model keys |
 | [postgresql-auto-ontology](postgresql-auto-ontology/README.md) | Infer an OWL/RDFS ontology from PostgreSQL tables, then review it by explicit ID | Azure PostgreSQL you control; optional Azure OpenAI or decision-model access (billed) |
 | [grid-screening](grid-screening/README.md) | `tokn harness evolve` improves its own harness on a substation N-1 screen | a decision-model key |

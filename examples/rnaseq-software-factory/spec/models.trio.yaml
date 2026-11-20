@@ -1,0 +1,19 @@
+# models: for --profile trio (Opus + astra + a decision model).
+# Bindings name credential PROFILES (files in $TOKN_FACTORY_ENV_DIR/<env>.env),
+# never secrets. run.py writes those profile files from your environment / .env.
+models:
+  default: { provider: anthropic, model: '{{OPUS_MODEL}}', env: anthropic-gateway }
+  roles:
+    product:     { provider: azure-openai, model: '{{ASTRA_MODEL}}', env: azure-astra }
+    architect:   { provider: anthropic, model: '{{OPUS_MODEL}}', env: anthropic-gateway }
+    implementer: { provider: anthropic, model: '{{OPUS_MODEL}}', env: anthropic-gateway }
+    reviewer:    { provider: azure-openai, model: '{{ASTRA_MODEL}}', env: azure-astra }
+    test:        { provider: azure-openai, model: '{{ASTRA_MODEL}}', env: azure-astra }
+    release:     { provider: azure-openai, model: '{{ASTRA_MODEL}}', env: azure-astra }
+    observer:    { provider: azure-openai, model: '{{ASTRA_MODEL}}', env: azure-astra }
+  decisions:
+    observer_triage: { backend: local }
+    draft_check:     { backend: local }
+    gate:            { backend: '{{DECISION_BACKEND}}', model: '{{DECISION_MODEL}}', env: decision, act: 0.6, suggest: 0.4 }
+    # Alternative: Microsoft Decision-1.1 (set FACTORY_DECISION_BACKEND=microsoft, DECISION_API_MODEL=decision-1.1)
+    # gate:          { backend: microsoft, model: decision-1.1, env: decision, act: 0.6, suggest: 0.4 }

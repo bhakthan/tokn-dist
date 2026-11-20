@@ -4,7 +4,7 @@
 task, use tools, collaborate and check its work. Bring a cloud model or prepare
 a local setup; choose the workflows and controls your task needs.
 
-Updated for **[v0.3.101](https://github.com/bhakthan/tokn-dist/releases/tag/v0.3.101)**.
+Updated for **[v0.3.115](https://github.com/bhakthan/tokn-dist/releases/tag/v0.3.115)**.
 This is a selected product overview; use the commands below for your installed build.
 Availability depends on your platform, licence, model and installed tools.
 See [platform support](README.md#platform-support) before starting a trial.
@@ -182,6 +182,29 @@ staged weights and sufficient memory. A worker reporting success is not a
 substitute for verification.
 
 Walkthrough: [agent organization](examples/agent-organization/README.md).
+
+## Software factory: a gated pipeline of agent roles
+
+`tokn factory` runs work items through a pipeline you declare in `factory.yaml`.
+The file sets the intent, domain invariants, gates, budgets and intake sources.
+Each stage has its own role: product, architect, implementer, reviewer, test,
+release and observer. The observer can turn CI failures and incidents into
+drafted work items, and those items go through the same gates as any other.
+
+- **Your gates, not the agent's opinion.** Typed decision-model checks, test
+  thresholds, blast-radius limits and budgets. Prod releases and spec changes
+  wait for a named human approver.
+- **Mix models per role.** Each role can use a frontier model, a Hugging Face
+  open-weights model or a local model. `data_boundary: local` keeps a role on a
+  loopback endpoint.
+- **Audit and resume.** Events are append-only and hash-chained, and
+  `tokn factory verify` re-checks them. An interrupted run picks up where it
+  stopped.
+
+Agent fixes can still be wrong. The gates and tests you configure decide what
+is caught. Review what reaches prod, and budget for several rework rounds.
+
+Walkthrough: [RNA-seq software factory](examples/rnaseq-software-factory/README.md).
 
 ## Measure and improve — keep the checks independent
 

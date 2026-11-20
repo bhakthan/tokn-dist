@@ -1,0 +1,7 @@
+out/
+.env
+.nospace/
+.tokn/
+__pycache__/
+*.pyc
+.pytest_cache/

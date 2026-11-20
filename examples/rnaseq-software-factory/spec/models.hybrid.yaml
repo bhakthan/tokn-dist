@@ -1,0 +1,30 @@
+# models: for --profile hybrid - one run mixing providers (plan "Hybrid composition").
+#   architect   claude-opus (anthropic)            hard reasoning -> frontier
+#   implementer open-weights HF coder, falls back to local ollama
+#   reviewer    gpt-6-astra (azure-openai)         cross-model review
+#   test        local ollama SLM, data_boundary: local
+#   observer    local ollama, data_boundary: local (signals carry raw sample metadata)
+#   decisions   observer triage + draft check local; review-gate decision remote
+# The ollama default endpoint (http://localhost:11434/v1) is loopback, which
+# data_boundary: local requires.
+models:
+  default: { provider: anthropic, model: '{{OPUS_MODEL}}', env: anthropic-gateway }
+  roles:
+    product:   { provider: azure-openai, model: '{{ASTRA_MODEL}}', env: azure-astra }
+    architect: { provider: anthropic, model: '{{OPUS_MODEL}}', env: anthropic-gateway }
+    implementer:
+      provider: huggingface
+      model: '{{HF_CODER_MODEL}}'
+      env: hf
+      fallback:
+        - { provider: ollama, model: '{{OLLAMA_MODEL}}', env: ollama-local }
+    reviewer:  { provider: azure-openai, model: '{{ASTRA_MODEL}}', env: azure-astra }
+    test:      { provider: ollama, model: '{{OLLAMA_MODEL}}', env: ollama-local, data_boundary: local }
+    release:   { provider: azure-openai, model: '{{ASTRA_MODEL}}', env: azure-astra }
+    observer:  { provider: ollama, model: '{{OLLAMA_MODEL}}', env: ollama-local, data_boundary: local }
+  decisions:
+    observer_triage: { backend: local }
+    draft_check:     { backend: local }
+    gate:            { backend: '{{DECISION_BACKEND}}', model: '{{DECISION_MODEL}}', env: decision, act: 0.6, suggest: 0.4 }
+    # Alternative: Microsoft Decision-1.1 (set FACTORY_DECISION_BACKEND=microsoft, DECISION_API_MODEL=decision-1.1)
+    # gate:          { backend: microsoft, model: decision-1.1, env: decision, act: 0.6, suggest: 0.4 }

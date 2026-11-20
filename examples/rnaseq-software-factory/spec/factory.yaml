@@ -1,0 +1,83 @@
+# FactorySpec TEMPLATE for the RNA-seq (transcriptomics) Agent Factory live test.
+# run.py renders every double-brace placeholder (absolute paths, model names,
+# approver) and splices spec/models.<profile>.yaml in at the MODELS placeholder,
+# then writes the result to <seed repo>/factory.yaml. The unrendered template
+# does NOT validate (the validator rejects unresolved placeholders) - intended.
+apiVersion: factory/v1
+name: rnaseq-de-live
+intent: |
+  Keep a transcriptomics (RNA-seq) differential-expression pipeline correct on
+  SYNTHETIC data: enforce the domain invariants below, turn the replayed CI failure
+  and staging incidents into reviewed, tested, human-approved fixes, and leave an
+  auditable evidence chain. Sample-sheet subject identifiers never reach outputs.
+domain:
+  plug: transcriptomics
+  glossary: GLOSSARY.md
+  invariants:
+    - "counts are non-negative integers; non-integer matrices (TPM/NumReads) are rejected"
+    - "samples with RIN < 6 are excluded before DE and listed in qc.json"
+    - "library strandedness is inferred from sense vs opposite-strand counts, not trusted from the sample sheet"
+    - "FDR uses Benjamini-Hochberg; calls need padj < 0.05 and |log2FC| >= 1"
+    - "a design where condition is confounded with batch is refused (non-zero exit, no results)"
+    - "subject_ref (patient-adjacent metadata) never appears in any output"
+    - "data/ and golden/ are inputs and are never modified"
+  acceptance_examples: golden/de_golden.tsv
+architecture:
+  constraints:
+    - language: "python >= 3.10"
+    - allowed_deps: [numpy, pandas, scipy]
+    - cli_contract: "python -m rnaseq_de.cli --counts --counts-opposite --samples --out writes de_results.tsv, qc.json, report.md"
+pipeline:
+  stages: [refine, design, implement, review, test, release]
+  gates:
+    review:
+      min_reviewer_score: 0.8
+      decision:
+        questions:
+          - id: invariant_broken
+            type: boolean
+            prompt: "According to the review, is any domain invariant broken by this change (integer counts, RIN >= 6 filter, inferred strandedness, BH-FDR, confounding refusal, no subject_ref in outputs, inputs untouched)?"
+        require: { invariant_broken: "false" }
+        min_confidence: 0.6
+    test:
+      regression_tolerance: 0
+      command: '"{{PYTHON}}" -m pytest -q -p no:cacheprovider && "{{PYTHON}}" "{{GRADE_PY}}" --key "{{ANSWER_KEY}}"'
+      timeout: 30m
+      # grade.py prints TOKN_METRIC lines; the grader lives outside the
+      # candidate worktree, so candidate code cannot rewrite it.
+      thresholds:
+        - { metric: recall, op: ">=", value: 0.8 }
+        - { metric: precision, op: ">=", value: 0.8 }
+        - { metric: pii_clean, op: "==", value: 1 }
+        - { metric: confounded_refused, op: "==", value: 1 }
+        - { metric: data_intact, op: "==", value: 1 }
+    release:
+      dev:
+        approval: auto
+        command: '"{{TOKN}}" factory demo deploy --target "{{TARGETS}}/dev"'
+        reconcile_command: '"{{TOKN}}" factory demo reconcile --target "{{TARGETS}}/dev"'
+      staging:
+        approval: auto
+        command: '"{{TOKN}}" factory demo deploy --target "{{TARGETS}}/staging"'
+        reconcile_command: '"{{TOKN}}" factory demo reconcile --target "{{TARGETS}}/staging"'
+      prod:
+        approval: human
+        approvers: ['{{APPROVER}}']
+        command: '"{{TOKN}}" factory demo deploy --target "{{TARGETS}}/prod"'
+        reconcile_command: '"{{TOKN}}" factory demo reconcile --target "{{TARGETS}}/prod"'
+policies:
+  # A full trio round (implement + review) costs ~$5; the adversarial reviewer
+  # finds genuine numeric/privacy edge cases, so allow several rework rounds.
+  budget: { per_run_tokens: 2000000, per_item_usd: 40, daily_usd: 150, warn_at: 0.8 }
+  blast_radius:
+    max_files_per_change: 8
+    # ~150 lines of fix plus the regression tests the implementer is asked to add.
+    max_lines_per_change: 600
+    protected_paths: [data, golden]
+  secrets: deny_read_outside_vault
+  max_retries: 4
+intake:
+  sources:
+    - { type: local-ci, name: replayed-ci, uri: '{{INTAKE_DIR}}/ci-replay.jsonl', options: { repo: example-lab/transcriptomics-de } }
+    - { type: incidents, name: staging-incidents, uri: '{{INTAKE_DIR}}/incidents.jsonl' }
+{{MODELS}}

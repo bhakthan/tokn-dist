@@ -78,9 +78,14 @@ version-accurate catalog.
 
 ## Recent highlights
 
-Updated for **[v0.3.101](https://github.com/bhakthan/tokn-dist/releases/tag/v0.3.101)**.
+Updated for **[v0.3.115](https://github.com/bhakthan/tokn-dist/releases/tag/v0.3.115)**.
 These are selected capabilities, not the full command catalog:
 
+- **Software factory.** Declare intent, invariants, gates and budgets in one
+  spec. Agent roles then refine, build, review, test and release each change,
+  with a human approving prod. An observer turns CI failures and incidents into
+  the next work items. Roles can mix frontier, open-weights and local models.
+  → [RNA-seq software factory](examples/rnaseq-software-factory/README.md)
 - **Reviewable database and CSV ontologies.** Map source types and relationships,
   optionally enrich descriptions, then batch advisory decision questions.
   Generated SHACL shapes can be checked against actual RDF rows with external
