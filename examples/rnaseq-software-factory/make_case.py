@@ -44,6 +44,11 @@ SAMPLES = [  # sample_id, condition, batch
 ]
 REVERSED_BATCH = "B2"
 THRESHOLDS = {"recall": 0.8, "precision": 0.8, "fdr": 0.05, "min_abs_log2fc": 1.0}
+# Single-cell (C2S) feature loop. Gates are graded against the deterministic offline
+# oracle (fake_c2s.py); a real C2S-Scale run is reported, not gated (see grade.py).
+SC_THRESHOLDS = {"correct": 0.90, "wrong": 0.02, "doublet_recall": 0.85, "doublet_fp": 2,
+                 "composition_tol": 0.05, "isg_recall": 6, "false_calls": 3}
+REQUEST_AT = "2026-11-21T10:00:00Z"
 N_GOLDEN = 20
 CI_CREATED_AT = "2026-11-20T09:30:00Z"
 INCIDENT_AT = "2026-11-20T15:05:00Z"
@@ -157,6 +162,26 @@ def incident_record() -> dict:
     }
 
 
+def feature_request_record() -> dict:
+    """GENERATED product request (kind "issue" => a Feature work item), appended after the incident ships."""
+    return {
+        "kind": "issue", "id": "REQ-SC-0001", "severity": "sev3", "at": REQUEST_AT,
+        "title": "[generated] productionise the single-cell C2S annotation prototype into a hardened service",
+        "body": (
+            "GENERATED PRODUCT REQUEST (synthetic). rnaseq_de/sc.py + sc_cli.py are a notebook port that asks a "
+            "local Cell2Sentence (C2S-Scale GGUF, llama.cpp llama-server) model for one cell type per barcode, then "
+            "runs a pooled treated-vs-control t-test. Turn it into a service that meets every single-cell invariant "
+            "in GLOSSARY.md and factory.yaml: validate inputs; QC (mitochondrial fraction, heterotypic doublets) "
+            "BEFORE the model; descending-count cell sentences with no identifiers on the wire; anchored alias "
+            "mapping plus marker verification (unmapped/unsupported => unassigned with a reason); fail closed "
+            "(exit 4, nothing written) when the model is unreachable or returns an invalid completion; loopback-only "
+            "endpoint; composition reported separately; per-cell-type donor pseudobulk DE with BH per type; atomic "
+            "outputs celltypes.tsv, sc_qc.json, composition.tsv, sc_de.tsv, sc_report.md. Offline tests use "
+            "tests/fake_c2s.py. Acceptance examples: golden/sc_celltypes_examples.tsv. Data: data/sc/."),
+        "attrs": {"generated": "true", "service": "rnaseq-sc", "requester": "product"},
+    }
+
+
 def _copy_seed_src(out: Path) -> None:
     for src in sorted(SEED_SRC.rglob("*")):
         if src.is_dir() or "__pycache__" in src.parts or src.suffix == ".pyc":
@@ -195,8 +220,17 @@ def make_case(out: Path, key: Path, seed: int, intake: Path | None = None) -> di
     _write(out / "golden" / "de_golden.tsv",
            "gene\tdirection\n" + "".join(f"{gn}\t{d}\n" for gn, d in g["golden"]))
 
+    import sc_case  # same directory; numpy-only
+    s = sc_case.generate(seed)
+    _write(out / "data" / "sc" / "counts.tsv", sc_case.counts_tsv(s["genes"], s["cells"], s["counts"]))
+    _write(out / "data" / "sc" / "cells.tsv", sc_case.cells_tsv(s["cells"]))
+    _write(out / "golden" / "sc_celltypes_examples.tsv",
+           "cell_id\tcell_type\n" + "".join(f"{c}\t{t}\n" for c, t in sc_case.golden_celltypes(s)))
+    _write(out / "tests" / "fake_c2s.py", (HERE / "fake_c2s.py").read_text(encoding="utf-8"))
+
     protected = ["data/counts.tsv", "data/counts_opposite.tsv", "data/samples.tsv",
-                 "data/samples_confounded.tsv", "golden/de_golden.tsv"]
+                 "data/samples_confounded.tsv", "golden/de_golden.tsv",
+                 "data/sc/counts.tsv", "data/sc/cells.tsv", "golden/sc_celltypes_examples.tsv"]
     answer = {
         "schema": 1,
         "generated": True,
@@ -211,12 +245,21 @@ def make_case(out: Path, key: Path, seed: int, intake: Path | None = None) -> di
         "pii_pattern": "SUBJ-",
         "thresholds": THRESHOLDS,
         "data_sha256": {rel: _sha256(out / rel) for rel in protected},
+        "sc": {
+            "counts": "data/sc/counts.tsv", "cells": "data/sc/cells.tsv",
+            "truth": s["truth"], "low_quality": s["low_quality"], "doublets": s["doublets"], "oov": s["oov"],
+            "examples": [c for c, _ in s["examples"]], "composition": s["composition"],
+            "b_shift": "up", "isgs": s["isgs"], "isgs_secondary": s["isgs_secondary"],
+            "isg_type": "monocyte", "thresholds": SC_THRESHOLDS,
+        },
     }
     _write(key, json.dumps(answer, indent=2, sort_keys=True) + "\n")
 
     if intake is not None:
         _write(intake / "ci-replay.jsonl", json.dumps(ci_replay_record(), sort_keys=True) + "\n")
         _write(intake / "incident.pending.jsonl", json.dumps(incident_record(), sort_keys=True) + "\n")
+        _write(intake / "request.pending.jsonl", json.dumps(feature_request_record(), sort_keys=True) + "\n")
+        _write(intake / "requirements.json", json.dumps({"sc": False}) + "\n")
     return answer
 
 

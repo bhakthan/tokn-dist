@@ -10,6 +10,10 @@ intent: |
   SYNTHETIC data: enforce the domain invariants below, turn the replayed CI failure
   and staging incidents into reviewed, tested, human-approved fixes, and leave an
   auditable evidence chain. Sample-sheet subject identifiers never reach outputs.
+  When product asks, grow the single-cell prototype into a hardened annotation
+  service: a LOCAL Cell2Sentence (C2S-Scale GGUF, llama.cpp llama-server) model
+  proposes cell types, deterministic QC and marker verification dispose, and the
+  factory tests and a human approves before anything reaches prod.
 domain:
   plug: transcriptomics
   glossary: GLOSSARY.md
@@ -21,12 +25,19 @@ domain:
     - "a design where condition is confounded with batch is refused (non-zero exit, no results)"
     - "subject_ref (patient-adjacent metadata) never appears in any output"
     - "data/ and golden/ are inputs and are never modified"
+    - "single-cell QC (mitochondrial fraction, heterotypic doublets) runs BEFORE any model call; excluded barcodes are never sent"
+    - "the C2S prompt is the model-card template over a descending-count cell sentence; no cell, sample or subject identifier is ever sent"
+    - "a C2S label is accepted only if the versioned alias table maps it to the vocabulary AND marker evidence supports it; otherwise unassigned with a reason"
+    - "an unreachable C2S endpoint or invalid completion fails closed: exit 4, no labels invented, nothing written"
+    - "the C2S endpoint must be loopback http; cell data never leaves the host"
+    - "cell-type composition is reported separately from expression; within-type DE uses donor pseudobulk with BH per cell type"
   acceptance_examples: golden/de_golden.tsv
 architecture:
   constraints:
     - language: "python >= 3.10"
     - allowed_deps: [numpy, pandas, scipy]
     - cli_contract: "python -m rnaseq_de.cli --counts --counts-opposite --samples --out writes de_results.tsv, qc.json, report.md"
+    - cli_contract: "python -m rnaseq_de.sc_cli --sc-counts --cells --c2s-url --out [--workers] writes celltypes.tsv, sc_qc.json, composition.tsv, sc_de.tsv, sc_report.md; exit 2 bad input, 4 model unavailable"
 pipeline:
   stages: [refine, design, implement, review, test, release]
   gates:
@@ -34,14 +45,15 @@ pipeline:
       min_reviewer_score: 0.8
       decision:
         questions:
+          # Framed so "true" is the unsafe answer: a missing or vague review must not read as a pass.
           - id: invariant_broken
             type: boolean
-            prompt: "According to the review, is any domain invariant broken by this change (integer counts, RIN >= 6 filter, inferred strandedness, BH-FDR, confounding refusal, no subject_ref in outputs, inputs untouched)?"
+            prompt: "According to the review, is any domain invariant broken by this change, OR is the evidence for any invariant the change touches missing (integer counts, RIN >= 6 filter, inferred strandedness, BH-FDR, confounding refusal, no subject_ref in outputs, inputs untouched; single-cell: QC before the model, no identifiers on the wire, alias + marker verification, fail closed, loopback-only endpoint, composition separate from pseudobulk DE)?"
         require: { invariant_broken: "false" }
         min_confidence: 0.6
     test:
       regression_tolerance: 0
-      command: '"{{PYTHON}}" -m pytest -q -p no:cacheprovider && "{{PYTHON}}" "{{GRADE_PY}}" --key "{{ANSWER_KEY}}"'
+      command: '"{{PYTHON}}" -m pytest -q -p no:cacheprovider && "{{PYTHON}}" "{{GRADE_PY}}" --key "{{ANSWER_KEY}}" --requirements "{{REQUIREMENTS}}"'
       timeout: 30m
       # grade.py prints TOKN_METRIC lines; the grader lives outside the
       # candidate worktree, so candidate code cannot rewrite it.
@@ -51,6 +63,8 @@ pipeline:
         - { metric: pii_clean, op: "==", value: 1 }
         - { metric: confounded_refused, op: "==", value: 1 }
         - { metric: data_intact, op: "==", value: 1 }
+        # 1 until product requests the single-cell service, then every sc_* check.
+        - { metric: sc_ok, op: "==", value: 1 }
     release:
       dev:
         approval: auto
@@ -70,9 +84,10 @@ policies:
   # finds genuine numeric/privacy edge cases, so allow several rework rounds.
   budget: { per_run_tokens: 2000000, per_item_usd: 40, daily_usd: 150, warn_at: 0.8 }
   blast_radius:
-    max_files_per_change: 8
-    # ~150 lines of fix plus the regression tests the implementer is asked to add.
-    max_lines_per_change: 600
+    # Sized for the single-cell feature (sc.py ~420 + sc_cli.py ~200 + tests and
+    # glossary); the incident fixes stay far below it. Bigger changes escalate.
+    max_files_per_change: 12
+    max_lines_per_change: 1800
     protected_paths: [data, golden]
   secrets: deny_read_outside_vault
   max_retries: 4
@@ -80,4 +95,5 @@ intake:
   sources:
     - { type: local-ci, name: replayed-ci, uri: '{{INTAKE_DIR}}/ci-replay.jsonl', options: { repo: example-lab/transcriptomics-de } }
     - { type: incidents, name: staging-incidents, uri: '{{INTAKE_DIR}}/incidents.jsonl' }
+    - { type: logs, name: product-requests, uri: '{{INTAKE_DIR}}/requests.jsonl' }
 {{MODELS}}

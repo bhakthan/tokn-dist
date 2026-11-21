@@ -7,6 +7,8 @@ subjects. `subject_ref` values are synthetic placeholders.
 ```
 python -m rnaseq_de.cli --counts data/counts.tsv --counts-opposite data/counts_opposite.tsv \
     --samples data/samples.tsv --out results
+python -m rnaseq_de.sc_cli --sc-counts data/sc/counts.tsv --cells data/sc/cells.tsv \
+    --c2s-url http://127.0.0.1:8091 --out results_sc   # single-cell prototype
 python -m pytest -q
 ```
 

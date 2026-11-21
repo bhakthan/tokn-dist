@@ -13,6 +13,9 @@ Checks:
   4. Model attribution: each finished AgentRun's provider/model matches the
      spec binding for its role (or one of that binding's fallbacks). Runs that
      carry no provider/model are reported as "unavailable", not as failures.
+  5. Single-cell service (when --requirements says sc): grade.py's sc gate on
+     the deployed tree, and the REQ-SC-0001 product request appears in the
+     event log. --showcase adds the report-only real-C2S run.
 Writes REPORT.md and report.json to --out (default: next to the repo) and
 prints the markdown. Exit 0 when every available check passes.
 """
@@ -119,15 +122,17 @@ def deployed_tree(targets: Path | None, env: str) -> Path | None:
     return d if d and (d / "rnaseq_de").is_dir() else None
 
 
-def grade_tree(code_root: Path, repo: Path, key: Path, work: Path) -> dict:
+def grade_tree(code_root: Path, repo: Path, key: Path, work: Path, requirements: Path | None = None) -> dict:
     """Grade code_root/rnaseq_de against repo's data/ and golden/ in a scratch copy."""
     shutil.rmtree(work, ignore_errors=True)
     work.mkdir(parents=True)
     shutil.copytree(code_root / "rnaseq_de", work / "rnaseq_de", ignore=shutil.ignore_patterns("__pycache__"))
     for d in ("data", "golden"):
         shutil.copytree(repo / d, work / d)
-    p = subprocess.run([sys.executable, str(HERE / "grade.py"), "--key", str(key), "--repo", str(work)],
-                       capture_output=True, text=True, timeout=900)
+    cmd = [sys.executable, str(HERE / "grade.py"), "--key", str(key), "--repo", str(work)]
+    if requirements and requirements.is_file():
+        cmd += ["--requirements", str(requirements)]
+    p = subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
     try:
         res = json.loads(p.stdout.strip().splitlines()[-1])
     except (json.JSONDecodeError, IndexError):
@@ -146,6 +151,9 @@ def main(argv=None) -> int:
     ap.add_argument("--targets", type=Path, default=None)
     ap.add_argument("--env", default="prod", help="target environment whose deployed code is graded")
     ap.add_argument("--out", type=Path, default=None)
+    ap.add_argument("--requirements", type=Path, default=None,
+                    help="intake/requirements.json from run.py; {\"sc\": true} also grades the single-cell service")
+    ap.add_argument("--showcase", type=Path, default=None, help="c2s-showcase.json from run.py (report-only)")
     a = ap.parse_args(argv)
     repo = a.repo.resolve()
     out = (a.out or repo.parent / "verify").resolve()
@@ -161,7 +169,11 @@ def main(argv=None) -> int:
     graded_deploy = deployed is not None
     if deployed is None:
         deployed = repo
-    grade = grade_tree(deployed, repo, a.key.resolve(), out / "_grade_work")
+    req = a.requirements.resolve() if a.requirements else None
+    sc_required = bool(req and req.is_file() and json.loads(req.read_text(encoding="utf-8")).get("sc"))
+    grade = grade_tree(deployed, repo, a.key.resolve(), out / "_grade_work", req)
+    showcase = json.loads(a.showcase.read_text(encoding="utf-8")) if a.showcase and a.showcase.is_file() else None
+    feature_seen = any("REQ-SC-0001" in json.dumps(e) for e in events)
 
     chain = tokn_verify(a.tokn, repo)
     decisions = [e["payload"] for e in events if e.get("kind") == "decision.recorded" and isinstance(e.get("payload"), dict)]
@@ -179,6 +191,12 @@ def main(argv=None) -> int:
         "decision_records": {"ok": bool(model_calls), "count": len(decisions), "model_calls": len(model_calls)},
         "model_attribution": {"ok": attr_ok, "available": attr_available, "runs": len(attribution)},
         "prod_deployed": {"ok": kinds.get("release.deployed", 0) > 0 and graded_deploy},
+        "sc_service": {"ok": bool(grade.get("sc_ok")), "available": sc_required,
+                       "correct": grade.get("sc_correct"), "wrong": grade.get("sc_wrong")},
+        "feature_item": {"ok": feature_seen, "available": sc_required,
+                         "detail": "REQ-SC-0001 intake record traced into the factory event log"},
+        "c2s_showcase": {"ok": bool(showcase and showcase.get("ok")), "available": bool(showcase),
+                         "detail": {k: (showcase or {}).get(k) for k in ("model", "live_correct", "live_wrong", "seconds")}},
     }
     overall = all(c["ok"] for k, c in checks.items() if c.get("available", True))
     report = {"pass": overall, "checks": checks, "grade": grade, "store_verify": chain,

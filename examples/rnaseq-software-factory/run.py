@@ -277,9 +277,11 @@ def tree_hash(root: Path) -> dict[str, str]:
             for p in sorted(root.rglob("*")) if p.is_file()}
 
 
-def grade(repo: Path, key: Path) -> tuple[int, dict]:
-    r = subprocess.run([sys.executable, str(HERE / "grade.py"), "--key", str(key), "--repo", str(repo)],
-                       capture_output=True, text=True, timeout=900)
+def grade(repo: Path, key: Path, requirements: Path | None = None) -> tuple[int, dict]:
+    cmd = [sys.executable, str(HERE / "grade.py"), "--key", str(key), "--repo", str(repo)]
+    if requirements:
+        cmd += ["--requirements", str(requirements)]
+    r = subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
     try:
         return r.returncode, json.loads(r.stdout.strip().splitlines()[-1])
     except (json.JSONDecodeError, IndexError):
@@ -295,8 +297,9 @@ def pytest_counts(repo: Path) -> tuple[int, str]:
 
 
 def overlay_fix(repo: Path) -> None:
-    for f in (HERE / "reference_fix" / "rnaseq_de").glob("*.py"):
-        shutil.copy2(f, repo / "rnaseq_de" / f.name)
+    for sub in ("rnaseq_de", "tests"):
+        for f in (HERE / "reference_fix" / sub).glob("*.py"):
+            shutil.copy2(f, repo / sub / f.name)
 
 
 def git(repo: Path, *args: str) -> str:
@@ -343,6 +346,7 @@ def render_spec(profile_models: str, run_dir: Path, tokn: Path | None, key: Path
         "TARGETS": str(run_dir / "targets"),
         "APPROVER": factory_actor(),
         "INTAKE_DIR": str(run_dir / "intake"),
+        "REQUIREMENTS": str(run_dir / "intake" / "requirements.json"),
         "MODELS": models,
     })
     return spec, models
@@ -443,6 +447,25 @@ def run_offline(args, ctx, run_dir: Path) -> int:
     rc, t = pytest_counts(fixed)
     check("pytest passes on seed+reference_fix", rc == 0, t)
 
+    # Loop 3: once product asks for the single-cell service, the same gate must
+    # fail the prototype and pass the hardened reference.
+    req = run_dir / "requirements.sc.json"
+    req.write_text(json.dumps({"sc": True}) + "\n", encoding="utf-8")
+    sc_keys = ("sc_prompts_exact", "sc_no_ids_on_wire", "sc_lq_exact", "sc_doublets_ok", "sc_correct",
+               "sc_wrong", "sc_guardrail", "sc_fail_closed", "sc_input_validation", "sc_isg_recall", "sc_false_calls")
+    bulk_only = run_dir / "bulkfix-scseed"
+    shutil.copytree(seed, bulk_only)
+    for f in (HERE / "reference_fix" / "rnaseq_de").glob("*.py"):
+        if not f.name.startswith("sc"):
+            shutil.copy2(f, bulk_only / "rnaseq_de" / f.name)
+    rc, g3 = grade(bulk_only, key, req)
+    check("grader FAILS the single-cell prototype once sc is required", rc == 1 and g3.get("sc_ok") is False,
+          {k: g3.get(k) for k in sc_keys})
+    shutil.rmtree(bulk_only, ignore_errors=True)
+    rc, g4 = grade(fixed, key, req)
+    check("grader PASSES the hardened single-cell reference", rc == 0 and g4.get("sc_ok") is True,
+          {k: g4.get(k) for k in sc_keys})
+
     tokn = ctx.get("tokn")
     if tokn is None:
         note = "; ".join(ctx.get("tokn_notes") or []) or "no candidate found"
@@ -502,6 +525,94 @@ def append_incident(intake: Path) -> None:
         f.write(pending)
 
 
+def append_feature_request(intake: Path) -> None:
+    """Product asks for the single-cell service: the grader starts requiring it, then the request lands."""
+    (intake / "requirements.json").write_text(json.dumps({"sc": True}) + "\n", encoding="utf-8")
+    pending = (intake / "request.pending.jsonl").read_text(encoding="utf-8")
+    with (intake / "requests.jsonl").open("a", encoding="utf-8") as f:
+        f.write(pending)
+
+
+LLAMA_HINT = ("llama.cpp's llama-server is needed to serve the C2S-Scale GGUF locally.\n"
+              "  Windows: winget install ggml.llamacpp\n  macOS:   brew install llama.cpp\n"
+              "  Linux:   download a release from https://github.com/ggml-org/llama.cpp/releases\n"
+              "Model (pick one, ~1.6 GB / ~10 GB), e.g. with the Hugging Face CLI (pip install -U huggingface_hub):\n"
+              "  hf download mradermacher/C2S-Scale-Gemma-2-2B-GGUF C2S-Scale-Gemma-2-2B.Q4_K_M.gguf --local-dir <dir>\n"
+              "Then set FACTORY_C2S_GGUF=<dir>\\C2S-Scale-Gemma-2-2B.Q4_K_M.gguf, or pass --c2s-url for a server you run.")
+
+
+class C2SServer:
+    """Starts llama-server on loopback for the real-model showcase; stops it on exit. No-op with --c2s-url."""
+
+    def __init__(self, url: str, gguf: str, port: int):
+        self.url, self.gguf, self.port, self.proc, self.sha256 = url, gguf, port, None, ""
+
+    def __enter__(self):
+        if self.url or not self.gguf:
+            return self
+        exe = os.environ.get("FACTORY_LLAMA_SERVER", "").strip() or shutil.which("llama-server")
+        gg = Path(self.gguf)
+        if not exe or not gg.is_file():
+            missing = [n for n, ok in (("llama-server", exe), (f"GGUF {gg}", gg.is_file())) if not ok]
+            raise SystemExit(f"C2S showcase needs: {', '.join(missing)}\n{LLAMA_HINT}")
+        h = hashlib.sha256()
+        with gg.open("rb") as f:
+            for chunk in iter(lambda: f.read(1 << 22), b""):
+                h.update(chunk)
+        self.sha256 = h.hexdigest()
+        pin = os.environ.get("FACTORY_C2S_SHA256", "").strip().lower()
+        if pin and pin != self.sha256:
+            raise SystemExit(f"GGUF sha256 {self.sha256} does not match FACTORY_C2S_SHA256 {pin}; refusing to run "
+                             "an unpinned model")
+        self.url = f"http://127.0.0.1:{self.port}"
+        log(f"starting llama-server ({gg.name}, sha256 {self.sha256[:12]}...) on {self.url}")
+        self.proc = subprocess.Popen([exe, "-m", str(gg), "--host", "127.0.0.1", "--port", str(self.port),
+                                      "-c", "8192", "--parallel", "2"],
+                                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        import urllib.request
+        for _ in range(180):
+            if self.proc.poll() is not None:
+                raise SystemExit(f"llama-server exited with {self.proc.returncode} while loading {gg.name}")
+            try:
+                with urllib.request.urlopen(self.url + "/health", timeout=2) as r:
+                    if r.status == 200:
+                        return self
+            except OSError:
+                pass
+            time.sleep(1)
+        raise SystemExit("llama-server did not become healthy within 180 s")
+
+    def __exit__(self, *exc):
+        if self.proc and self.proc.poll() is None:
+            self.proc.terminate()
+            try:
+                self.proc.wait(timeout=30)
+            except subprocess.TimeoutExpired:
+                self.proc.kill()
+
+
+def c2s_showcase(args, repo: Path, key: Path, requirements: Path, out: Path) -> dict | None:
+    """Grade the shipped service once against the REAL C2S model (report-only evidence)."""
+    if not (args.c2s_url or os.environ.get("FACTORY_C2S_GGUF", "").strip()):
+        log("C2S showcase skipped: set FACTORY_C2S_GGUF or pass --c2s-url to run the shipped service on the real model")
+        return None
+    with C2SServer(args.c2s_url, os.environ.get("FACTORY_C2S_GGUF", "").strip(),
+                   int(os.environ.get("FACTORY_C2S_PORT", "8091"))) as srv:
+        r = subprocess.run([sys.executable, str(HERE / "grade.py"), "--key", str(key), "--repo", str(repo),
+                            "--requirements", str(requirements), "--c2s-url", srv.url],
+                           capture_output=True, text=True, timeout=7200)
+    res = jparse(r.stdout) or {"error": (r.stdout + r.stderr)[-600:]}
+    res["model_sha256"] = srv.sha256 or "external server (not hashed)"
+    res["model"] = Path(srv.gguf).name if srv.gguf and not args.c2s_url else args.c2s_url
+    lw = res.get("live_wrong")
+    res["ok"] = "error" not in res and isinstance(lw, (int, float)) and lw <= 0.05
+    res["seconds"] = res.get("live_seconds")
+    out.write_text(json.dumps(res, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    log(f"C2S showcase: live_correct={res.get('live_correct')} live_wrong={res.get('live_wrong')} "
+        f"live_unassigned={res.get('live_unassigned')} in {res.get('live_seconds')} s -> {out}")
+    return res
+
+
 # Gate reasons that only report a passing check; anything else is an escalation.
 _INFO_REASONS = {"implementation produced changes"}
 
@@ -534,6 +645,7 @@ def run_live(args, ctx, run_dir: Path) -> int:
         (intake / "ci-replay.jsonl").write_text(json.dumps(_mc().ci_replay_record(head), sort_keys=True) + "\n",
                                                 encoding="utf-8")
         (intake / "incidents.jsonl").write_text("", encoding="utf-8")
+        (intake / "requests.jsonl").write_text("", encoding="utf-8")
         log(f"seed repo {seed} @ {head[:12]}; answer key and intake kept outside it")
 
     write_profiles(envdir, args.profile, ctx)
@@ -543,7 +655,7 @@ def run_live(args, ctx, run_dir: Path) -> int:
     env = tokn_env({"TOKN_FACTORY_ENV_DIR": str(envdir), **ctx["anthropic"], **ctx.get("azure_auth", {})})
     tk = Tokn(tokn, seed, logs, env)
     summary: dict = {"profile": args.profile, "run_dir": str(run_dir), "head": head, "ticks": [],
-                     "prod_approved": False, "incident_appended": False, "stopped": "",
+                     "prod_approved": False, "incident_appended": False, "feature_appended": False, "stopped": "",
                      "blast_radius_approved": []}
     prev = run_dir / "run-summary.json"
     if resuming and prev.is_file():
@@ -552,6 +664,8 @@ def run_live(args, ctx, run_dir: Path) -> int:
             summary[k] = old.get(k, summary[k])
     if resuming:
         summary["incident_appended"] = bool((intake / "incidents.jsonl").read_text(encoding="utf-8").strip())
+        rq = intake / "requests.jsonl"
+        summary["feature_appended"] = rq.is_file() and bool(rq.read_text(encoding="utf-8").strip())
     try:
         if not resuming:
             v = jparse(tk("validate", "--json").stdout) or {}
@@ -620,7 +734,15 @@ def run_live(args, ctx, run_dir: Path) -> int:
             if not active:
                 idle += 1
                 if summary["incident_appended"] and idle >= 2:
-                    summary["stopped"] = "all items settled after the incident loop"
+                    if not args.no_feature and not summary["feature_appended"]:
+                        append_feature_request(intake)
+                        summary["feature_appended"] = True
+                        log("incident loop settled: product request REQ-SC-0001 appended to intake/requests.jsonl; "
+                            "the grader now requires the single-cell (C2S) service")
+                        idle = 0
+                        continue
+                    summary["stopped"] = ("all items settled after the feature loop" if summary["feature_appended"]
+                                          else "all items settled after the incident loop")
                     break
                 if not summary["incident_appended"] and idle >= 3:
                     summary["stopped"] = "no active items and nothing reached prod"
@@ -638,9 +760,14 @@ def run_live(args, ctx, run_dir: Path) -> int:
 
     (run_dir / "run-summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
     log(f"stopped: {summary['stopped']}")
+    vargs = []
+    if summary["feature_appended"]:
+        c2s_showcase(args, seed, key, intake / "requirements.json", run_dir / "c2s-showcase.json")
+        vargs = ["--requirements", str(intake / "requirements.json"), "--showcase", str(run_dir / "c2s-showcase.json")]
     vr = subprocess.run([sys.executable, str(HERE / "verify.py"), "--repo", str(seed), "--key", str(key),
                          "--bindings", str(run_dir / "bindings.json"), "--tokn", str(tokn),
-                         "--targets", str(run_dir / "targets"), "--out", str(run_dir / "verify")], timeout=1800)
+                         "--targets", str(run_dir / "targets"), "--out", str(run_dir / "verify"), *vargs],
+                        timeout=3600)
     log(f"artifacts: {run_dir}  (verify/REPORT.md)")
     return vr.returncode
 
@@ -658,6 +785,11 @@ def main(argv=None) -> int:
     ap.add_argument("--seed", type=int, default=7)
     ap.add_argument("--max-ticks", type=int, default=40)
     ap.add_argument("--max-steps", type=int, default=0, help="--max-steps per role run (0 = runtime default)")
+    ap.add_argument("--no-feature", action="store_true",
+                    help="stop after the incident loop (skip the single-cell C2S feature request)")
+    ap.add_argument("--c2s-url", default="",
+                    help="loopback llama-server already serving a C2S-Scale GGUF for the final showcase "
+                         "(default: launch one from $FACTORY_C2S_GGUF, or skip the showcase)")
     args = ap.parse_args(argv)
 
     load_dotenv(HERE / ".env")
