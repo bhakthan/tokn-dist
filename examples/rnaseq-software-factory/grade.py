@@ -21,13 +21,25 @@ Prints one JSON object with:
   sc_ok                    1 when the single-cell (C2S) feature is not yet required
                            (--requirements says {"sc": false}) or every sc_* check
                            passes; see grade_sc() for the individual checks
-Exit 0 only when every check passes; 1 otherwise; 2 on a usage error.
+RH/Lagarias stress gate (stress.py + checks/lagarias_stress_gate.py):
+  lagarias_min_gap         smallest relative gap over the stress ladder (designs the
+                           shipped case does not contain); <= 0 fails, < 0.05 is a near miss
+  off_line_exponent        a_hat from the log2FC error trend over N = 24..192; > 0.55 fails
+                           (a fixture-specific screen, not a diagnosis of confounding)
+  min_criterion_margin     tightest (bound - observed)/bound over recall, precision and
+                           each tier's empirical FDR; catches near misses the compound gap hides
+  c2s_euler_discrepancy    in-vocabulary C2S labels that marker evidence rejects; > 0.25 fails
+  c2s_invalid_token_rate   gene tokens on the wire outside the locked gene index; > 0 fails
+  gguf_anchor_kl           only with --c2s-url and --c2s-anchor: label-distribution KL of
+                           this GGUF vs a reference-quant run (report-only Observer signal)
+  observer_signals         lagarias_gap_erosion / off_line_zero_detected / c2s_gguf_quant_drift ...
+Exit 0 for passing hard checks, 1 for a failed criterion, 2 for invalid inputs.
 
 Single-cell checks never touch a real model: the candidate's CLI is pointed at an
 in-process recording oracle (fake_c2s.py, kept next to this grader and outside the
 candidate), so gates are deterministic and offline. --c2s-url additionally runs the
 candidate once against a REAL loopback llama-server (C2S-Scale GGUF) and reports
-live_* metrics; those are evidence, not gates.
+live_* metrics; showcase verification separately checks the live wrong-label rate.
 """
 from __future__ import annotations
 
@@ -46,6 +58,11 @@ import numpy as np
 import pandas as pd
 
 HERE = Path(__file__).resolve().parent
+if str(HERE) not in sys.path:
+    sys.path.insert(0, str(HERE))
+import stress  # noqa: E402  (grader-side ladder; lives next to this file, outside the candidate)
+from checks import lagarias_stress_gate as lsg  # noqa: E402
+
 SCRATCH = ".grade_out"
 SC_VOCAB = ("cd4_t", "cd8_t", "b", "nk", "monocyte")
 SC_FILES = ("celltypes.tsv", "sc_qc.json", "composition.tsv", "sc_de.tsv", "sc_report.md")
@@ -67,9 +84,10 @@ def bh(p: np.ndarray) -> np.ndarray:
     return out
 
 
-def run_cli(repo: Path, out: Path, samples: str, counts: str = "data/counts.tsv", timeout: int = 300):
+def run_cli(repo: Path, out: Path, samples: str, counts: str = "data/counts.tsv",
+            opposite: str = "data/counts_opposite.tsv", timeout: int = 300):
     cmd = [sys.executable, "-m", "rnaseq_de.cli", "--counts", counts,
-           "--counts-opposite", "data/counts_opposite.tsv", "--samples", samples, "--out", str(out)]
+           "--counts-opposite", opposite, "--samples", samples, "--out", str(out)]
     env = dict(os.environ)
     env["PYTHONPATH"] = str(repo) + os.pathsep + env.get("PYTHONPATH", "")
     env.pop("PYTHONDONTWRITEBYTECODE", None)
@@ -92,7 +110,7 @@ def grade(repo: Path, key: dict) -> tuple[dict, list[str]]:
                if not (repo / rel).is_file() or hashlib.sha256((repo / rel).read_bytes()).hexdigest() != h]
         m["data_intact"] = not bad
         if bad:
-            notes.append("input data modified: " + ", ".join(bad))
+            raise ValueError("protected fixture modified; refusing to run candidate: " + ", ".join(bad))
 
         main_out = scratch / "main"
         rc, log = run_cli(repo, main_out, "data/samples.tsv")
@@ -113,11 +131,14 @@ def grade(repo: Path, key: dict) -> tuple[dict, list[str]]:
                     m.update(recall=0.0, precision=0.0, bh_applied=False, n_called=0)
                     res = None
             if res is not None and not missing:
+                vals = res[["log2fc", "pvalue", "padj"]].to_numpy(dtype=float)
+                if not np.isfinite(vals).all() or (vals[:, 1:] < 0).any() or (vals[:, 1:] > 1).any():
+                    raise ValueError("de_results.tsv: non-finite effects or probabilities outside [0,1]")
                 calls = res[(res["padj"] < th["fdr"]) & (res["log2fc"].abs() >= th["min_abs_log2fc"])]
                 truth = key["de_genes"]
                 tp = len({g for g, l in zip(calls["gene"], calls["log2fc"]) if g in truth and np.sign(l) == np.sign(truth[g])})
-                m["recall"] = round(tp / len(truth), 4)
-                m["precision"] = round(tp / len(calls), 4) if len(calls) else 0.0
+                m["recall"] = tp / len(truth)
+                m["precision"] = tp / len(calls) if len(calls) else 0.0
                 m["n_called"] = int(len(calls))
                 p = res["pvalue"].to_numpy(dtype=float)
                 padj = res["padj"].to_numpy(dtype=float)
@@ -148,6 +169,11 @@ def grade(repo: Path, key: dict) -> tuple[dict, list[str]]:
         bad_counts.write_text("\n".join(txt) + "\n", encoding="utf-8")
         rc, _ = run_cli(repo, scratch / "float", "data/samples.tsv", counts=str(bad_counts))
         m["integer_counts_enforced"] = rc != 0 and not (scratch / "float" / "de_results.tsv").exists()
+
+        # RH/Lagarias stress ladder: extra synthetic designs, generated here, never in data/.
+        ladder = stress.run_ladder(
+            lambda out, s, c, o: run_cli(repo, out, s, counts=c, opposite=o), scratch / "stress")
+        m["_ladder"] = ladder
     finally:
         shutil.rmtree(scratch, ignore_errors=True)
 
@@ -234,10 +260,62 @@ def _label_scores(lab: pd.DataFrame, sk: dict) -> tuple[float, float, int]:
     got = lab["cell_type"].reindex(known).fillna("")
     ok = sum(got[c] == truth[c] for c in known)
     wrong = sum(got[c] in SC_VOCAB and got[c] != truth[c] for c in known)
-    return round(ok / len(known), 4), round(wrong / len(known), 4), len(known)
+    return ok / len(known), wrong / len(known), len(known)
 
 
-def grade_sc(repo: Path, key: dict, scratch: Path, live_url: str = "") -> tuple[dict, list[str], list[str]]:
+def _sentence_tokens(prompt: str) -> list[str]:
+    i = prompt.find("Cell sentence:")
+    if i < 0:
+        return []
+    return prompt[i + len("Cell sentence:"):].split("\n", 1)[0].strip().rstrip(".").split()
+
+
+MARKER_PANELS = {
+    "cd4_t": ["CD4", "IL7R", "CCR7", "LEF1", "TCF7", "SELL", "MAL"],
+    "cd8_t": ["CD8A", "CD8B", "GZMK"],
+    "b": ["MS4A1", "CD79A", "CD79B", "CD19", "BANK1", "TCL1A"],
+    "nk": ["GNLY", "KLRF1", "KLRD1", "PRF1", "FCGR3A", "GZMB"],
+    "monocyte": ["CD14", "LYZ", "S100A8", "S100A9", "FCN1", "VCAN", "CSF1R"],
+}
+
+
+def _euler_discrepancy(lab: pd.DataFrame, counts: pd.DataFrame) -> float:
+    if "candidate" not in lab or set(lab.index) != set(counts.columns):
+        return 1.0
+    post = lab[(lab["qc_status"] == "pass") & lab["candidate"].isin(SC_VOCAB)]
+    unsupported = 0
+    for cell, candidate in post["candidate"].items():
+        col = counts[cell]
+        top = set(sorted(col[col > 0].index, key=lambda g: (-int(col[g]), g))[:100])
+        hits = {k: len(top.intersection(panel)) for k, panel in MARKER_PANELS.items()}
+        unsupported += hits[candidate] < 2 or hits[candidate] < max(hits.values())
+    return unsupported / len(post) if len(post) else 1.0
+
+
+def _label_dist(lab: pd.DataFrame) -> dict[str, float]:
+    labels = lab.loc[lab["qc_status"] == "pass", "cell_type"]
+    if labels.empty or not labels.isin((*SC_VOCAB, "unassigned")).all():
+        raise ValueError("live labels missing or outside the agreed vocabulary")
+    return {t: float((labels == t).mean()) for t in (*SC_VOCAB, "unassigned")}
+
+
+def _distribution(d):
+    if not isinstance(d, dict) or set(d) != {*SC_VOCAB, "unassigned"}:
+        raise ValueError("label_dist must contain the five vocabulary labels and unassigned")
+    a = np.array([d[k] for k in (*SC_VOCAB, "unassigned")])
+    if a.dtype.kind not in "fiu" or not np.isfinite(a).all() or (a < 0).any() or not np.isclose(a.sum(), 1, atol=5e-6, rtol=0):
+        raise ValueError("label_dist must be finite, non-negative probabilities summing to one")
+    return a
+
+
+def _kl(p, q, eps=1e-4):
+    a, b = _distribution(p) + eps, _distribution(q) + eps
+    a, b = a / a.sum(), b / b.sum()
+    return max(0.0, float(np.sum(a * np.log(a / b))))
+
+
+def grade_sc(repo: Path, key: dict, scratch: Path, live_url: str = "",
+             anchor: dict | None = None) -> tuple[dict, list[str], list[str]]:
     sk, th = key["sc"], key["sc"]["thresholds"]
     m: dict = {}
     fails: list[str] = []
@@ -254,6 +332,7 @@ def grade_sc(repo: Path, key: dict, scratch: Path, live_url: str = "") -> tuple[
         for k in SC_CHECKS:
             m[k] = False
         m["sc_correct"] = m["sc_wrong"] = 0.0
+        m["c2s_euler_discrepancy"] = m["c2s_invalid_token_rate"] = 1.0
         return m, [f"{k} is false" for k in SC_CHECKS], notes
 
     # QC before the model
@@ -275,9 +354,14 @@ def grade_sc(repo: Path, key: dict, scratch: Path, live_url: str = "") -> tuple[
                      "(order genes by descending count, ties by symbol, top 200, template verbatim, temperature 0)")
     toks = {t.strip(".,:;[]()/") for r in reqs for t in r["prompt"].split()}
     m["sc_no_ids_on_wire"] = not (toks & ids) and not any(key.get("pii_pattern", "SUBJ-") in r["prompt"] for r in reqs)
+    # Every gene token sent must exist in the locked gene index (the counts file the grader holds).
+    sent = [t for r in reqs for t in _sentence_tokens(r["prompt"])]
+    m["c2s_invalid_token_rate"] = (sum(t not in counts.index for t in sent) / len(sent) if sent else 1.0)
 
     # Labels (oracle)
     m["sc_correct"], m["sc_wrong"], _ = _label_scores(lab, sk)
+    m["c2s_euler_discrepancy"] = _euler_discrepancy(lab, counts)
+    m["sc_n_pass"] = int((lab["qc_status"] == "pass").sum())
     m["sc_correct_ok"] = m["sc_correct"] >= th["correct"]
     m["sc_wrong_ok"] = m["sc_wrong"] <= th["wrong"]
     m["sc_oov_unassigned"] = all(lab["cell_type"].get(c, "") not in SC_VOCAB for c in sk["oov"])
@@ -389,6 +473,10 @@ def grade_sc(repo: Path, key: dict, scratch: Path, live_url: str = "") -> tuple[
     for k in SC_CHECKS:
         if not m.get(k):
             fails.append(f"{k} is false")
+    if m["c2s_invalid_token_rate"] > 0:
+        fails.append(f"c2s_invalid_token_rate {m['c2s_invalid_token_rate']} > 0: a gene token outside the locked index went on the wire")
+    if m["c2s_euler_discrepancy"] > lsg.MAX_C2S_EULER:
+        fails.append(f"c2s_euler_discrepancy {m['c2s_euler_discrepancy']} > {lsg.MAX_C2S_EULER}")
 
     # Report-only: the REAL model, if the caller started one.
     if live_url:
@@ -397,44 +485,133 @@ def grade_sc(repo: Path, key: dict, scratch: Path, live_url: str = "") -> tuple[
         rc, log = run_sc(repo, lo, live_url, counts_rel, cells_rel, timeout=3600)
         m["live_rc"], m["live_seconds"] = rc, round(time.time() - t0, 1)
         ll = _labels(lo) if rc == 0 else None
-        if ll is None:
+        if ll is None or set(ll.index) != set(counts.columns):
             fails.append(f"live C2S run failed (exit {rc}): {log.strip()[-300:]}")
         else:
             m["live_correct"], m["live_wrong"], _ = _label_scores(ll, sk)
             post = ll[ll["qc_status"] == "pass"]
             m["live_unassigned"] = int((post["cell_type"] == "unassigned").sum())
+            m["live_euler_discrepancy"] = _euler_discrepancy(ll, counts)
+            m["live_label_dist"] = _label_dist(ll)
+            selected = sorted(post.index)
+            cohort = json.dumps([key["data_sha256"][counts_rel], selected], separators=(",", ":"))
+            m["anchor_cohort"] = hashlib.sha256(cohort.encode()).hexdigest()
+            if anchor is not None:
+                if anchor.get("anchor_cohort") != m["anchor_cohort"]:
+                    raise ValueError("anchor cohort differs or is missing: re-run the reference quant on these counts and QC-passing cells")
+                # Quantisation drift: the same cells, this GGUF vs a recorded anchor run
+                # (for example the Q8_0 of the same model). Not gated: an Observer signal.
+                m["gguf_anchor_kl"] = _kl(m["live_label_dist"], anchor["label_dist"])
             if m["live_wrong"] > 0.05:
                 fails.append(f"live C2S wrong-label rate {m['live_wrong']} > 0.05")
     return m, fails, notes
 
 
+def stress_gate(m: dict, key: dict, sc_required: bool) -> list[str]:
+    """Fold the ladder (and the sc Euler-dual case) into the RH/Lagarias gate. Mutates m."""
+    th = key["thresholds"]
+    ladder = m.pop("_ladder", None)
+    if not ladder or ladder["problems"]:
+        m.update(lagarias_min_gap=-1.0, off_line_exponent=1.0, min_criterion_margin=-1.0, observer_signals=[])
+        return ladder["problems"] if ladder else ["stress ladder did not run"]
+    cases = list(ladder["stress_cases"])
+    if sc_required:
+        cases.append({"case_id": "sc_c2s_euler_dual", "stress_tier_n": max(2, int(m.get("sc_n_pass", 2))),
+                      "emp_fdr": 0.0, "target_fdr": th["fdr"],
+                      "c2s_euler_discrepancy": float(m.get("c2s_euler_discrepancy", 1.0)),
+                      "note": "C2S label vs marker evidence on QC-passing cells (fake_c2s oracle)"})
+    rep = lsg.evaluate_suite(cases, ladder["scaling_trace"], min_recall=th["recall"])
+    worst = rep["worst_stress_case"]
+    m["lagarias_min_gap"] = worst["relative_gap"]
+    m["lagarias_worst_case"] = worst["case_id"]
+    m["off_line_exponent"] = rep["estimated_critical_exponent_a"]
+    m["scaling_trace"] = rep["scaling_trace"]
+    m["stress_cases"] = [{k: c.get(k) for k in ("recall", "case_id", "stress_tier_n", "relative_gap", "emp_fdr", "batch_leak",
+                                                  "c2s_euler_discrepancy") if k in c} for c in rep["ranked_stress_cases"]]
+    margins = {"recall": lsg.criterion_margin(m.get("recall", 0.0), th["recall"], upper=False),
+               "precision": lsg.criterion_margin(m.get("precision", 0.0), th["precision"], upper=False)}
+    margins.update(rep["criterion_margins"])
+    m["criterion_margins"] = margins
+    tight = min(margins, key=margins.get)
+    m["min_criterion_margin"] = margins[tight]
+    m["min_criterion_margin_at"] = tight
+    m["observer_signals"] = rep["observer_signals"]
+    fails = []
+    if margins[tight] <= 0:
+        fails.append(f"criterion has no positive margin: {tight} (relative margin {margins[tight]:.5g})")
+    if worst["relative_gap"] <= 0:
+        fails.append(f"Lagarias counterexample: relative gap {worst['relative_gap']} <= 0 on {worst['case_id']}")
+    if rep["estimated_critical_exponent_a"] > lsg.MAX_OFF_LINE_A:
+        fails.append(f"off-line zero: error exponent {rep['estimated_critical_exponent_a']:.5g} > {lsg.MAX_OFF_LINE_A} "
+                     "(slower error decay than the fixture cutoff; inspect the batch adjustment)")
+    # 0 < gap < 0.05 and small criterion margins are near misses: the factory's needs_human band, not a failure here.
+    return fails
+
+
+def input_error(reason):
+    defaults = dict(recall=0, precision=0, pii_clean=0, confounded_refused=0, data_intact=0,
+                    sc_ok=0, lagarias_min_gap=-1, off_line_exponent=1, min_criterion_margin=-1,
+                    c2s_euler_discrepancy=1, c2s_invalid_token_rate=1)
+    for k, v in defaults.items():
+        print(f"TOKN_METRIC {k}={v}")
+    print(json.dumps({"pass": False, "error": str(reason), **defaults}))
+    return 2
+
+
 def main(argv=None) -> int:
+    try:
+        return _main(argv)
+    except SystemExit as exc:
+        if exc.code != 2:
+            raise
+        return input_error("invalid grader arguments; see --help")
+    except (OSError, ValueError, TypeError, KeyError, IndexError, AttributeError, ArithmeticError) as exc:
+        return input_error(f"cannot grade the supplied inputs or candidate outputs: {exc}")
+
+
+def _main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--key", default=os.environ.get("FACTORY_RNASEQ_KEY", ""), help="answer_key.json (or $FACTORY_RNASEQ_KEY)")
     ap.add_argument("--repo", default=".", type=Path, help="candidate worktree (default: cwd)")
     ap.add_argument("--requirements", default=os.environ.get("FACTORY_RNASEQ_REQUIREMENTS", ""),
                     help='requirements.json kept OUTSIDE the candidate; {"sc": true} turns on the single-cell checks')
     ap.add_argument("--c2s-url", default="", help="optional loopback llama-server with a real C2S GGUF (report-only)")
+    ap.add_argument("--c2s-anchor", default="",
+                    help="optional c2s-showcase.json (label_dist and anchor_cohort) from the same cells and model family; "
+                         "with --c2s-url, reports gguf_anchor_kl (quantisation drift, report-only)")
     a = ap.parse_args(argv)
     if not a.key:
-        print(json.dumps({"error": "no answer key: pass --key or set FACTORY_RNASEQ_KEY"}))
-        return 2
+        return input_error("no answer key: pass --key or set FACTORY_RNASEQ_KEY")
     kp = Path(a.key)
     if not kp.is_file():
-        print(json.dumps({"error": f"answer key not found: {kp}"}))
-        return 2
+        return input_error(f"answer key not found: {kp}")
     repo = a.repo.resolve()
     if repo in kp.resolve().parents:
-        print(json.dumps({"error": "answer key is inside the candidate repo; refusing"}))
-        return 2
+        return input_error("answer key is inside the candidate repo; refusing")
     key = json.loads(kp.read_text(encoding="utf-8"))
     req = {}
     if a.requirements:
         rp = Path(a.requirements)
         if not rp.is_file() or repo in rp.resolve().parents:
-            print(json.dumps({"error": f"requirements file missing or inside the candidate repo: {rp}"}))
-            return 2
+            return input_error(f"requirements file missing or inside the candidate repo: {rp}")
         req = json.loads(rp.read_text(encoding="utf-8"))
+    anchor = None
+    if a.c2s_anchor:
+        try:
+            if not a.c2s_url:
+                return input_error("--c2s-anchor requires --c2s-url")
+            anchor = json.loads(Path(a.c2s_anchor).read_text(encoding="utf-8"))
+            _distribution(anchor["label_dist"])
+        except (OSError, KeyError, ValueError, TypeError) as e:
+            return input_error(f"unreadable --c2s-anchor: {e}")
+    if not isinstance(req, dict) or (a.requirements and type(req.get("sc")) is not bool):
+        return input_error("requirements must contain a boolean sc flag")
+    if (req.get("sc") and "sc" not in key) or (a.c2s_url and not req.get("sc")):
+        return input_error("single-cell grading needs sc: true in requirements and an sc answer key")
+    if a.c2s_url:
+        from run import loopback_url
+        if not loopback_url(a.c2s_url, plain_http=True):
+            return input_error("--c2s-url must be a plain-HTTP loopback URL without credentials, query or fragment")
     metrics, problems = grade(repo, key)
     sc_required = bool(req.get("sc")) and "sc" in key
     metrics["sc_required"] = sc_required
@@ -443,7 +620,7 @@ def main(argv=None) -> int:
         shutil.rmtree(scratch, ignore_errors=True)
         scratch.mkdir(parents=True)
         try:
-            sm, sfails, snotes = grade_sc(repo, key, scratch, a.c2s_url)
+            sm, sfails, snotes = grade_sc(repo, key, scratch, a.c2s_url, anchor)
         finally:
             shutil.rmtree(scratch, ignore_errors=True)
         metrics.update(sm)
@@ -451,11 +628,20 @@ def main(argv=None) -> int:
         problems += sfails + [f"note: {n}" for n in snotes]
     else:
         metrics["sc_ok"] = True
+        # No single-cell service yet: no model traffic, nothing to disagree. Same convention as sc_ok.
+        metrics["c2s_euler_discrepancy"] = metrics["c2s_invalid_token_rate"] = 0.0
+    problems += stress_gate(metrics, key, sc_required)
+    kl = metrics.get("gguf_anchor_kl")
+    if isinstance(kl, float) and kl > lsg.MAX_GGUF_KL:
+        metrics.setdefault("observer_signals", []).append(
+            {"type": "c2s_gguf_quant_drift", "severity": "medium", "gguf_kl_div": kl,
+             "action": "check anchor comparability and decoding before changing quantisation"})
     failures = [p for p in problems if not p.startswith("note: ")]
     # Factory metric protocol: thresholds in factory.yaml read these lines.
     # They precede the JSON line, which callers parse as the LAST line.
     for k in ("recall", "precision", "n_called", "sc_correct", "sc_wrong", "sc_isg_recall", "sc_false_calls",
-              "live_correct", "live_wrong"):
+              "live_correct", "live_wrong", "lagarias_min_gap", "off_line_exponent", "min_criterion_margin",
+              "c2s_euler_discrepancy", "c2s_invalid_token_rate", "gguf_anchor_kl"):
         if isinstance(metrics.get(k), (int, float)) and not isinstance(metrics.get(k), bool):
             print(f"TOKN_METRIC {k}={metrics[k]}")
     for k in ("rin_filtered", "strandedness_detected", "confounded_refused", "bh_applied",

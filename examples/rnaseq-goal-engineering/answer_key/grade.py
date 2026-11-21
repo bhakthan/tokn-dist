@@ -9,6 +9,12 @@ Usage:
 
 Thresholds below MUST match case/TASK.md "Acceptance criteria".
 Exit status 0 = PASS, 1 = FAIL, 2 = unreadable input.
+
+Besides PASS/FAIL it prints each numeric criterion's relative margin,
+(observed - bound) / bound for a floor and (bound - observed) / bound for a
+ceiling. A negative margin fails; 0 <= margin < 0.05 is a NEAR MISS: it passes,
+but one more design like it could fail (the Lagarias-style relative gap; see
+checks/lagarias_stress_gate.py). The margins never change the exit status.
 """
 import argparse
 import math
@@ -25,6 +31,7 @@ MIN_LFC_CORR = 0.90         # Pearson r on true-DE genes that have a finite LFC
 MIN_CALLS = 20              # guards against an empty / degenerate call set
 MAX_LOWCOUNT_TESTED = 0.25  # of genes with mean raw count < 1, max share given a finite padj
 MIN_COVERAGE = 0.95         # share of true-DE genes that must appear in the table (tested)
+NEAR_MISS = 0.05            # relative margin below which a passing criterion is flagged
 
 
 def num(x):
@@ -71,9 +78,16 @@ def main():
         return 2
 
     checks = []  # (name, ok, detail)
+    margins = []  # (criterion, relative margin)
 
     def chk(name, ok, detail):
         checks.append((name, bool(ok), detail))
+
+    def margin(name, observed, bound, ceiling=False):
+        if observed is None or (isinstance(observed, float) and not math.isfinite(observed)):
+            margins.append((name, -1.0))
+        else:
+            margins.append((name, ((bound - observed) if ceiling else (observed - bound)) / bound))
 
     # ---- schema / integrity ------------------------------------------------
     missing = [c for c in REQUIRED_COLS if c not in hdr]
@@ -108,7 +122,7 @@ def main():
     tp = len(calls & de)
     n_calls = len(calls)
     precision = tp / n_calls if n_calls else 0.0
-    fdr = 1 - precision if n_calls else float("nan")
+    fdr = (n_calls - tp) / n_calls if n_calls else float("nan")
     recall = tp / len(de)
     tested_de = [g for g in de if g in res and not math.isnan(res[g][2])]
     coverage = len(tested_de) / len(de)
@@ -122,6 +136,12 @@ def main():
     chk(f"recall >= {MIN_RECALL}", recall >= MIN_RECALL, f"recall={recall:.3f} ({tp}/{len(de)})")
     chk(f"true-DE coverage (finite padj) >= {MIN_COVERAGE}", coverage >= MIN_COVERAGE,
         f"coverage={coverage:.3f}")
+    margin("calls", n_calls, MIN_CALLS)
+    margin("precision", precision, MIN_PRECISION)
+    margin("empirical FDR", fdr, MAX_FDR, ceiling=True)
+    margin("recall", recall, MIN_RECALL)
+    margin("coverage", coverage, MIN_COVERAGE)
+    margin("log2FC r", r_lfc, MIN_LFC_CORR)
     chk(f"log2FC Pearson r on true DE >= {MIN_LFC_CORR}",
         (not math.isnan(r_lfc)) and r_lfc >= MIN_LFC_CORR,
         f"r={r_lfc:.3f}, sign agreement={sign_ok:.3f}, n={len(pairs)}")
@@ -136,6 +156,7 @@ def main():
                 lowset.append(r[0])
         tested_low = sum(1 for g in lowset if g in res and not math.isnan(res[g][2]))
         share = tested_low / len(lowset) if lowset else 0.0
+        margin("low-count share", share, MAX_LOWCOUNT_TESTED, ceiling=True)
         chk(f"filtering: <= {MAX_LOWCOUNT_TESTED:.0%} of genes with mean raw count < 1 receive a padj",
             share <= MAX_LOWCOUNT_TESTED, f"{tested_low}/{len(lowset)} = {share:.3f}")
     except Exception as e:  # noqa: BLE001
@@ -147,18 +168,26 @@ def main():
             txt = open(a.report, encoding="utf-8").read()
             has_qc = re.search(r"^\s*#+\s*.*\bQC\b", txt, re.I | re.M) is not None
             chk("report: has a QC section heading", has_qc, "found" if has_qc else "no heading containing 'QC'")
+            margin("report words", len(txt.split()), 150)
             chk("report: non-trivial length (>= 150 words)", len(txt.split()) >= 150,
                 f"words={len(txt.split())}")
         except Exception as e:  # noqa: BLE001
             chk("report: readable", False, str(e))
 
-    return finish(checks)
+    return finish(checks, margins)
 
 
-def finish(checks):
+def finish(checks, margins=()):
     print("== Grading ==")
     for name, ok, detail in checks:
         print(f"[{'ok' if ok else 'XX'}] {name}: {detail}")
+    if margins:
+        print("== Relative margins (report-only) ==")
+        for name, m in margins:
+            tag = "XX" if m < 0 else ("~~ NEAR MISS" if m < NEAR_MISS else "ok")
+            print(f"[{tag}] {name}: {m:+.3f}")
+        name, m = min(margins, key=lambda x: x[1])
+        print(f"min criterion margin: {m:+.3f} ({name})")
     allok = all(ok for _, ok, _ in checks)
     print("RESULT: " + ("PASS" if allok else "FAIL"))
     return 0 if allok else 1

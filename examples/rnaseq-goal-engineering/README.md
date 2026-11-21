@@ -199,13 +199,67 @@ The shipped case uses seed 20240607 with 3 replicates per cell (12 samples). The
 16-sample instance in the table came from a different seed, so `make_case.py` with
 the defaults reproduces the 12-sample case, not that instance.
 
+## Stress gaps: turn lessons into a pre-review check
+
+Step 3 grades against hidden truth and reports numerical margins.
+`checks/lagarias_stress_gate.py` adds a different, truth-free check. It borrows a framing from Lagarias's reformulation of the Riemann hypothesis,
+where the margin of an inequality at each n, not just its sign, says how close a case
+is to a counterexample. It's an analogy for gate design; nothing here is derived from
+the Riemann hypothesis.
+
+The check reads only the run's outputs and the case files, and scores each lesson as a
+relative gap (binary checks, including zero invalid tokens, use +1/−1). A gated gap of 0 or less is a counterexample and the check fails. A gap between
+0 and 0.05 is a near miss: the check passes but prints a warning for the reviewer.
+
+| Check | Lesson category | What it catches |
+|---|---|---|
+| `bh_consistent` | (integrity) | `padj` isn't Benjamini–Hochberg of `pvalue` |
+| `reference_stated`, `residual_df` | `calibration` | no recognised test name or matching residual df in the report; this checks wording, not the p-value calculation |
+| `lfc_agreement_r` | `off-line-zero` | advisory: correlation with batch-adjusted log2(CPM+1) OLS on tested genes with mean count ≥ 10. Different normalisation, shrinkage or count models can disagree without batch leakage |
+| `c2s_invalid_token_rate`, `c2s_euler_discrepancy` | `analytic-continuation` | only with `--c2s-audit`: unknown gene tokens or labels marked unverified by the supplied audit (not independently recomputed); use only with a matching gene index |
+
+Record the check command on a new scope. Run it from this example directory before review; recording `--check` alone is not evidence that it ran:
+
+```bash
+tokn goal scope create bulk-rnaseq-de-batch-stress \
+  --task-type "bulk RNA-seq differential expression between two conditions with a batch covariate, starting from raw integer count matrices" \
+  --goal "produce a per-gene results table and a QC report that meet every acceptance criterion in the case brief, with every stress gap positive" \
+  --check "python checks/lagarias_stress_gate.py --results work/solution/results.tsv --counts work/case/counts.tsv"
+```
+
+Record lessons about the task type, not one instance. The scope linter checks task and goal text, not the statistical validity of a lesson:
+
+```bash
+tokn goal scope lesson add bulk-rnaseq-de-batch-stress --category calibration \
+  --text "For a small-sample linear model, use a Student t reference with the residual degrees of freedom. For a count-model likelihood-ratio test, document its reference distribution and limitations."
+tokn goal scope lesson add bulk-rnaseq-de-batch-stress --category off-line-zero \
+  --text "Fit expression ~ condition + batch. If error stops shrinking, investigate batch imbalance and other error floors; check log2FC against an independent batch-adjusted fit."
+tokn goal scope lesson add bulk-rnaseq-de-batch-stress --category analytic-continuation \
+  --text "When a model labels cells, keep a label only if the cell's own marker genes support it, and reject gene tokens outside the panel."
+```
+
+Run the check by hand at any time:
+
+```bash
+python checks/lagarias_stress_gate.py --results work/solution/results.tsv --counts work/case/counts.tsv
+```
+
+**Observed** on the shipped 12-sample case, with two hand-built solutions that use the
+same batch-adjusted linear model: the one that reports "Student t with 9 residual df"
+passes (log2FC r = 1.0, advisory margin 0.11). With `--require-lfc-agreement`, that margin is also the minimum gated gap. Pearson correlation alone does not validate log units or offsets. The one that uses a normal reference
+fails on `reference_stated` and `residual_df`, before any reviewer or answer key is
+involved. The answer-key grader now also prints each criterion's relative margin and
+the minimum, flagging near misses below 0.05. The margins never change its verdict.
+
+These paths assume the layout from step 2. Keep `checks/` outside the solver's `work/` directory and retain the check output with the review. The check cannot establish whether the report describes the analysis that actually ran.
+
 ## What to try next
 
 - Generate more seeds and replicate counts. Check whether the lesson holds across
   designs, not just on the one you corrected.
-- Add a `--check` command to the scope (`tokn goal scope create ... --check "<cmd>"`)
-  to run a script on each run before the reviewer sees it. Keep the answer key out of
-  the solver's working tree when you do this.
+- Write your own `--check` for another lesson, in the style of
+  `checks/lagarias_stress_gate.py`. Keep the answer key out of the solver's working
+  tree when you do this.
 - Write a second lesson in another category and see how the scope's history
   changes.
 

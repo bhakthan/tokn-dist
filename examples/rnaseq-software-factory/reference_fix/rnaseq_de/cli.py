@@ -20,7 +20,7 @@ def run(counts_path, opposite_path, samples_path, out_dir, min_rin=qc.MIN_RIN):
     qc.check_confounding(kept)
 
     counts = counts[list(kept.index)]
-    results = de.welch_de(normalize.log_cpm(counts), kept)
+    results = de.batch_adjusted_de(normalize.log_cpm(counts), kept)
     summary = {
         "excluded_samples": sorted(excluded),
         "strandedness": dict(sorted(calls.items())),

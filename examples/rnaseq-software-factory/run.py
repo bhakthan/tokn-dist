@@ -4,6 +4,7 @@
     python run.py --profile offline                 # no models: fixture + grader self-test
     python run.py --profile trio   [--approve-prod]  # Opus + gpt-6-astra + decision model
     python run.py --profile hybrid [--approve-prod]  # + HF coder, local ollama (data_boundary: local)
+    python run.py --profile c2s-hybrid                # hybrid roles plus a required local C2S showcase
 
 Every run writes to out/<timestamp>/ (gitignored): seed/ (the candidate git repo,
 with the factory store in seed/.nospace/factory), answer_key.json and intake/
@@ -86,8 +87,15 @@ AZ_HINT = hint("winget install Microsoft.AzureCLI", "brew install azure-cli",
                "curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash") + "; then `az login`"
 OLLAMA_HINT = hint("winget install Ollama.Ollama", "brew install ollama",
                    "curl -fsSL https://ollama.com/install.sh | sh") + "; then start it (`ollama serve`)"
-TOKN_HINT = ("download tokn v0.3.115+ from https://github.com/bhakthan/tokn-dist/releases/latest "
-             "and put it on PATH (or pass --tokn / set TOKN_BIN)")
+_ARTIFACTS = "https://github.com/bhakthan/tokn-dist/releases/latest/download"
+_ARCH = "arm64" if platform.machine().lower() in ("arm64", "aarch64") else "amd64"
+TOKN_HINT = "From the example directory: " + hint(
+    f"Invoke-WebRequest {_ARTIFACTS}/tokn_windows_amd64.exe -OutFile .\\tokn.exe",
+    f"curl -fL {_ARTIFACTS}/tokn_darwin_{_ARCH} -o ./tokn && chmod +x ./tokn",
+    f"curl -fL {_ARTIFACTS}/tokn_linux_{_ARCH} -o ./tokn && chmod +x ./tokn",
+) + ". Verify the release checksum as in the distribution README before retrying."
+PYTHON_HINT = hint("winget install Python.Python.3.12", "brew install python@3.12",
+                   "sudo apt-get update && sudo apt-get install python3 python3-pip (Debian/Ubuntu with Python 3.10+)")
 
 
 # ── tokn discovery ──────────────────────────────────────────────────────────
@@ -180,7 +188,33 @@ DECISION_REQS = {
 }
 
 
-def preflight(profile: str, tokn_arg: str | None) -> dict:
+def loopback_url(url, *, plain_http=False):
+    import ipaddress
+    from urllib.parse import urlsplit
+    try:
+        u = urlsplit(url)
+        return (u.scheme in (("http",) if plain_http else ("http", "https"))
+                and (u.hostname == "localhost" or ipaddress.ip_address(u.hostname or "").is_loopback)
+                and u.username is None and not u.query and not u.fragment and (u.port is None or u.port > 0))
+    except ValueError:
+        return False
+
+
+def healthy(url):
+    from http.client import HTTPConnection, HTTPSConnection, HTTPException
+    from urllib.parse import urlsplit
+    u = urlsplit(url)
+    conn = (HTTPSConnection if u.scheme == "https" else HTTPConnection)(u.hostname, u.port, timeout=3)
+    try:
+        conn.request("GET", u.path.rstrip("/") + "/health")
+        return conn.getresponse().status == 200
+    except (OSError, HTTPException):
+        return False
+    finally:
+        conn.close()
+
+
+def preflight(profile: str, tokn_arg: str | None, c2s_url: str = "") -> dict:
     """Collects every problem, prints them all with install commands, exits 2 if any."""
     problems: list[str] = []
     ctx: dict = {}
@@ -188,9 +222,9 @@ def preflight(profile: str, tokn_arg: str | None) -> dict:
     missing_py = [p for p in PY_PKGS if importlib.util.find_spec(p) is None]
     if missing_py:
         problems.append(f"Python packages missing: {', '.join(missing_py)} (fixture generator, pipeline and grader). "
-                        f"Install: \"{sys.executable}\" -m pip install {' '.join(missing_py)}")
+                        f"Install: python -m pip install {' '.join(missing_py)}")
     if sys.version_info < (3, 10):
-        problems.append(f"Python >= 3.10 required (found {platform.python_version()}).")
+        problems.append(f"Python >= 3.10 is needed for the runner and grader (found {platform.python_version()}). Install: {PYTHON_HINT}")
 
     tokn, notes = find_tokn(tokn_arg)
     ctx["tokn"] = tokn
@@ -204,18 +238,18 @@ def preflight(profile: str, tokn_arg: str | None) -> dict:
             problems.append(f"git is missing (the candidate is a git repo; every role works in a git worktree). Install: {GIT_HINT}")
         if importlib.util.find_spec("yaml") is None:
             problems.append(f"PyYAML missing (run.py reads the rendered models section to grade model attribution). "
-                            f"Install: \"{sys.executable}\" -m pip install pyyaml")
+                            f"Install: python -m pip install pyyaml")
 
         ant = anthropic_creds()
         ctx["anthropic"] = ant
         if not ant:
-            problems.append("Anthropic credentials missing (architect/implementer roles, Opus). Set ANTHROPIC_API_KEY "
+            problems.append("Anthropic credentials missing (frontier roles, including architect). Set ANTHROPIC_API_KEY "
                             "(+ANTHROPIC_BASE_URL for a gateway), in the shell or "
                             f"{HERE / '.env'} (see profiles/{profile}.env.example).")
 
         endpoint = os.environ.get("AZURE_OPENAI_ENDPOINT", "")
         if not endpoint:
-            problems.append("AZURE_OPENAI_ENDPOINT is not set (gpt-6-astra: product/reviewer/test/release roles).")
+            problems.append("AZURE_OPENAI_ENDPOINT is not set (Azure-hosted factory roles, including product and reviewer).")
         if os.environ.get("AZURE_OPENAI_API_KEY"):
             ctx["azure_auth"] = {"AZURE_OPENAI_API_KEY": os.environ["AZURE_OPENAI_API_KEY"]}
         else:
@@ -244,7 +278,35 @@ def preflight(profile: str, tokn_arg: str | None) -> dict:
             if entra and backend == "microsoft" and not os.environ.get("DECISION_API_KEY") and az_token() is None:
                 problems.append("Decision backend 'microsoft' needs DECISION_API_KEY or a signed-in Azure CLI (Entra).")
 
-        if profile == "hybrid":
+        if os.environ.get("FACTORY_C2S_ANCHOR") and not (c2s_url or os.environ.get("FACTORY_C2S_GGUF")):
+            problems.append("FACTORY_C2S_ANCHOR requires a real model: set FACTORY_C2S_GGUF or pass --c2s-url.")
+        if profile == "c2s-hybrid" or c2s_url or os.environ.get("FACTORY_C2S_GGUF"):
+            # The real C2S model is part of this profile, not an optional showcase.
+            if not c2s_url:
+                gg = os.environ.get("FACTORY_C2S_GGUF", "").strip()
+                exe = shutil.which(os.environ.get("FACTORY_LLAMA_SERVER", "").strip() or "llama-server")
+                missing = [name for name, ok in (("llama-server", exe), ("FACTORY_C2S_GGUF file", gg and Path(gg).is_file())) if not ok]
+                if missing:
+                    problems.append(f"Local C2S inference needs {', '.join(missing)}. {LLAMA_HINT}")
+                port = os.environ.get("FACTORY_C2S_PORT", "8091")
+                if not port.isascii() or not port.isdecimal() or not 1 <= int(port) <= 65535:
+                    problems.append("FACTORY_C2S_PORT must be a TCP port from 1 to 65535 (default 8091).")
+            elif not loopback_url(c2s_url, plain_http=True):
+                problems.append("--c2s-url must be a plain-HTTP loopback URL without credentials, query or fragment.")
+            elif not healthy(c2s_url):
+                problems.append("--c2s-url is not serving /health (HTTP 200). Start the C2S llama-server or supply its GGUF. " + LLAMA_HINT)
+            an = os.environ.get("FACTORY_C2S_ANCHOR", "").strip()
+            if an:
+                try:
+                    data = json.loads(Path(an).read_text(encoding="utf-8"))
+                    if not isinstance(data, dict) or not isinstance(data.get("anchor_cohort"), str) or len(data["anchor_cohort"]) != 64:
+                        raise ValueError("missing cohort fingerprint; regenerate the reference showcase")
+                    if not missing_py:
+                        from grade import _distribution
+                        _distribution(data["label_dist"])
+                except (OSError, ValueError, KeyError, TypeError) as exc:
+                    problems.append(f"FACTORY_C2S_ANCHOR must be a matching reference c2s-showcase.json: {exc}")
+        if profile in ("hybrid", "c2s-hybrid"):
             if not os.environ.get("HF_TOKEN"):
                 problems.append("HF_TOKEN is not set (implementer runs an open-weights coder on Hugging Face). "
                                 "Create one at https://huggingface.co/settings/tokens and export HF_TOKEN.")
@@ -259,13 +321,15 @@ def preflight(profile: str, tokn_arg: str | None) -> dict:
             elif not any(n == want or n == f"{want}:latest" for n in names):
                 problems.append(f"ollama model {want!r} is not pulled (have: {', '.join(names) or 'none'}). Run: ollama pull {want}")
             ob = os.environ.get("OLLAMA_BASE_URL", "")
-            if ob and not any(h in ob for h in ("localhost", "127.0.0.1", "[::1]")):
-                problems.append(f"OLLAMA_BASE_URL={ob} is not loopback; data_boundary: local roles require a loopback endpoint.")
+            if ob and not loopback_url(ob):
+                problems.append("OLLAMA_BASE_URL is not loopback; data_boundary: local roles require a loopback endpoint.")
 
     if problems:
+        print("Requirements: Python 3.10+, numpy, pandas, scipy and pytest. Live profiles add git, tokn factory, PyYAML, Anthropic and Azure credentials and a configured decision backend. Hybrid also needs HF_TOKEN and local Ollama with its model. c2s-hybrid needs a local C2S server or llama-server and a C2S GGUF.", file=sys.stderr)
         print(f"Preflight failed for --profile {profile}; nothing was run. Fix ALL of these, then retry:", file=sys.stderr)
         for p in problems:
             print(f"  - {p}", file=sys.stderr)
+        print(f"Retry from this directory: python run.py --profile {profile} (keep your --tokn/--c2s-url options).", file=sys.stderr)
         sys.exit(2)
     return ctx
 
@@ -411,6 +475,21 @@ def jparse(text: str):
 
 # ── offline profile ─────────────────────────────────────────────────────────
 
+# Negative control for the off-line-exponent check: the previous reference's
+# batch-blind Welch test, swapped in under the batch-adjusted name.
+WELCH_CONTROL = '''
+
+def batch_adjusted_de(log_expr, samples, condition="condition", case="treated", control="control", batch="batch"):
+    """NEGATIVE CONTROL: Welch t-test that ignores batch."""
+    a = log_expr[samples.index[samples[condition] == case]].to_numpy()
+    b = log_expr[samples.index[samples[condition] == control]].to_numpy()
+    _, p = stats.ttest_ind(a, b, axis=1, equal_var=False)
+    res = pd.DataFrame({"gene": log_expr.index, "log2fc": a.mean(axis=1) - b.mean(axis=1),
+                        "pvalue": np.nan_to_num(p, nan=1.0)})
+    res["padj"] = bh_fdr(res["pvalue"].to_numpy())
+    return res.sort_values("pvalue", kind="mergesort").reset_index(drop=True)
+'''
+
 def run_offline(args, ctx, run_dir: Path) -> int:
     results: dict = {"profile": "offline", "checks": {}}
     ok = True
@@ -429,6 +508,10 @@ def run_offline(args, ctx, run_dir: Path) -> int:
                        "intake": tree_hash(d / "intake")})
     check("make_case deterministic", hashes[0] == hashes[1],
           f"seed {args.seed}: {len(hashes[0]['seed'])} files + key + intake identical across two runs")
+    if args.seed == 7:
+        protected = json.loads((run_dir / "det1" / "answer_key.json").read_text(encoding="utf-8"))["data_sha256"]
+        check("seed 7 protected bytes match baseline", hashlib.sha256(json.dumps(protected, sort_keys=True).encode()).hexdigest()
+              == "06f5b0330350b95af39bb896044b168d7ff73657663751a8b1bf729776a37bb2", "data and golden files")
     shutil.rmtree(run_dir / "det2", ignore_errors=True)
     seed, key = run_dir / "det1" / "seed", run_dir / "det1" / "answer_key.json"
 
@@ -466,6 +549,26 @@ def run_offline(args, ctx, run_dir: Path) -> int:
     check("grader PASSES the hardened single-cell reference", rc == 0 and g4.get("sc_ok") is True,
           {k: g4.get(k) for k in sc_keys})
 
+    # RH/Lagarias stress gate: the reference must hold on designs the shipped case
+    # does not contain, and a batch-blind test that passes the shipped case must not.
+    rh_keys = ("lagarias_min_gap", "lagarias_worst_case", "off_line_exponent", "min_criterion_margin",
+               "min_criterion_margin_at", "observer_signals")
+    check("stress gate FAILS on seed", g.get("lagarias_min_gap", 1) <= 0 and "lagarias_worst_case" in g, {k: g.get(k) for k in rh_keys})
+    check("stress gate PASSES seed+reference_fix outside the near-miss band",
+          (g2.get("lagarias_min_gap") or 0) >= 0.05 and g2.get("off_line_exponent", 9) <= 0.55 and g2.get("min_criterion_margin", -1) >= 0.05,
+          {k: g2.get(k) for k in rh_keys + ("scaling_trace",)})
+    welch = run_dir / "welch-control"
+    shutil.copytree(fixed, welch)
+    de = welch / "rnaseq_de" / "de.py"
+    de.write_text(de.read_text(encoding="utf-8") + WELCH_CONTROL, encoding="utf-8")
+    rc, g5 = grade(welch, key)
+    check("off-line exponent FAILS a batch-blind Welch that passes the shipped case",
+          rc == 1 and g5.get("recall", 0) >= 0.9 and g5.get("precision", 0) >= 0.9
+          and g5.get("lagarias_min_gap", -1) > 0 and g5.get("off_line_exponent", 0) > 0.55
+          and [f.split(":")[0] for f in g5.get("failures", []) if not f.startswith("note:")] == ["off-line zero"],
+          {k: g5.get(k) for k in ("recall", "precision") + rh_keys})
+    shutil.rmtree(welch, ignore_errors=True)
+
     tokn = ctx.get("tokn")
     if tokn is None:
         note = "; ".join(ctx.get("tokn_notes") or []) or "no candidate found"
@@ -475,7 +578,7 @@ def run_offline(args, ctx, run_dir: Path) -> int:
         log("SKIP  spec validation: git missing")
         results["checks"]["spec validate"] = {"ok": None, "detail": "skipped: git missing"}
     else:
-        for prof in ("trio", "hybrid"):
+        for prof in ("trio", "hybrid", "c2s-hybrid"):
             repo = run_dir / f"spec-{prof}"
             shutil.copytree(seed, repo)
             spec, _ = render_spec(prof, run_dir, tokn, key)
@@ -514,7 +617,7 @@ def write_profiles(envdir: Path, profile: str, ctx: dict) -> None:
         if os.environ.get(k):
             dec[k] = os.environ[k]
     put("decision", dec)
-    if profile == "hybrid":
+    if profile in ("hybrid", "c2s-hybrid"):
         put("hf", {"HF_TOKEN": os.environ.get("HF_TOKEN", ""), "HF_BASE_URL": os.environ.get("HF_BASE_URL", "")})
         put("ollama-local", {"OLLAMA_BASE_URL": os.environ.get("OLLAMA_BASE_URL", "")})
 
@@ -533,12 +636,11 @@ def append_feature_request(intake: Path) -> None:
         f.write(pending)
 
 
-LLAMA_HINT = ("llama.cpp's llama-server is needed to serve the C2S-Scale GGUF locally.\n"
-              "  Windows: winget install ggml.llamacpp\n  macOS:   brew install llama.cpp\n"
-              "  Linux:   download a release from https://github.com/ggml-org/llama.cpp/releases\n"
-              "Model (pick one, ~1.6 GB / ~10 GB), e.g. with the Hugging Face CLI (pip install -U huggingface_hub):\n"
-              "  hf download mradermacher/C2S-Scale-Gemma-2-2B-GGUF C2S-Scale-Gemma-2-2B.Q4_K_M.gguf --local-dir <dir>\n"
-              "Then set FACTORY_C2S_GGUF=<dir>\\C2S-Scale-Gemma-2-2B.Q4_K_M.gguf, or pass --c2s-url for a server you run.")
+LLAMA_HINT = ("Install llama-server: " + hint("winget install ggml.llamacpp", "brew install llama.cpp",
+              "sudo apt-get install -y git cmake build-essential libcurl4-openssl-dev && git clone https://github.com/ggml-org/llama.cpp && cmake -S llama.cpp -B llama.cpp/build && cmake --build llama.cpp/build --target llama-server -j2 && export FACTORY_LLAMA_SERVER=\"$PWD/llama.cpp/build/bin/llama-server\"")
+              + "\nGet the model: python -m pip install -U huggingface_hub; "
+              "hf download mradermacher/C2S-Scale-Gemma-2-2B-GGUF C2S-Scale-Gemma-2-2B.Q4_K_M.gguf --local-dir ."
+              "\nSet FACTORY_C2S_GGUF=C2S-Scale-Gemma-2-2B.Q4_K_M.gguf in .env and retry, or pass --c2s-url for a running local server.")
 
 
 class C2SServer:
@@ -550,7 +652,7 @@ class C2SServer:
     def __enter__(self):
         if self.url or not self.gguf:
             return self
-        exe = os.environ.get("FACTORY_LLAMA_SERVER", "").strip() or shutil.which("llama-server")
+        exe = shutil.which(os.environ.get("FACTORY_LLAMA_SERVER", "").strip() or "llama-server")
         gg = Path(self.gguf)
         if not exe or not gg.is_file():
             missing = [n for n, ok in (("llama-server", exe), (f"GGUF {gg}", gg.is_file())) if not ok]
@@ -569,17 +671,14 @@ class C2SServer:
         self.proc = subprocess.Popen([exe, "-m", str(gg), "--host", "127.0.0.1", "--port", str(self.port),
                                       "-c", "8192", "--parallel", "2"],
                                      stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        import urllib.request
-        for _ in range(180):
+        deadline = time.monotonic() + 180
+        while time.monotonic() < deadline:
             if self.proc.poll() is not None:
                 raise SystemExit(f"llama-server exited with {self.proc.returncode} while loading {gg.name}")
-            try:
-                with urllib.request.urlopen(self.url + "/health", timeout=2) as r:
-                    if r.status == 200:
-                        return self
-            except OSError:
-                pass
+            if healthy(self.url):
+                return self
             time.sleep(1)
+        self.__exit__()
         raise SystemExit("llama-server did not become healthy within 180 s")
 
     def __exit__(self, *exc):
@@ -589,27 +688,57 @@ class C2SServer:
                 self.proc.wait(timeout=30)
             except subprocess.TimeoutExpired:
                 self.proc.kill()
+                self.proc.wait()
 
 
-def c2s_showcase(args, repo: Path, key: Path, requirements: Path, out: Path) -> dict | None:
+def c2s_showcase(args, repo: Path, key: Path, requirements: Path, out: Path, intake: Path | None = None) -> dict | None:
     """Grade the shipped service once against the REAL C2S model (report-only evidence)."""
     if not (args.c2s_url or os.environ.get("FACTORY_C2S_GGUF", "").strip()):
         log("C2S showcase skipped: set FACTORY_C2S_GGUF or pass --c2s-url to run the shipped service on the real model")
         return None
+    anchor = os.environ.get("FACTORY_C2S_ANCHOR", "").strip()
+    from verify import deployed_tree, grade_tree
+    deployed = deployed_tree(out.parent / "targets", "prod")
+    if deployed is None:
+        log("C2S showcase not run: no production deployment to measure")
+        res = {"ok": False, "error": "no production deployment"}
+        out.write_text(json.dumps(res) + "\n", encoding="utf-8")
+        return res
     with C2SServer(args.c2s_url, os.environ.get("FACTORY_C2S_GGUF", "").strip(),
-                   int(os.environ.get("FACTORY_C2S_PORT", "8091"))) as srv:
-        r = subprocess.run([sys.executable, str(HERE / "grade.py"), "--key", str(key), "--repo", str(repo),
-                            "--requirements", str(requirements), "--c2s-url", srv.url],
-                           capture_output=True, text=True, timeout=7200)
-    res = jparse(r.stdout) or {"error": (r.stdout + r.stderr)[-600:]}
+                   8091 if args.c2s_url else int(os.environ.get("FACTORY_C2S_PORT", "8091"))) as srv:
+        res = grade_tree(deployed, repo, key, out.parent / "_showcase_work", requirements,
+                         live_url=srv.url, anchor=anchor)
+    res["deployment"] = deployed.name
     res["model_sha256"] = srv.sha256 or "external server (not hashed)"
     res["model"] = Path(srv.gguf).name if srv.gguf and not args.c2s_url else args.c2s_url
     lw = res.get("live_wrong")
-    res["ok"] = "error" not in res and isinstance(lw, (int, float)) and lw <= 0.05
+    res["ok"] = res.get("pass") is True and isinstance(lw, (int, float)) and lw <= 0.05
     res["seconds"] = res.get("live_seconds")
+    # A reference-quant run's file doubles as the anchor for later runs: it carries label_dist.
+    if isinstance(res.get("live_label_dist"), dict):
+        res["label_dist"] = res["live_label_dist"]
     out.write_text(json.dumps(res, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     log(f"C2S showcase: live_correct={res.get('live_correct')} live_wrong={res.get('live_wrong')} "
-        f"live_unassigned={res.get('live_unassigned')} in {res.get('live_seconds')} s -> {out}")
+        f"live_unassigned={res.get('live_unassigned')} gguf_anchor_kl={res.get('gguf_anchor_kl')} "
+        f"in {res.get('live_seconds')} s -> {out}")
+    drift = [s for s in res.get("observer_signals") or [] if s.get("type") == "c2s_gguf_quant_drift"]
+    if drift and intake is not None:
+        # GENERATED incident: the factory's Observer drafts the next work item from it on the next tick.
+        event_key = json.dumps([res["deployment"], res["anchor_cohort"], res["model_sha256"],
+                                res["label_dist"], drift[0]["gguf_kl_div"]], sort_keys=True)
+        incident_id = "INC-C2S-DRIFT-" + hashlib.sha256(event_key.encode()).hexdigest()[:16]
+        inc = {"kind": "incident", "id": incident_id, "severity": "sev3",
+               "at": datetime.now().astimezone().isoformat(timespec="seconds"),
+               "title": "[generated] C2S-Scale GGUF quantisation drift against the anchor run",
+               "body": (f"GENERATED INCIDENT (synthetic data). Label-distribution KL {drift[0].get('gguf_kl_div')} of "
+                        f"{res['model']} vs the anchor run exceeds 0.035. Check the model family, prompt, cells and decoding settings before attributing drift to quantisation."),
+               "attrs": {"generated": "true", "service": "rnaseq-sc", "signal": "c2s_gguf_quant_drift"}}
+        incident_log = intake / "incidents.jsonl"
+        if incident_log.exists() and any(json.loads(line).get("id") == inc["id"] for line in incident_log.read_text(encoding="utf-8").splitlines() if line.strip()):
+            return res
+        with incident_log.open("a", encoding="utf-8") as f:
+            f.write(json.dumps(inc, sort_keys=True) + "\n")
+        log(f"quant drift: appended GENERATED incident {inc['id']} to {intake / 'incidents.jsonl'} for the next run")
     return res
 
 
@@ -762,19 +891,22 @@ def run_live(args, ctx, run_dir: Path) -> int:
     log(f"stopped: {summary['stopped']}")
     vargs = []
     if summary["feature_appended"]:
-        c2s_showcase(args, seed, key, intake / "requirements.json", run_dir / "c2s-showcase.json")
+        c2s_showcase(args, seed, key, intake / "requirements.json", run_dir / "c2s-showcase.json", intake)
         vargs = ["--requirements", str(intake / "requirements.json"), "--showcase", str(run_dir / "c2s-showcase.json")]
     vr = subprocess.run([sys.executable, str(HERE / "verify.py"), "--repo", str(seed), "--key", str(key),
                          "--bindings", str(run_dir / "bindings.json"), "--tokn", str(tokn),
                          "--targets", str(run_dir / "targets"), "--out", str(run_dir / "verify"), *vargs],
                         timeout=3600)
     log(f"artifacts: {run_dir}  (verify/REPORT.md)")
+    if args.profile == "c2s-hybrid" and not summary["feature_appended"]:
+        log("c2s-hybrid incomplete: no feature showcase yet; resume this run after resolving its pending gate")
+        return vr.returncode or 1
     return vr.returncode
 
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--profile", choices=["offline", "trio", "hybrid"], default="offline")
+    ap.add_argument("--profile", choices=["offline", "trio", "hybrid", "c2s-hybrid"], default="offline")
     ap.add_argument("--approve-prod", action="store_true",
                     help="approve the production release gate when it opens (logged loudly); default: stop there")
     ap.add_argument("--approve-blast-radius", action="store_true",
@@ -792,8 +924,10 @@ def main(argv=None) -> int:
                          "(default: launch one from $FACTORY_C2S_GGUF, or skip the showcase)")
     args = ap.parse_args(argv)
 
+    if args.no_feature and args.profile == "c2s-hybrid":
+        ap.error("--no-feature skips the C2S service required by c2s-hybrid; use hybrid instead")
     load_dotenv(HERE / ".env")
-    ctx = preflight(args.profile, args.tokn)
+    ctx = preflight(args.profile, args.tokn, args.c2s_url)
     if args.resume:
         run_dir = Path(args.resume).resolve()
         if not (run_dir / "seed" / "factory.yaml").is_file() or args.profile == "offline":

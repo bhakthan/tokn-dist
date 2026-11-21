@@ -122,24 +122,31 @@ def deployed_tree(targets: Path | None, env: str) -> Path | None:
     return d if d and (d / "rnaseq_de").is_dir() else None
 
 
-def grade_tree(code_root: Path, repo: Path, key: Path, work: Path, requirements: Path | None = None) -> dict:
+def grade_tree(code_root: Path, repo: Path, key: Path, work: Path, requirements: Path | None = None,
+               *, live_url: str = "", anchor: str = "") -> dict:
     """Grade code_root/rnaseq_de against repo's data/ and golden/ in a scratch copy."""
     shutil.rmtree(work, ignore_errors=True)
     work.mkdir(parents=True)
-    shutil.copytree(code_root / "rnaseq_de", work / "rnaseq_de", ignore=shutil.ignore_patterns("__pycache__"))
-    for d in ("data", "golden"):
-        shutil.copytree(repo / d, work / d)
-    cmd = [sys.executable, str(HERE / "grade.py"), "--key", str(key), "--repo", str(work)]
-    if requirements and requirements.is_file():
-        cmd += ["--requirements", str(requirements)]
-    p = subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
     try:
-        res = json.loads(p.stdout.strip().splitlines()[-1])
-    except (json.JSONDecodeError, IndexError):
-        res = {"pass": False, "failures": [f"grade.py produced no JSON (exit {p.returncode}): {p.stderr[-400:]}"]}
-    res["exit_code"] = p.returncode
-    shutil.rmtree(work, ignore_errors=True)
-    return res
+        shutil.copytree(code_root / "rnaseq_de", work / "rnaseq_de", ignore=shutil.ignore_patterns("__pycache__"))
+        for d in ("data", "golden"):
+            shutil.copytree(repo / d, work / d)
+        cmd = [sys.executable, str(HERE / "grade.py"), "--key", str(key), "--repo", str(work)]
+        if requirements and requirements.is_file():
+            cmd += ["--requirements", str(requirements)]
+        if live_url:
+            cmd += ["--c2s-url", live_url]
+        if anchor:
+            cmd += ["--c2s-anchor", anchor]
+        p = subprocess.run(cmd, capture_output=True, text=True, timeout=7200 if live_url else 1800)
+        try:
+            res = json.loads(p.stdout.strip().splitlines()[-1])
+        except (json.JSONDecodeError, IndexError):
+            res = {"pass": False, "failures": [f"grade.py produced no JSON (exit {p.returncode}): {p.stderr[-400:]}"]}
+        res["exit_code"] = p.returncode
+        return res
+    finally:
+        shutil.rmtree(work, ignore_errors=True)
 
 
 def main(argv=None) -> int:

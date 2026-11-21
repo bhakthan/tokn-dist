@@ -81,7 +81,7 @@ per-gene truth. All of the following must hold:
 | 1 | Schema: all five required columns present | required |
 | 2 | Integrity: every `gene_id` known and unique; `pvalue`, `padj` within [0, 1]; `padj >= pvalue` for every row | required |
 | 3 | Number of calls at `padj < 0.05` | >= 20 |
-| 4 | Precision of calls (true positives / calls) | >= 0.80 (i.e. empirical FDR <= 0.10) |
+| 4 | Precision of calls (true positives / calls) | >= 0.80, and empirical false discovery proportion <= 0.10 (the latter requires precision >= 0.90) |
 | 5 | Recall (true positives / all truly responsive genes) | >= 0.70 |
 | 6 | Coverage: share of truly responsive genes that receive a finite `padj` (i.e. were not filtered out) | >= 0.95 |
 | 7 | Pearson correlation of estimated vs true log2 fold change over truly responsive genes | >= 0.90 |

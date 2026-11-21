@@ -22,6 +22,8 @@ domain:
     - "samples with RIN < 6 are excluded before DE and listed in qc.json"
     - "library strandedness is inferred from sense vs opposite-strand counts, not trusted from the sample sheet"
     - "FDR uses Benjamini-Hochberg; calls need padj < 0.05 and |log2FC| >= 1"
+    - "DE models batch (expression ~ condition + batch); log2FC error must keep shrinking as N grows on a partially imbalanced design (off_line_exponent <= 0.55)"
+    - "Lagarias stress gate: on every stress tier (low replicates, batch imbalance, borderline RIN + mixed strandedness, high dropout) the empirical FDR stays inside the BH-implied bound; relative gap <= 0 is a counterexample and fails, gap < 0.05 is a near miss for a human"
     - "a design where condition is confounded with batch is refused (non-zero exit, no results)"
     - "subject_ref (patient-adjacent metadata) never appears in any output"
     - "data/ and golden/ are inputs and are never modified"
@@ -30,6 +32,7 @@ domain:
     - "a C2S label is accepted only if the versioned alias table maps it to the vocabulary AND marker evidence supports it; otherwise unassigned with a reason"
     - "an unreachable C2S endpoint or invalid completion fails closed: exit 4, no labels invented, nothing written"
     - "the C2S endpoint must be loopback http; cell data never leaves the host"
+    - "Euler-dual check: C2S labels and marker evidence are two independent views of the same cell; disagreement on QC-passing cells (c2s_euler_discrepancy) stays <= 0.25 and every gene token on the wire is in the locked gene index"
     - "cell-type composition is reported separately from expression; within-type DE uses donor pseudobulk with BH per cell type"
   acceptance_examples: golden/de_golden.tsv
 architecture:
@@ -42,29 +45,42 @@ pipeline:
   stages: [refine, design, implement, review, test, release]
   gates:
     review:
-      min_reviewer_score: 0.8
+      min_reviewer_score: 0.85
       decision:
         questions:
           # Framed so "true" is the unsafe answer: a missing or vague review must not read as a pass.
           - id: invariant_broken
             type: boolean
-            prompt: "According to the review, is any domain invariant broken by this change, OR is the evidence for any invariant the change touches missing (integer counts, RIN >= 6 filter, inferred strandedness, BH-FDR, confounding refusal, no subject_ref in outputs, inputs untouched; single-cell: QC before the model, no identifiers on the wire, alias + marker verification, fail closed, loopback-only endpoint, composition separate from pseudobulk DE)?"
+            prompt: "According to the review, is any domain invariant broken by this change, OR is the evidence for any invariant the change touches missing (integer counts, RIN >= 6 filter, inferred strandedness, BH-FDR, batch-adjusted DE that holds on the stress ladder, confounding refusal, no subject_ref in outputs, inputs untouched; single-cell: QC before the model, no identifiers on the wire, alias + marker verification, fail closed, loopback-only endpoint, composition separate from pseudobulk DE, C2S labels that agree with marker evidence)?"
         require: { invariant_broken: "false" }
-        min_confidence: 0.6
+        min_confidence: 0.85
     test:
       regression_tolerance: 0
       command: '"{{PYTHON}}" -m pytest -q -p no:cacheprovider && "{{PYTHON}}" "{{GRADE_PY}}" --key "{{ANSWER_KEY}}" --requirements "{{REQUIREMENTS}}"'
       timeout: 30m
+      # Near-miss bands (on_fail: needs_human below) need a named human sign-off.
+      signoff: { approvers: ['{{APPROVER}}'], reason: "RH/Lagarias near-miss band" }
       # grade.py prints TOKN_METRIC lines; the grader lives outside the
       # candidate worktree, so candidate code cannot rewrite it.
       thresholds:
-        - { metric: recall, op: ">=", value: 0.8 }
-        - { metric: precision, op: ">=", value: 0.8 }
+        - { metric: recall, op: ">=", value: 0.9 }
+        - { metric: precision, op: ">=", value: 0.9 }
         - { metric: pii_clean, op: "==", value: 1 }
         - { metric: confounded_refused, op: "==", value: 1 }
         - { metric: data_intact, op: "==", value: 1 }
         # 1 until product requests the single-cell service, then every sc_* check.
         - { metric: sc_ok, op: "==", value: 1 }
+        # RH-inspired stress gate (stress.py + checks/lagarias_stress_gate.py). The
+        # relative gap and the scaling exponent are analogies to Lagarias's criterion
+        # and an off-line zeta zero, not derived from the Riemann hypothesis.
+        - { metric: lagarias_min_gap, op: ">", value: 0 }
+        - { metric: lagarias_min_gap, op: ">=", value: 0.05, on_fail: needs_human }
+        - { metric: off_line_exponent, op: "<=", value: 0.55 }
+        - { metric: min_criterion_margin, op: ">", value: 0 }
+        - { metric: min_criterion_margin, op: ">=", value: 0.05, on_fail: needs_human }
+        # 0 until the single-cell service is required (same convention as sc_ok).
+        - { metric: c2s_euler_discrepancy, op: "<=", value: 0.25 }
+        - { metric: c2s_invalid_token_rate, op: "==", value: 0 }
     release:
       dev:
         approval: auto

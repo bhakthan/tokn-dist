@@ -1,4 +1,4 @@
-"""Differential expression: Welch t-test on log2(CPM+1) with FDR control."""
+"""Differential expression: batch-adjusted linear model on log2(CPM+1) with FDR control."""
 import numpy as np
 import pandas as pd
 from scipy import stats
@@ -18,19 +18,35 @@ def bh_fdr(pvalues):
     return out
 
 
-def welch_de(log_expr, samples, condition="condition", case="treated", control="control"):
-    """Per-gene Welch t-test of case vs control on log-scale expression."""
-    cases = samples.index[samples[condition] == case]
-    ctrls = samples.index[samples[condition] == control]
-    a = log_expr[cases].to_numpy()
-    b = log_expr[ctrls].to_numpy()
-    _, p = stats.ttest_ind(a, b, axis=1, equal_var=False)
-    p = np.nan_to_num(p, nan=1.0)
-    res = pd.DataFrame({
-        "gene": log_expr.index,
-        "log2fc": a.mean(axis=1) - b.mean(axis=1),
-        "pvalue": p,
-    })
+def batch_adjusted_de(log_expr, samples, condition="condition", case="treated", control="control", batch="batch"):
+    """Per-gene OLS of expression ~ condition + batch; Student t on the condition coefficient.
+
+    A batch effect can bias a test that ignores batch when the condition mix differs across batches.
+    With opposite 2:1 batch imbalances, part of the planted batch effect leaks into
+    a batch-blind log2FC. A single-batch design drops the batch term.
+    """
+    if set(samples[condition]) != {case, control} or batch not in samples or samples[batch].isna().any():
+        raise ValueError("expected both contrast conditions and a batch for every sample")
+    y = log_expr.loc[:, samples.index].to_numpy(dtype=float)
+    if not np.isfinite(y).all():
+        raise ValueError("non-finite log expression: check for empty count libraries")
+    cols = [np.ones(len(samples)), (samples[condition] == case).to_numpy(dtype=float)]
+    for lv in sorted(samples[batch].unique())[1:]:
+        cols.append((samples[batch] == lv).to_numpy(dtype=float))
+    x = np.column_stack(cols)
+    df = len(samples) - x.shape[1]
+    if df < 1 or np.linalg.matrix_rank(x) < x.shape[1]:
+        raise ValueError("design has no residual degrees of freedom or is rank deficient")
+    pinv = np.linalg.pinv(x)
+    beta = y @ pinv.T
+    resid = y - beta @ x.T
+    se = np.sqrt((resid ** 2).sum(axis=1) / df * np.dot(pinv[1], pinv[1]))
+    with np.errstate(divide="ignore", invalid="ignore"):
+        p = 2.0 * stats.t.sf(np.abs(beta[:, 1] / se), df)
+    constant = np.ptp(y, axis=1) == 0
+    beta[constant, 1] = 0
+    p[constant] = 1
+    res = pd.DataFrame({"gene": log_expr.index, "log2fc": beta[:, 1], "pvalue": p})
     res["padj"] = bh_fdr(res["pvalue"].to_numpy())
     return res.sort_values("pvalue", kind="mergesort").reset_index(drop=True)
 

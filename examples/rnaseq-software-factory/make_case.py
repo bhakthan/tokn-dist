@@ -43,7 +43,7 @@ SAMPLES = [  # sample_id, condition, batch
     ("S10", "treated", "B2"), ("S11", "treated", "B2"), ("S12", "treated", "B2"),
 ]
 REVERSED_BATCH = "B2"
-THRESHOLDS = {"recall": 0.8, "precision": 0.8, "fdr": 0.05, "min_abs_log2fc": 1.0}
+THRESHOLDS = {"recall": 0.9, "precision": 0.9, "fdr": 0.05, "min_abs_log2fc": 1.0}
 # Single-cell (C2S) feature loop. Gates are graded against the deterministic offline
 # oracle (fake_c2s.py); a real C2S-Scale run is reported, not gated (see grade.py).
 SC_THRESHOLDS = {"correct": 0.90, "wrong": 0.02, "doublet_recall": 0.85, "doublet_fp": 2,
@@ -74,8 +74,16 @@ def _matrix_tsv(genes, sample_ids, mat) -> str:
     return "\n".join(lines) + "\n"
 
 
-def generate(seed: int) -> dict:
-    """Simulate counts. Returns matrices plus the planted truth."""
+def generate(seed: int, samples=None, low_rin=(LOW_RIN_SAMPLE,), reversed_ids=None,
+             rin_override: dict | None = None, lib_scale: float = 1.0) -> dict:
+    """Simulate counts. Returns matrices plus the planted truth.
+
+    The defaults reproduce the shipped 12-sample case byte for byte. The stress ladder
+    (stress.py, grader-side) passes other designs: a sample list, which samples are
+    degraded (RIN < 6), which libraries are really reverse-stranded (default: batch B2),
+    fixed RIN values (borderline 6.0-6.5) and a library-size scale (dropout).
+    """
+    samples = SAMPLES if samples is None else samples
     rng = np.random.default_rng(seed)
     genes = [f"GENE{i:05d}" for i in range(1, N_GENES + 1)]
     mu = np.clip(np.exp(rng.normal(np.log(200.0), 1.2, N_GENES)), 5, 50000)
@@ -85,33 +93,38 @@ def generate(seed: int) -> dict:
     lfc = np.zeros(N_GENES)
     lfc[de_idx] = rng.choice([-1.0, 1.0], n_de) * rng.uniform(1.5, 3.0, n_de)
     batch_eff = rng.normal(0.0, 0.25, N_GENES)
-    lib = rng.uniform(0.7, 1.4, len(SAMPLES))
+    lib = rng.uniform(0.7, 1.4, len(samples)) * lib_scale
     # Opposite-strand background: expression-independent, a few % of sense.
     anti_level = np.exp(rng.normal(np.log(200.0), 1.2, N_GENES)) * 0.02
-    rins = np.round(rng.uniform(7.0, 9.6, len(SAMPLES)), 1)
+    rins = np.round(rng.uniform(7.0, 9.6, len(samples)), 1)
+    low_rin = set(low_rin)
 
-    sense = np.zeros((N_GENES, len(SAMPLES)), dtype=np.int64)
+    sense = np.zeros((N_GENES, len(samples)), dtype=np.int64)
     anti = np.zeros_like(sense)
-    for j, (sid, cond, batch) in enumerate(SAMPLES):
+    for j, (sid, cond, batch) in enumerate(samples):
         m = mu * lib[j]
         if cond == "treated":
             m = m * np.power(2.0, lfc)
         if batch == "B2":
             m = m * np.power(2.0, batch_eff)
-        if sid == LOW_RIN_SAMPLE:
+        if sid in low_rin:
             m = m * np.exp(rng.normal(0.0, 1.2, N_GENES)) * 0.6  # degraded library
             rins[j] = 4.1
+        elif rin_override and sid in rin_override:
+            rins[j] = rin_override[sid]
         lam = rng.gamma(1.0 / DISPERSION, m * DISPERSION)
         sense[:, j] = rng.poisson(lam)
         anti[:, j] = rng.poisson(anti_level * lib[j])
 
     counts = sense.copy()
     opposite = anti.copy()
-    reversed_ids = []
-    for j, (sid, _, batch) in enumerate(SAMPLES):
-        if batch == REVERSED_BATCH:  # declared forward, really reverse
+    flip = (set(reversed_ids) if reversed_ids is not None
+            else {sid for sid, _, batch in samples if batch == REVERSED_BATCH})
+    rev = []
+    for j, (sid, _, _) in enumerate(samples):
+        if sid in flip:  # declared forward, really reverse
             counts[:, j], opposite[:, j] = anti[:, j], sense[:, j]
-            reversed_ids.append(sid)
+            rev.append(sid)
 
     de_genes = {genes[i]: round(float(lfc[i]), 4) for i in de_idx}
     strength = mu[de_idx] * np.abs(lfc[de_idx])
@@ -119,7 +132,8 @@ def generate(seed: int) -> dict:
     golden = sorted((genes[i], "up" if lfc[i] > 0 else "down") for i in golden_idx)
     return {
         "genes": genes, "counts": counts, "opposite": opposite, "rins": rins,
-        "de_genes": de_genes, "golden": golden, "reversed": reversed_ids,
+        "de_genes": de_genes, "golden": golden, "reversed": rev,
+        "lfc": lfc, "batch_eff": batch_eff, "mu": mu,
     }
 
 
@@ -145,7 +159,9 @@ def ci_replay_record(head_sha: str = FAKE_SHA) -> dict:
                 "test_counts_reject_non_integer, test_low_rin_samples_excluded, test_bh_fdr_reference_values, "
                 "test_strandedness_inferred_from_data; batch B2 libraries look antisense "
                 "(sense fraction < 0.1) although strandedness_declared=forward; S05 has RIN 4.1 and "
-                "entered DE; padj equals the raw p-value."),
+                "entered DE; padj equals the raw p-value. Stress replay: with batches imbalanced 2:1 "
+                "across conditions the log2FC error does not shrink as samples are added (batch leaks "
+                "into the condition effect)."),
     }
 
 

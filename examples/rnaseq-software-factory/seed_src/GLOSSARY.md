@@ -10,7 +10,14 @@
   on the wrong strand has almost all reads on the opposite strand; infer it from
   the sense/opposite ratio (`data/counts_opposite.tsv`), never from
   `strandedness_declared` alone.
-- **Welch t-test** — two-sample t-test without equal-variance assumption.
+- **Welch t-test** — two-sample t-test without equal-variance assumption. It
+  ignores batch, so it is unbiased only when every batch holds the conditions in
+  the same proportion.
+- **Batch-adjusted model** — per-gene linear model `expression ~ condition + batch`
+  with a Student t on the condition coefficient. Required once batches are
+  partially imbalanced across conditions: otherwise part of the batch effect leaks
+  into log2FC and the error stops shrinking as samples are added (the stress gate's
+  `off_line_exponent`).
 - **BH-FDR** — Benjamini–Hochberg adjusted p-values (`padj`). Calls use
   padj < 0.05 and |log2FC| ≥ 1.
 - **Confounding** — when condition and batch coincide (no batch holds both

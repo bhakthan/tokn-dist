@@ -1,0 +1,33 @@
+# models: for --profile c2s-hybrid - the hybrid bindings, plus the real
+# Cell2Sentence (C2S-Scale GGUF) model as the SERVICE's data-plane model.
+#
+# C2S-Scale is not bound to a factory role: it is a cell-sentence -> cell-type
+# completion model with no tool calling, so it cannot act as the test agent. The
+# shipped service calls it through rnaseq_de.sc_cli -> loopback llama-server, and
+# run.py requires that server (FACTORY_C2S_GGUF or --c2s-url) for this profile.
+# The trusted grader then measures it: c2s_euler_discrepancy and
+# c2s_invalid_token_rate (gated), optional gguf_anchor_kl against FACTORY_C2S_ANCHOR
+# (Observer signal -> GENERATED incident). Test and observer roles stay local
+# (data_boundary: local) because they see raw single-cell metadata.
+#
+models:
+  default: { provider: anthropic, model: '{{OPUS_MODEL}}', env: anthropic-gateway }
+  roles:
+    product:   { provider: azure-openai, model: '{{ASTRA_MODEL}}', env: azure-astra }
+    architect: { provider: anthropic, model: '{{OPUS_MODEL}}', env: anthropic-gateway }
+    implementer:
+      provider: huggingface
+      model: '{{HF_CODER_MODEL}}'
+      env: hf
+      fallback:
+        - { provider: ollama, model: '{{OLLAMA_MODEL}}', env: ollama-local }
+    reviewer:  { provider: azure-openai, model: '{{ASTRA_MODEL}}', env: azure-astra }
+    test:      { provider: ollama, model: '{{OLLAMA_MODEL}}', env: ollama-local, data_boundary: local }
+    release:   { provider: azure-openai, model: '{{ASTRA_MODEL}}', env: azure-astra }
+    observer:  { provider: ollama, model: '{{OLLAMA_MODEL}}', env: ollama-local, data_boundary: local }
+  decisions:
+    observer_triage: { backend: local }
+    draft_check:     { backend: local }
+    gate:            { backend: '{{DECISION_BACKEND}}', model: '{{DECISION_MODEL}}', env: decision, act: 0.6, suggest: 0.4 }
+    # Alternative: Microsoft Decision-1.1 (set FACTORY_DECISION_BACKEND=microsoft, DECISION_API_MODEL=decision-1.1)
+    # gate:          { backend: microsoft, model: decision-1.1, env: decision, act: 0.6, suggest: 0.4 }
