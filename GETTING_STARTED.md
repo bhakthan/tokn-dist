@@ -150,6 +150,9 @@ Expected: a catalog of three domain previews. If you see
 `unknown command "community"`, your binary predates v0.3.44 — run `tokn update`
 (that one command does need internet access) and try again.
 
+Shortcut: a bare `tokn` opens the agent session, and `tokn "prompt"` opens it and
+runs that prompt first. Section 5 covers this.
+
 You may also see a one- or two-line notice about your licence state, for example
 that you are running the free Community tier. That notice is informational.
 Nothing in this guide requires a licence.
@@ -577,8 +580,20 @@ bring-your-own-model: **usage is billed by your provider, under your key.**
 
 ```bash
 tokn auth status        # reports provider credential readiness, not a successful model call
-tokn agent-repl
+tokn                    # opens the interactive session (same as: tokn agent-repl)
 ```
+
+A one-shot prompt needs no session: `tokn -p "summarise this repo"` runs once,
+prints the answer and exits (same as `tokn agent-run --prompt ...`).
+
+Tips:
+
+- **Piped input.** With no prompt, piped text is the prompt: `echo "list TODOs" | tokn -p`.
+  With a prompt, piped text is attached as data: `git diff | tokn -p "review this"`.
+- **Resume an interrupted run.** `tokn -c` continues the last unfinished run in this
+  directory, with its saved prompt and conversation. A completed run has nothing to
+  continue.
+- **Help.** `tokn agent-run --help` lists the essential flags; `--help-all` lists every flag.
 
 Inside the session, the built-in lessons work in the public build even though the
 embedded wiki does not ship with it:

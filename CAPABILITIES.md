@@ -18,10 +18,20 @@ Those commands describe your installed build. Inside an agent session,
 `/help` lists commands and `/learn <topic>` opens a built-in lesson.
 For installation and your first run, start with [GETTING_STARTED.md](GETTING_STARTED.md).
 
+### CLI shortcuts
+
+```text
+tokn                        # interactive session
+tokn "fix the failing test" # session that runs this prompt first
+tokn -p "summarise this"    # one-shot: run, print, exit
+tokn -c                     # resume the last unfinished run in this repo
+tokn -m <model>             # set the model name for this run
+```
+
 ## Point it at a repo and just ask — your first 5 minutes
 
 Configure a model with [SETUP.md](SETUP.md), open a repository and start
-`tokn agent-repl`. Ask in plain language:
+`tokn` (bare `tokn` opens the same session as `tokn agent-repl`). Ask in plain language:
 
 ```text
 Give me a short tour of this repository, citing the files you read.

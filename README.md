@@ -76,6 +76,27 @@ version-accurate catalog.
 > Curious what it does? See **[CAPABILITIES.md](CAPABILITIES.md)** for a quick tour —
 > or just run `tokn --help` after installing.
 
+## Quick start — short forms
+
+Once TOKN is on your `PATH` and a model is configured
+([section 4](#4-point-tokn-at-a-model)):
+
+```sh
+tokn                              # interactive session (same as: tokn agent-repl)
+tokn "fix the failing test"       # open the session and run this prompt first
+tokn -p "summarise this repo"     # one-shot: run once, print, exit (agent-run)
+echo "list TODOs" | tokn -p       # piped text with no prompt becomes the prompt
+git diff | tokn -p "review this"  # piped text with a prompt is attached as data
+tokn -c                           # resume the last unfinished run in this repo
+tokn -p "..." -m <model>          # -m / --model sets the model name
+tokn agent-run --help-all         # every flag; --help shows the essentials
+```
+
+Outside a terminal (CI, scripts), `tokn "..."` runs once instead of opening the
+session. Use `--no-stdin` to ignore piped input. The long forms such as
+`tokn agent-repl` and `tokn agent-run --prompt ...` still work and are clearer
+in scripts.
+
 ## Recent highlights
 
 Updated for **[v0.3.115](https://github.com/bhakthan/tokn-dist/releases/tag/v0.3.115)**.
@@ -637,8 +658,8 @@ tokn plugin list                  # what is already visible
 tokn doctor --list                # providers and how to connect one
 ```
 
-Then inspect inside `tokn agent-repl` (`/skill list`, `/hooks list`,
-`/permissions show`, `/trust audit`) before enabling anything. Those commands
+Then inspect inside a session (`tokn` or `tokn agent-repl`) with `/skill list`, `/hooks list`,
+`/permissions show`, `/trust audit` before enabling anything. Those commands
 only report configuration — `/hooks list` in particular does not tell you which
 hooks are live, and a workspace hook additionally needs
 `tokn trust --capability hooks` plus a restart before it will run. Full path,
@@ -648,7 +669,7 @@ including a safe prompt-customization example:
 ### Learn without the wiki
 
 The public download excludes the embedded wiki, **not the built-in lessons or these
-Community features**. Inside a configured `tokn agent-repl` session, run:
+Community features**. Inside a configured session (`tokn`, or `tokn agent-repl`), run:
 
 ```text
 /learn system-one
@@ -675,7 +696,7 @@ permissions boundary. This table is the map; the walkthrough is
 [GETTING_STARTED.md](GETTING_STARTED.md#7-developer-path-tools-skills-hooks-permissions).
 
 Two places to type. **[shell]** is your normal terminal. **[repl]** is inside an
-agent session you started with `tokn agent-repl`, which needs a configured model
+agent session you started with `tokn` (or `tokn agent-repl`), which needs a configured model
 ([SETUP.md](SETUP.md)). Everything marked [shell] below works with no model, no
 key and no licence.
 

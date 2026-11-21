@@ -101,6 +101,11 @@ tokn agent-run --model-provider openai --model-name "YOUR_MODEL_ID" --prompt "Sa
 This makes a model call and may incur charges. Use the diagnostic steps below
 before trying it.
 
+Shortcut: `tokn -p "Say hello in one word."` runs the same one-shot prompt with
+the provider and model already set in your environment. The explicit form above
+stays useful for scripts and for trying a different provider or model. `-m
+<model>` sets the model name for a single run.
+
 ## 3. Per-provider settings
 
 The Bash examples use real environment variables. In PowerShell, translate
