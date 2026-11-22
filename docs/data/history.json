@@ -555,6 +555,10 @@
     "2026-11-20": {
       "count": 42,
       "uniques": 21
+    },
+    "2026-11-21": {
+      "count": 40,
+      "uniques": 20
     }
   },
   "downloads_daily": {
@@ -683,7 +687,8 @@
     "2026-11-18": 43,
     "2026-11-19": 26,
     "2026-11-20": 3,
-    "2026-11-21": 15
+    "2026-11-21": 15,
+    "2026-11-22": 33
   },
   "downloads_snapshots": {
     "2026-07-18": {
@@ -2189,6 +2194,18 @@
         "tokn_windows_amd64.exe": 28
       },
       "total": 1123
+    },
+    "2026-11-22": {
+      "assets": {
+        "SHA256SUMS": 34,
+        "SHA256SUMS.sig": 34,
+        "tokn_darwin_amd64": 27,
+        "tokn_darwin_arm64": 26,
+        "tokn_linux_amd64": 32,
+        "tokn_linux_arm64": 27,
+        "tokn_windows_amd64.exe": 33
+      },
+      "total": 1156
     }
   },
   "downloads_state_v2": {
@@ -2588,11 +2605,11 @@
       },
       "v0.3.115/SHA256SUMS": {
         "carry": 0,
-        "last": 1
+        "last": 3
       },
       "v0.3.115/SHA256SUMS.sig": {
         "carry": 0,
-        "last": 1
+        "last": 3
       },
       "v0.3.115/tokn_darwin_amd64": {
         "carry": 0,
@@ -2604,13 +2621,97 @@
       },
       "v0.3.115/tokn_linux_amd64": {
         "carry": 0,
-        "last": 1
+        "last": 2
       },
       "v0.3.115/tokn_linux_arm64": {
         "carry": 0,
         "last": 1
       },
       "v0.3.115/tokn_windows_amd64.exe": {
+        "carry": 0,
+        "last": 2
+      },
+      "v0.3.116/SHA256SUMS": {
+        "carry": 0,
+        "last": 3
+      },
+      "v0.3.116/SHA256SUMS.sig": {
+        "carry": 0,
+        "last": 3
+      },
+      "v0.3.116/tokn_darwin_amd64": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.116/tokn_darwin_arm64": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.116/tokn_linux_amd64": {
+        "carry": 0,
+        "last": 2
+      },
+      "v0.3.116/tokn_linux_arm64": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.116/tokn_windows_amd64.exe": {
+        "carry": 0,
+        "last": 2
+      },
+      "v0.3.117/SHA256SUMS": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.117/SHA256SUMS.sig": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.117/tokn_darwin_amd64": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.117/tokn_darwin_arm64": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.117/tokn_linux_amd64": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.117/tokn_linux_arm64": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.117/tokn_windows_amd64.exe": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.118/SHA256SUMS": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.118/SHA256SUMS.sig": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.118/tokn_darwin_amd64": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.118/tokn_darwin_arm64": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.118/tokn_linux_amd64": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.118/tokn_linux_arm64": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.118/tokn_windows_amd64.exe": {
         "carry": 0,
         "last": 1
       },
@@ -2842,51 +2943,51 @@
   },
   "paths": [
     {
-      "count": 51,
+      "count": 53,
       "path": "/bhakthan/tokn-dist",
       "title": "Overview",
       "uniques": 3
     },
     {
-      "count": 40,
+      "count": 39,
       "path": "/bhakthan/tokn-dist/tree/main/examples",
       "title": "/tree/main/examples",
       "uniques": 1
     },
     {
-      "count": 21,
+      "count": 20,
       "path": "/bhakthan/tokn-dist/tree/main",
       "title": "/tree/main",
       "uniques": 2
     },
     {
-      "count": 13,
-      "path": "/bhakthan/tokn-dist/tree/main/examples/domain-relay",
-      "title": "/tree/main/examples/domain-relay",
+      "count": 7,
+      "path": "/bhakthan/tokn-dist/tree/main/examples/rnaseq-software-factory",
+      "title": "/tree/main/examples/rnaseq-software-factory",
       "uniques": 1
     },
     {
       "count": 6,
-      "path": "/bhakthan/tokn-dist/tree/main/examples/domain-relay/scenarios",
-      "title": "/tree/main/examples/domain-relay/scenarios",
-      "uniques": 1
-    },
-    {
-      "count": 6,
-      "path": "/bhakthan/tokn-dist/tree/main/examples/domain-relay/walkthroughs",
-      "title": "/tree/main/examples/domain-relay/walkthroughs",
-      "uniques": 1
-    },
-    {
-      "count": 5,
       "path": "/bhakthan/tokn-dist/pulse",
       "title": "/pulse",
       "uniques": 1
     },
     {
-      "count": 5,
+      "count": 6,
       "path": "/bhakthan/tokn-dist/releases",
       "title": "/releases",
+      "uniques": 1
+    },
+    {
+      "count": 5,
+      "path": "/bhakthan/tokn-dist/graphs/traffic",
+      "title": "/graphs/traffic",
+      "uniques": 1
+    },
+    {
+      "count": 5,
+      "path": "/bhakthan/tokn-dist/tree/main/examples/rnaseq-software-factory/spec",
+      "title": "/tree/main/examples/rnaseq-software-factory/spec",
       "uniques": 1
     },
     {
@@ -2897,8 +2998,8 @@
     },
     {
       "count": 4,
-      "path": "/bhakthan/tokn-dist/graphs/traffic",
-      "title": "/graphs/traffic",
+      "path": "/bhakthan/tokn-dist/releases/tag/v0.3.101",
+      "title": "/releases/tag/v0.3.101",
       "uniques": 1
     }
   ],
@@ -2910,7 +3011,7 @@
     }
   ],
   "repo": "bhakthan/tokn-dist",
-  "updated_at": "2026-11-21T14:43:56.693928+00:00",
+  "updated_at": "2026-11-22T14:40:06.228774+00:00",
   "views_daily": {
     "2026-07-05": {
       "count": 0,
@@ -3466,6 +3567,10 @@
     },
     "2026-11-20": {
       "count": 8,
+      "uniques": 1
+    },
+    "2026-11-21": {
+      "count": 69,
       "uniques": 1
     }
   }
