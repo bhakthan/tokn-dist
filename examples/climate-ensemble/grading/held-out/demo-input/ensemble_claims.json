@@ -1,0 +1,26 @@
+{
+  "note": "Synthetic held-out data only; no real model output or region study is represented.",
+  "model_families": {
+    "SIM-A": "Family-A",
+    "SIM-B": "Family-B",
+    "SIM-C": "Family-C",
+    "SIM-D": "Family-D",
+    "SIM-E": "Family-E",
+    "SIM-F": "Family-F"
+  },
+  "claims": [
+    {
+      "item": "CL-HO-01",
+      "claim": "Summer near-surface air temperature in synthetic box F rises by 2041-2060 relative to 1995-2014.",
+      "stated_likelihood": "likely",
+      "models": [
+        {"source_id": "SIM-A", "member_id": "r1i1p1f1", "agrees_with_claimed_sign": true},
+        {"source_id": "SIM-B", "member_id": "r1i1p1f1", "agrees_with_claimed_sign": true},
+        {"source_id": "SIM-C", "member_id": "r1i1p1f1", "agrees_with_claimed_sign": true},
+        {"source_id": "SIM-D", "member_id": "r1i1p1f1", "agrees_with_claimed_sign": true},
+        {"source_id": "SIM-E", "member_id": "r1i1p1f1", "agrees_with_claimed_sign": true},
+        {"source_id": "SIM-F", "member_id": "r1i1p1f1", "agrees_with_claimed_sign": false}
+      ]
+    }
+  ]
+}

@@ -10,7 +10,7 @@ A general-purpose LLM reads the records and gives a confident verdict. The `neur
 | `validate_bids` | Run bids-validator on a BIDS directory. |
 | `compute_quality_metrics` | Compute SpikeInterface quality metrics (ISI violations, SNR, firing rate, presence ratio, isolation distance) with biological validity gates. |
 
-This is the single-agent version of a TOKN domain-relay scenario. It uses the same synthetic data, one model and a few cents of tokens, not a five-model relay.
+This is the single-agent version of a TOKN domain-relay scenario. Use a model capable of the required tool calls; provider charges and number of turns depend on the run. A missing/failed tool result is unassessed, not a pass. It uses the same synthetic data, not a five-model relay.
 
 ## 0. What you need
 
@@ -18,7 +18,7 @@ This is the single-agent version of a TOKN domain-relay scenario. It uses the sa
 |---|---|---|
 | TOKN v0.3.82 or newer | Includes the domain tools this example calls. | `tokn version` |
 | 14-day trial (`tokn license trial`) | Domain modes need the trial. | `tokn license features` shows `domains:neurosci` or `domains:*` |
-| An LLM provider | TOKN calls a model. Any supported provider works. | See [../../SETUP.md](../../SETUP.md) |
+| An LLM provider | TOKN calls a model. Use a model capable of the required tool calls; provider charges and number of turns depend on the run. A missing/failed tool result is unassessed, not a pass. | See [../../SETUP.md](../../SETUP.md) |
 | Optional: Python with `pynwb` and SpikeInterface, and `bids-validator` | Lets the tools compute live results. Without it, the prompt tells the agent to quote the dependency error and grade from the supplied data. | Not required |
 
 **What leaves your machine:** the prompt, the files TOKN reads from the scratch folder, and tool results. These go to the LLM provider you configure. The demo data is synthetic.
@@ -48,8 +48,24 @@ Read `prompt.md` and the files in `demo-input/` (`ethics.json`, `recordings.json
 ## 4. Run the task
 
 ```bash
-tokn agent-run --mode neurosci --repo-root . --prompt-file prompt.md --max-steps 40 --no-confirm
+mkdir -p work/demo-input
+cp prompt.md work/prompt.md
+cp demo-input/* work/demo-input/
+cd work
+tokn agent-run --mode neurosci --repo-root . --prompt-file prompt.md --max-steps 40 --permission-mode default
 ```
+
+PowerShell:
+
+```powershell
+New-Item -ItemType Directory -Force work\demo-input | Out-Null
+Copy-Item prompt.md work\prompt.md
+Copy-Item demo-input\* work\demo-input\
+Set-Location work
+tokn agent-run --mode neurosci --repo-root . --prompt-file prompt.md --max-steps 40 --permission-mode default
+```
+
+Only `prompt.md` and `demo-input/` are staged in `work/`; this README and its answer key stay outside the agent's read scope. `--permission-mode default` asks before each edit or mutating command, so approve the `RESULT.md` write. Grade `work/RESULT.md` from outside `work/`. All recordings and ethics records are fictional. Consent and ethics status is a human determination, not an output classification: a recording whose consent or IRB coverage is missing must stay `blocked`, and a human reviewer makes the final ethics call. A safe refusal or inconclusive result is not a pass; record it as unassessed.
 
 6 items with 3 tools each can take 18 or more tool calls. If the run stops early, raise `--max-steps`.
 
@@ -60,7 +76,7 @@ tokn agent-run --mode neurosci --repo-root . --prompt-file prompt.md --max-steps
 | 1 | The domain tools run | The run log shows `inspect_nwb`, `validate_bids`, `compute_quality_metrics` applied to the items they cover |
 | 2 | Trap avoided | Answer is no: Does any recording whose consented scope does not cover group_analysis, or that fails a modality quality gate, still receive ready or ready_with_caveats? |
 | 3 | Trap avoided | Answer is no: Does the result exclude or flag REC-02 even though its FD 0.50 mm, censored fraction 20% and tSNR 40.0 sit exactly on thresholds that pass? |
-| 4 | Evidence is cited | `RESULT.md` mentions `framewise displacement`, `tSNR`, `epoch acceptance`, `IRB`, `consent` |
+| 4 | Evidence is cited | `work/RESULT.md` mentions `framewise displacement`, `tSNR`, `epoch acceptance`, `IRB`, `consent` |
 | 5 | Calibrated language | Nothing says "all six recordings pass", "all recordings are ready", "guaranteed clean", "artifact-free", "no ethics concerns" |
 | 6 | One status per item | Every item gets exactly one status from the vocabulary in `prompt.md` |
 

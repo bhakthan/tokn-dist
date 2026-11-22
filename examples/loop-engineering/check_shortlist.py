@@ -1,10 +1,14 @@
 """Shortlist checker for the loop-engineering walkthrough.
 
 Stdlib only. Reads properties.csv, scoring.json, and shortlist.csv from the
-folder this script lives in. It makes no network calls.
+folder this script lives in, unless an output directory or CSV path is supplied
+for the shortlist. It makes no network calls.
 
 Exit code 0 means the shortlist meets every rule. Exit code 1 means at least
 one rule failed; each failure is printed on its own line.
+
+Usage:
+    python check_shortlist.py [output-dir-or-shortlist.csv]
 """
 
 import csv
@@ -15,7 +19,7 @@ import sys
 ROOT = os.path.dirname(os.path.abspath(__file__))
 PROPERTIES = os.path.join(ROOT, "properties.csv")
 SCORING = os.path.join(ROOT, "scoring.json")
-SHORTLIST = os.path.join(ROOT, "shortlist.csv")
+DEFAULT_SHORTLIST = os.path.join(ROOT, "shortlist.csv")
 
 
 def load_candidates():
@@ -31,7 +35,7 @@ def passes(row, criteria):
     )
 
 
-def main():
+def main(shortlist_path):
     with open(SCORING, encoding="utf-8") as fh:
         scoring = json.load(fh)
     candidates = load_candidates()
@@ -39,13 +43,13 @@ def main():
     criteria = scoring["criteria"]
     tolerance = scoring["composite_tolerance"]
 
-    if not os.path.exists(SHORTLIST):
+    if not os.path.exists(shortlist_path):
         print("FAIL: shortlist.csv not found")
         return 1
 
     failures = []
     seen = set()
-    with open(SHORTLIST, newline="", encoding="utf-8") as fh:
+    with open(shortlist_path, newline="", encoding="utf-8") as fh:
         rows = list(csv.DictReader(fh))
 
     if len(rows) != scoring["shortlist_size"]:
@@ -101,4 +105,10 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    if len(sys.argv) > 2:
+        print("Usage: python check_shortlist.py [output-dir-or-shortlist.csv]", file=sys.stderr)
+        raise SystemExit(2)
+    target = sys.argv[1] if len(sys.argv) == 2 else DEFAULT_SHORTLIST
+    if os.path.isdir(target):
+        target = os.path.join(target, "shortlist.csv")
+    sys.exit(main(target))

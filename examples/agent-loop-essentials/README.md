@@ -16,7 +16,7 @@ A plain agent run works, but it can drift on a task like this. It forgets the go
 | Requirement | Why | Check |
 |---|---|---|
 | TOKN v0.3.57 or newer | The loop flags and tools shown here ship in this version. | `tokn version` |
-| Community tier (no trial) | Default mode and these loop features are free. No `tokn license trial` step is needed. | `tokn agent-run --help` lists `--predict` and `--no-task-anchor` |
+| Community tier (no trial) | Default mode and these loop features are free. No `tokn license trial` step is needed. | `tokn agent-run --help-all` lists `--predict` and `--no-task-anchor` |
 | An LLM provider | TOKN calls a model for every turn of the loop. | See [../../SETUP.md](../../SETUP.md) |
 | Python 3.9+ (optional) | Only for the offline report checker. The fixture code is not run in this walkthrough. | `python --version` |
 
@@ -44,19 +44,25 @@ Replace the placeholders with your own values. See [../../SETUP.md](../../SETUP.
 
 ```bash
 export NOSPACE_MODEL_PROVIDER=anthropic
-export NOSPACE_MODEL_NAME=<your model name>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_NAME='YOUR_MODEL_NAME'
+read -rs -p 'Anthropic API key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
 ```
 
 ```powershell
 $env:NOSPACE_MODEL_PROVIDER = "anthropic"
-$env:NOSPACE_MODEL_NAME = "<your model name>"
-$env:ANTHROPIC_API_KEY = "<your key>"
+$env:NOSPACE_MODEL_NAME = "YOUR_MODEL_NAME"
+$secret = Read-Host "Anthropic API key" -AsSecureString
+$env:ANTHROPIC_API_KEY = [System.Net.NetworkCredential]::new('', $secret).Password
 ```
 
 ## 3. Read the task and the contract before the run
 
 Open `task.md` and `contract.json`. The contract is the outcome check. It lists what the final answer must mention, which files must change, the expected status, and the step budget.
+
+Use `contract.json` as the worked case: inspect its acceptance text, changed-file
+allowlist, status and budget. Before running, predict one withheld outcome: what
+should happen to the contract if the run changes `app/greet.py`, which is not an
+allowed changed file?
 
 The contract fields are:
 
@@ -68,11 +74,11 @@ The contract fields are:
 ## 4. Run the loop with all four features on
 
 ```bash
-tokn agent-run --repo-root greeting-app --prompt-file task.md --max-steps 12 --no-confirm --predict --predict-level strict --predict-contract contract.json --tool-explore-budget 4
+tokn agent-run --repo-root greeting-app --prompt-file task.md --max-steps 12 --predict --predict-level strict --predict-contract contract.json --tool-explore-budget 4
 ```
 
 ```powershell
-tokn agent-run --repo-root greeting-app --prompt-file task.md --max-steps 12 --no-confirm --predict --predict-level strict --predict-contract contract.json --tool-explore-budget 4
+tokn agent-run --repo-root greeting-app --prompt-file task.md --max-steps 12 --predict --predict-level strict --predict-contract contract.json --tool-explore-budget 4
 ```
 
 What each flag does:
@@ -82,7 +88,7 @@ What each flag does:
 | `--repo-root greeting-app` | Limits file access and commands to the fixture repo. |
 | `--prompt-file task.md` | Reads the task from a file, which avoids shell quoting problems. |
 | `--max-steps 12` | Caps the number of turns. Matches `max_steps` in the contract. |
-| `--no-confirm` | Approves tool calls without prompting. Use it only on the scratch copy. |
+| Default approval | Review and approve tool calls interactively before mutation. |
 | `--predict --predict-level strict` | Uses temperature 0 and writes a Predictability Report at the end. |
 | `--predict-contract contract.json` | Checks the run against the contract. |
 | `--tool-explore-budget 4` | Sends the "converge" advisory after 4 read-only calls on a change task. The default is 8. |
@@ -106,11 +112,11 @@ The script reads the newest `report-*.json` under `greeting-app/.nospace/predict
 Run the same task again with the anchor disabled. The flag is `--no-task-anchor`. The environment variable `TOKN_NO_TASK_ANCHOR` does the same thing.
 
 ```bash
-tokn agent-run --repo-root greeting-app --prompt-file task.md --max-steps 12 --no-confirm --no-task-anchor
+tokn agent-run --repo-root greeting-app --prompt-file task.md --max-steps 12 --no-task-anchor
 ```
 
 ```powershell
-tokn agent-run --repo-root greeting-app --prompt-file task.md --max-steps 12 --no-confirm --no-task-anchor
+tokn agent-run --repo-root greeting-app --prompt-file task.md --max-steps 12 --no-task-anchor
 ```
 
 Two runs will not produce identical text, even with `--predict-level strict`. Compare the plan the agent keeps and whether it still reports `--shout` at the end.

@@ -1,0 +1,18 @@
+{
+  "record_type": "synthetic worked fixture; not a recorded run",
+  "provenance": {
+    "scenario": "synthetic target-trial emulation",
+    "minimum_tokn_version": "v0.3.57 or newer",
+    "checker": "check_inputs.py inputs/ (offline input-structure check only)",
+    "inputs": {
+      "inputs/target-trial-spec.json": "sha256:75a8c92edac55e91dbd7c00ba42428f173e653957842f3d68eaf55b6eccfe183",
+      "inputs/synthetic-cohort.json": "sha256:8f5b46ddaebe64d78c2ff69195397a3a48afcb1a51c7e7349c192d84f3e5dd99"
+    }
+  },
+  "disposition": {
+    "status": "hold_for_human_review",
+    "evidence_emitted": false,
+    "clinical_conclusion": null,
+    "limitation": "Synthetic fixture only; no treatment recommendation or clinical conclusion."
+  }
+}

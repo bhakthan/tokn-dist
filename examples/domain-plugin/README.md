@@ -24,7 +24,7 @@ Nothing in this walkthrough calls a model. The only LLM step is an optional
 | Requirement | Why | Check |
 |---|---|---|
 | TOKN v0.3.57 or later | The `plugin` command tree shipped in this version line | `tokn version` |
-| Licence tier: **community** | `plugin` commands have no licence gate in the source | `tokn license --help` |
+| Licence tier: **community** | Check current feature entitlements in TOKN | `tokn license features` |
 | Python 3.8+ (optional) | Runs the offline checker in step 7 | `python --version` |
 | A terminal in an empty folder | Keeps the toy plugin separate from your repos | `pwd` |
 
@@ -53,20 +53,20 @@ Set-Location "$HOME\tokn-demo\lab-inventory-workspace"
 ## 2. Read the plugin commands
 
 ```bash
-tokn plugin --help
-tokn plugin init --help
-tokn plugin validate --help
+tokn plugin --help-all
+tokn plugin init --help-all
+tokn plugin validate --help-all
 ```
 
 ```powershell
-tokn plugin --help
-tokn plugin init --help
-tokn plugin validate --help
+tokn plugin --help-all
+tokn plugin init --help-all
+tokn plugin validate --help-all
 ```
 
 Expected, not a recorded run: the top-level help lists `list`, `inspect`,
 `validate`, `init`, and `export`. There is no `install` or `catalog`
-subcommand in the released source, so installing is a manual copy (step 6).
+subcommand in this CLI, so installing is a manual copy (step 6).
 
 ## 3. Scaffold a starting point
 
@@ -115,7 +115,7 @@ EOF
 '@ | Set-Content -Encoding utf8 lab-inventory\plugin.json
 ```
 
-Rules the validator enforces, read from source:
+Expected validator checks:
 
 - `name` must be lowercase letters, digits, dots, or hyphens. It must start and
   end with a letter or digit, and be at most 64 characters.
@@ -192,10 +192,12 @@ fails, the message names the file and field.
 
 Now copy the bundle into a discovery root. TOKN's default roots include
 `~/.copilot/installed-plugins/` and `~/.claude/plugins/`. The example uses the
-Copilot root.
+Copilot root. Stop if `lab-inventory` already exists there; never merge with or
+overwrite an existing installation.
 
 ```bash
 mkdir -p ~/.copilot/installed-plugins
+test ! -e ~/.copilot/installed-plugins/lab-inventory || { echo "lab-inventory already exists; choose another discovery root" >&2; exit 1; }
 cp -R lab-inventory ~/.copilot/installed-plugins/
 tokn plugin list
 tokn plugin inspect lab-inventory
@@ -203,13 +205,15 @@ tokn plugin inspect lab-inventory
 
 ```powershell
 New-Item -ItemType Directory -Force "$HOME\.copilot\installed-plugins" | Out-Null
+if (Test-Path "$HOME\.copilot\installed-plugins\lab-inventory") { throw "lab-inventory already exists; choose another discovery root" }
 Copy-Item -Recurse lab-inventory "$HOME\.copilot\installed-plugins\"
 tokn plugin list
 tokn plugin inspect lab-inventory
 ```
 
 Expected, not a recorded run: `list` shows `lab-inventory` at 0.1.0. `inspect`
-shows the manifest fields and the skill it found. When you are finished, delete
+shows the manifest fields and the skill it found. After confirming this
+walkthrough created the exact target and you no longer need it, remove only
 `~/.copilot/installed-plugins/lab-inventory`.
 
 ## 7. Optional: run the offline checker
@@ -293,22 +297,18 @@ is **not reachable from a user manifest** in the released binary:
 
 - Agent modes are a fixed list compiled into TOKN. A plugin cannot add
   `lab-inventory` to that list, so `tokn agent-run --mode` will not accept it.
-- The compiled-in domain plugs are managed by an internal lifecycle package. It
-  is not a user-facing loader.
+- A plugin cannot add a compiled mode or make its skill activate only when a
+  named mode is selected.
 - So a plugin's skill is guidance an agent reads when it is relevant. It is not
   a hook that fires only in a mode.
 
-Expected, not a recorded run: an unknown mode is rejected with an "unsupported
-agent mode" message that lists the valid modes. Read the message; do not treat
-this as a test.
+Do not run the following invalid-mode example; it is a counterexample, not a
+command:
 
-```bash
-tokn agent-run --mode lab-inventory --prompt "Check this stock table"
-```
+`tokn agent-run --mode lab-inventory --prompt "Check this stock table"`
 
-```powershell
-tokn agent-run --mode lab-inventory --prompt "Check this stock table"
-```
+Discover selectable modes with `tokn introspect --section modes`. A skill is
+plain-language guidance, not a compiled mode or executable gate.
 
 For a real mode-scoped domain, use a built-in one. See
 [../custom-hooks/README.md](../custom-hooks/README.md) and
@@ -330,7 +330,7 @@ domain feature for your licence tier.
 | `tokn: command not found` | CLI not on PATH | Follow [../../SETUP.md](../../SETUP.md), then open a new terminal |
 | `validate` rejects `name` | Uppercase letters, spaces, or a leading hyphen | Use lowercase, digits, dots, or hyphens |
 | `list` does not show the plugin | Copied into the wrong folder | Confirm `~/.copilot/installed-plugins/lab-inventory/plugin.json` exists |
-| `plugin install` is "unknown command" | No install subcommand in the released source | Copy the folder as in step 6 |
+| `plugin install` is "unknown command" | The CLI has no install subcommand | Copy the folder as in step 6 |
 | Checker says `missing plugin.json` | Ran it from the wrong folder | Pass the bundle path, e.g. `python check_lab_inventory.py lab-inventory` |
 | Mode is "unsupported" | Expected: plugins cannot add modes | See step 8 |
 

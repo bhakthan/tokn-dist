@@ -48,6 +48,12 @@ choose (the **root**), and run a local Python model on synthetic data. Steps
 9 and 10 send the requirement, the context file and the metrics to the model
 provider you configure — and only when you pass `--allow-external`.
 
+Egress is per selected capability: baseline tabular nodes use local files and
+Python; loopback LLM/SLM stages stay local; remote `llm`, `slm`, `judgment`
+or `specialist` stages send their configured inputs to that provider and need
+`--allow-external`. Only stages present in the plan are called. `--air-gap`
+blocks every external stage, even when the plan includes one.
+
 ## 1. Make a root folder
 
 Every command takes `--root`: an existing folder that holds the plans, the
@@ -433,8 +439,20 @@ The next commands need a remote provider's credentials in your environment
 model). They make **no model call**: `validate` never runs nodes, and the
 blocked run stops before the first node.
 
+These are fixed example outputs, not a live trace or a result for your
+deployment. Set `MODEL` to an account-available model ID in your trusted shell;
+do not copy a model name from an old trace.
+
 ```bash
-tokn solution validate --root . --plan plan-explain.json --provider openai --model gpt-4.1-mini
+MODEL='YOUR_MODEL_ID'
+```
+
+```powershell
+$Model = "YOUR_MODEL_ID"
+```
+
+```bash
+tokn solution validate --root . --plan plan-explain.json --provider openai --model "$MODEL"
 ```
 
 Expected:
@@ -447,14 +465,14 @@ A remote model is an external capability, so it needs `--allow-external`.
 Now add both `--allow-external` and `--air-gap`, and try to run it:
 
 ```bash
-tokn solution run --root . --plan plan-explain.json --provider openai --model gpt-4.1-mini \
+tokn solution run --root . --plan plan-explain.json --provider openai --model "$MODEL" \
   --allow-external --air-gap --execute
 ```
 
 PowerShell:
 
 ```powershell
-tokn solution run --root . --plan plan-explain.json --provider openai --model gpt-4.1-mini `
+tokn solution run --root . --plan plan-explain.json --provider openai --model $Model `
   --allow-external --air-gap --execute
 ```
 
@@ -517,13 +535,22 @@ also needs `--allow-external` and no `--air-gap`.
 ## 9. Optional: let a model propose the plan
 
 This needs a model provider. The output depends on the model, so none is
-shown here.
+shown here. Set an account-available model ID in your trusted shell; this
+placeholder is not a deployment name.
+
+```bash
+MODEL='YOUR_MODEL_ID'
+```
+
+```powershell
+$Model = "YOUR_MODEL_ID"
+```
 
 ```bash
 tokn solution plan --root . \
   --requirement "Predict which open deliveries will be late, and report holdout accuracy." \
   --context context.json \
-  --provider openai --model gpt-4.1-mini --allow-external
+  --provider openai --model "$MODEL" --allow-external
 ```
 
 PowerShell:
@@ -532,7 +559,7 @@ PowerShell:
 tokn solution plan --root . `
   --requirement "Predict which open deliveries will be late, and report holdout accuracy." `
   --context context.json `
-  --provider openai --model gpt-4.1-mini --allow-external
+  --provider openai --model $Model --allow-external
 ```
 
 The prompt gets the requirement, `context.json` and the catalog; no other
@@ -558,7 +585,7 @@ that saves stdout to a file never gets a plan from a failed run.
 tokn solution solve --root . --dir delivery-app \
   --requirement "Predict which open deliveries will be late, and report holdout accuracy." \
   --context context.json \
-  --provider openai --model gpt-4.1-mini --allow-external --execute
+  --provider openai --model "$MODEL" --allow-external --execute
 ```
 
 `solve` plans, generates `delivery-app/` and runs the plan in one command. It

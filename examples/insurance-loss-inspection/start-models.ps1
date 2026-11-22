@@ -12,17 +12,9 @@ Set-Location -LiteralPath $PSScriptRoot
 function Fail([string]$Msg) { Write-Host "[!] $Msg" -ForegroundColor Red; exit 1 }
 function Note([string]$Msg) { Write-Host "[*] $Msg" -ForegroundColor Cyan }
 
-# Load .env without overriding the shell (only CODER_HF_MODEL is read from it here).
-if (Test-Path ".env") {
-    foreach ($line in Get-Content ".env") {
-        $t = $line.Trim()
-        if (-not $t -or $t.StartsWith("#") -or -not $t.Contains("=")) { continue }
-        $k, $v = $t.Split("=", 2)
-        $k = $k.Trim(); $v = $v.Trim().Trim('"')
-        if ($k.StartsWith("SYSTEMONE_") -or $k.StartsWith("TOKN_INSPECT_")) { continue }
-        if (-not [Environment]::GetEnvironmentVariable($k)) { [Environment]::SetEnvironmentVariable($k, $v) }
-    }
-}
+# Select the coding model in the trusted shell; repository data never chooses downloads.
+. (Join-Path $PSScriptRoot "load-safe-env.ps1")
+Load-SafeEnv ".env" @()
 
 $problems = @()
 
@@ -53,7 +45,7 @@ $coder = $env:CODER_HF_MODEL
 if (-not $coder -or $coder -match '^<.*>$') {
     $problems += @"
 Missing: CODER_HF_MODEL. Set it to the Hugging Face repo and quant of a coder GGUF, for example:
-         `$env:CODER_HF_MODEL = "<hf-repo>:<quant>"
+         `$env:CODER_HF_MODEL = "YOUR_HF_REPO:YOUR_QUANT"
   Why:   the coding model drives the TOKN agent in insurance mode (run-agent).
   Pick:  a Qwen coder GGUF that fits your memory (see the README hardware notes).
 "@

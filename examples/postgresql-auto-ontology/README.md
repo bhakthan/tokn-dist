@@ -17,6 +17,19 @@ Nothing here certifies an element automatically. TOKN writes ontology artifacts
 only under the `--out` folder you choose, and helper outputs are the explicit
 files you name.
 
+**Three separate tracks.** This page is long; treat it as three exercises and stop
+after the one you need:
+
+| Track | Sections | Needs | Spend |
+|---|---|---|---|
+| Local schema exercise | Part 1 | TOKN, a local PostgreSQL container | None |
+| Read-only walk of a database you prepared, local or cloud | Part 2, Part 5 | A database you own and a read-only role | Any managed server bills while it exists |
+| Optional enrichment and review | Part 3, Part 4 | A model provider or deployment | Provider charges per call |
+
+Splitting these into separate pages is on the roadmap. Use only synthetic or public
+sample rows here. Names such as `customers` and `customer_priorities.csv` are
+fictional fixtures, not evidence of a real customer or a real priority list.
+
 ## What you get
 
 | Output | What it is | Authority |
@@ -203,6 +216,11 @@ PostgreSQL. Docker/Podman startup and dataset migration were not exercised here;
 container hosting is an alternative deployment, not a separate tested TOKN
 integration. Neither engine supplies a ready-made PostgreSQL version of the
 Microsoft SQL Server sample.
+
+**Cost and cleanup:** the scratch database and any managed server you create
+bill while they exist. Drop the scratch database (`DROP DATABASE tokn_orders_demo`)
+and clear `PGPASSWORD` when you finish. The Entra token expires on its own, but
+do not store it in a file.
 
 ### 1.1 Create a scratch database
 
@@ -837,7 +855,8 @@ A spreadsheet export is a separate, independent source. TOKN builds an
 ontology from one `--source` at a time, so it does not merge the PostgreSQL
 ontology with the CSV ontology. Keep the two outputs in separate folders.
 
-Demonstrated on sample files only:
+Demonstrated on sample files only. `customer_priorities.csv` is a hand-written
+synthetic fixture (5 rows); it describes no real customer.
 
 | Step | Input | Result |
 |---|---|---|
@@ -1130,6 +1149,11 @@ Delete what you created, in this order:
 2. The `sql-server-samples` clone, if you no longer need it.
 3. The scratch databases you created (`tokn_orders_demo`, and
    `wideworldimporters` if this is a test server you own).
+
+4. Any managed server, resource group or firewall rule you created only for this
+   walkthrough. Only its owner should delete it, and it keeps billing until they do.
+   Also remove any model or embedding deployment created only for Part 3 or Part 4.
+5. Clear `PG_DSN`, `PGPASSWORD` and any decision or provider key from the shell.
 
 Do not commit any of these. The repository ignores `out/`, `csv-demo/`, `sql-server-samples/`, `.env`, `.tokn/`, and `.nospace/`.
 

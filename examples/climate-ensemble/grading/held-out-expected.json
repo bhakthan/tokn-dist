@@ -1,0 +1,27 @@
+{
+  "record_type": "hidden synthetic grading key",
+  "scenario": "synthetic held-out climsci likelihood claim",
+  "minimum_tokn_version": "v0.3.82 or newer",
+  "checker": "manual comparison of RESULT.md status and evidence from outside the run folder",
+  "status": "expected; not observed",
+  "input_digest": {
+    "method": "SHA-256 of UTF-8 bytes with CRLF line endings normalized to LF",
+    "grading/held-out-task.md": "26176cfcbafac3c0938ea7b197976731a982dea892dfe9cb0d8e8ecbf53bc124",
+    "grading/held-out/demo-input/catalog_requests.json": "a0b330825704378ed3523fed0e86c1361c44b3a40da5725c5be1e75baed4ff1d",
+    "grading/held-out/demo-input/ensemble_claims.json": "dc76db0eabbb3084b68e86f7161f3bcfd82212d6908a59630248e588cccb4f38",
+    "grading/held-out/demo-input/field_ranges.json": "8a436564accb428328133bd07091f97e7e29dddd4322648ab9510b06db3f8040"
+  },
+  "item": "CL-HO-01",
+  "expected_status": "supported",
+  "expected_evidence": {
+    "independent_family_count": 6,
+    "families_agreeing": 5,
+    "probability": "5/6 ≈ 0.833",
+    "derived_likelihood": "likely",
+    "stated_likelihood": "likely",
+    "tas_range_K": [280.0, 296.0],
+    "tas_tolerance_band_K": [164.0, 356.0],
+    "evidence_rule": "A label without the supporting independent-family and physical-range evidence is not a pass."
+  },
+  "limitations": "Synthetic fixture only; not a live climate finding."
+}

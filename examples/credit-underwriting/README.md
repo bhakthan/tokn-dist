@@ -10,6 +10,8 @@ skips the disclaimer does not get marked complete.
 
 This is a training exercise. It is not financial advice and does not produce a credit decision.
 
+**Offline arithmetic; optional provider-generated training memo; no credit decision.**
+
 For the domain background, see [finrisk-system-one](../finrisk-system-one/README.md), which covers
 the risk-analysis workflow in more depth. This example focuses on the underwriting review and the
 gates it passes through.
@@ -28,7 +30,7 @@ gates it passes through.
 | Requirement | Why | Check |
 |---|---|---|
 | TOKN v0.3.57 or newer | Finrisk mode and these gates are in this version | `tokn version` |
-| Trial tier (or a licence with the finrisk feature) | Domain modes are not in the free tier | `tokn license status` |
+| Trial tier (or a licence with the finrisk feature) | Domain modes are not in the free tier | `tokn license features` |
 | Python 3.9 or newer | Runs the offline ratio checker | `python --version` |
 | An LLM provider (step 4 only) | The agent drafts the memo | See step 4 and [SETUP.md](../../SETUP.md) |
 
@@ -108,26 +110,28 @@ Configure the LLM with placeholders. Replace each `<...>` with your own value.
 **bash**
 ```bash
 export NOSPACE_MODEL_PROVIDER=anthropic
-export NOSPACE_MODEL_NAME=<your model name>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+read -rs -p 'Anthropic API key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
 tokn agent-run --prompt-file credit-review-work/prompt.md \
   --repo-root ./credit-review-work --mode finrisk \
-  --max-steps 30 --no-confirm --output-format json > credit-review-result.json
+  --max-steps 30 --output-format json > credit-review-work/result.json
 echo "exit code: $?"
 ```
 
 **PowerShell**
 ```powershell
 $env:NOSPACE_MODEL_PROVIDER = "anthropic"
-$env:NOSPACE_MODEL_NAME = "<your model name>"
-$env:ANTHROPIC_API_KEY = "<your key>"
+$env:NOSPACE_MODEL_NAME = "YOUR_MODEL_ID"
+# Set ANTHROPIC_API_KEY through your trusted secret manager or existing shell session.
 tokn agent-run --prompt-file credit-review-work\prompt.md `
   --repo-root .\credit-review-work --mode finrisk `
-  --max-steps 30 --no-confirm --output-format json | Out-File -Encoding utf8 credit-review-result.json
+  --max-steps 30 --output-format json | Out-File -Encoding utf8 credit-review-work\result.json
 "exit code: $LASTEXITCODE"
 ```
 
-The agent should write `credit-review-work/memo.md`.
+For a static provider configuration check, run
+`tokn doctor --provider anthropic`; it does not verify a live credential.
+The agent should write `credit-review-work/memo.md`. Keep the default approval behavior so each file-writing call can be reviewed. The memo is training material only.
 
 ## 5. Read the gate results
 

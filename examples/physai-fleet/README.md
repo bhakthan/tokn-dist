@@ -7,7 +7,10 @@ Give TOKN a written spec and the `physai` mode generates a project: a
 14-agent system for a warehouse fleet of autonomous mobile robots (AMRs), with
 safety, perception, path-planning, fleet-coordination, and hardware layers, plus
 a simulation test. This example shows you how to run it and what to check. It
-does **not** include a generated project; you create that yourself.
+does **not** include a generated project; you create that yourself. You start
+with a single role (the emergency-stop path) and a static check, and only then,
+if you choose, generate the full 14-agent system. Everything is software and
+simulation; no real robot or hardware is involved.
 
 | Capability | What TOKN produces |
 |---|---|
@@ -22,7 +25,7 @@ does **not** include a generated project; you create that yourself.
 |---|---|---|
 | TOKN v0.3.57 or later | Includes the physai mode | `tokn version` |
 | Tier: **trial or paid license** | `physai` is a domain plug; Community does not include `domains:physai` | `tokn license features` should list `domains:physai` or `domains:*` |
-| An LLM API key | `agent-run` calls a model | See [SETUP.md](../../SETUP.md) |
+| An LLM API key | `agent-run` calls a model. Use a model capable of the required tool calls; provider charges and number of turns depend on the run. A missing/failed tool result is unassessed, not a pass. | `tokn doctor --provider anthropic` (static; see [SETUP.md](../../SETUP.md)) |
 | Python 3.10+ | To run the generated simulation test yourself | `python --version` |
 
 To start a trial, run `tokn license trial` once per machine. If you do not have a
@@ -30,8 +33,8 @@ trial or paid license, this example will not run in physai mode.
 
 ## What leaves your machine
 
-- `task-prompt.md` and whatever TOKN reads from the output folder are sent to the
-  model provider you configure.
+- The prompt file you run (`one-role-prompt.md` or `task-prompt.md`) and whatever
+  TOKN reads from the output folder are sent to the model provider you configure.
 - The generated code is written locally and is not sent anywhere by this example.
 
 ## Steps
@@ -40,57 +43,93 @@ trial or paid license, this example will not run in physai mode.
 
 bash:
 ```bash
-mkdir -p ~/physai-fleet-out
-cp task-prompt.md ~/physai-fleet-out/
+mkdir ~/physai-fleet-out
+cp one-role-prompt.md task-prompt.md ~/physai-fleet-out/
 cd ~/physai-fleet-out
 ```
 
 PowerShell:
 ```powershell
-New-Item -ItemType Directory -Force $HOME\physai-fleet-out | Out-Null
-Copy-Item task-prompt.md $HOME\physai-fleet-out\
+New-Item -ItemType Directory $HOME\physai-fleet-out | Out-Null
+Copy-Item one-role-prompt.md, task-prompt.md $HOME\physai-fleet-out\
 Set-Location $HOME\physai-fleet-out
 ```
 
+`mkdir` fails if the folder already exists, so the run always starts empty.
+
 ### 2. Configure your model
 
-Use the same placeholders as step 2 of [grid-screening](../grid-screening/README.md).
-Replace `<your key>` with your real key.
+The key is read without echo, so it stays out of your shell history.
 
 bash:
 ```bash
-export NOSPACE_MODEL_PROVIDER=anthropic
-export NOSPACE_MODEL_NAME=<model name>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_PROVIDER='anthropic'
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+read -rs -p 'Anthropic key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
 ```
 
 PowerShell:
 ```powershell
 $env:NOSPACE_MODEL_PROVIDER = "anthropic"
-$env:NOSPACE_MODEL_NAME = "<model name>"
-$env:ANTHROPIC_API_KEY = "<your key>"
+$env:NOSPACE_MODEL_NAME = "YOUR_MODEL_ID"
+$env:ANTHROPIC_API_KEY = Read-Host 'Anthropic key' -MaskInput   # pwsh 7.1+; or read it from your secret store
 ```
 
 ### 3. Generate the system
 
-Flags were checked against `tokn agent-run --help`. `--max-steps` caps how many
-agent steps TOKN takes; start at 60 and raise it if the run stops before the
-project is complete.
+Flags were checked against `tokn agent-run --help-all`. Every command here uses
+`--permission-mode default`, so TOKN asks before each file write or command and
+you see every tool call. Leaving the flag out does **not** give you prompts: the
+scripted default runs without asking. Run the commands only in the empty output
+folder you created.
+
+**Start with one role.** Generate only the emergency-stop path:
+
+bash:
+```bash
+tokn agent-run --mode physai --prompt-file one-role-prompt.md --repo-root . \
+  --permission-mode default --max-steps 20
+```
+
+PowerShell:
+```powershell
+tokn agent-run --mode physai --prompt-file one-role-prompt.md --repo-root . `
+  --permission-mode default --max-steps 20
+```
+
+Then check the contract yourself, without trusting the agent's summary. Compile
+every generated file and run the stop test:
+
+```bash
+python -m compileall -q safety
+python -m unittest discover -s safety -p "test_*.py" -v
+```
+
+Read `safety/estop.py` and confirm `request_stop`, `tick`, `stopped` and
+`reset` exist and that nothing imports a hardware, network or serial module.
+If a file is missing or a test fails, that role is unassessed or failed; do not
+move on as if it passed.
+
+**Advanced: the full 14-agent simulation.** Only after the one-role check, and
+only if you accept a much longer and costlier run, generate the full system in
+the same folder:
 
 bash:
 ```bash
 tokn agent-run --mode physai --prompt-file task-prompt.md --repo-root . \
-  --max-steps 60 --no-confirm
+  --permission-mode default --max-steps 60 --token-budget 400000
 ```
 
 PowerShell:
 ```powershell
 tokn agent-run --mode physai --prompt-file task-prompt.md --repo-root . `
-  --max-steps 60 --no-confirm
+  --permission-mode default --max-steps 60 --token-budget 400000
 ```
 
-`--no-confirm` lets TOKN write files without asking each time. Run it only in the
-empty output folder you created.
+`--max-steps` limits turns and `--token-budget` is a soft budget, not a hard
+spend cap. Press Ctrl+C to stop the run at any point; files already written stay
+in the folder for you to inspect. Do not add `--no-confirm` here: it
+auto-approves every tool call.
 
 ### 4. Look at the shape of what was generated
 

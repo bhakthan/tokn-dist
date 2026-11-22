@@ -84,15 +84,16 @@ Troubleshooting table.
 Follow [SETUP.md](../../SETUP.md) for your provider. For Anthropic, for example:
 
 ```bash
-export NOSPACE_MODEL_PROVIDER=anthropic
-export NOSPACE_MODEL_NAME=<a Claude model you have access to>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_PROVIDER='anthropic'
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+read -rs -p 'Anthropic API key: ' ANTHROPIC_API_KEY; echo
+export ANTHROPIC_API_KEY
 ```
 
 ```powershell
 $env:NOSPACE_MODEL_PROVIDER = "anthropic"
-$env:NOSPACE_MODEL_NAME     = "<a Claude model you have access to>"
-$env:ANTHROPIC_API_KEY      = "<your key>"
+$env:NOSPACE_MODEL_NAME     = "YOUR_MODEL_ID"
+# Load ANTHROPIC_API_KEY from a trusted secret store/session.
 ```
 
 Use your shell or `~/.tokn/config/credentials.env` for keys. Never commit a
@@ -126,14 +127,14 @@ Flags used:
 | `--max-steps 25` | Stops the run after 25 agent steps |
 | `--output-format text` | Plain text output, which the checker can read |
 
-Add `--no-confirm` only if you want to skip interactive confirmations. The agent
-reads only `inputs/`, so this example does not need it.
+Keep normal interactive approvals. This fictional matter is for learning only;
+the output is not legal advice and requires human counsel review.
 
 ## 5. Check the result
 
-Expected gate outcomes come from the domain's hook and error messages in
-`environment-manager/internal/agent/domains/legalai/`. They are not a recorded
-run. Where a result depends on exact citation-format rules, the table says so.
+Expected outcomes below describe public gate behavior and a sanitized fixture
+citation check. They are not a recorded run. This is a fictional matter for
+human counsel, not legal advice.
 
 | Step in `prompt.md` | Expected gate behaviour | Message to look for |
 |---|---|---|

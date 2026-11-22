@@ -80,18 +80,22 @@ List the supported models and the settings for each. This works offline:
 tokn system-one models
 ```
 
-These are the three backends we used. Use any two or more you have access to.
+These are backend types from a historical observed run, not endorsements or a
+promise of current availability. Use only destinations and models available
+to your account. The Microsoft Decision-1 backend is distinct from any
+separately selectable 1.1 deployment.
 
 | Backend | Settings |
 |---|---|
 | TypeSafe **Jev** | `SYSTEMONE_BACKEND=jev`, `JEV_API_KEY=<key>` |
-| Bespoke Labs **Nimble** (hosted) | `SYSTEMONE_BACKEND=compatible`, `SYSTEMONE_BASE_URL=https://api.bespokelabs.ai/v1`, `SYSTEMONE_API_KEY=<key>`, `SYSTEMONE_MODEL=nimble-latest` |
-| Microsoft **decision-1** | `SYSTEMONE_BACKEND=microsoft`, `DECISION_API_ENDPOINT=https://<resource>.cognitiveservices.azure.com`, `DECISION_API_KEY=<key>` (or Entra ID via `az login`) |
+| Bespoke Labs **Nimble** (hosted) | `SYSTEMONE_BACKEND=compatible`, `SYSTEMONE_BASE_URL=YOUR_TRUSTED_API_BASE_URL`, `SYSTEMONE_API_KEY` from a secret store, `SYSTEMONE_MODEL=YOUR_MODEL_ID` |
+| Microsoft **Decision-1** | `SYSTEMONE_BACKEND=microsoft`, `DECISION_API_ENDPOINT=YOUR_TRUSTED_DECISION_ENDPOINT`, `DECISION_API_KEY` from a secret store (or Entra ID via `az login`) |
 | OpenAI Decisions API | `SYSTEMONE_BACKEND=openai`, `OPENAI_API_KEY=<key>` |
 
 Set these in your shell. Destinations such as `SYSTEMONE_BACKEND`,
 `SYSTEMONE_BASE_URL` and `DECISION_API_ENDPOINT` are **never** read from a
 repository `.env`. Never paste a key into a file you might commit or share.
+Do not treat any sample deployment name as a default for your account.
 
 ## 3. Ask every decision model (in parallel)
 
@@ -103,7 +107,8 @@ makes this tier fast.
 macOS / Linux, Jev for example:
 
 ```bash
-export SYSTEMONE_BACKEND=jev JEV_API_KEY=<your key>
+export SYSTEMONE_BACKEND='jev'
+read -rs -p 'Jev API key: ' JEV_API_KEY; echo; export JEV_API_KEY
 tokn system-one batch --file batch.json --concurrency 8 --run-timeout 120s --mcp-disabled > votes/jev.json
 ```
 
@@ -111,9 +116,9 @@ Windows PowerShell, Nimble for example:
 
 ```powershell
 $env:SYSTEMONE_BACKEND  = "compatible"
-$env:SYSTEMONE_BASE_URL = "https://api.bespokelabs.ai/v1"
-$env:SYSTEMONE_API_KEY  = "<your key>"
-$env:SYSTEMONE_MODEL    = "nimble-latest"
+$env:SYSTEMONE_BASE_URL = "YOUR_TRUSTED_API_BASE_URL"
+# Set SYSTEMONE_API_KEY through your trusted secret manager or existing shell session.
+$env:SYSTEMONE_MODEL    = "YOUR_MODEL_ID"
 tokn system-one batch --file batch.json --concurrency 8 --run-timeout 120s --mcp-disabled > votes\nimble.json
 ```
 
@@ -169,14 +174,14 @@ Configure your LLM as in [SETUP.md](../../SETUP.md). For Anthropic, for example:
 
 ```bash
 export NOSPACE_MODEL_PROVIDER=anthropic
-export NOSPACE_MODEL_NAME=<a Claude model you have access to>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+read -rs -p 'Anthropic API key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
 ```
 
 Then run:
 
 ```bash
-tokn agent-run --repo-root workspace --prompt-file prompt.md --max-steps 20 --no-confirm --no-stream
+tokn agent-run --repo-root workspace --prompt-file prompt.md --max-steps 20 --no-stream
 ```
 
 `prompt.md` tells the agent to:
@@ -195,6 +200,8 @@ plus the plan. Expect 1–3 minutes.
 ```bash
 python council.py grade workspace/triage.json
 ```
+
+Historical observed output (not an expected result or guarantee):
 
 ```text
 action 100%  risk 100%  priority 100%

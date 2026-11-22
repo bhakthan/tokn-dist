@@ -27,7 +27,7 @@ All data in `fixture/` is synthetic and written for this example.
 
 | Requirement | Why | Check |
 |---|---|---|
-| TOKN **v0.3.57 or newer** | First release with the tool-contract flags used here | `tokn version` |
+| TOKN **v0.3.57 or newer** | Minimum version for the tool-contract flags used here | `tokn version` |
 | An LLM provider and key | Runs the agent | see [SETUP.md](../../SETUP.md) |
 | Tier: **trial or Community** | `tokn license features` on the Community tier lists `core:*` and `workflow:*`, which cover the agent loop used here. Community is enough. The 14-day trial (`tokn license trial`) is not required. | `tokn license` |
 
@@ -63,15 +63,15 @@ Replace `path/to` with the location of your `tokn-dist` checkout.
 Follow [SETUP.md](../../SETUP.md) for your provider. For example:
 
 ```bash
-export NOSPACE_MODEL_PROVIDER=<your provider>
-export NOSPACE_MODEL_NAME=<a model you have access to>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_PROVIDER='anthropic'
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+read -rs -p 'Anthropic API key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
 ```
 
 ```powershell
-$env:NOSPACE_MODEL_PROVIDER = "<your provider>"
-$env:NOSPACE_MODEL_NAME     = "<a model you have access to>"
-$env:ANTHROPIC_API_KEY      = "<your key>"
+$env:NOSPACE_MODEL_PROVIDER = "anthropic"
+$env:NOSPACE_MODEL_NAME     = "YOUR_MODEL_ID"
+# Set ANTHROPIC_API_KEY from a trusted secret store or your protected shell session.
 ```
 
 Keep keys out of the repo. Do not commit them.
@@ -85,7 +85,7 @@ the command uses your home folder.
 macOS / Linux:
 
 ```bash
-tokn agent-run --prompt-file prompt.md --no-confirm --headless \
+tokn agent-run --prompt-file prompt.md --headless \
   --max-steps 10 --log-file contract-run.log \
   --tool-contract-stats "$HOME/tokn-tool-contract.json" \
   --output-format json > result.json 2> contract-stderr.txt
@@ -94,7 +94,7 @@ tokn agent-run --prompt-file prompt.md --no-confirm --headless \
 Windows PowerShell:
 
 ```powershell
-tokn agent-run --prompt-file prompt.md --no-confirm --headless `
+tokn agent-run --prompt-file prompt.md --headless `
   --max-steps 10 --log-file contract-run.log `
   --tool-contract-stats "$HOME\tokn-tool-contract.json" `
   --output-format json > result.json 2> contract-stderr.txt
@@ -135,23 +135,25 @@ and tool. Open it to compare repairs and blocks between runs.
 
 ## 5. Compare with the raw failure (optional)
 
-Turn the layer off and run the same task:
+turn the layer off as a comparison-only negative control, not a recommended
+configuration fix:
 
 macOS / Linux:
 
 ```bash
-tokn agent-run --prompt-file prompt.md --no-confirm --headless \
+tokn agent-run --prompt-file prompt.md --headless \
   --max-steps 10 --no-tool-contract --log-file raw-run.log --output-format json > raw.json
 ```
 
 Windows PowerShell:
 
 ```powershell
-tokn agent-run --prompt-file prompt.md --no-confirm --headless `
+tokn agent-run --prompt-file prompt.md --headless `
   --max-steps 10 --no-tool-contract --log-file raw-run.log --output-format json > raw.json
 ```
 
-Without the layer, a read with the missing field is not repaired. The model
+Compare repaired and error counts from the two result files; do not conclude
+that disabling the layer reduces errors from prose alone. Without the layer, a read with the missing field is not repaired. The model
 sees the raw result and has to work out the fix itself. Compare the step
 counts in `result.json` and `raw.json`. Models do not always make the same
 mistake, so the raw run may succeed anyway. That is also worth noting.
@@ -196,4 +198,4 @@ recovered after a not-found result.
 | `--tool-contract-stats` rejected | The path must be absolute. Use `$HOME/...` or `$HOME\...`. |
 | The read returns "not found" | The model may have put the range in the path. Check the log for the retry, and check that `fixture/ring_buffer.go` exists in the folder you run from. |
 | The run stops at the step limit | Raise `--max-steps`, or check the LLM configuration in step 2. |
-| `Unknown flag` error | Run `tokn agent-run --help` and check the flag name. |
+| `Unknown flag` error | Run `tokn agent-run --help-all` and check the flag name. |

@@ -15,10 +15,9 @@ blocking a write during a real `tokn agent-run`:
 TOKN supports 26 lifecycle phases and four handler types: `command`, `http`,
 `prompt` and `agent`. This example uses only `command` hooks on the two
 tool-call phases. The `http` handler is omitted on purpose, so nothing in
-this example sends data over the network. The phase names are in
-`environment-manager/internal/agent/hooks/hooks.go`, and the config keys map
-to them in `hooks/configurable.go`: `PreToolUse` maps to `before_tool_call`,
-and `PostToolUse` maps to `after_tool_call`.
+this example sends data over the network. The observable hook results are
+recorded in the scratch audit log. Use `tokn agent-run --help-all` to inspect
+advanced logging and approval options for your installed version.
 
 All paths and content in `repo/` are synthetic.
 
@@ -33,10 +32,8 @@ All paths and content in `repo/` are synthetic.
 | `git` (optional) | Only if you want to commit the example repo | `git --version` |
 | An LLM provider and key | Runs the agent | see [SETUP.md](../../SETUP.md) |
 
-Trial and Community tiers both run this example. I did not find a license gate
-on hooks or `agent-run` in source, but the Community feature list only names
-`core:*` and `workflow:*`, so confirm with `tokn version` before you start.
-Model calls are billed by your own provider, not by TOKN.
+Check `tokn license features` for the entitlements available in your
+installation. Model calls may incur charges from your configured provider.
 
 > **What leaves your machine.** The model provider receives the task and the
 > files the agent reads or writes. The hook scripts run locally and write only
@@ -86,18 +83,20 @@ Follow [SETUP.md](../../SETUP.md) for your provider. For Anthropic, for example:
 
 ```bash
 export NOSPACE_MODEL_PROVIDER=anthropic
-export NOSPACE_MODEL_NAME=<a Claude model you have access to>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+read -rs -p 'Anthropic API key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
 ```
 
 ```powershell
 $env:NOSPACE_MODEL_PROVIDER = "anthropic"
-$env:NOSPACE_MODEL_NAME     = "<a Claude model you have access to>"
-$env:ANTHROPIC_API_KEY      = "<your key>"
+$env:NOSPACE_MODEL_NAME     = "YOUR_MODEL_ID"
+# Set ANTHROPIC_API_KEY through your trusted secret manager or existing shell session.
 ```
 
-Use your shell or `~/.tokn/config/credentials.env` for keys. Never commit a
-key to the repo.
+Use a trusted secret store or existing shell session for keys. Never commit a
+key or place one in a populated `.env` file.
+Run `tokn doctor --provider anthropic` for a static configuration check; it
+does not verify a live credential.
 
 ## 3. Trust the workspace so hooks load
 
@@ -117,19 +116,17 @@ The grant is pinned to the current contents of the settings file. If you edit
 
 ## 4. Run the agent
 
-`--no-confirm` auto-approves tool calls, which is acceptable in this scratch
-repo. Leave it off if you want to approve each edit.
+Keep the default approval behavior so you can review each intended edit.
 
 macOS / Linux / Windows PowerShell:
 
 ```bash
-tokn agent-run --repo-root . --prompt-file task.md --no-confirm --max-steps 8
+tokn agent-run --repo-root . --prompt-file task.md --max-steps 8
 ```
 
 ## 5. See the hook block the write
 
-Expected behaviour, from the code paths in `loop/realworld.go` and
-`hooks/configurable.go`:
+Expected behavior to observe in the scratch workspace:
 
 | Step | What you should see |
 |---|---|
@@ -161,9 +158,9 @@ The audit log should have one line for the allowed write, for example:
 2025-01-01T12:00:00Z tool=write_file path=notes/status.md
 ```
 
-The run log records the blocked call as an event named `hook-blocked`. Find it
-in `.tokn/logs/` under the repo (the default is `session-<stamp>.log`, per
-`tokn agent-run --help`). Use `--log-file` to choose a different path.
+Inspect the hook result in the scratch audit log and the run logs under
+`.tokn/logs/`. Use `tokn agent-run --help-all` to check the logging options
+available in your installed version.
 
 ### What to look for
 

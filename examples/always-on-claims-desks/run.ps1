@@ -15,7 +15,6 @@ $ReviewWs = Join-Path $PSScriptRoot "review"
 $State = Join-Path $PSScriptRoot "state"
 $IntakeState = Join-Path $State $Intake
 $ReviewState = Join-Path $State $Review
-$Model = "gpt-6-astra"
 
 function Note([string]$Msg) { Write-Host "[*] $Msg" -ForegroundColor Cyan }
 function Abort([string]$Msg) {
@@ -65,18 +64,28 @@ if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
 
 if (-not $env:AZURE_OPENAI_ENDPOINT) {
     $problems += "AZURE_OPENAI_ENDPOINT is not set in this shell. Export your Azure OpenAI resource endpoint (README step 1). It is not read from .env."
+} elseif ($env:AZURE_OPENAI_ENDPOINT -match '(YOUR_|placeholder|[<>])') {
+    $problems += "AZURE_OPENAI_ENDPOINT is still a placeholder. Set a trusted endpoint in this shell."
 }
 if (-not $env:AZURE_OPENAI_DEPLOYMENT) {
-    $problems += "AZURE_OPENAI_DEPLOYMENT is not set in this shell. Set it to $Model (the model.model in both configs)."
-} elseif ($env:AZURE_OPENAI_DEPLOYMENT -ne $Model) {
-    $problems += "AZURE_OPENAI_DEPLOYMENT is '$($env:AZURE_OPENAI_DEPLOYMENT)' but both configs use '$Model'. Set it to $Model, or edit model.model in config\claims-intake.yaml and config\coverage-review.yaml."
+    $problems += "AZURE_OPENAI_DEPLOYMENT is not set in this shell. Set it to the same trusted alias used in both model.model config fields."
+} elseif ($env:AZURE_OPENAI_DEPLOYMENT -match '(YOUR_|placeholder|[<>])') {
+    $problems += "AZURE_OPENAI_DEPLOYMENT is still a placeholder. Set a trusted deployment alias in this shell and in both model.model config fields."
+} else {
+    foreach ($relativeConfig in @("config\claims-intake.yaml", "config\coverage-review.yaml")) {
+        $configPath = Join-Path $PSScriptRoot $relativeConfig
+        $expectedModelLine = [regex]::Escape("  model: $($env:AZURE_OPENAI_DEPLOYMENT)")
+        if ((Get-Content -LiteralPath $configPath -Raw) -notmatch "(?m)^$expectedModelLine$") {
+            $problems += "$relativeConfig model.model does not match AZURE_OPENAI_DEPLOYMENT. Edit the config alias before rerunning."
+        }
+    }
 }
 if ($env:AZURE_OPENAI_USE_DEFAULT_CREDENTIAL -ne "true") {
     $problems += "AZURE_OPENAI_USE_DEFAULT_CREDENTIAL=true is not set in this shell (README step 1)."
 }
 $az = Get-Command az -ErrorAction SilentlyContinue
 if (-not $az) {
-    $problems += "Missing: Azure CLI. Install: winget install Microsoft.AzureCLI (Windows), brew install azure-cli (macOS), or curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash (Debian/Ubuntu). Then run az login."
+    $problems += "Missing: Azure CLI. Install it using Microsoft's signed package instructions for your OS: https://learn.microsoft.com/cli/azure/install-azure-cli. Then run az login."
 } else {
     & az account show -o none *> $null
     if ($LASTEXITCODE -ne 0) { $problems += "Azure CLI is not signed in. Run az login, then rerun." }

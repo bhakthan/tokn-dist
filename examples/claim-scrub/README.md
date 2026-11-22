@@ -13,7 +13,7 @@ A general-purpose LLM reads the records and gives a confident verdict. The `heal
 | `hrcm_prior_auth_check` | Prior-authorization requirement per line against the SYNTHETIC payer rule set (code, POS exemptions, therapy visit thresholds) and validation of auth on file (code, date window, units). |
 | `hrcm_timely_filing` | Compute the timely-filing deadline and days remaining for a date of service (SYNTHETIC payer table; Medicare-FFS style 12 months, others by days; a claim received on the deadline date is timely). |
 
-This is the single-agent version of a TOKN domain-relay scenario. It uses the same synthetic data, one model and a few cents of tokens, not a five-model relay.
+This is the single-agent version of a TOKN domain-relay scenario. Use a model capable of the required tool calls; provider charges and number of turns depend on the run. A missing/failed tool result is unassessed, not a pass. It uses the same synthetic data, not a five-model relay.
 
 ## 0. What you need
 
@@ -21,7 +21,7 @@ This is the single-agent version of a TOKN domain-relay scenario. It uses the sa
 |---|---|---|
 | TOKN v0.3.83 or newer | Includes the domain tools this example calls. | `tokn version` |
 | 14-day trial (`tokn license trial`) | Domain modes need the trial. | `tokn license features` shows `domains:healthrcm` or `domains:*` |
-| An LLM provider | TOKN calls a model. Any supported provider works. | See [../../SETUP.md](../../SETUP.md) |
+| An LLM provider | TOKN calls a model. Use a model capable of the required tool calls; provider charges and number of turns depend on the run. A missing/failed tool result is unassessed, not a pass. | See [../../SETUP.md](../../SETUP.md) |
 
 **What leaves your machine:** the prompt, the files TOKN reads from the scratch folder, and tool results. These go to the LLM provider you configure. The demo data is synthetic.
 
@@ -50,8 +50,24 @@ Read `prompt.md` and the files in `demo-input/` (`claims.json`), then assign a s
 ## 4. Run the task
 
 ```bash
-tokn agent-run --mode healthrcm --repo-root . --prompt-file prompt.md --max-steps 40 --no-confirm
+mkdir -p work/demo-input
+cp prompt.md work/prompt.md
+cp demo-input/* work/demo-input/
+cd work
+tokn agent-run --mode healthrcm --repo-root . --prompt-file prompt.md --max-steps 40
 ```
+
+PowerShell:
+
+```powershell
+New-Item -ItemType Directory -Force work\demo-input | Out-Null
+Copy-Item prompt.md work\prompt.md
+Copy-Item demo-input\* work\demo-input\
+Set-Location work
+tokn agent-run --mode healthrcm --repo-root . --prompt-file prompt.md --max-steps 40
+```
+
+Only synthetic `prompt.md` and `demo-input/` are staged in `work/`; never upload real claims. Do not copy this README or its answer key into the agent's read scope. Grade `work/RESULT.md` from outside `work/`, checking for `blocked`/`referred` status and redacted identifiers. A safe refusal or inconclusive result is unassessed, not a pass.
 
 6 items with 6 tools each can take 36 or more tool calls. If the run stops early, raise `--max-steps`.
 

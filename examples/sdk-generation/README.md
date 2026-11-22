@@ -27,11 +27,11 @@ Install the toolchains for your OS. Only the ones you need for the languages you
 | TypeScript (`tsc`) | `ts` | `npm install -g typescript` | `npm install -g typescript` | `sudo npm install -g typescript` |
 | Python 3 and pip | `py` | `winget install Python.Python.3.12` | `brew install python` | `sudo apt install python3 python3-pip` |
 | Go (optional) | `go` | `winget install GoLang.Go` | `brew install go` | `sudo apt install golang-go` |
-| Rust toolchain (optional) | `rs` | `winget install Rustlang.Rustup` | `brew install rustup` then `rustup default stable` | `curl https://sh.rustup.rs -sSf \| sh` |
+| Rust toolchain (optional) | `rs` | Install a versioned Rustup release from its official Windows installer, then verify with `rustc --version` and `cargo --version` | Install a versioned Rustup release from the official Rustup site, then run `rustup default stable` and verify `rustc --version` | Download a versioned Rustup release from the official Rustup site, verify the published checksum/signature, then run the installer and verify `rustc --version` |
 
 After installing, open a new terminal so the new `PATH` entries are picked up.
 
-**What leaves your machine:** `ingest` and `generate` run locally and send nothing. `validate` can run `npm install` for the TypeScript client, which downloads packages from the npm registry. TOKN runs it with `--ignore-scripts`. No LLM is called in this walkthrough. The spec is synthetic.
+**What leaves your machine:** `ingest` and `generate` run locally and send nothing. `validate` can run `npm install` for the TypeScript client, which downloads packages from the npm registry. TOKN runs it with `--ignore-scripts`. No LLM is called in this walkthrough. Start with metadata-only scaffolding; installing generated dependencies or compiling clients is optional and requires your choice. The spec is synthetic.
 
 ## 1. Copy the example to a scratch folder
 

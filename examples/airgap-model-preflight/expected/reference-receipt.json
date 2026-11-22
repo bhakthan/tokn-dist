@@ -1,0 +1,12 @@
+{
+  "version": "0.3.118",
+  "input_digest": "sha256:974010564126aeec49bb0dde409d80dbc1db61add2444477ac7006f98772aea1",
+  "digest_scope": "task.txt; sorted relative path + NUL + bytes + NUL",
+  "scenario": "static provider preflight and optional staged local model",
+  "checker": "tokn doctor --provider gguf and tokn models status",
+  "status": "static checks observed; staged inference not performed",
+  "limitations": [
+    "Static diagnostics do not prove the local server can infer.",
+    "The input digest excludes weights, which are not included."
+  ]
+}

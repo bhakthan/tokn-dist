@@ -41,7 +41,7 @@ subject references. There's no real patient or lab data.
 | Profile | Needs | Cost |
 |---|---|---|
 | `offline` | Python 3.10+, `numpy pandas scipy pytest`; Git and TOKN v0.3.115+ for spec validation | none, with no model calls |
-| `trio` | Git, TOKN, PyYAML and the offline Python packages, plus an Anthropic key (Opus), an Azure OpenAI deployment (gpt-6-astra), a decision-model backend, and a TOKN **trial or licence** | billed by your providers; about $5 per implement+review round |
+| `trio` | Git, TOKN, PyYAML and the offline Python packages, plus an Anthropic key (Opus), an Azure OpenAI deployment (gpt-6-astra), a decision-model backend, and a TOKN **trial or licence** | Use a model capable of the required tool calls; provider charges and number of turns depend on the run. A missing/failed tool result is unassessed, not a pass. |
 | `hybrid` | the trio requirements, plus a Hugging Face token (open-weights coder) and a local [Ollama](https://ollama.com) with one pulled coder model | frontier roles billed; local roles free |
 | `c2s-hybrid` (optional showcase on `trio`/`hybrid`) | hybrid requirements plus a loopback server, or llama.cpp `llama-server` and a C2S-Scale GGUF (2B Q4_K_M is about 1.6 GB and runs on CPU) | local inference; provider roles still billed |
 
@@ -123,16 +123,20 @@ After the third loop's request, the single-cell prototype must meet these too:
 
 ## Step 2: Trio. Frontier models plus a decision model
 
-Copy the profile template and fill in your own values:
-
-```bash
-cp profiles/trio.env.example .env        # Windows: copy profiles\trio.env.example .env
-```
+Use `profiles/trio.env.example` as a reference checklist only; do not source it
+or copy it into `.env`. The runner imports only documented credentials from
+`.env`. Set routing, endpoint, deployment, model and executable overrides
+directly in a trusted shell. For example, provide `AZURE_OPENAI_ENDPOINT` and
+any decision-backend endpoint there; do not take these destination values from
+a repository file.
 
 Set the `FACTORY_DECISION_MODEL` only if your decision backend needs a specific deployment name. Otherwise each backend uses its own decision model; a chat model such as gpt-6-astra is not a decision model. If the decision call fails, the gate stops for a human rather than passing.
 
-`.env` is git-ignored. `run.py` turns it into short-lived credential profiles
-named by the spec's `models:` bindings, and deletes them when the run ends.
+`.env` is git-ignored. `run.py` imports only non-empty, allowlisted credentials
+from it, never overrides the shell, and turns them into short-lived credential
+profiles named by the spec's `models:` bindings. Unsupported `.env` settings
+are ignored with their names only; their values are never printed. The profiles
+are deleted when the run ends.
 
 Then run:
 
@@ -155,7 +159,11 @@ The two flags are **your** approvals. The factory pauses at them either way.
   `max_files_per_change` or `max_lines_per_change`. The fix plus its new tests
   usually does.
 
-To continue an interrupted run, use `--resume out/<run-dir>`.
+New runs write outside the checkout by default, under
+`~/tokn-runs/rnaseq-software-factory/`. The startup line prints the exact run
+directory. Set `--out-root <absolute-path>` to choose another parent; the
+runner rejects paths inside the source checkout. Resume a live run with
+`--resume <exact-run-directory>`.
 
 ### Batched decisions
 
@@ -198,7 +206,7 @@ models:
 
 ```bash
 ollama pull qwen2.5-coder:7b
-cp profiles/hybrid.env.example .env
+# Use profiles/hybrid.env.example as a checklist; do not source or copy it.
 python run.py --profile hybrid --approve-prod --approve-blast-radius
 ```
 
@@ -242,22 +250,54 @@ The design rule the agents must implement is:
 
 To include the real model, install llama.cpp and download a C2S-Scale GGUF:
 
-```bash
-winget install ggml.llamacpp          # macOS: brew install llama.cpp
-pip install -U huggingface_hub
-hf download mradermacher/C2S-Scale-Gemma-2-2B-GGUF C2S-Scale-Gemma-2-2B.Q4_K_M.gguf --local-dir models
+Windows PowerShell:
+
+```powershell
+winget install ggml.llamacpp
+python -m pip install -U huggingface_hub
+$MODEL_DIR = Join-Path $HOME 'tokn-models\c2s-scale'
+New-Item -ItemType Directory -Force $MODEL_DIR | Out-Null
+hf download mradermacher/C2S-Scale-Gemma-2-2B-GGUF C2S-Scale-Gemma-2-2B.Q4_K_M.gguf --local-dir $MODEL_DIR
+$env:FACTORY_C2S_GGUF = Join-Path $MODEL_DIR 'C2S-Scale-Gemma-2-2B.Q4_K_M.gguf'
 ```
 
-Set `FACTORY_C2S_GGUF=models/C2S-Scale-Gemma-2-2B.Q4_K_M.gguf` in `.env`. `run.py`
-starts `llama-server` on `127.0.0.1`, records the file's SHA-256 (and refuses a file that doesn't
-match `FACTORY_C2S_SHA256` when you pin it), grades the shipped service, and stops the
-server. You can also pass `--c2s-url` for a server you run yourself. The larger
+macOS:
+
+```bash
+brew install llama.cpp
+python -m pip install -U huggingface_hub
+MODEL_DIR="$HOME/tokn-models/c2s-scale"
+mkdir -p "$MODEL_DIR"
+hf download mradermacher/C2S-Scale-Gemma-2-2B-GGUF C2S-Scale-Gemma-2-2B.Q4_K_M.gguf --local-dir "$MODEL_DIR"
+export FACTORY_C2S_GGUF="$MODEL_DIR/C2S-Scale-Gemma-2-2B.Q4_K_M.gguf"
+```
+
+Linux (Debian/Ubuntu):
+
+```bash
+sudo apt-get install -y git cmake build-essential libcurl4-openssl-dev
+git clone https://github.com/ggml-org/llama.cpp "$HOME/llama.cpp"
+cmake -S "$HOME/llama.cpp" -B "$HOME/llama.cpp/build"
+cmake --build "$HOME/llama.cpp/build" --target llama-server -j2
+export FACTORY_LLAMA_SERVER="$HOME/llama.cpp/build/bin/llama-server"
+python -m pip install -U huggingface_hub
+MODEL_DIR="$HOME/tokn-models/c2s-scale"
+mkdir -p "$MODEL_DIR"
+hf download mradermacher/C2S-Scale-Gemma-2-2B-GGUF C2S-Scale-Gemma-2-2B.Q4_K_M.gguf --local-dir "$MODEL_DIR"
+export FACTORY_C2S_GGUF="$MODEL_DIR/C2S-Scale-Gemma-2-2B.Q4_K_M.gguf"
+```
+
+The model stays outside the checkout. `run.py` starts `llama-server` on
+`127.0.0.1`, records the file's SHA-256 (and refuses a file that doesn't match
+`FACTORY_C2S_SHA256` when you pin it), grades the shipped service, and stops
+the server. You can also pass `--c2s-url` for a server you run yourself. The larger
 `C2S-Scale-Gemma-2-27B` Q2_K (about 10 GB) works the same way.
 
 **The `c2s-hybrid` profile.** `python run.py --profile c2s-hybrid` runs the hybrid
 factory and requires the local C2S model up front: preflight checks for
 `llama-server` and `FACTORY_C2S_GGUF` (or a loopback `--c2s-url`). Copy
-`profiles/c2s-hybrid.env.example` to start. C2S-Scale is the service's data-plane
+`profiles/c2s-hybrid.env.example` as a checklist. Set the GGUF path in your
+trusted shell. C2S-Scale is the service's data-plane
 model, not a factory role, because it has no tool calling, so
 `spec/models.c2s-hybrid.yaml` binds the same roles as `models.hybrid.yaml`.
 
@@ -365,7 +405,8 @@ incident intake.
 
 ## Step 5: Read the evidence
 
-Each run writes `out/<timestamp>-<profile>/`:
+Each run writes under its unique run directory (`RUN_DIR`), whose exact path
+is printed at startup:
 
 | Path | What it is |
 |---|---|
@@ -387,8 +428,8 @@ tokn factory verify --json      # re-check the chain, blobs and gate semantics
 ### Results: offline profile (observed)
 
 Run: `python run.py --profile offline --tokn <path-to-tokn>` (no keys or network).
-Spec validation needs `tokn` v0.3.115 or later. Artifacts land in
-`out/<timestamp>-offline/`.
+Spec validation needs `tokn` v0.3.115 or later. Artifacts land in the printed
+`RUN_DIR` under `~/tokn-runs/rnaseq-software-factory/` by default.
 
 | Check | Result | Artifact |
 |---|---|---|
@@ -430,6 +471,7 @@ decision records or agent commits. A `trio` or `hybrid` run produces them. Per s
 
 ## Cleanup
 
-Everything a run writes stays under `out/`. Delete it with `rm -rf out` (on
-Windows, `Remove-Item -Recurse out`). Don't commit `out/`, `.env`, `.nospace/`
-or `.tokn/`; the included `.gitignore` already excludes them.
+Run artifacts stay under the user-owned `RUN_DIR`, outside the checkout.
+Keep that directory while you need its audit evidence; when cleaning up, remove
+only the exact run directory after reviewing it, not the parent run root.
+Never commit `.env`, `.nospace/` or `.tokn/`.

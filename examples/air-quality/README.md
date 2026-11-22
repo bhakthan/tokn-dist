@@ -17,8 +17,8 @@ This example runs TOKN's atmospheric chemistry domain (`--mode atmchem`) on a sm
 |---|---|---|
 | TOKN v0.3.57 or later | Earlier builds do not have the `atmchem` mode or its tools | `tokn version` |
 | Python 3.8+ | Runs the offline checker | `python --version` |
-| An LLM provider you can reach | TOKN's agent loop needs a model. See [SETUP.md](../../SETUP.md). | `tokn agent-run --help` |
-| 14-day trial | Domain modes such as `atmchem` need the trial. Community grants only `domains:basic`. | `tokn license status` |
+| An LLM provider you can reach | TOKN's agent loop needs a model. See [SETUP.md](../../SETUP.md). | `tokn doctor --provider <id>` checks static configuration only, not live credentials or connectivity |
+| 14-day trial | Domain modes such as `atmchem` need the trial. Community grants only `domains:basic`. | `tokn license features` |
 
 **Tier:** `atmchem` is a domain mode. Start the trial with `tokn license trial` (14 days). Without it, the mode is not available. Everything else in this example (the checker and the CSV) is plain Python and needs no licence.
 
@@ -46,16 +46,17 @@ Set-Location tokn-dist\examples\air-quality
 
 Bash:
 ```bash
-export NOSPACE_MODEL_PROVIDER=<your provider>
-export NOSPACE_MODEL_NAME=<a model you have access to>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_PROVIDER='YOUR_PROVIDER'
+export NOSPACE_MODEL_NAME='YOUR_MODEL_NAME'
+read -rs -p 'Provider API key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
 ```
 
 PowerShell:
 ```powershell
-$env:NOSPACE_MODEL_PROVIDER = "<your provider>"
-$env:NOSPACE_MODEL_NAME = "<a model you have access to>"
-$env:ANTHROPIC_API_KEY = "<your key>"
+$env:NOSPACE_MODEL_PROVIDER = "YOUR_PROVIDER"
+$env:NOSPACE_MODEL_NAME = "YOUR_MODEL_NAME"
+$secret = Read-Host "Provider API key" -AsSecureString
+$env:ANTHROPIC_API_KEY = [System.Net.NetworkCredential]::new('', $secret).Password
 ```
 
 Set only the key variable that matches your provider. See [SETUP.md](../../SETUP.md) for the full list.
@@ -70,15 +71,15 @@ tokn license trial
 
 Bash:
 ```bash
-tokn agent-run --mode atmchem --prompt-file prompt.md --no-confirm
+tokn agent-run --mode atmchem --prompt-file prompt.md
 ```
 
 PowerShell:
 ```powershell
-tokn agent-run --mode atmchem --prompt-file prompt.md --no-confirm
+tokn agent-run --mode atmchem --prompt-file prompt.md
 ```
 
-`--no-confirm` skips interactive prompts. Remove it if you want to approve each step. Add `--max-steps 12` if the agent stops early.
+Interactive approvals are the default. Review each requested tool call; add `--max-steps 12` if the agent stops early.
 
 ### 5. Recompute the metrics offline
 
@@ -112,12 +113,17 @@ The PM2.5 row is the main lesson. Its correlation is almost perfect, but the mod
 - Limit values are not asserted from memory. Any NAAQS, EU AQD or WHO AQG number the agent cites should be checked against the official source.
 - The answer labels which numbers were computed from the file.
 
+Porting an air-quality model to a new language or runtime? The
+[migration-parity](../migration-parity/README.md) walkthrough includes a guided
+`atmchem` oracle variant that checks a candidate against recorded legacy outputs,
+with no model required.
+
 ## Troubleshooting
 
 | Symptom | Fix |
 |---|---|
 | The mode is not recognised | Your TOKN is older than v0.3.57. Update it. |
-| Mode refuses to start, or a domain-licence error appears | Run `tokn license trial`, then `tokn license status`. |
+| Mode refuses to start, or a domain-licence error appears | Run `tokn license trial`, then `tokn license features`. |
 | The agent makes no tool calls | Raise `--max-steps`, and check the model settings in step 2. |
 | `python` not found on Windows | Use `py` instead, or install Python from python.org. |
 | Checker reports a missing file | Run it from this folder, or pass the CSV path as the first argument. |

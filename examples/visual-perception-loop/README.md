@@ -1,9 +1,9 @@
 # Visual perception loop
 
-TOKN has typed vision tools (`tokn vision ...`). They let an agent look at a
-rendered page, measure what it sees, and check its own work. This example walks
-through each tool on a small landing page, then runs a full agent loop that
-rebuilds the page from a screenshot.
+TOKN has typed vision tools (`tokn vision ...`). They let an agent inspect a
+rendered page and compare visual evidence. Steps 1–7 render and inspect the
+provided synthetic pages; they do not ask an agent to edit HTML. The optional
+build in step 9 is a separate, model-backed exercise with file writes.
 
 ## Why typed vision tools
 
@@ -17,8 +17,9 @@ rebuilds the page from a screenshot.
 
 ## Evidence
 
-In the maintainer's 5-seed benchmark, a vision-capable coder (Claude Haiku 5.5)
-used these tools on two tasks: an HTML card and an SVG badge.
+In a historical maintainer 5-seed benchmark, a vision-capable coder used these
+tools on two tasks: an HTML card and an SVG badge. This is an observed result
+from that benchmark, not a guarantee or a result reproduced by this walkthrough.
 
 | Task | Average SSIM with vision tools | Average SSIM without |
 |------|-------------------------------|----------------------|
@@ -35,7 +36,7 @@ without them.
 | `target.html` | The page to match. Think of it as the design you were given. |
 | `draft.html` | A copy of the page with three faults (see below). |
 | `brief.md` | The task brief for the agent run in step 9. |
-| `.env.example` | Placeholder settings. Copy it to `.env` and add your key. |
+| `.env.example` | Reference-only settings; configure values in your trusted shell. |
 
 The draft has three faults:
 
@@ -57,22 +58,51 @@ Set your key for this session.
 PowerShell:
 
 ```powershell
-$env:ANTHROPIC_API_KEY='your-anthropic-api-key'
+$secret = Read-Host 'Anthropic API key' -AsSecureString
+$ptr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secret)
+try { $env:ANTHROPIC_API_KEY = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($ptr) }
+finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($ptr) }
 $env:TOKN_VISION_PROVIDER='anthropic'
-$env:TOKN_VISION_MODEL='claude-haiku-5-5'
+$env:TOKN_VISION_MODEL='YOUR_MODEL_ID'
 ```
 
 macOS or Linux:
 
 ```bash
-export ANTHROPIC_API_KEY=your-anthropic-api-key
-export TOKN_VISION_PROVIDER=anthropic
-export TOKN_VISION_MODEL=claude-haiku-5-5
+read -rs -p 'Anthropic API key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
+export TOKN_VISION_PROVIDER='anthropic'
+export TOKN_VISION_MODEL='YOUR_MODEL_ID'
 ```
 
-The commands below are the same on every system. Run them from this folder,
-where `out\` is created by the render step. The commands below show PowerShell
-paths (`out\`). On macOS or Linux, use `out/` instead.
+Use a protected shell/session secret source for PowerShell rather than copying
+a key into a command or file.
+
+## Scratch workspace
+
+From the `tokn-dist` root, copy only the three inputs into a unique folder
+outside the checkout. Run the walkthrough there; its rendered images and
+`.tokn/` state will stay out of the repository.
+
+PowerShell:
+
+```powershell
+$WORK = Join-Path $env:TEMP "tokn-vision-$([guid]::NewGuid().ToString('N'))"
+New-Item -ItemType Directory -Path $WORK | Out-Null
+Copy-Item examples\visual-perception-loop\target.html, examples\visual-perception-loop\draft.html, examples\visual-perception-loop\brief.md $WORK
+Set-Location $WORK
+```
+
+macOS or Linux:
+
+```bash
+WORK="$HOME/tokn-vision-$(date +%Y%m%d%H%M%S)-$$"
+mkdir "$WORK"
+cp examples/visual-perception-loop/target.html examples/visual-perception-loop/draft.html examples/visual-perception-loop/brief.md "$WORK/"
+cd "$WORK"
+```
+
+The commands below use PowerShell paths (`out\`). On macOS or Linux, use
+`out/` instead.
 
 ## Walkthrough
 
@@ -94,6 +124,10 @@ tokn vision render --kind html --source draft.html --out out\render_1.png
 Each command writes a 1280x720 PNG.
 
 ### 3. Read the layout
+
+The image-inspection steps are read-only with respect to the HTML sources, but
+model-backed vision calls may send the selected image and query to your
+configured provider and may incur charges. Rendering writes PNGs under `out/`.
 
 ```powershell
 tokn vision transcribe out\target.png --focus layout
@@ -153,7 +187,8 @@ tokn vision align out\target.png --assert "the navigation bar has five links"
 tokn vision diff out\target.png out\render_1.png
 ```
 
-On the draft, the result is:
+Historical observed output for the supplied draft (results can vary by version
+and provider):
 
 - `ssim`: 0.9378182570672562 (measured from pixels).
 - `high_severity`: 2.
@@ -192,7 +227,9 @@ export TOKN_HOST_VISION=1
 
 ### 9. Let an agent rebuild the page
 
-Make a working folder with three things:
+This is optional and may incur provider charges. Keep normal interactive
+tool approvals enabled; do not use `--no-confirm`. Work only in a fresh scratch
+folder outside the example checkout. Make a working folder with three things:
 
 - `target.png`: copy `out\target.png` here.
 - `brief.md`: the task brief, included in this example.
@@ -201,20 +238,24 @@ Make a working folder with three things:
 Then run:
 
 ```powershell
-tokn agent-run --repo-root . --prompt-file brief.md --image target.png --model-provider anthropic --model-name claude-haiku-5-5 --max-steps 30 --headless --no-confirm
+tokn agent-run --repo-root . --prompt-file brief.md --image target.png --model-provider anthropic --model-name $env:TOKN_VISION_MODEL --max-steps 30 --permission-mode default --headless
 ```
 
 The agent writes `index.html`, renders it, diffs it against the target, and
-fixes what it finds.
+fixes what it finds, subject to the approvals you grant. Stop if it requests
+writes outside `index.html` or `out/`.
 
-Result from the maintainer's run:
+Historical observed result from one maintainer run; it is not an expected
+score or a recorded result from this walkthrough:
 
 - Exit code 0, in 94 seconds.
 - 9 steps, 11 tool calls, 0 tool errors.
 - 4 vision calls: render, diff, render, diff.
 - The second diff reported `converged` true.
 
-Score the result yourself:
+Score the result yourself, and inspect both the rendered pixels and the HTML
+structure. A visual score does not establish semantic or accessibility
+correctness:
 
 ```powershell
 tokn vision render --kind html --source index.html --out out\final.png
@@ -228,10 +269,22 @@ The maintainer's score:
 - `converged`: true.
 - Remaining: 1 medium and 2 low items, all about style and placement.
 
+## Held-out layout check
+
+To test a change the rebuild has not seen, create a grader-only copy of
+`target.html` outside the agent's work folder, add one layout change (for
+example, a fifth navigation link), and render it to a new target PNG. Give the
+agent only that PNG, `brief.md`, and an empty `out/` directory in a fresh work
+folder. Keep the changed HTML outside its read scope. After the approved build,
+compare the new PNG with `tokn vision diff`; separately inspect the generated
+HTML or browser DOM to confirm the new navigation structure. The visual
+comparison is pixel evidence; the DOM check is a separate structural check.
+
 ## About these outputs
 
-These outputs come from one maintainer run with Claude Haiku 5.5 as the vision
-model on TOKN v0.3.105. Requires TOKN v0.3.105 or newer.
+The historical outputs above come from a maintainer run on TOKN v0.3.105 using
+that operator's configured vision model. The minimum version for this
+walkthrough is TOKN v0.3.105 or newer.
 
 Model-written fields, such as descriptions and labels, will vary from run to
 run. Pixel-measured fields, such as SSIM and colour values, are deterministic

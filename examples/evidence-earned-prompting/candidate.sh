@@ -11,16 +11,17 @@ here="$(cd "$(dirname "$0")" && pwd)"
 tokn_bin="${TOKN_BIN:-tokn}"
 provider="${NOSPACE_MODEL_PROVIDER:-}"
 model="${NOSPACE_MODEL_NAME:-}"
-repo="$here/scratch"
-prompt_file="$repo/prompt.txt"
 
 fail() { echo "candidate: $*" >&2; exit 1; }
 
 command -v "$tokn_bin" >/dev/null 2>&1 || fail "tokn not found (set TOKN_BIN to the path of tokn)"
-command -v python3 >/dev/null 2>&1 || fail "python3 not found (needed to read the run log)"
+command -v python3 >/dev/null 2>&1 || fail "python3 not found (needed to validate the final JSON result)"
 [ -n "$provider" ] || fail "NOSPACE_MODEL_PROVIDER is not set (see README step 4)"
 [ -n "$model" ] || fail "NOSPACE_MODEL_NAME is not set (see README step 4)"
 
+run_id="$(date -u +%Y%m%dT%H%M%SZ)-$$"
+repo="$here/scratch/runs/$run_id"
+prompt_file="$repo/prompt.txt"
 mkdir -p "$repo"
 cat > "$prompt_file"
 [ -s "$prompt_file" ] || fail "empty prompt on stdin"
@@ -31,32 +32,26 @@ cat > "$prompt_file"
   --model-provider "$provider" \
   --model-name "$model" \
   --max-steps 2 \
-  --no-confirm \
+  --output-format json \
   --quiet >"$repo/agent.out" 2>"$repo/agent.err" \
   || fail "agent-run failed, see $repo/agent.err"
 
-# agent-run writes one JSON line per event to .nospace/runs/<timestamp>.jsonl.
-run_log="$(ls -t "$repo"/.nospace/runs/*.jsonl 2>/dev/null | head -n 1 || true)"
-[ -n "$run_log" ] || fail "no run log under $repo/.nospace/runs"
-
-answer="$(python3 - "$run_log" <<'PY'
+answer="$(python3 - "$repo/agent.out" <<'PY'
 import json, sys
 
-final = last = ""
-with open(sys.argv[1], encoding="utf-8") as fh:
-    for line in fh:
-        try:
-            event = json.loads(line)
-        except ValueError:
-            continue
-        if event.get("role") != "assistant" or event.get("content") is None:
-            continue
-        last = str(event["content"])
-        if event.get("event") == "final":
-            final = last
-print((final or last).strip(), end="")
+try:
+    with open(sys.argv[1], encoding="utf-8") as fh:
+        result = json.load(fh)
+except (OSError, ValueError) as exc:
+    raise SystemExit(f"invalid agent-run JSON result: {exc}")
+if result.get("status") != "success" or result.get("exit_code") != 0:
+    raise SystemExit("agent-run did not report terminal success")
+answer = result.get("result")
+if not isinstance(answer, str) or not answer.strip():
+    raise SystemExit("successful agent-run result is empty")
+print(answer.strip(), end="")
 PY
-)"
+)" || fail "agent-run did not produce a successful final result (see $repo/agent.err)"
 
-[ -n "$answer" ] || fail "no assistant answer in $run_log (check provider auth)"
+[ -n "$answer" ] || fail "agent-run returned an empty final result"
 printf '%s' "$answer"

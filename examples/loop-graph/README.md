@@ -30,26 +30,31 @@ No LLM is involved. Every check is a local command.
 | TOKN **v0.3.57 or newer** | Ships `tokn loopgraph` | `tokn version` |
 | Python 3 (standard library only) | Runs the oracle and the cross-check. No packages to install. | `python --version` |
 
-Trial and Community tiers both run this example. The `loopgraph` commands are not
-license-gated in the source. The CLI prints `running the free community tier` when
-the trial has ended, which is expected. If a command refuses to run, start the
-14-day trial with `tokn license trial`.
+Trial and Community tiers both run this example. On v0.3.118 the `loopgraph`
+commands below ran on the Community tier; the CLI prints `running the free community
+tier` when no trial or licence is active, which is expected. If a command refuses to
+run, check `tokn license features` and start the 14-day trial with `tokn license trial`.
 
 > **What leaves your machine.** Nothing. This example makes no model call and no
 > network request. Every file it reads is in this folder.
 
 ## 1. Open the example folder
 
+The steps edit `model.json` and write `graph-record.json`, so work in a scratch
+copy and keep your checkout clean.
+
 macOS / Linux:
 
 ```bash
-cd examples/loop-graph
+cp -r examples/loop-graph ~/loop-graph-run
+cd ~/loop-graph-run
 ```
 
 Windows PowerShell:
 
 ```powershell
-Set-Location examples\loop-graph
+Copy-Item -Recurse examples\loop-graph $HOME\loop-graph-run
+Set-Location $HOME\loop-graph-run
 ```
 
 You now have:
@@ -78,9 +83,9 @@ macOS / Linux / Windows PowerShell (same command):
 tokn loopgraph validate --spec graph.json
 ```
 
-A valid spec should pass without a refusal. The `--cheap-win` and `--ungrounded`
-flags, listed in `tokn loopgraph validate --help`, are for demonstrating refusals.
-(Not yet run against this copy of the example.)
+Observed on v0.3.118: `valid: optimizing node + Goodhart guard + >=1 anchor, no
+self-guarding edges`, exit 0. The `--cheap-win` and `--ungrounded` flags listed in
+`tokn loopgraph validate --help` act on the built-in demo graph, not on `--spec`.
 
 ## 3. Start where the optimizer starts
 
@@ -175,14 +180,20 @@ is missing.
 
 ### What we expect (not yet observed in this port)
 
-These expectations follow from the source's test design. They have not been
-run against this copy of the example, so check them on your machine.
+The expected column is the design intent. The observed columns are a reference
+receipt from one local run (TOKN v0.3.118, Windows, Python 3, checked-in data,
+`--timeout 60s`; no model, no network). Gates: training MSE <= 0.05, held-out
+MSE <= 0.10. Rerun it on your machine; the numbers are deterministic but your
+`tokn` version may differ.
 
-| `model.json` | Training check | Held-out check | Expected graph result |
-|---|---|---|---|
-| `degree 1` | fails | fails | no win claimed |
-| `degree 12` | passes (interpolates) | fails | win vetoed, `accepted` false |
-| `degree 2` | passes | passes | win accepted, `grounded` true |
+| `model.json` | Expected graph result | Observed train MSE | Observed held-out MSE | Observed `accepted` / `grounded` / `stop_reason` | `crosscheck.py` |
+|---|---|---|---|---|---|
+| `degree 1` | no win claimed | 2.574 (fail) | 1.838 (fail) | false / false / `max_cycles` | `CONSISTENT` |
+| `degree 12` | win vetoed, `accepted` false | 0.000 (pass) | 16.023 (fail) | false / false / `ungrounded` | `CONSISTENT` |
+| `degree 2` | win accepted, `grounded` true | 0.022 (pass) | 0.016 (pass) | true / true / `grounded_accept` | `CONSISTENT` |
+
+The held-out file stays in `custodian/`. Keep it out of anything you hand to an
+optimizer, and treat the degree-12 refusal as the result to preserve.
 
 ## What to look for
 

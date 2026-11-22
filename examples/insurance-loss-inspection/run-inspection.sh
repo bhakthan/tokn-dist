@@ -10,19 +10,9 @@ cd "$(dirname "$0")"
 fail() { printf '[!] %s\n' "$1" >&2; exit 1; }
 note() { printf '[*] %s\n' "$1"; }
 
-# Load .env without overriding shell variables. TOKN_INSPECT_* and SYSTEMONE_* are skipped:
-# they must be set in the shell (see .env.example).
-if [ -f .env ]; then
-  while IFS= read -r line || [ -n "$line" ]; do
-    line="${line%$'\r'}"
-    case "$line" in ''|\#*|*[!=]*) continue ;; esac
-    key="${line%%=*}"; val="${line#*=}"
-    key="$(printf '%s' "$key" | tr -d '[:space:]')"
-    val="$(printf '%s' "$val" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' -e 's/^"//' -e 's/"$//')"
-    case "$key" in SYSTEMONE_*|TOKN_INSPECT_*) continue ;; esac
-    if [ -z "${!key:-}" ]; then export "$key=$val"; fi
-  done < .env
-fi
+# Repository .env values never set model routing, credentials or local-server policy.
+source ./load-safe-env.sh
+load_safe_env .env TOKN_MODEL
 
 problems=()
 loopback_re='^(127\.[0-9]+\.[0-9]+\.[0-9]+|localhost|\[::1\])(:[0-9]+)?$'

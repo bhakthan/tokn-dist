@@ -13,19 +13,18 @@ the spec asks for, and stops before any evidence is emitted:
 > effect naively and after adjustment, run the placebo and negative-control
 > checks, and stop before emitting the evidence summary.*
 
-| Hook | What it protects against | Where it lives |
+| Hook | What it protects against | Observable output cue |
 |---|---|---|
-| `estimand_completeness` | An analysis that starts before the question is fully specified | `clintrial/hooks.go` |
-| `phi_before_model` / `phi_input_screen` | Identifiers reaching the model | `clintrial/hooks.go` |
-| `positivity_before_emulate` | An estimate computed where one arm has no overlap | `clintrial/hooks.go` |
-| `validation_before_emit` | Evidence emitted before the validation suite runs | `clintrial/hooks.go` |
-| `human_in_loop_before_emit` | Evidence emitted without a human decision | `clintrial/hooks.go` |
-| `no_silent_artifact` | Output written with no visible record | `clintrial/hooks.go` |
-| `calibrated_language` / `decision_support_disclaimer` | Overstated certainty, or output without the disclaimer | `clintrial/hooks.go` |
+| `estimand_completeness` | An analysis that starts before the question is fully specified | Inspect the reached gate's status and evidence in the agent run output. |
+| `phi_before_model` / `phi_input_screen` | Identifiers reaching the model | Inspect the reached gate's status and evidence in the agent run output. |
+| `positivity_before_emulate` | An estimate computed where one arm has no overlap | Inspect the reached gate's status and evidence in the agent run output. |
+| `validation_before_emit` | Evidence emitted before the validation suite runs | Inspect the reached gate's status and evidence in the agent run output. |
+| `human_in_loop_before_emit` | Evidence emitted without a human decision | Inspect the reached gate's status and evidence in the agent run output. |
+| `no_silent_artifact` | Output written with no visible record | Inspect the reached gate's status and evidence in the agent run output. |
+| `calibrated_language` / `decision_support_disclaimer` | Overstated certainty, or output without the disclaimer | Inspect the reached gate's status and evidence in the agent run output. |
 
-The example uses tools such as `ct_estimand_check`, `ct_confounder_map`,
-`ct_positivity_check`, `ct_propensity_weight`, `ct_evalue`, `ct_negative_control`
-and `ct_validate_suite`, which are defined in `clintrial/tools*.go`.
+The offline fixture checker validates the input structure only. Counting a hook
+name in saved output does not establish that its gate passed.
 
 ---
 
@@ -34,7 +33,7 @@ and `ct_validate_suite`, which are defined in `clintrial/tools*.go`.
 | Requirement | Why | Check |
 |---|---|---|
 | TOKN **v0.3.57 or newer** | First release with this example's hook names | `tokn version` |
-| **14-day trial** (`tokn license trial`) | `--mode clintrial` is a domain mode. The Community tier grants only `domains:basic`, so the run is refused without a trial. | `tokn license` |
+| **14-day trial** (`tokn license trial`) | `--mode clintrial` is a domain mode. The Community tier grants only `domains:basic`, so the run is refused without a trial. | `tokn license features` |
 | Python 3.8+ (optional) | Runs the local input and output checker. Standard library only. | `python --version` |
 | An LLM provider and key | Runs the agent | see [SETUP.md](../../SETUP.md) |
 
@@ -76,12 +75,12 @@ tokn-clintrial/
 
 ```bash
 tokn license trial
-tokn license
+tokn license features
 ```
 
 ```powershell
 tokn license trial
-tokn license
+tokn license features
 ```
 
 `tokn license trial` runs once per machine. The second command shows the tier and
@@ -106,19 +105,37 @@ Follow [SETUP.md](../../SETUP.md) for your provider. For Anthropic, for example:
 
 ```bash
 export NOSPACE_MODEL_PROVIDER=anthropic
-export NOSPACE_MODEL_NAME=<a Claude model you have access to>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_NAME='YOUR_MODEL_NAME'
+read -rs -p 'Anthropic API key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
 ```
 
 ```powershell
 $env:NOSPACE_MODEL_PROVIDER = "anthropic"
-$env:NOSPACE_MODEL_NAME     = "<a Claude model you have access to>"
-$env:ANTHROPIC_API_KEY      = "<your key>"
+$env:NOSPACE_MODEL_NAME     = "YOUR_MODEL_NAME"
+$secret = Read-Host "Anthropic API key" -AsSecureString
+$env:ANTHROPIC_API_KEY      = [System.Net.NetworkCredential]::new('', $secret).Password
 ```
 
 Keep keys in your shell or `~/.tokn/config/credentials.env`. Never commit a key.
 
 ## 5. Run the emulation task
+
+Keep the run's read scope to the task and synthetic inputs. Do not put the
+worked provenance/disposition fixture or this README in `work/`.
+
+```bash
+mkdir -p work/inputs
+cp prompt.md work/prompt.md
+cp inputs/*.json work/inputs/
+cd work
+```
+
+```powershell
+New-Item -ItemType Directory -Force work\inputs | Out-Null
+Copy-Item prompt.md work\prompt.md
+Copy-Item inputs\*.json work\inputs\
+Set-Location work
+```
 
 ```bash
 tokn agent-run --mode clintrial --prompt-file prompt.md --repo-root . \
@@ -135,23 +152,40 @@ tokn agent-run --mode clintrial --prompt-file prompt.md --repo-root . `
 
 ## 6. Check the hooks (optional, local only)
 
+From the scratch-folder root, run the checker against the original fixture and
+then inspect the saved run in `work/`. The input check is offline; the run-output
+mode counts hook-name mentions and does not validate gate outcomes.
+
 ```bash
-python check_inputs.py result.json
+cd ..
+python check_inputs.py inputs/
+python check_inputs.py work/result.json
 ```
 
 ```powershell
-python check_inputs.py result.json
+Set-Location ..
+python check_inputs.py inputs\
+python check_inputs.py work\result.json
 ```
 
-This counts how often each hook name appears in the saved run. It makes no
-network calls. A mention is not a pass, so read the sentence around it.
+Both checks make no network calls. Read gate evidence and disposition in the run
+output; a hook-name mention is not a pass.
+
+## Synthetic provenance and disposition fixture
+
+`grading/provenance-disposition.json` is a static, synthetic example—not output
+from an agent run. It pairs the fixture-input digests and checker scope with the
+disposition `hold_for_human_review`; it contains no treatment recommendation or
+clinical conclusion. The offline input checker does not verify these digests or
+evaluate clinical evidence.
 
 ## 7. Expected outcomes
 
-These are the outcomes the hooks and the task are designed to produce, taken
-from the source. They are **not** a recorded run.
+The following are expected outcomes for the synthetic fixture; they are not a
+recorded run. The offline fixture checker validates input structure only. It is
+separate from an optional licensed agent review.
 
-| Step in `prompt.md` | Expected outcome |
+| Step in `prompt.md` | Observable expected gate result |
 |---|---|
 | 1. Restate the estimand | All six elements are present in `target-trial-spec.json`, so `estimand_completeness` passes. |
 | 2. Confirm synthetic data | Both files are marked `synthetic: true`. Any real identifier is a `phi_*` block. |
@@ -174,9 +208,9 @@ from the source. They are **not** a recorded run.
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
-| Run refused or falls back to the community tier | No trial running, or the trial has expired | `tokn license trial` (once per machine), then `tokn license` to confirm |
+| Run refused or falls back to the community tier | No trial running, or the trial has expired | `tokn license trial` (once per machine), then `tokn license features` to confirm |
 | `tokn license trial` refuses to start | One trial per machine, already used | Keep using the active trial. After it expires TOKN falls back to Community, which cannot run domain modes. |
-| `unknown flag` on `agent-run` | Older TOKN build | Upgrade to v0.3.57 or newer and check with `tokn agent-run --help` |
+| `unknown flag` on `agent-run` | Older TOKN build | Upgrade to v0.3.57 or newer and check with `tokn agent-run --help-all` |
 | Run ends with `max steps` before the hooks | Step budget too small | Raise `--max-steps` (for example 16) and rerun |
 | `check_inputs.py` reports missing fields | An edited input file | Restore `inputs/` from this folder and rerun |
 | Model call fails at start | Missing `NOSPACE_MODEL_PROVIDER` or key | See step 4 and [SETUP.md](../../SETUP.md) |

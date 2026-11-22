@@ -1,6 +1,6 @@
 """Reference artifact: the kind of script the webwright pattern produces.
 
-Reads the heading and first link on https://example.com, writes result.json,
+Reads the heading and first link on a local fixture, writes result.json,
 page.png and run.log next to this file. Nothing is written outside this folder.
 
 Rerun:  python example_domain_check.py
@@ -12,7 +12,7 @@ from pathlib import Path
 
 from playwright.sync_api import sync_playwright
 
-URL = "https://example.com"
+URL = "http://127.0.0.1:8000/"
 OUT_DIR = Path(__file__).resolve().parent / "out"
 OUT_DIR.mkdir(exist_ok=True)
 

@@ -49,15 +49,15 @@ Keys and endpoints come from your environment, never from the code.
 **OpenAI:**
 
 ```bash
-export OPENAI_API_KEY=<your OpenAI key>
+read -rs -p 'OpenAI API key: ' OPENAI_API_KEY; echo; export OPENAI_API_KEY
 ```
 
 **Azure OpenAI (API key):**
 
 ```bash
-export AZURE_OPENAI_ENDPOINT=https://<resource>.openai.azure.com/openai/v1/
-export AZURE_OPENAI_API_KEY=<your key>
-export DECISIONS_MODEL=<your gpt-6-luna deployment name>
+export AZURE_OPENAI_ENDPOINT='YOUR_TRUSTED_AZURE_ENDPOINT'
+read -rs -p 'Azure OpenAI API key: ' AZURE_OPENAI_API_KEY; echo; export AZURE_OPENAI_API_KEY
+export DECISIONS_MODEL='YOUR_DEPLOYMENT_NAME'
 ```
 
 **Azure OpenAI (Microsoft Entra ID):** run `az login`, leave `AZURE_OPENAI_API_KEY` unset, and set `AZURE_OPENAI_USE_ENTRA=1`. Your identity needs a role that can call the deployment, for example *Cognitive Services OpenAI User*.
@@ -94,14 +94,15 @@ Then point TOKN at the same backend. Set these in your real environment or in `~
 
 ```bash
 # OpenAI
-export SYSTEMONE_BACKEND=openai
-export OPENAI_API_KEY=<your OpenAI key>
+export SYSTEMONE_BACKEND='openai'
+read -rs -p 'OpenAI API key: ' OPENAI_API_KEY; echo; export OPENAI_API_KEY
 
 # or Azure OpenAI / Foundry
-export SYSTEMONE_BACKEND=azure
-export AZURE_OPENAI_ENDPOINT=https://<resource>.cognitiveservices.azure.com/openai/v1
-export AZURE_OPENAI_API_KEY=<key>            # omit to use Microsoft Entra ID (az login)
-export SYSTEMONE_MODEL=<your gpt-6-luna deployment name>
+export SYSTEMONE_BACKEND='azure'
+export AZURE_OPENAI_ENDPOINT='YOUR_TRUSTED_AZURE_ENDPOINT'
+# Set AZURE_OPENAI_API_KEY through your trusted secret manager or existing shell session;
+# omit it to use Microsoft Entra ID (az login).
+export SYSTEMONE_MODEL='YOUR_DEPLOYMENT_NAME'
 ```
 
 Check it, then evaluate:

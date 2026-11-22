@@ -1,0 +1,7 @@
+{
+  "query": "Who approves a refund?",
+  "expected_citation": "kb:handbook/policies/refunds.md:L3-5",
+  "expected_claim": "Refunds above 50 credits require approval from the duty lead.",
+  "revision": "4",
+  "status": "curated reference, not a captured search result"
+}

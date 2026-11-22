@@ -43,20 +43,22 @@ Set-Location $HOME\loop-demo
 
 ## 2. Configure the LLM
 
-Set your provider and key. See [../../SETUP.md](../../SETUP.md) for every supported provider.
+Use a model capable of the required tool calls; provider charges and number of
+turns depend on the run. A missing/failed tool result is unassessed, not a pass.
+See [../../SETUP.md](../../SETUP.md) for provider setup.
 
 bash:
 ```bash
-export NOSPACE_MODEL_PROVIDER=<your provider>
-export NOSPACE_MODEL_NAME=<your model>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_PROVIDER='YOUR_PROVIDER_ID'
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+# Load the provider-specific secret from a trusted secret store/session.
 ```
 
 PowerShell:
 ```powershell
-$env:NOSPACE_MODEL_PROVIDER = "<your provider>"
-$env:NOSPACE_MODEL_NAME = "<your model>"
-$env:ANTHROPIC_API_KEY = "<your key>"
+$env:NOSPACE_MODEL_PROVIDER = "YOUR_PROVIDER_ID"
+$env:NOSPACE_MODEL_NAME = "YOUR_MODEL_ID"
+# Load the provider-specific secret from a trusted secret store/session.
 ```
 
 ## 3. Start the REPL
@@ -99,15 +101,52 @@ Then start it and watch it:
 
 `/loop clear` discards the definition.
 
-Notes on the flags, all checked against `loop_cmd.go`:
+Notes on the visible `/loop define` options:
 - `--check-cmd` runs through `cmd /C` on Windows and `sh -c` elsewhere. The value ends at the next `--` token, so keep the command free of flags.
 - `--max-wall` takes a Go duration such as `15m`.
 - The check passes on exit code 0. `--pass-pattern` is an alternative and is not used here.
 - The command is run from the REPL's working directory. This is an assumption, so run the REPL from the copied folder.
 
+### Guided variant: withhold the checker
+
+For a less-revealing exercise, keep the checker and its canonical inputs one
+directory above the agent workspace. Copy only `prompt.md`, `properties.csv`,
+and `scoring.json` into `work/`:
+
+**Bash**
+
+```bash
+mkdir -p ~/loop-demo/work
+cp prompt.md properties.csv scoring.json ~/loop-demo/work/
+cd ~/loop-demo/work
+tokn agent-repl --repo-root .
+```
+
+**PowerShell**
+
+```powershell
+New-Item -ItemType Directory -Force $HOME\loop-demo\work | Out-Null
+Copy-Item prompt.md,properties.csv,scoring.json $HOME\loop-demo\work\
+Set-Location $HOME\loop-demo\work
+tokn agent-repl --repo-root .
+```
+
+In the REPL, define the same goal but point the check at the parent copy:
+
+```text
+/loop define Shortlist five candidates from properties.csv that meet every criterion in scoring.json and write them to shortlist.csv --check-cmd "python ..\check_shortlist.py ." --max-iter 8 --no-progress 3 --max-wall 15m
+```
+
+The checker reads its canonical inputs beside itself and grades
+`work/shortlist.csv`; the agent workspace does not contain the checker
+definition. Do not add the parent checker directory to the model workspace or
+context. On macOS or Linux, use
+`--check-cmd "python3 ../check_shortlist.py ."` and `python3` for the
+independent check.
+
 ## 5. Check the result
 
-Run the checker yourself, outside the loop:
+For the standard variant, run the checker yourself after the loop:
 
 bash:
 ```bash

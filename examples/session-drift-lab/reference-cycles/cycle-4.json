@@ -1,0 +1,1 @@
+{"cycle":4,"dataset":"synthetic-reference","target":"review_disposition","metrics":{"review_disposition":{"name":"review_disposition","value":1.0,"higher_is_better":true}}}

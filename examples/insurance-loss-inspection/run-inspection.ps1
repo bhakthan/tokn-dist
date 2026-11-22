@@ -9,18 +9,9 @@ Set-Location -LiteralPath $PSScriptRoot
 function Fail([string]$Msg) { Write-Host "[!] $Msg" -ForegroundColor Red; exit 1 }
 function Note([string]$Msg) { Write-Host "[*] $Msg" -ForegroundColor Cyan }
 
-# Load .env without overriding the shell. TOKN_INSPECT_* and SYSTEMONE_* are skipped on
-# purpose: they must be set in the shell (see .env.example).
-if (Test-Path ".env") {
-    foreach ($line in Get-Content ".env") {
-        $t = $line.Trim()
-        if (-not $t -or $t.StartsWith("#") -or -not $t.Contains("=")) { continue }
-        $k, $v = $t.Split("=", 2)
-        $k = $k.Trim(); $v = $v.Trim().Trim('"')
-        if ($k.StartsWith("SYSTEMONE_") -or $k.StartsWith("TOKN_INSPECT_")) { continue }
-        if (-not [Environment]::GetEnvironmentVariable($k)) { [Environment]::SetEnvironmentVariable($k, $v) }
-    }
-}
+# Routing, credentials and local-server policy must come from the trusted shell.
+. (Join-Path $PSScriptRoot "load-safe-env.ps1")
+Load-SafeEnv ".env" @()
 
 $problems = @()
 $loopback = '^(127\.\d+\.\d+\.\d+|localhost|\[::1\])(:\d+)?$'

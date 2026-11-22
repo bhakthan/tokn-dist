@@ -8,17 +8,9 @@ Set-Location -LiteralPath $PSScriptRoot
 function Fail([string]$Msg) { Write-Host "[!] $Msg" -ForegroundColor Red; exit 1 }
 function Note([string]$Msg) { Write-Host "[*] $Msg" -ForegroundColor Cyan }
 
-# Load .env without overriding the shell. TOKN_INSPECT_* and SYSTEMONE_* are skipped on purpose.
-if (Test-Path ".env") {
-    foreach ($line in Get-Content ".env") {
-        $t = $line.Trim()
-        if (-not $t -or $t.StartsWith("#") -or -not $t.Contains("=")) { continue }
-        $k, $v = $t.Split("=", 2)
-        $k = $k.Trim(); $v = $v.Trim().Trim('"')
-        if ($k.StartsWith("SYSTEMONE_") -or $k.StartsWith("TOKN_INSPECT_")) { continue }
-        if (-not [Environment]::GetEnvironmentVariable($k)) { [Environment]::SetEnvironmentVariable($k, $v) }
-    }
-}
+# Only a non-routing model ID may be loaded from repository data.
+. (Join-Path $PSScriptRoot "load-safe-env.ps1")
+Load-SafeEnv ".env" @("TOKN_MODEL")
 
 $problems = @()
 
@@ -51,8 +43,14 @@ if (-not $curl) {
 
 # 4. Coding server responds at /health
 $base = if ($env:GGUF_SERVER_URL) { $env:GGUF_SERVER_URL } else { "http://127.0.0.1:8083/v1" }
+$baseAuthority = ""
+try { $baseAuthority = ([Uri]$base).Authority } catch { }
+$baseOk = $baseAuthority -match '^(127\.\d+\.\d+\.\d+|localhost|\[::1\])(:\d+)?$'
+if (-not $baseOk) {
+    $problems += "GGUF_SERVER_URL must point to a loopback host for this local-only example. Set it in your trusted shell."
+}
 $healthUrl = ($base -replace '/v1/?$', '') + "/health"
-if ($curl) {
+if ($baseOk -and $curl) {
     $health = & curl.exe -s --max-time 5 $healthUrl 2>$null
     if ($LASTEXITCODE -ne 0 -or $health -notmatch '"ok"') {
         $problems += @"

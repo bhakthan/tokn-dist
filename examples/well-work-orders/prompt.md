@@ -27,6 +27,7 @@ The data is synthetic but realistic. Everything you need is in `demo-input/`:
 4. **Compression:** compare `plan.planned_stages` with the `stages` returned by `og_compression_design`; report the compression ratio.
 5. MAASP is exceeded only when treating pressure is strictly above it. Report each emissions figure with its method and confidence cap.
 6. Every number you report must come from a tool call, not mental arithmetic.
+7. If a required tool result is missing or fails, report the item as unassessed; do not infer approval. This is a simulated review disposition, not a real job release. A qualified human approver must review the actual work package.
 
 ## Deliverable
 

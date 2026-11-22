@@ -68,14 +68,15 @@ Follow [SETUP.md](../../SETUP.md) for your provider. For Anthropic, for example:
 
 ```bash
 export NOSPACE_MODEL_PROVIDER=anthropic
-export NOSPACE_MODEL_NAME=<a Claude model you have access to>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_NAME='YOUR_MODEL_NAME'
+read -rs -p 'Anthropic API key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
 ```
 
 ```powershell
 $env:NOSPACE_MODEL_PROVIDER = "anthropic"
-$env:NOSPACE_MODEL_NAME     = "<a Claude model you have access to>"
-$env:ANTHROPIC_API_KEY      = "<your key>"
+$env:NOSPACE_MODEL_NAME     = "YOUR_MODEL_NAME"
+$secret = Read-Host "Anthropic API key" -AsSecureString
+$env:ANTHROPIC_API_KEY      = [System.Net.NetworkCredential]::new('', $secret).Password
 ```
 
 ## 3. Good edit, then commit it
@@ -171,6 +172,12 @@ the time. This example does not depend on it. If you try it, check `git status`
 afterwards.
 
 Type `/exit` when you are done.
+
+For an unfinished run, `tokn agent-repl -c` resumes from its saved checkpoint.
+For completed runs, use `tokn list-sessions` to find the session and review its
+transcript. Reapply the original task constraints after resuming; `/undo` remains
+a file rollback to the last commit and is distinct from checkpoint continuation
+and transcript review.
 
 ## What to look for
 

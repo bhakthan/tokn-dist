@@ -13,7 +13,7 @@ A general-purpose LLM reads the records and gives a confident verdict. The `oilg
 | `og_compression_design` | Design gas compression — stage selection, horsepower, discharge temperature. |
 | `og_emissions_report` | Generate emissions report with mandatory method declaration (OGMP 2.0 Levels 1-5). |
 
-This is the single-agent version of a TOKN domain-relay scenario. It uses the same synthetic data, one model and a few cents of tokens, not a five-model relay.
+This is the single-agent version of a TOKN domain-relay scenario. It uses the same synthetic data and one model, not a five-model relay.
 
 ## 0. What you need
 
@@ -21,21 +21,30 @@ This is the single-agent version of a TOKN domain-relay scenario. It uses the sa
 |---|---|---|
 | TOKN v0.3.82 or newer | Includes the domain tools this example calls. | `tokn version` |
 | 14-day trial (`tokn license trial`) | Domain modes need the trial. | `tokn license features` shows `domains:oilgas` or `domains:*` |
-| An LLM provider | TOKN calls a model. Any supported provider works. | See [../../SETUP.md](../../SETUP.md) |
+| An LLM provider | TOKN calls a model. | See [../../SETUP.md](../../SETUP.md) |
+
+Use a model capable of the required tool calls; provider charges and number of
+turns depend on the run. A missing/failed tool result is unassessed, not a pass.
 
 **What leaves your machine:** the prompt, the files TOKN reads from the scratch folder, and tool results. These go to the LLM provider you configure. The demo data is synthetic.
 
 ## 1. Copy the example to a scratch folder
 
-TOKN writes `.nospace/` state and output files into the working folder, so run it outside this repo.
+Create a new work folder outside this checkout. Copy only `prompt.md` and
+`demo-input/` into it; do not copy this README or `grading/`. TOKN writes
+`.nospace/` state and output files into the work folder.
 
 ```bash
-cp -r examples/well-work-orders ~/well-work-orders-run
+mkdir -p ~/well-work-orders-run/demo-input
+cp examples/well-work-orders/prompt.md ~/well-work-orders-run/
+cp -r examples/well-work-orders/demo-input/. ~/well-work-orders-run/demo-input/
 cd ~/well-work-orders-run
 ```
 
 ```powershell
-Copy-Item -Recurse examples\well-work-orders $HOME\well-work-orders-run
+New-Item -ItemType Directory -Force $HOME\well-work-orders-run\demo-input | Out-Null
+Copy-Item examples\well-work-orders\prompt.md $HOME\well-work-orders-run\
+Copy-Item examples\well-work-orders\demo-input\* $HOME\well-work-orders-run\demo-input\
 Set-Location $HOME\well-work-orders-run
 ```
 
@@ -50,7 +59,7 @@ Read `prompt.md` and the files in `demo-input/` (`operating_limits.json`, `work_
 ## 4. Run the task
 
 ```bash
-tokn agent-run --mode oilgas --repo-root . --prompt-file prompt.md --max-steps 40 --no-confirm
+tokn agent-run --mode oilgas --repo-root . --prompt-file prompt.md --max-steps 40
 ```
 
 6 items with 6 tools each can take 36 or more tool calls. If the run stops early, raise `--max-steps`.
@@ -69,17 +78,7 @@ tokn agent-run --mode oilgas --repo-root . --prompt-file prompt.md --max-steps 4
 <details>
 <summary>Answer key (open after your run)</summary>
 
-| Item | Status | Why |
-|---|---|---|
-| `OG-1` | `approve` | No trap: the status follows directly from the tool results. |
-| `OG-2` | `blocked` | Looks like a routine, well-specified perforation job, but secondary_barrier_verified is false, so the well-control gate refuses it under the two-barrier rule. |
-| `OG-3` | `approve` | Boundary item: treating pressure is exactly 5000 psi, equal to MAASP; the gate blocks only when strictly above, so the job is approved, not blocked. |
-| `OG-4` | `revise` | Passes the design-envelope gate (1850 psi, 180 F), but the compression ratio 1700/400 = 4.25 exceeds 4.0, so the tool returns 2 stages against a planned 1 — revise. |
-| `OG-5` | `blocked` | Method is declared, but the 0.72 confidence is just above the 0.70 cap for engineering estimates, so the emissions gate refuses it. |
-| `OG-6` | `revise` | og_drill_operation returns 'operating' because 15.55 ppg is between pore pressure (13.0) and the fracture gradient (15.6), but og_mud_weight gives a window of 13.3 to 15.5 ppg, so the mud weight breaches the kick-tolerance margin — revise. |
-
-All 6 correct counts as PASS. Missing any trap item (`OG-2`, `OG-3`, `OG-4`, `OG-5`, `OG-6`) is a FAIL even if the rest are right.
-
+See the [grader-only answer key](grading/answer-key.md). It is outside the staged work folder.
 </details>
 
 ## Reflect
@@ -87,6 +86,7 @@ All 6 correct counts as PASS. Missing any trap item (`OG-2`, `OG-3`, `OG-4`, `OG
 - Which item did you get wrong in step 3, and which number or field misled you?
 - Pick one trap item, edit its record in `demo-input/` so the deciding check passes, and predict the new status before you rerun. Did the tool agree?
 - Where did the run's evidence come from a tool result, and where from the model's own reading? Which of those would you show an auditor?
+- A missing or failed tool result is unassessed, not a pass. End at a simulated review disposition; a qualified human approver must review the real work package before mobilization.
 
 ## Troubleshooting
 

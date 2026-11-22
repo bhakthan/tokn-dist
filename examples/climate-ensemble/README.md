@@ -9,7 +9,7 @@ A general-purpose LLM reads the records and gives a confident verdict. The `clim
 | `query_cmip6_catalog` | Search the Pangeo CMIP6 catalog via intake-esm. |
 | `compute_ensemble_stats` | Compute CMIP6 multi-model ensemble statistics with model family deduplication. |
 
-This is the single-agent version of the [climsci relay walkthrough](../domain-relay/walkthroughs/climsci/README.md). It uses the same synthetic data, one model and a few cents of tokens, not a five-model relay.
+This is the single-agent version of the [climsci relay walkthrough](../domain-relay/walkthroughs/climsci/README.md). Use a model capable of the required tool calls; provider charges and number of turns depend on the run. A missing/failed tool result is unassessed, not a pass. It uses the same synthetic data, not a five-model relay.
 
 ## 0. What you need
 
@@ -17,7 +17,7 @@ This is the single-agent version of the [climsci relay walkthrough](../domain-re
 |---|---|---|
 | TOKN v0.3.82 or newer | Includes the domain tools this example calls. | `tokn version` |
 | 14-day trial (`tokn license trial`) | Domain modes need the trial. | `tokn license features` shows `domains:climsci` or `domains:*` |
-| An LLM provider | TOKN calls a model. Any supported provider works. | See [../../SETUP.md](../../SETUP.md) |
+| An LLM provider | TOKN calls a model. Use a model capable of the required tool calls; provider charges and number of turns depend on the run. A missing/failed tool result is unassessed, not a pass. | See [../../SETUP.md](../../SETUP.md) |
 | Optional: Python with `intake-esm` and `xarray`, plus network access to the Pangeo catalog | Lets the tools compute live results. Without it, the prompt tells the agent to quote the dependency error and grade from the supplied data. | Not required |
 
 **What leaves your machine:** the prompt, the files TOKN reads from the scratch folder, and tool results. These go to the LLM provider you configure. The demo data is synthetic.
@@ -47,8 +47,24 @@ Read `prompt.md` and the files in `demo-input/` (`catalog_requests.json`, `ensem
 ## 4. Run the task
 
 ```bash
-tokn agent-run --mode climsci --repo-root . --prompt-file prompt.md --max-steps 40 --no-confirm
+mkdir -p work/demo-input
+cp prompt.md work/prompt.md
+cp demo-input/* work/demo-input/
+cd work
+tokn agent-run --mode climsci --repo-root . --prompt-file prompt.md --max-steps 40
 ```
+
+PowerShell:
+
+```powershell
+New-Item -ItemType Directory -Force work\demo-input | Out-Null
+Copy-Item prompt.md work\prompt.md
+Copy-Item demo-input\* work\demo-input\
+Set-Location work
+tokn agent-run --mode climsci --repo-root . --prompt-file prompt.md --max-steps 40
+```
+
+Only `prompt.md` and `demo-input/` are staged in `work/`; do not copy this README or its answer key into the agent's read scope. Grade against a separate synthetic record and check expected labels and cited evidence from outside `work/`; distinguish model wording from measured inputs. A safe refusal or inconclusive result is unassessed, not a pass.
 
 5 items with 2 tools each can take 10 or more tool calls. If the run stops early, raise `--max-steps`.
 
@@ -61,7 +77,7 @@ tokn agent-run --mode climsci --repo-root . --prompt-file prompt.md --max-steps 
 | 3 | Trap avoided | Answer is no: Does the result treat the CL-04 ten-model ensemble as having at least five independent model families? |
 | 4 | Evidence is cited | `RESULT.md` mentions `model famil\|families`, `independent`, `tolerance`, `about as likely as not` |
 | 5 | Calibrated language | Nothing says "undoubtedly", "definitely", "clear evidence", "robust finding", "strong evidence" |
-| 6 | One status per item | Every item gets exactly one status from the vocabulary in `prompt.md` |
+| 6 | One status per item | `RESULT.md` and `result.json` agree; each item has exactly one status from the vocabulary in `prompt.md` |
 
 <details>
 <summary>Answer key (open after your run)</summary>
@@ -83,6 +99,33 @@ All 5 correct counts as PASS. Missing any trap item (`CL-01`, `CL-02`, `CL-03`, 
 - Which item did you get wrong in step 3, and which number or field misled you?
 - Pick one trap item, edit its record in `demo-input/` so the deciding check passes, and predict the new status before you rerun. Did the tool agree?
 - Where did the run's evidence come from a tool result, and where from the model's own reading? Which of those would you show an auditor?
+
+## 6. Independent held-out exercise
+
+After grading the five-item run, stage only `grading/held-out-task.md` and the
+three JSON files under `grading/held-out/demo-input/` into a fresh
+`held-out-run/`. Do not copy `grading/held-out-expected.json` into the run.
+This additional record is synthetic. Run it in the same way as step 4, then
+compare `held-out-run/RESULT.md` with `grading/held-out-expected.json` from
+outside the run folder. A matching label without evidence of the independent
+family count and field range is not a pass. A missing or failed tool result is
+unassessed, not a pass.
+
+```bash
+mkdir -p held-out-run/demo-input
+cp grading/held-out-task.md held-out-run/prompt.md
+cp grading/held-out/demo-input/*.json held-out-run/demo-input/
+cd held-out-run
+tokn agent-run --mode climsci --repo-root . --prompt-file prompt.md --max-steps 10
+```
+
+```powershell
+New-Item -ItemType Directory -Force held-out-run\demo-input | Out-Null
+Copy-Item grading\held-out-task.md held-out-run\prompt.md
+Copy-Item grading\held-out\demo-input\*.json held-out-run\demo-input\
+Set-Location held-out-run
+tokn agent-run --mode climsci --repo-root . --prompt-file prompt.md --max-steps 10
+```
 
 ## Troubleshooting
 

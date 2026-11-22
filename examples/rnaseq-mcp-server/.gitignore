@@ -3,4 +3,5 @@
 .tokn/
 __pycache__/
 work/
+work.prev-*/
 data/

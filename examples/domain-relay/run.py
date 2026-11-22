@@ -10,14 +10,12 @@ Stage 6 REFLECT   claude-opus-5-5    TOKN reflecting on TOKN, reads TRACE.json -
 Stage 7 GRADE     verify.py          deterministic outer ring, never a model
 
 Every agent stage runs `tokn agent-run --mode <domain>` in an isolated home and workspace.
-Credentials are read by exact name from .env (beside run.py when standalone, the repo root
-inside the TOKN source checkout) or the process environment, and are scrubbed from every
-saved artifact. Inside the source checkout, output must be under artifacts/.
+Credentials and endpoint destinations come only from the operator's process environment.
+Runtime artifacts, including the summary, are confined to the explicit --out directory.
 """
 
 import argparse
 import concurrent.futures as cf
-from datetime import datetime, timezone
 import json
 import os
 import re
@@ -31,34 +29,26 @@ import urllib.parse
 import verify
 
 HERE = Path(__file__).resolve().parent
-# Inside the TOKN source checkout the harness uses a dev build; standalone (the public
-# example) it uses the installed `tokn` and the user's own license.
-IN_REPO = len(HERE.parents) > 1 and (HERE.parents[1] / "environment-manager").is_dir()
-REPO = HERE.parents[1] if IN_REPO else HERE
-ENV_FILE = REPO / ".env"
+REPO = HERE.parents[1]
 SCENARIOS = HERE / "scenarios"
 PROMPTS = HERE / "prompts"
-DEV_BUILD = REPO / "artifacts" / "domain-trio-live" / "dev-build"
 
 
 def default_binary():
-    if IN_REPO:
-        return DEV_BUILD / "tokn-dev.exe"
     found = shutil.which("tokn")
     return Path(found) if found else Path("tokn")
 
 
 def default_license():
-    if IN_REPO:
-        return DEV_BUILD / "dev-license.json"
     if os.environ.get("TOKN_LICENSE_FILE"):
         return Path(os.environ["TOKN_LICENSE_FILE"])
     home = os.environ.get("TOKN_HOME") or str(Path.home() / ".tokn")
     return Path(home) / "license.json"
 
-# Endpoints and keys come only from .env or the environment (see .env.example); never hard-code them.
+# Endpoints and keys come only from the operator's process environment; never load a repository .env file.
 NEEDED = ("RELAY_GATEWAY_URL", "RELAY_FOUNDRY_URL", "APIM_KEY", "FAST_API_KEY",
           "DECISION_API_ENDPOINT", "DECISION_API_KEY")
+ENDPOINTS = ("RELAY_GATEWAY_URL", "RELAY_FOUNDRY_URL", "DECISION_API_ENDPOINT")
 
 PASSTHROUGH = {"PATH", "SYSTEMROOT", "WINDIR", "COMSPEC", "PATHEXT", "PROGRAMFILES", "PROGRAMFILES(X86)",
                "PROGRAMDATA", "PROCESSOR_ARCHITECTURE", "LANG", "SSL_CERT_FILE", "SSL_CERT_DIR",
@@ -115,24 +105,19 @@ def fetch_ad_token():
 
 
 def read_secrets():
-    values = {}
-    env_file = ENV_FILE
-    if env_file.is_file():
-        for line in env_file.read_text(encoding="utf-8-sig").splitlines():
-            key, sep, value = line.strip().partition("=")
-            if sep and key in NEEDED:
-                values[key] = value.strip().strip("\"'")
-    for key in NEEDED:
-        if os.environ.get(key):
-            values[key] = os.environ[key]
+    values = {key: os.environ[key] for key in NEEDED if os.environ.get(key)}
     missing = [k for k in NEEDED if not values.get(k)]
     if missing:
         raise SystemExit(
             "Missing credentials: " + ", ".join(missing) + ".\n"
-            f"Copy .env.example to {ENV_FILE} and fill it in. "
+            "Set these values in a trusted shell session or secret manager; .env.example is reference-only. "
             "The relay needs ALL of: RELAY_GATEWAY_URL + RELAY_FOUNDRY_URL (model endpoints), APIM_KEY (gateway for Kimi-K3.1-Pro and FW-GLM-5.3), FAST_API_KEY "
             "(Anthropic gateway for Claude Opus 5.5 and Haiku 5.5), DECISION_API_ENDPOINT + DECISION_API_KEY "
-            "(Microsoft-Decision-1), and an Azure CLI login (az login) for gpt-6.1-sol. Add them to .env and retry.")
+            "(Microsoft-Decision-1), and an Azure CLI login (az login) for gpt-6.1-sol. Set them in a trusted shell and retry.")
+    for key in ENDPOINTS:
+        parsed = urllib.parse.urlsplit(values[key])
+        if parsed.scheme != "https" or not parsed.netloc or parsed.username or parsed.password or parsed.query or parsed.fragment:
+            raise SystemExit(f"{key} must be an operator-configured HTTPS endpoint without embedded credentials or query values.")
     token = os.environ.get("AZURE_OPENAI_AD_TOKEN", "") or fetch_ad_token()
     values["AZURE_OPENAI_AD_TOKEN"] = token
     return values
@@ -288,7 +273,9 @@ def run_agent(ctx, stage, prompt_text, model, max_steps):
            "--repo-root", str(ctx["ws"]), "--prompt-file", str(prompt_file),
            "--max-steps", str(max_steps), "--token-budget", str(ctx["token_budget"]),
            "--step-timeout", "240s", "--run-timeout", f"{ctx['timeout']}s",
-           "--no-confirm", "--no-stream", "--mcp-disabled", "--output-format", "json"]
+           "--no-stream", "--mcp-disabled", "--output-format", "json"]
+    if ctx["approve_all_tools"]:
+        cmd.append("--no-confirm")
     started = time.monotonic()
     try:
         proc = subprocess.run(cmd, cwd=ctx["ws"], env=env, capture_output=True, text=True, encoding="utf-8",
@@ -315,7 +302,8 @@ def run_agent(ctx, stage, prompt_text, model, max_steps):
             (logs / f"{stage}.materialized.txt").write_text("\n".join(written), encoding="utf-8")
     runlog = newest_runlog(ctx["ws"], before)
     if runlog:
-        shutil.copy(runlog, logs / f"{stage}.runlog.jsonl")
+        (logs / f"{stage}.runlog.jsonl").write_text(
+            scrub(runlog.read_text(encoding="utf-8", errors="replace"), ctx["secrets"]), encoding="utf-8")
     summary = summarize_runlog(runlog)
     return {"stage": stage, "model": model, "exit_code": code, "status": status, "duration_s": elapsed,
             "tokens": usage.get("tokens"), "steps": usage.get("steps"), "cost_usd": usage.get("cost_usd"),
@@ -393,15 +381,10 @@ def run_domain(domain, args, secrets):
         (ws / "tokn-self").mkdir()
         (ws / "tokn-self" / "introspect-slice.json").write_text(
             json.dumps(introspect_slice(args.binary, env, ws, mode), indent=2), encoding="utf-8")
-        doc = REPO / "docs" / "implementation" / f"{domain}.md"
-        if doc.is_file():
-            text = doc.read_text(encoding="utf-8", errors="replace")
-            if len(text) > 30_000:
-                text = text[:30_000] + "\n\n[truncated by the relay driver at 30 KB]\n"
-            (ws / "tokn-self" / "DOMAIN-README.md").write_text(text, encoding="utf-8")
     ctx = {"domain": domain, "mode": mode, "root": root, "ws": ws, "env": env, "binary": args.binary,
            "timeout": args.stage_timeout, "secrets": secrets, "models": models(secrets),
-           "token_budget": args.token_budget, "read_only": bool(scenario.get("read_only"))}
+           "token_budget": args.token_budget, "read_only": bool(scenario.get("read_only")),
+           "approve_all_tools": args.approve_all_tools}
     vocab = ", ".join(scenario["status_vocabulary"])
     values = {"DOMAIN": domain, "STATUS_VOCAB": vocab, "DECISION_ROUTING": ""}
     trace = {"domain": domain, "title": scenario.get("title"), "stages": []}
@@ -515,10 +498,8 @@ def license_ok(binary, license_file, cwd):
 
 
 def write_summary(args, results):
-    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    lines = [f"# Domain relay live results — {stamp}", "",
-             "Roster: Haiku 5.5 (discover) → Opus 5.5 (plan) → Kimi-K3.1-Pro (execute) → FW-GLM-5.3 (critique) → "
-             "Microsoft-Decision-1 (gate) → gpt-6.1-sol (revise) → Opus 5.5 (reflect) → verify.py (grade)", "",
+    lines = ["# Domain relay run receipt", "",
+             "This receipt summarizes this invocation only; it is not a certification or a published walkthrough.", "",
              "| Domain | Verdict | v1 accuracy | Final accuracy | Findings | Answered | Gate routing | Execute tools | Minutes |",
              "|---|---|---|---|---|---|---|---|---|"]
     for domain, report, trace in sorted(results, key=lambda r: r[0]):
@@ -526,13 +507,7 @@ def write_summary(args, results):
         lines.append(f"| {domain} | **{report['verdict']}** | {m.get('accuracy_v1')} | {m.get('accuracy_final')} | "
                      f"{m.get('findings')} | {m.get('findings_answered')} | {m.get('routing')} | "
                      f"{m.get('execute_domain_tools')} | {round(trace.get('elapsed_s', 0) / 60, 1)} |")
-    lines += ["", "## Failed checks", ""]
-    for domain, report, _ in sorted(results, key=lambda r: r[0]):
-        for check in report.get("checks", []):
-            if not check["ok"]:
-                lines.append(f"- **{domain}** `{check['name']}`: {check['detail']}")
-    (HERE / "results").mkdir(exist_ok=True)
-    path = HERE / "results" / f"SUMMARY-{stamp}.md"
+    path = args.out / "SUMMARY.md"
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return path
 
@@ -550,16 +525,17 @@ def main():
     parser.add_argument("--resume-from", type=int, default=0,
                         help="Rerun stages N.. in an existing --out (e.g. 5 after an expired token killed revise)")
     parser.add_argument("--stages", default="", help="Comma-separated stage numbers to run (debug only)")
+    parser.add_argument("--approve-all-tools", action="store_true",
+                        help="Opt in to --no-confirm (auto-approves every tool call); use only in a dedicated throwaway output directory.")
     args = parser.parse_args()
     if not args.out.is_absolute() or (args.out.exists() != bool(args.resume_from)):
         parser.error("--out must be an absolute directory: not-yet-existing, or existing with --resume-from.")
     args.out = args.out.resolve()
-    if IN_REPO and args.out.is_relative_to(REPO) and not args.out.is_relative_to(REPO / "artifacts"):
-        parser.error("Inside this checkout, runtime output must be under artifacts/.")
+    if args.out == REPO or args.out.is_relative_to(REPO) or REPO.is_relative_to(args.out):
+        parser.error("--out must be a dedicated directory outside the example checkout.")
+    if not args.out.parent.is_dir():
+        parser.error("--out's parent directory must already exist; the driver will not create parent directories.")
     if not args.binary.is_file() or not args.license_file.is_file():
-        if IN_REPO:
-            parser.error("Domain modes need a licensed binary. Build one with tests\\system-one-domain-live\\prepare-dev.ps1 "
-                         "(dev binary + dev license) or pass --binary/--license-file. Also required: Python 3.11+, az login.")
         parser.error(f"Need the tokn binary ({args.binary}) and a license file ({args.license_file}). "
                      "Install tokn from the releases page and put it on PATH, then start the trial once with "
                      "`tokn license trial` (domain modes need trial or higher), or pass --binary/--license-file.")
@@ -569,11 +545,11 @@ def main():
     unknown = [d for d in domains if not (SCENARIOS / d / "scenario.json").is_file()]
     if unknown:
         parser.error("No scenario for: " + ", ".join(unknown))
-    args.out.mkdir(parents=True, exist_ok=bool(args.resume_from))
-    ok, why = license_ok(args.binary, args.license_file, args.out)
+    ok, why = license_ok(args.binary, args.license_file, Path.cwd())
     if not ok:
         raise SystemExit(f"License preflight failed ({why}); no inference started.")
     secrets = read_secrets()
+    args.out.mkdir(exist_ok=bool(args.resume_from))
     results = []
     with cf.ThreadPoolExecutor(max_workers=max(1, args.parallel)) as pool:
         futures = {pool.submit(run_domain, d, args, secrets): d for d in domains}

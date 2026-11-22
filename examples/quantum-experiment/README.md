@@ -2,7 +2,7 @@
 
 > "Here is a synthetic experiment plan and two device specs. Check each experiment against the error-budget, tier, ZNE and NISQ/fault-tolerant gates, and tell me which claims are blocked."
 
-This example runs TOKN's quantum science domain (`--mode quantumsci`) on synthetic plans. The expected behaviour is that the error-budget gate blocks a deep circuit on a noisy device, that tier labels are required, that ZNE is rejected when the fit does not suit the noise, and that a fault-tolerant claim is refused when either the two-qubit fidelity or the qubit overhead falls short.
+This example runs TOKN's quantum science domain (`--mode quantumsci`) on synthetic plans. The two device specs are invented for the exercise; they describe no real backend, and nothing here runs on quantum hardware. The expected behaviour is that the error-budget gate blocks a deep circuit on a noisy device, that tier labels are required, that ZNE is rejected when the fit does not suit the noise, and that a fault-tolerant claim is refused when either the two-qubit fidelity or the qubit overhead falls short.
 
 | Capability | What it does here |
 |---|---|
@@ -20,8 +20,8 @@ This example runs TOKN's quantum science domain (`--mode quantumsci`) on synthet
 |---|---|---|
 | TOKN v0.3.57 or later | Earlier builds do not have the `quantumsci` mode | `tokn version` |
 | Python 3.8+ | Runs the offline checker | `python --version` |
-| An LLM provider you can reach | TOKN's agent loop needs a model. See [SETUP.md](../../SETUP.md). | `tokn agent-run --help` |
-| 14-day trial | Domain modes such as `quantumsci` need the trial. Community grants only `domains:basic`. | `tokn license status` |
+| An LLM provider you can reach | TOKN's agent loop needs a model. See [SETUP.md](../../SETUP.md). Use a model capable of the required tool calls; provider charges and number of turns depend on the run. A missing/failed tool result is unassessed, not a pass. | `tokn doctor --provider anthropic` (static; the first run tests the key) |
+| 14-day trial | Domain modes such as `quantumsci` need the trial. Community grants only `domains:basic`. | `tokn license features` |
 
 **Tier:** `quantumsci` is a domain mode. Start the trial with `tokn license trial` (14 days). Without it, the mode is not available. The checker and the JSON files need no licence.
 
@@ -49,16 +49,16 @@ Set-Location tokn-dist\examples\quantum-experiment
 
 Bash:
 ```bash
-export NOSPACE_MODEL_PROVIDER=<your provider>
-export NOSPACE_MODEL_NAME=<a model you have access to>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_PROVIDER='anthropic'
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+read -rs -p 'Anthropic key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
 ```
 
 PowerShell:
 ```powershell
-$env:NOSPACE_MODEL_PROVIDER = "<your provider>"
-$env:NOSPACE_MODEL_NAME = "<a model you have access to>"
-$env:ANTHROPIC_API_KEY = "<your key>"
+$env:NOSPACE_MODEL_PROVIDER = "anthropic"
+$env:NOSPACE_MODEL_NAME = "YOUR_MODEL_ID"
+$env:ANTHROPIC_API_KEY = Read-Host 'Anthropic key' -MaskInput   # pwsh 7.1+; or read it from your secret store
 ```
 
 Set only the key variable that matches your provider. See [SETUP.md](../../SETUP.md) for the full list.
@@ -71,17 +71,29 @@ tokn license trial
 
 ### 4. Review the plans in quantumsci mode
 
+Stage only the prompt and the two JSON inputs into a new `work/` folder. This README (with the expected outcomes) and `check_plan.py` stay outside the agent's read scope, and the result is saved outside `work/`.
+
 Bash:
 ```bash
-tokn agent-run --mode quantumsci --prompt-file prompt.md --no-confirm
+mkdir work
+cp prompt.md devices.json experiments.json work/
+cd work
+tokn agent-run --mode quantumsci --prompt-file prompt.md --repo-root . \
+  --permission-mode plan --max-steps 12 --output-format json > ../result.json
+cd ..
 ```
 
 PowerShell:
 ```powershell
-tokn agent-run --mode quantumsci --prompt-file prompt.md --no-confirm
+New-Item -ItemType Directory work | Out-Null
+Copy-Item prompt.md, devices.json, experiments.json work\
+Set-Location work
+tokn agent-run --mode quantumsci --prompt-file prompt.md --repo-root . `
+  --permission-mode plan --max-steps 12 --output-format json > ..\result.json
+Set-Location ..
 ```
 
-`--no-confirm` skips interactive prompts. Remove it if you want to approve each step. Add `--max-steps 12` if the agent stops early.
+`--permission-mode plan` keeps the run read-only: the task is a report, so the agent needs no file writes or commands. `mkdir` fails if `work/` already exists; delete or rename the old one first. The answer is the `result` field of `result.json`; use it only if `status` is `success`.
 
 ### 5. Recompute the gates offline
 
@@ -95,7 +107,7 @@ PowerShell:
 python check_plan.py
 ```
 
-The checker reads `devices.json` and `experiments.json`, prints the fidelity and each issue, and exits with code 1 if any CRITICAL issue is found.
+The checker reads `devices.json` and `experiments.json`, prints the fidelity and each issue, and exits with code 1 if any CRITICAL issue is found. It recomputes the gates independently; it does not read the agent's answer. Grade the run from this folder by comparing each verdict in `result.json` with the checker's output, experiment by experiment.
 
 ## Expected outcomes
 
@@ -116,14 +128,15 @@ exp-1 is the clearest block: the error budget, decoherence, shot count, tier lab
 - exp-3's fault-tolerant claim is refused and labelled NISQ-era, even though the circuit itself is fine.
 - The agent does not call a quantum advantage over classical methods, because the plans give no classical baseline.
 - Each result carries a tier label in the answer.
+- Three kinds of claim stay separate. A **simulator estimate** (`[EXACT-SIM]`, `[NOISY-SIM]`, `[ANALOG-SIM]`) is a computed expectation. **Hardware evidence** (`[HARDWARE:…]`) exists only where a plan records a hardware run; here that label is synthetic too. Anything the run did not compute, or computed with a failed tool call, is **unassessed**, not PASS.
 
 ## Troubleshooting
 
 | Symptom | Fix |
 |---|---|
 | The mode is not recognised | Your TOKN is older than v0.3.57. Update it. |
-| Mode refuses to start, or a domain-licence error appears | Run `tokn license trial`, then `tokn license status`. |
-| The agent makes no tool calls | Raise `--max-steps`, and check the model settings in step 2. |
+| Mode refuses to start, or a domain-licence error appears | Run `tokn license trial`, then `tokn license features`. |
+| The agent makes no tool calls | Raise `--max-steps`, and check the model settings in step 2 with `tokn doctor --provider anthropic`. For other agent flags, see `tokn agent-run --help-all`. |
 | `python` not found on Windows | Use `py` instead, or install Python from python.org. |
 | Checker reports a missing file | Run it from this folder. The JSON files must sit next to `check_plan.py`. |
 | Checker exits 1 | Expected for this dataset. exp-1 and exp-3 are BLOCKED. |

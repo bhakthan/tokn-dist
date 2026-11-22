@@ -25,23 +25,32 @@ synthetic notes file.
 **What leaves your machine:** each step's prompt, `sample-notes.md`, and tool
 results. These go to the LLM provider you configure. The notes are synthetic.
 
-**Surface note:** the released binary exposes flows through the interactive
-session (`tokn agent-repl`). The `start_workflow` tool is registered there. This
-example uses that path. It does not use `tokn agent-run`, and it does not depend
-on the internal `create_flow` or `run_flow` tools, which are not reachable from
-the released binary.
+**Surface note:** this example launches a flow from the interactive session
+(`tokn agent-repl`) using the available workflow tool; it does not use
+`tokn agent-run`.
 
 ## 1. Copy the example to a scratch folder
 
 ```bash
-cp -r examples/flows ~/flows-run   # any scratch folder you own
-cd ~/flows-run
+mkdir -p ~/flows-run/work
+cp examples/flows/notes-review.json examples/flows/sample-notes.md ~/flows-run/work/
+cd ~/flows-run/work
 ```
 
 ```powershell
-Copy-Item -Recurse examples\flows $HOME\flows-run
-Set-Location $HOME\flows-run
+New-Item -ItemType Directory -Force $HOME\flows-run\work | Out-Null
+Copy-Item examples\flows\notes-review.json,examples\flows\sample-notes.md $HOME\flows-run\work\
+Set-Location $HOME\flows-run\work
 ```
+
+Use a model capable of the required tool calls; provider charges and number of
+turns depend on the run. A missing/failed tool result is unassessed, not a pass.
+The three graph nodes each make a model call; retries or additional turns can
+increase that count.
+This fixed flow runs its nodes once; compare it with
+[loop engineering](../loop-engineering/README.md), which repeats a task under
+an explicit check and stop condition. Keep the README and your held-out grading
+criterion outside the agent's work folder; `sample-notes.md` is task input.
 
 ## 2. Configure the LLM
 
@@ -49,15 +58,15 @@ Use the same placeholders as [grid-screening](../grid-screening/README.md#2-conf
 Replace them with your own values.
 
 ```bash
-export NOSPACE_MODEL_PROVIDER=anthropic
-export NOSPACE_MODEL_NAME=<your model name>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_PROVIDER='anthropic'
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+# Load the provider secret from a trusted secret store/session.
 ```
 
 ```powershell
 $env:NOSPACE_MODEL_PROVIDER = "anthropic"
-$env:NOSPACE_MODEL_NAME = "<your model name>"
-$env:ANTHROPIC_API_KEY = "<your key>"
+$env:NOSPACE_MODEL_NAME = "YOUR_MODEL_ID"
+# Load ANTHROPIC_API_KEY from a trusted secret store/session.
 ```
 
 For other providers, see [../../SETUP.md](../../SETUP.md).
@@ -100,7 +109,10 @@ if you want to see what each step did.
 
 ## 6. Check the result
 
-Expected, not a recorded run. Your output will differ in wording.
+Expected, not a recorded run. Your output will differ in wording. For a guided
+variant, privately withhold one requirement from `sample-notes.md` and check
+the final notes against it after the run; do not put that criterion in the
+agent prompt.
 
 | # | Expectation | Pass signal |
 |---|---|---|

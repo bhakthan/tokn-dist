@@ -109,6 +109,22 @@ Inside the REPL:
 
 The output format for `path` was not captured in a run, so check what it prints on your build.
 
+## 8. Optional: plan a migration from the graph
+
+After `/codebase build`, try this from the same scratch repo:
+
+```bash
+tokn migrate plan --repo-root .
+```
+
+```powershell
+tokn migrate plan --repo-root .
+```
+
+This reads the generated graph and proposes file-disjoint batches. The batches
+are advisory planning output, not proof that changes are independent or that
+the migration is safe; review dependencies and run the project's tests.
+
 ## What to look for
 
 Expected results, computed by hand from the fixture. **These are expected, not a recorded run.** Your output should match the symbol sets. Ordering and line numbers may differ slightly.

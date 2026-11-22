@@ -1,0 +1,12 @@
+{
+  "version": "0.3.118",
+  "input_digest": "sha256:30d996d394b0f039b8d3495e4b22ffa6cbbf7b31057c87859ce08160448449b5",
+  "digest_scope": "sessions/*.ndjson and disposition.json; sorted relative path + NUL + bytes + NUL",
+  "scenario": "synthetic categorical review-disposition drift",
+  "checker": "tokn flywheel grade-sessions and tokn flywheel drift",
+  "status": "offline plan observed; grading and drift report are expected, not a captured run",
+  "limitations": [
+    "Repeated synthetic traces exercise the window calculation, not production trend.",
+    "A keyword category is not independent proof that a disposition is correct."
+  ]
+}

@@ -15,7 +15,7 @@ A general-purpose LLM reads the records and gives a confident verdict. The `trad
 | `trade_hs_validate` | Validate HS codes: 2/4/6-digit international structure, national 8/10-digit extensions (US-HTS 10, EU-CN 8, EU-TARIC 10), reserved chapter 77 and invalid chapter 00, heading ending 00, declared chapter/heading consistency, HS section. |
 | `trade_shipment_review` | Run every check on a shipment (screening + ownership, classification USML-first, license, deemed exports, red flags, HS/value/origin) and derive one disposition: hold_sanctions > hold_screening_review > hold_jurisdiction > hold_classification > hold_license > hold_red_flag > correct_documentation > ready_for_officer_review. |
 
-This is the single-agent version of a TOKN domain-relay scenario. It uses the same synthetic data, one model and a few cents of tokens, not a five-model relay.
+This is the single-agent version of a TOKN domain-relay scenario. It uses the same synthetic data and one model, not a five-model relay.
 
 ## 0. What you need
 
@@ -23,21 +23,30 @@ This is the single-agent version of a TOKN domain-relay scenario. It uses the sa
 |---|---|---|
 | TOKN v0.3.83 or newer | Includes the domain tools this example calls. | `tokn version` |
 | 14-day trial (`tokn license trial`) | Domain modes need the trial. | `tokn license features` shows `domains:tradecomp` or `domains:*` |
-| An LLM provider | TOKN calls a model. Any supported provider works. | See [../../SETUP.md](../../SETUP.md) |
+| An LLM provider | TOKN calls a model. | See [../../SETUP.md](../../SETUP.md) |
+
+Use a model capable of the required tool calls; provider charges and number of
+turns depend on the run. A missing/failed tool result is unassessed, not a pass.
 
 **What leaves your machine:** the prompt, the files TOKN reads from the scratch folder, and tool results. These go to the LLM provider you configure. The demo data is synthetic.
 
 ## 1. Copy the example to a scratch folder
 
-TOKN writes `.nospace/` state and output files into the working folder, so run it outside this repo.
+Create a new work folder outside this checkout. Copy only `prompt.md` and
+`demo-input/` into it; do not copy this README or `grading/`. TOKN writes
+`.nospace/` state and output files into the work folder.
 
 ```bash
-cp -r examples/shipment-release-review ~/shipment-release-review-run
+mkdir -p ~/shipment-release-review-run/demo-input
+cp examples/shipment-release-review/prompt.md ~/shipment-release-review-run/
+cp -r examples/shipment-release-review/demo-input/. ~/shipment-release-review-run/demo-input/
 cd ~/shipment-release-review-run
 ```
 
 ```powershell
-Copy-Item -Recurse examples\shipment-release-review $HOME\shipment-release-review-run
+New-Item -ItemType Directory -Force $HOME\shipment-release-review-run\demo-input | Out-Null
+Copy-Item examples\shipment-release-review\prompt.md $HOME\shipment-release-review-run\
+Copy-Item examples\shipment-release-review\demo-input\* $HOME\shipment-release-review-run\demo-input\
 Set-Location $HOME\shipment-release-review-run
 ```
 
@@ -51,8 +60,12 @@ Read `prompt.md` and the files in `demo-input/` (`control_criteria.json`, `count
 
 ## 4. Run the task
 
+The answer key remains in `grading/` outside the staged work folder. Grade
+`RESULT.md` after the run from the example checkout, not from the agent's
+workspace.
+
 ```bash
-tokn agent-run --mode tradecomp --repo-root . --prompt-file prompt.md --max-steps 40 --no-confirm
+tokn agent-run --mode tradecomp --repo-root . --prompt-file prompt.md --max-steps 40
 ```
 
 7 items with 8 tools each can take 56 or more tool calls. If the run stops early, raise `--max-steps`.
@@ -76,18 +89,7 @@ tokn agent-run --mode tradecomp --repo-root . --prompt-file prompt.md --max-step
 <details>
 <summary>Answer key (open after your run)</summary>
 
-| Item | Status | Why |
-|---|---|---|
-| `SHP-001` | `ready_for_officer_review` | Clean control: 3A991.a microprocessor (clock 48 MHz meets the synthetic 3A991.a criterion; reason for control AT1 only, no X for XN), clean parties, valid 10-digit US-HTS code, plausible unit value. It must reach ready_for_officer_review - and only that: release still needs the officer's attestation. |
-| `SHP-002` | `hold_screening_review` | The consignee name differs letter by letter from list entry SYN-001 (Evgrafov/Yevgrafov, Mashinostroi/Mashinostroy, plus an LLC suffix), so exact matching misses it. Transliteration-insensitive matching scores it above the potential threshold; the country (XS vs XR) does not corroborate, so it is a potential match held for analyst disposition, not a confirmed match. |
-| `SHP-003` | `hold_sanctions` | Corvane Industrial Supply is not itself listed. Two listed entities own 30% and 25%; each is below 50% alone, but blocked ownership aggregates to 55%, so the consignee is treated as blocked under the 50% rule. |
-| `SHP-004` | `hold_classification` | Declared EAR99 on a 'sales team assumption'. The specs (total_dose_krad_si 600, product_type integrated_circuit) meet synthetic criterion CRIT-3A001-A-1, so EAR99 is a misclassification; the corrected ECCN would also need a license for XN (NS1). |
-| `SHP-005` | `hold_jurisdiction` | Routed under the EAR as 6A003.b.4 and the EAR criterion also matches, but the order of review checks the USML first: generation-3, specially-designed-military image intensifiers meet synthetic CRIT-USML-XII-C, so ITAR jurisdiction governs - a jurisdiction conflict, not a verified ECCN. |
-| `SHP-006` | `hold_red_flag` | Parties screen clear and the EAR99 item needs no license, but the only consignee is a freight forwarder with no ultimate consignee or end user identified: an unresolved red flag that blocks release. |
-| `SHP-007` | `correct_documentation` | Everything passes except the HS code 7701.90: chapter 77 is reserved in the Harmonized System, so the documentation must be corrected. |
-
-All 7 correct counts as PASS. Missing any trap item (`SHP-001`, `SHP-002`, `SHP-003`, `SHP-004`, `SHP-005`, `SHP-006`, `SHP-007`) is a FAIL even if the rest are right.
-
+See the [grader-only answer key](grading/answer-key.md). It is outside the staged work folder.
 </details>
 
 ## Reflect
@@ -95,6 +97,7 @@ All 7 correct counts as PASS. Missing any trap item (`SHP-001`, `SHP-002`, `SHP-
 - Which item did you get wrong in step 3, and which number or field misled you?
 - Pick one trap item, edit its record in `demo-input/` so the deciding check passes, and predict the new status before you rerun. Did the tool agree?
 - Where did the run's evidence come from a tool result, and where from the model's own reading? Which of those would you show an auditor?
+- Every result is decision support only, not a sanctions determination or export authorization. A compliance officer must review it. Missing or failed tool results are unassessed, never a pass.
 
 ## Troubleshooting
 

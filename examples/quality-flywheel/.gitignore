@@ -1,2 +1,7 @@
 scratch/
 cycles/
+demo-cycles/
+result.json
+.env
+.tokn/
+.nospace/

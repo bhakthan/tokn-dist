@@ -34,15 +34,17 @@
 bash:
 
 ```bash
-export OPENAI_API_KEY=sk-...
-tokn acp --provider openai --model gpt-5.6-sol
+export OPENAI_API_KEY  # Set in a trusted secret store or protected shell session.
+MODEL='YOUR_MODEL_ID'
+tokn acp --provider openai --model "$MODEL"
 ```
 
 PowerShell:
 
 ```powershell
-$env:OPENAI_API_KEY = "sk-..."
-tokn acp --provider openai --model gpt-5.6-sol
+$env:MODEL = "YOUR_MODEL_ID"
+# Set OPENAI_API_KEY from a trusted secret store or protected shell session.
+tokn acp --provider openai --model $env:MODEL
 ```
 
 Air-gapped, with a local Ollama model instead:
@@ -58,7 +60,7 @@ In T3 Code, open **Settings → Providers → Add provider → Local ACP command
 | Field | Value |
 |---|---|
 | Command path | `tokn`, or its absolute path (for example `C:\tools\tokn.exe`) |
-| Arguments, one per row | `acp` · `--provider` · `openai` · `--model` · `gpt-5.6-sol` |
+| Arguments, one per row | `acp` · `--provider` · `openai` · `--model` · your configured model ID |
 | Environment overrides | `OPENAI_API_KEY` (or the key for your provider) |
 | Auth method | leave empty |
 
@@ -69,7 +71,7 @@ Useful extra arguments:
 | Arguments | Effect |
 |---|---|
 | `--permission-mode` `accept_edits` | Start new threads with edits auto-approved |
-| `--available-models` `gpt-5.6-sol,gpt-5.6-luna` | Models listed in T3 Code's picker |
+| `--available-models` `YOUR_MODEL_ID` | Model IDs available in your account, listed in T3 Code's picker |
 | `--max-steps` `80` | A longer budget per prompt (default 50) |
 | `--no-session-store` | Keep no transcripts (threads cannot resume after a restart) |
 

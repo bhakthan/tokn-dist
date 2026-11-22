@@ -25,13 +25,12 @@ All data in `synthetic/` is invented. Addresses use documentation ranges.
 | Requirement | Why | Check |
 |---|---|---|
 | TOKN **v0.3.57 or newer** | First release with this example's flags | `tokn version` |
-| **Trial** licence (domain mode) | Community grants only `domains:basic`. `cybersec` needs the trial. | `tokn license status` |
+| **Trial** licence (domain mode) | Community grants only `domains:basic`. `cybersec` needs the trial. | `tokn license features` |
 | An LLM provider and key | Runs the agent | see [SETUP.md](../../SETUP.md) |
 | Python 3 (optional) | Runs the stdlib checker in step 6 | `python --version` |
 
 **Tier:** domain modes need the 14-day trial. Start it once with
-`tokn license trial`. Non-domain features in this folder would work on
-Community or trial.
+`tokn license trial`, then inspect entitlement with `tokn license features`.
 
 > **What leaves your machine.** The model provider receives the prompt and the
 > two synthetic files the agent reads. Starting the trial also sends a one-time
@@ -62,15 +61,18 @@ Set-Location $HOME\tokn-cyber
 ```bash
 tokn license trial
 tokn license status
+tokn license features
 ```
 
 ```powershell
 tokn license trial
 tokn license status
+tokn license features
 ```
 
-Expected: `status` reports an active trial. If `trial` says one was already
-used on this machine, the domain modes cannot be enabled here.
+Expected: `status` reports an active trial and `features` lists
+`domains:cybersec` or `domains:*`. If `trial` says one was already used on
+this machine, the domain modes cannot be enabled here.
 
 ## 3. Configure the LLM
 
@@ -78,46 +80,49 @@ Follow [SETUP.md](../../SETUP.md) for your provider. For Anthropic, for example:
 
 ```bash
 export NOSPACE_MODEL_PROVIDER=anthropic
-export NOSPACE_MODEL_NAME=<a Claude model you have access to>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+read -rs -p 'Anthropic API key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
 ```
 
 ```powershell
 $env:NOSPACE_MODEL_PROVIDER = "anthropic"
-$env:NOSPACE_MODEL_NAME     = "<a Claude model you have access to>"
-$env:ANTHROPIC_API_KEY      = "<your key>"
+$env:NOSPACE_MODEL_NAME     = "YOUR_MODEL_ID"
+# Set ANTHROPIC_API_KEY through your trusted secret manager or existing shell session.
 ```
 
-Keep keys in your shell or `~/.tokn/config/credentials.env`. Never commit one.
+Keep credentials in a trusted secret store or existing shell session. Never put a populated `.env` file in the example or commit a key.
+For a static provider configuration check, run
+`tokn doctor --provider anthropic`; it does not verify a live credential.
 
 ## 4. Run the triage
 
-Flags come from `tokn agent-run --help`: `--mode`, `--prompt-file`,
-`--repo-root`, `--max-steps`, `--no-confirm`, `--output-format`.
+Advanced flags come from `tokn agent-run --help-all`: `--mode`, `--prompt-file`,
+`--repo-root`, `--max-steps`, `--output-format`.
 `--output-format json` prints one final JSON object on stdout. Logs go to stderr.
 
 bash:
 
 ```bash
 tokn agent-run --mode cybersec --prompt-file prompt.md --repo-root . \
-  --max-steps 20 --no-confirm --output-format json > result.json
+  --max-steps 20 --output-format json > result.json
 ```
 
 PowerShell:
 
 ```powershell
 tokn agent-run --mode cybersec --prompt-file prompt.md --repo-root . `
-  --max-steps 20 --no-confirm --output-format json > result.json
+  --max-steps 20 --output-format json > result.json
 ```
 
-`--no-confirm` auto-approves tool calls. Because this scope is two read-only
-files, that is safe here. Do not use it on a real environment without reading
-the prompt first.
+The scope is limited to the two supplied synthetic files; it is not a
+permission restriction on the agent. Keep default approvals enabled and review
+the report before acting. A missing or failed tool result is unassessed, not a
+pass; do not add active reproduction or use a real target.
 
 ## 5. Expected gate outcomes
 
-The table lists what the source says each gate does. It is not a recorded run.
-Check the actual run against it.
+Expected, not a recorded run: these outcomes describe the supplied gate
+configuration. Check an actual run against them.
 
 | Gate | Type | Expected in this run |
 |---|---|---|

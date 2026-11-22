@@ -6,7 +6,7 @@
     python run.py --profile hybrid [--approve-prod]  # + HF coder, local ollama (data_boundary: local)
     python run.py --profile c2s-hybrid                # hybrid roles plus a required local C2S showcase
 
-Every run writes to out/<timestamp>/ (gitignored): seed/ (the candidate git repo,
+Every run writes to a unique user-owned run directory: seed/ (the candidate git repo,
 with the factory store in seed/.nospace/factory), answer_key.json and intake/
 (both OUTSIDE the candidate), targets/{dev,staging,prod}, logs and verify/REPORT.md.
 
@@ -30,7 +30,7 @@ from datetime import datetime
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-OUT_ROOT = HERE / "out"
+DEFAULT_RUN_ROOT = Path.home() / "tokn-runs" / "rnaseq-software-factory"
 sys.path.insert(0, str(HERE))
 
 
@@ -44,6 +44,14 @@ DEFAULTS = {
     "FACTORY_DECISION_BACKEND": "azure",
     "FACTORY_HF_CODER_MODEL": "Qwen/Qwen2.5-Coder-32B-Instruct",
     "FACTORY_OLLAMA_MODEL": "qwen2.5-coder:7b",
+}
+DOTENV_SECRET_KEYS = {
+    "ANTHROPIC_API_KEY",
+    "AZURE_OPENAI_API_KEY",
+    "DECISION_API_KEY",
+    "HF_TOKEN",
+    "OPENAI_API_KEY",
+    "SYSTEMONE_API_KEY",
 }
 PY_PKGS = ["numpy", "pandas", "scipy", "pytest"]
 OS = platform.system()
@@ -59,7 +67,7 @@ def banner(msg: str) -> None:
 
 
 def load_dotenv(path: Path) -> None:
-    """KEY=VALUE lines from ./.env; never overrides the environment."""
+    """Load documented credentials only; routing and executable settings stay in the shell."""
     if not path.is_file():
         return
     for raw in path.read_text(encoding="utf-8").splitlines():
@@ -68,7 +76,11 @@ def load_dotenv(path: Path) -> None:
             continue
         k, v = line.split("=", 1)
         k, v = k.strip().removeprefix("export ").strip(), v.strip().strip('"').strip("'")
-        if k and k not in os.environ:
+        if k not in DOTENV_SECRET_KEYS:
+            print(f"Ignoring unsupported .env setting {k}; set routing, endpoint, and executable values in a trusted shell.",
+                  file=sys.stderr)
+            continue
+        if v and k not in os.environ:
             os.environ[k] = v
 
 
@@ -105,7 +117,7 @@ def tokn_candidates(explicit: str | None) -> list[Path]:
     c = [Path(explicit)] if explicit else []
     if os.environ.get("TOKN_BIN"):
         c.append(Path(os.environ["TOKN_BIN"]))
-    c += [OUT_ROOT / "bin" / exe, HERE / exe]
+    c += [HERE / "out" / "bin" / exe, HERE / exe]
     if shutil.which("tokn"):
         c.append(Path(shutil.which("tokn")))
     return c
@@ -136,6 +148,14 @@ def tokn_env(extra: dict[str, str]) -> dict[str, str]:
     env.update({"TOKN_NO_REGISTER": "1", "TOKN_NO_UPDATE_CHECK": "1", "TOKN_LICENSE_QUIET": "1"})
     env.update(extra)
     return env
+
+
+def outside_checkout(path: Path) -> Path:
+    resolved = path.expanduser().resolve()
+    repo_root = HERE.parents[1].resolve()
+    if (repo_root / ".git").exists() and (resolved == repo_root or repo_root in resolved.parents):
+        raise SystemExit(f"Run data must stay outside the source checkout: {resolved}")
+    return resolved
 
 
 # ── preflight ───────────────────────────────────────────────────────────────
@@ -637,10 +657,14 @@ def append_feature_request(intake: Path) -> None:
 
 
 LLAMA_HINT = ("Install llama-server: " + hint("winget install ggml.llamacpp", "brew install llama.cpp",
-              "sudo apt-get install -y git cmake build-essential libcurl4-openssl-dev && git clone https://github.com/ggml-org/llama.cpp && cmake -S llama.cpp -B llama.cpp/build && cmake --build llama.cpp/build --target llama-server -j2 && export FACTORY_LLAMA_SERVER=\"$PWD/llama.cpp/build/bin/llama-server\"")
-              + "\nGet the model: python -m pip install -U huggingface_hub; "
-              "hf download mradermacher/C2S-Scale-Gemma-2-2B-GGUF C2S-Scale-Gemma-2-2B.Q4_K_M.gguf --local-dir ."
-              "\nSet FACTORY_C2S_GGUF=C2S-Scale-Gemma-2-2B.Q4_K_M.gguf in .env and retry, or pass --c2s-url for a running local server.")
+              "sudo apt-get install -y git cmake build-essential libcurl4-openssl-dev && "
+              "git clone https://github.com/ggml-org/llama.cpp \"$HOME/llama.cpp\" && "
+              "cmake -S \"$HOME/llama.cpp\" -B \"$HOME/llama.cpp/build\" && "
+              "cmake --build \"$HOME/llama.cpp/build\" --target llama-server -j2 && "
+              "export FACTORY_LLAMA_SERVER=\"$HOME/llama.cpp/build/bin/llama-server\"")
+              + "\nInstall the Hugging Face client with `python -m pip install -U huggingface_hub`; "
+              "download the GGUF to a user-owned folder outside the checkout, then set FACTORY_C2S_GGUF "
+              "in your trusted shell to that file. Or pass --c2s-url for a running local server.")
 
 
 class C2SServer:
@@ -912,8 +936,10 @@ def main(argv=None) -> int:
     ap.add_argument("--approve-blast-radius", action="store_true",
                     help="approve non-prod gates whose ONLY escalation is a blast-radius overrun (logged loudly)")
     ap.add_argument("--resume", default=None, metavar="RUN_DIR",
-                    help="continue ticking an existing out/<run> directory instead of starting fresh")
-    ap.add_argument("--tokn", default=None, help="tokn binary (default: $TOKN_BIN, out/bin, this folder, PATH)")
+                    help="continue ticking an existing user-owned run directory instead of starting fresh")
+    ap.add_argument("--out-root", type=Path, default=DEFAULT_RUN_ROOT, metavar="DIR",
+                    help="parent for new run directories (default: ~/tokn-runs/rnaseq-software-factory; must be outside the checkout)")
+    ap.add_argument("--tokn", default=None, help="tokn binary (default: $TOKN_BIN, this folder's out/bin, this folder, PATH)")
     ap.add_argument("--seed", type=int, default=7)
     ap.add_argument("--max-ticks", type=int, default=40)
     ap.add_argument("--max-steps", type=int, default=0, help="--max-steps per role run (0 = runtime default)")
@@ -926,16 +952,17 @@ def main(argv=None) -> int:
 
     if args.no_feature and args.profile == "c2s-hybrid":
         ap.error("--no-feature skips the C2S service required by c2s-hybrid; use hybrid instead")
+    args.out_root = outside_checkout(args.out_root)
     load_dotenv(HERE / ".env")
     ctx = preflight(args.profile, args.tokn, args.c2s_url)
     if args.resume:
-        run_dir = Path(args.resume).resolve()
+        run_dir = outside_checkout(Path(args.resume))
         if not (run_dir / "seed" / "factory.yaml").is_file() or args.profile == "offline":
-            raise SystemExit(f"--resume needs a live out/<run> directory with seed/factory.yaml: {run_dir}")
+            raise SystemExit(f"--resume needs a live run directory with seed/factory.yaml: {run_dir}")
         args.resume = run_dir
     else:
-        run_dir = OUT_ROOT / f"{datetime.now():%Y%m%d-%H%M%S}-{args.profile}"
-        run_dir.mkdir(parents=True)
+        run_dir = args.out_root / f"{datetime.now():%Y%m%d-%H%M%S-%f}-{args.profile}"
+        run_dir.mkdir(parents=True, exist_ok=False)
     log(f"profile={args.profile} tokn={ctx.get('tokn')} run_dir={run_dir}")
     if args.profile == "offline":
         return run_offline(args, ctx, run_dir)

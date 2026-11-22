@@ -24,17 +24,18 @@ The project being built is a toy. TOKN itself is not modified. Every step first 
 | Requirement | Why | Check |
 |---|---|---|
 | TOKN v0.3.57 or later | Ships `agentorg-run`, `swarm-plan`, `swarm-build` | `tokn version` |
-| Licence tier: **Community** | These commands run without a premium mode; default-mode sub-agents are included | `tokn license` |
+| Licence tier: **Community** | Organization checks and dry planning do not need a premium mode; the optional live-worker path needs model access | `tokn license features` |
 | Git | Each role or task works in its own git worktree | `git --version` |
 | Python 3.8+ | Runs the optional offline checker and the sample project | `python --version` |
 | A model provider (only for `--real`) | Sub-agents call a model. Not needed for the dry runs | see [SETUP.md](../../SETUP.md) |
 
-For `--real` runs only, configure the model with placeholders:
+Badge: **Free plan; live workers need model access.** For `--real` runs only,
+configure the model in a trusted shell:
 
 ```
 NOSPACE_MODEL_PROVIDER=anthropic
-NOSPACE_MODEL_NAME=<a model you have access to>
-ANTHROPIC_API_KEY=<your key>
+NOSPACE_MODEL_NAME='YOUR_MODEL_NAME'
+# Set the secret in a trusted secret store or hidden prompt; do not paste it here.
 ```
 
 See [SETUP.md](../../SETUP.md).
@@ -109,7 +110,7 @@ PowerShell:
 tokn agentorg-run --org org.json --base main
 ```
 
-Expected, not a recorded run: the output lists the three roles in dependency order (planner first, then implementer and reviewer), and reports an integration branch for review. Nothing is pushed.
+Expected, not a recorded run: `org.json` produces a dry planning output listing the three roles in dependency order (planner first, then implementer and reviewer), with a budget and integration branch for review. Use this dry output as the worked result before the optional live-worker path. Nothing is pushed.
 
 ## 4. Look at the task graph
 
@@ -163,16 +164,16 @@ This step calls a model. Run it only after steps 2 to 5 look right and your mode
 bash:
 
 ```bash
-tokn swarm-build --spec swarm.json --base main --real --worker-model "<your model name>" --max-steps 8 --max-parallel 2
+tokn swarm-build --spec swarm.json --base main --real --worker-model "YOUR_MODEL_NAME" --max-steps 8 --max-parallel 2
 ```
 
 PowerShell:
 
 ```powershell
-tokn swarm-build --spec swarm.json --base main --real --worker-model "<your model name>" --max-steps 8 --max-parallel 2
+tokn swarm-build --spec swarm.json --base main --real --worker-model "YOUR_MODEL_NAME" --max-steps 8 --max-parallel 2
 ```
 
-`--max-steps` caps each sub-agent's turns. `--max-parallel` caps concurrent tasks. Each task runs as a sub-agent in its own worktree.
+`--max-steps` caps each sub-agent's turns. `--max-parallel` caps concurrent tasks. Each task runs as a sub-agent in its own worktree. This optional live-worker path needs configured model access; dry plans require neither model access nor paid entitlement.
 
 Expected, not a recorded run: each task's branch gains commits, and the integration branch holds the merged `convert.py`, `cli.py`, and `test_convert.py`.
 

@@ -2,7 +2,7 @@
 # Usage: .\run.ps1 [-Local] [-Reset]
 #   -Local   use a llama.cpp server on 127.0.0.1:8080 instead of Azure OpenAI (implies --airgap)
 #   -Reset   first delete state\, workspace\.nospace\ and workspace\.tokn\ (generated, git-ignored)
-# This makes model calls unless -Local is used with a running llama-server.
+# Both variants make model calls; -Local sends inference requests to the local model.
 [CmdletBinding()]
 param([switch]$Local, [switch]$Reset)
 
@@ -16,7 +16,7 @@ $State = Join-Path $PSScriptRoot "state"
 function Note([string]$Msg) { Write-Host "[*] $Msg" -ForegroundColor Cyan }
 function Abort([string]$Msg) {
     Write-Host "[!] $Msg" -ForegroundColor Red
-    if (Test-Path -LiteralPath $State) { Remove-Item -LiteralPath $State -Recurse -Force }
+    Write-Host "[*] State is preserved at '$State' for diagnosis. Use -Reset only when you explicitly want to discard it." -ForegroundColor Yellow
     exit 1
 }
 
@@ -63,16 +63,20 @@ if ($Local) {
 } else {
     if (-not $env:AZURE_OPENAI_ENDPOINT) {
         $problems += "AZURE_OPENAI_ENDPOINT is not set in this shell. Export your Azure OpenAI resource endpoint (README step 1). It is not read from .env."
+    } elseif ($env:AZURE_OPENAI_ENDPOINT -match '(YOUR_|placeholder|[<>])') {
+        $problems += "AZURE_OPENAI_ENDPOINT is still a placeholder. Set a trusted endpoint in this shell."
     }
     if (-not $env:AZURE_OPENAI_DEPLOYMENT) {
         $problems += "AZURE_OPENAI_DEPLOYMENT is not set in this shell (for example gpt-6-astra)."
+    } elseif ($env:AZURE_OPENAI_DEPLOYMENT -match '(YOUR_|placeholder|[<>])') {
+        $problems += "AZURE_OPENAI_DEPLOYMENT is still a placeholder. Set a trusted deployment alias in this shell."
     }
     if ($env:AZURE_OPENAI_USE_DEFAULT_CREDENTIAL -ne "true") {
         $problems += "AZURE_OPENAI_USE_DEFAULT_CREDENTIAL=true is not set in this shell (README step 1)."
     }
     $az = Get-Command az -ErrorAction SilentlyContinue
     if (-not $az) {
-        $problems += "Missing: Azure CLI. Install: winget install Microsoft.AzureCLI (Windows), brew install azure-cli (macOS), or curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash (Debian/Ubuntu). Then run az login."
+        $problems += "Missing: Azure CLI. Install it using Microsoft's signed package instructions for your OS: https://learn.microsoft.com/cli/azure/install-azure-cli. Then run az login."
     } else {
         & az account show -o none *> $null
         if ($LASTEXITCODE -ne 0) { $problems += "Azure CLI is not signed in. Run az login, then rerun." }

@@ -26,10 +26,10 @@ path, where the two people are on different computers, is in step 6.
 
 | Requirement | Why | Check |
 |---|---|---|
-| TOKN **v0.3.57 or newer** | Current release with `tokn peer` and `--peers` | `tokn version` |
+| A TOKN build that includes `tokn peer` and `--peers` | Peer commands are not in every build. Check the flags with `tokn peer send --help`. | `tokn version` |
 | **Two terminals** on one machine | Each terminal is one peer identity | — |
 | Licence tier: **Community** for steps 1–4 | No peer gate was found in the licence policy. Confirm on your machine. | `tokn license features` |
-| An LLM provider and key (step 5 only) | Runs the agent that drafts the review | see [SETUP.md](../../SETUP.md) |
+| An LLM provider and key (step 5 only) | Runs the agent that drafts the review. Use a model capable of the required tool calls; provider charges and number of turns depend on the run. A missing/failed tool result is unassessed, not a pass. | `tokn doctor --provider anthropic` (static; does not prove the key works) |
 | **14-day trial** (`tokn license trial`) only if you switch step 5 to a domain mode such as `nucsci` | Domain modes need `domains:<name>`. Community grants only `domains:basic`. The default mode used here does not need it. | `tokn license features` |
 
 > **What leaves your machine.** Steps 1–4 write only local files to the exchange
@@ -113,6 +113,17 @@ tokn peer send --exchange .\exchange --identity ana --consumer ben `
 When the printed message looks right, run the same command without `--dry-run`. `--type`
 is required. `--action` can be repeated for more than one request.
 
+A quick dry run needs no real note. This one writes nothing, so it is safe to run in an
+empty exchange folder:
+
+```bash
+tokn peer send --exchange . --identity ana --consumer ben --type review-note --subject demo --action "Check cost, then scope" --dry-run
+```
+
+The printed JSON shows `"requestedActions"` with one entry, `"Check cost, then scope"`.
+Commas inside an `--action` value are kept as written. To request several actions, repeat
+the `--action` flag once per action.
+
 ## 4. Ben picks up the note
 
 In a second terminal, as Ben, run the watcher once. `--once` runs a single tick and exits,
@@ -152,14 +163,14 @@ Configure the LLM. Follow [SETUP.md](../../SETUP.md) for your provider. For Anth
 
 ```bash
 export NOSPACE_MODEL_PROVIDER=anthropic
-export NOSPACE_MODEL_NAME=<a model you have access to>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+read -rs -p 'Anthropic key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
 ```
 
 ```powershell
 $env:NOSPACE_MODEL_PROVIDER = "anthropic"
-$env:NOSPACE_MODEL_NAME     = "<a model you have access to>"
-$env:ANTHROPIC_API_KEY      = "<your key>"
+$env:NOSPACE_MODEL_NAME     = "YOUR_MODEL_ID"
+$env:ANTHROPIC_API_KEY      = Read-Host 'Anthropic key' -MaskInput   # pwsh 7.1+; or read it from your secret store
 ```
 
 Save this prompt as `review-prompt.txt`:
@@ -171,14 +182,15 @@ for each reviewer. Do not give operating instructions and do not propose setpoin
 changes. Keep it under 150 words.
 ```
 
-Run the agent in the default mode, with tool confirmation on:
+Run the agent in the default mode. `--permission-mode default` asks before each tool call;
+without it a scripted run does not prompt.
 
 ```bash
-tokn agent-run --repo-root . --prompt-file review-prompt.txt --max-steps 8
+tokn agent-run --repo-root . --prompt-file review-prompt.txt --max-steps 8 --permission-mode default
 ```
 
 ```powershell
-tokn agent-run --repo-root . --prompt-file review-prompt.txt --max-steps 8
+tokn agent-run --repo-root . --prompt-file review-prompt.txt --max-steps 8 --permission-mode default
 ```
 
 Paste the review into a note to the other reviewer with `tokn peer send`, as in step 3.
@@ -205,12 +217,17 @@ or host address into the example files. Keep the path in your own shell or confi
 The `--peers` flag lets agents exchange messages through a control plane.
 
 ```bash
-tokn agent-repl --peers --control-plane-url <control-plane-url> --control-plane-token <your token>
+tokn agent-repl --peers --control-plane-url <control-plane-url>
 ```
 
 ```powershell
-tokn agent-repl --peers --control-plane-url <control-plane-url> --control-plane-token <your token>
+tokn agent-repl --peers --control-plane-url <control-plane-url>
 ```
+
+If the control plane requires a bearer token, do not paste it into these commands. A
+command-line token ends up in shell history and in the process list. Use a token source
+you control, and never commit it to these example files or paste it into a shared
+transcript.
 
 Inside the REPL, `/peers list`, `/peers inbox`, `/peers send`, and `/peers thread` work
 once peers are enabled. Without `--peers`, the REPL prints `Peers are not enabled. Restart

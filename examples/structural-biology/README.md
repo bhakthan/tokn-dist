@@ -28,7 +28,7 @@ All data in `data/` is synthetic.
 
 | Requirement | Why | Check |
 |---|---|---|
-| TOKN **v0.3.57 or newer** | Current release with the structural biology mode | `tokn version` |
+| TOKN **v0.3.57 or newer** | Minimum version for this walkthrough's structural biology mode | `tokn version` |
 | Python 3.8+ | Runs the offline FSC checker (standard library only) | `python --version` |
 | An LLM provider and key | Runs the agent | see [SETUP.md](../../SETUP.md) |
 | **14-day trial** (`tokn license trial`) | `--mode structbio` is a domain mode. Community grants only `domains:basic`. | `tokn license features` |
@@ -75,14 +75,14 @@ Follow [SETUP.md](../../SETUP.md) for your provider. For Anthropic, for example:
 
 ```bash
 export NOSPACE_MODEL_PROVIDER=anthropic
-export NOSPACE_MODEL_NAME=<a Claude model you have access to>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+read -rs -p 'Anthropic API key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
 ```
 
 ```powershell
 $env:NOSPACE_MODEL_PROVIDER = "anthropic"
-$env:NOSPACE_MODEL_NAME     = "<a Claude model you have access to>"
-$env:ANTHROPIC_API_KEY      = "<your key>"
+$env:NOSPACE_MODEL_NAME     = "YOUR_MODEL_ID"
+# Set ANTHROPIC_API_KEY from a trusted secret store or your protected shell session.
 ```
 
 Use your shell or `~/.tokn/config/credentials.env` for keys. Never commit a

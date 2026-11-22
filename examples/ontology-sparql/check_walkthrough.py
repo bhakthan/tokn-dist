@@ -6,6 +6,11 @@ It does NOT run SPARQL; the expected answers are hand-computed.
 
 Usage (from this folder):
     python check_walkthrough.py
+        Syntax and fixture sanity only.
+    python check_walkthrough.py --answer result.json
+        Also grades an agent run: reads the JSON object saved from
+        `tokn agent-run --output-format json` and compares the turbine and part
+        ids in its final `result` with the bindings in expected_answers.json.
 Exit code 0 = all checks passed, 1 = at least one failed.
 """
 import json
@@ -54,7 +59,44 @@ def count_triples(text):
     return total
 
 
+def local(iri):
+    return iri.rsplit("#", 1)[-1]
+
+
+def grade_answer(path, exp, ttl_names):
+    """Compare the ids named in the agent's final answer with expected bindings."""
+    print(f"Agent answer ({path})")
+    try:
+        res = json.loads(Path(path).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as e:
+        check(False, f"result file is readable JSON ({e})")
+        return
+    status = res.get("status")
+    check(status == "success", f"run status is 'success' (got {status!r}); otherwise the answer is unassessed")
+    if status != "success":
+        return
+    answer = str(res.get("result") or "")
+    q = exp.get("queries", {})
+    over_2000 = {local(r["turbine"]) for r in q.get("01_turbines_over_2000kw.rq", {}).get("before_reasoning", [])}
+    in_north = {local(r["asset"]) for r in q.get("04_assets_in_site_north.rq", {}).get("after_reasoning", [])}
+    parts = {local(r["part"]) for r in q.get("05_parts_of_wt01.rq", {}).get("after_reasoning", [])}
+    want = (over_2000 & in_north) | parts
+    universe = {n for n in ttl_names if re.fullmatch(r"(WT|GB|GEN|MO)-\d+", n)}
+    named = set(re.findall(r"\b(?:WT|GB|GEN|MO)-\d+\b", answer))
+    for n in sorted(want):
+        check(n in named, f"answer names {n} (expected binding)")
+    extra = sorted((named & universe) - want)
+    check(not extra, "answer names no other turbine or part"
+          + (f" (also named: {', '.join(extra)}; read the answer: a mention as excluded is fine)" if extra else ""))
+
+
 def main():
+    answer_path = None
+    if len(sys.argv) == 3 and sys.argv[1] == "--answer":
+        answer_path = sys.argv[2]
+    elif len(sys.argv) != 1:
+        print(__doc__)
+        return 2
     print("Data")
     check(DATA.is_file(), "data/plant.ttl exists")
     ttl = DATA.read_text(encoding="utf-8")
@@ -100,11 +142,17 @@ def main():
         for frag in set(re.findall(r"plant#([A-Za-z][\w-]*)", blob)):
             check(frag in local_names, f"{qname}: {frag} is defined in plant.ttl")
 
+    if answer_path:
+        grade_answer(answer_path, exp, local_names)
+
     print()
     if failures:
         print(f"FAILED: {len(failures)} check(s)")
         return 1
-    print("All checks passed. (Structural only; SPARQL results are not executed.)")
+    if answer_path:
+        print("All checks passed. (Answer ids match the expected bindings; SPARQL is not executed here.)")
+    else:
+        print("All checks passed. (Syntax and fixture sanity only; SPARQL results are not executed.)")
     return 0
 
 

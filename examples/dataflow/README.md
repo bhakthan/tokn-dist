@@ -33,7 +33,12 @@ If `agent-run` reports a license error, run `tokn license trial` once and retry.
 
 ## Steps
 
-### 1. Copy the fixture to a scratch folder
+### 1. Copy the exact fixture allowlist to a scratch folder
+
+The supplied `.nospace/skills/*/SKILL.md` files are authored fixture inputs,
+not run state. Copy only `fixture/`; do not copy any existing `.nospace/` or
+`.tokn/` directories from a prior run. The allowlist is `fixture/TASK.md` and
+`fixture/.nospace/skills/{harvest-metrics,chart-metrics,publish-findings}/SKILL.md`.
 
 bash:
 ```bash
@@ -50,36 +55,40 @@ Set-Location $HOME\tokn-dataflow
 ### 2. Configure your model
 
 Use the same placeholders as step 2 of [grid-screening](../grid-screening/README.md).
-Replace `<your key>` with your real key.
+Set the selected provider's key through a trusted secret store or existing
+shell session; do not paste it into a command or populated `.env` file.
 
 bash:
 ```bash
-export NOSPACE_MODEL_PROVIDER=anthropic
-export NOSPACE_MODEL_NAME=<model name>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_PROVIDER='anthropic'
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+read -rs -p 'Anthropic API key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
 ```
 
 PowerShell:
 ```powershell
 $env:NOSPACE_MODEL_PROVIDER = "anthropic"
-$env:NOSPACE_MODEL_NAME = "<model name>"
-$env:ANTHROPIC_API_KEY = "<your key>"
+$env:NOSPACE_MODEL_NAME = "YOUR_MODEL_ID"
+# Set ANTHROPIC_API_KEY through your trusted secret manager or existing shell session.
 ```
+
+For a static provider configuration check, run
+`tokn doctor --provider anthropic`; it does not verify a live credential.
 
 ### 3. Run the task
 
-Flags were checked against `tokn agent-run --help`. `--log-file` keeps the composition
+Check advanced flags with `tokn agent-run --help-all`. `--log-file` keeps the composition
 lines in a file you can search afterwards.
 
 bash:
 ```bash
-tokn agent-run --prompt-file TASK.md --repo-root . --max-steps 8 --no-confirm \
+tokn agent-run --prompt-file TASK.md --repo-root . --max-steps 8 \
   --log-level verbose --log-file run.log
 ```
 
 PowerShell:
 ```powershell
-tokn agent-run --prompt-file TASK.md --repo-root . --max-steps 8 --no-confirm `
+tokn agent-run --prompt-file TASK.md --repo-root . --max-steps 8 `
   --log-level verbose --log-file run.log
 ```
 

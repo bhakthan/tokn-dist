@@ -11,12 +11,15 @@ creates <dir>/mean-bug, <dir>/max-bug, <dir>/mean-impossible and <dir>/mean-corr
 
 import os
 import shutil
-import stat
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 GO_MOD = "module calc\n\ngo 1.22\n"
+RUN_MARKER = ".tokn-verified-completion-run"
+RUN_MARKER_VALUE = "Disposable verified-completion workspace; created by fixtures.py\n"
+RUN_PREFIX = "tokn-verified-completion-"
 
 MEAN_BUGGY = '''package calc
 
@@ -111,16 +114,10 @@ def git(ws, *args):
                           text=True, encoding="utf-8", check=False)
 
 
-def _clear_readonly(func, path, _exc):
-    # Git marks object files read-only on Windows; make them writable so rmtree can finish.
-    os.chmod(path, stat.S_IWRITE)
-    func(path)
-
-
 def make(ws: Path, name: str) -> Path:
     """Create fixture `name` at ws as a one-commit git repo."""
     if ws.exists():
-        shutil.rmtree(ws, onerror=_clear_readonly)
+        raise FileExistsError(f"refusing to overwrite existing fixture workspace: {ws}")
     ws.mkdir(parents=True)
     files = {"go.mod": GO_MOD, **FIXTURES[name]}
     for rel, body in files.items():
@@ -150,7 +147,14 @@ def main():
     if not shutil.which("go"):
         raise SystemExit("Go is not on PATH. Install Go 1.22+ from https://go.dev/dl/ and retry.")
     root = Path(sys.argv[1]).resolve()
+    if root.parent != Path(tempfile.gettempdir()).resolve() or not root.name.startswith(RUN_PREFIX):
+        raise SystemExit(
+            f"workspace must be a dedicated {RUN_PREFIX}<unique-id> directory under the system temp directory"
+        )
+    if root.exists() and any(root.iterdir()):
+        raise SystemExit(f"workspace is not empty: {root}; choose a new unique path")
     root.mkdir(parents=True, exist_ok=True)
+    (root / RUN_MARKER).write_text(RUN_MARKER_VALUE, encoding="utf-8")
     ok_all = True
     for name in FIXTURES:
         ws = make(root / name, name)

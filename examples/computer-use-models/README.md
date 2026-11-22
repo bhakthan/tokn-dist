@@ -18,15 +18,38 @@ This is not the default web agent. See [Choosing a path](#choosing-a-path).
 | Requirement | Why | Check |
 |---|---|---|
 | TOKN v0.3.57+ | Ships the `fara-*` commands and `--prompted-tools` | `tokn version` |
-| Licence tier: **Community** | `fara-step`, `fara-run`, and the default `agent-run` mode are not in the premium list in `internal/license/policy.go` | Nothing to buy |
+| Licence tier: **Community** | Check the entitlement reported by TOKN | `tokn license features` |
 | Your own hosted endpoint for each model | TOKN calls an OpenAI-style chat endpoint you control; it does not host models | Endpoint reachable (see step 2) |
 | Azure subscription, with quota for a GPU SKU that fits each model | Azure ML managed online endpoints run the models on GPUs. TOKN does not name a SKU: **see the model card** for each model's memory needs | `az account show` |
-| Azure ML workspace + managed online endpoints | The endpoint URL shape TOKN accepts is `https://<endpoint>.<region>.inference.ml.azure.com/v1` | `az ml workspace show` |
+| Azure ML workspace + managed online endpoints | Use the endpoint URL supplied by your own Azure ML deployment | `az ml workspace show` |
 | Azure CLI with the `ml` extension | Create, inspect, and fetch keys for the endpoint | `az version` then `az extension list -o table` |
 | Chrome, Chromium, or Edge | Only for `fara-run --live-browser`. TOKN drives the browser over CDP, not Playwright | `chrome --version` / `chromium --version` / `msedge --version` |
 | Playwright | **Not needed** for these commands. Only the separate web-agent path uses it (see [../web-agent/](../web-agent/)) | n/a |
 
 ### Preflight: install the tools
+
+Before provisioning an endpoint or GPU, try the offline path (no endpoint,
+model or key required):
+
+```bash
+tokn fara-run --dry-run
+tokn fara-step --dry-run
+tokn fara-run --help-all
+tokn fara-step --help-all
+tokn agent-run --help-all
+```
+
+```powershell
+tokn fara-run --dry-run
+tokn fara-step --dry-run
+tokn fara-run --help-all
+tokn fara-step --help-all
+tokn agent-run --help-all
+```
+
+Expected, not a recorded run: the dry runs print a parsed action without
+calling an endpoint. Advanced flags are version-dependent; use full help for
+the installed CLI.
 
 Windows (PowerShell):
 ```powershell
@@ -54,38 +77,48 @@ Create the managed online endpoint with the Azure portal or the Azure ML docs. P
 
 ```bash
 az login
-az account set --subscription <your-subscription>
-az ml online-endpoint show -n <your-endpoint-name> -w <your-workspace> -g <your-resource-group>
+az account set --subscription 'YOUR_SUBSCRIPTION'
+az ml online-endpoint show -n 'YOUR_ENDPOINT_NAME' -w 'YOUR_WORKSPACE' -g 'YOUR_RESOURCE_GROUP'
 ```
 
 ```powershell
 az login
-az account set --subscription <your-subscription>
-az ml online-endpoint show -n <your-endpoint-name> -w <your-workspace> -g <your-resource-group>
+az account set --subscription 'YOUR_SUBSCRIPTION'
+az ml online-endpoint show -n 'YOUR_ENDPOINT_NAME' -w 'YOUR_WORKSPACE' -g 'YOUR_RESOURCE_GROUP'
 ```
 
 Two endpoints, one per model, is the simplest layout. Use separate `<your-endpoint-name>` values for `MagenticBrain-14B` and `Fara1.5-9B`.
 
 **Auth.** Pick one:
 
-- **Entra ID (preferred).** Set `AZURE_OPENAI_USE_DEFAULT_CREDENTIAL=true` and run `az login`. For `*.inference.ml.azure.com` hosts TOKN requests the `https://ml.azure.com/.default` scope automatically. Your identity needs data-plane access to the endpoint. The scope selection is verified in source; whether your endpoint accepts it depends on its auth mode.
+- **Entra ID (preferred).** Set `AZURE_OPENAI_USE_DEFAULT_CREDENTIAL=true` and run `az login`. Your identity needs the data-plane role required by the endpoint, and the endpoint must accept the selected authentication method; check this with your endpoint administrator.
 - **Key.** Fetch the endpoint key yourself and put it in an env var. Never paste it into a file in this repo.
 
 ```bash
-az ml online-endpoint get-credentials -n <your-endpoint-name> -w <your-workspace> -g <your-resource-group> --query primaryKey -o tsv
+az ml online-endpoint get-credentials -n 'YOUR_ENDPOINT_NAME' -w 'YOUR_WORKSPACE' -g 'YOUR_RESOURCE_GROUP' --query primaryKey -o tsv
 ```
 
 **Billing warning.** GPU endpoints bill while idle. Delete each endpoint after testing:
 
 ```bash
-az ml online-endpoint delete -n <your-endpoint-name> -w <your-workspace> -g <your-resource-group> --yes
+az ml online-endpoint delete -n 'YOUR_ENDPOINT_NAME' -w 'YOUR_WORKSPACE' -g 'YOUR_RESOURCE_GROUP' --yes
 ```
 
 ## 2. Readiness: what TOKN checks, and what it does not
 
-- **TOKN does not run an endpoint probe** in the `fara-*` or `agent-run` paths reviewed for this example. A missing or failing endpoint surfaces as an error from the completion call. For `fara-step`, the message is `fara completion failed: ...`.
-- Config errors are caught before any network call: a missing endpoint, key or credential, or deployment name fails with a message that names the variable (for example `AZURE_OPENAI_DEPLOYMENT is required when NOSPACE_MODEL_PROVIDER=azure-openai`).
-- So check readiness yourself before a live run:
+First check static provider configuration. This does not prove that the
+endpoint is reachable, that credentials work, or that a deployment is ready:
+
+```bash
+tokn doctor --provider azure-openai
+```
+
+```powershell
+tokn doctor --provider azure-openai
+```
+
+For a live run, verify readiness against your own deployment before sending
+screenshots or page text:
 
 ```bash
 curl -sS -o /dev/null -w "%{http_code}\n" -H "Authorization: <your-auth-header-value>" "https://<your-endpoint-name>.<region>.inference.ml.azure.com/v1/models"
@@ -174,15 +207,17 @@ MagenticBrain runs through the normal agent loop. Point it at a scratch repo roo
 
 ```bash
 export NOSPACE_PROMPTED_TOOLS=true
-tokn agent-run --prompt "Reply with one word: ready." --repo-root <your-scratch-folder> --max-steps 2 --prompted-tools
+tokn agent-run --prompt "Reply with one word: ready." --repo-root 'YOUR_SCRATCH_FOLDER' --max-steps 2 --prompted-tools
 ```
 
 ```powershell
 $env:NOSPACE_PROMPTED_TOOLS = "true"
-tokn agent-run --prompt "Reply with one word: ready." --repo-root <your-scratch-folder> --max-steps 2 --prompted-tools
+tokn agent-run --prompt "Reply with one word: ready." --repo-root 'YOUR_SCRATCH_FOLDER' --max-steps 2 --prompted-tools
 ```
 
-`--prompted-tools` (or `NOSPACE_PROMPTED_TOOLS=true`) routes tool calls through text blocks instead of the OpenAI `tools` array. The flag's help text says the MaaP vLLM server rejects that array with HTTP 424.
+`--prompted-tools` (or `NOSPACE_PROMPTED_TOOLS=true`) routes tool calls through text blocks instead of the OpenAI `tools` array. Some tool-compatible model servers may reject the tools-array format. If the
+configured server reports that incompatibility, try `--prompted-tools` and
+verify the behavior against your own endpoint.
 
 **Expected, not a recorded run:** a one-word reply, then exit.
 
@@ -194,7 +229,7 @@ tokn agent-run --prompt "Reply with one word: ready." --repo-root <your-scratch-
 | Webwright scripting | See [../webwright/](../webwright/) | Your chosen LLM | No | Writes a re-runnable Playwright script as the artifact |
 | **This example** | `tokn fara-*` and `agent-run --prompted-tools` | Your MagenticBrain-14B / Fara1.5-9B endpoints | Yes, on your endpoint | The computer-use models run where you host them |
 
-The web agent's `--webagent-backend` flag selects an LLM backend for its own loop. None of those backends is the Entra-authenticated MaaP path used here. Use the `fara-*` commands or `agent-run --prompted-tools` above instead.
+The web agent's `--webagent-backend` flag selects an LLM backend for its own loop. Its backend settings are separate from the endpoint configured for this example. Use the `fara-*` commands or `agent-run --prompted-tools` above instead.
 
 ## What to look for
 
@@ -217,27 +252,17 @@ The web agent's `--webagent-backend` flag selects an LLM backend for its own loo
 
 **Quota error on deploy.** The GPU SKU you chose has no quota in that region. Pick a different SKU or region, or request quota in the Azure portal. Check the model card for the memory the model needs.
 
-**HTTP 424 from the endpoint.** The server rejected the tools array. Use `--prompted-tools` on `agent-run`. `fara-*` already sends no tools array.
+**Endpoint rejects a request.** Review the endpoint's accepted request format and authentication settings. If it does not accept a tools-array format, try `--prompted-tools` on `agent-run` and verify against your own deployment.
 
 **`--live-browser` says no browser found.** Install Chrome, Chromium, or Edge (step 0). Re-run.
 
 **"... is required when NOSPACE_MODEL_PROVIDER=azure-openai".** A variable from step 3 is unset. The message names it.
 
-## Verified from source vs not yet verified
+## What is and is not verified
 
-Verified from the TOKN source (`environment-manager`):
-
-- Command names and flags for `fara-step` and `fara-run`, including `--dry-run`, `--live-browser`, `--max-steps`, and `--auto-approve`.
-- Azure env vars for the `azure-openai` provider, and the Entra switch `AZURE_OPENAI_USE_DEFAULT_CREDENTIAL`.
-- The `ml.azure.com` token scope for `*.inference.ml.azure.com` hosts.
-- `--prompted-tools` and `NOSPACE_PROMPTED_TOOLS`.
-- The community tier for these commands.
-
-Not verified (do not treat as fact):
-
-- Any automatic endpoint readiness gate. None was found in these paths. Step 2 is a manual check.
-- That either model responds correctly to the prompts above. Expected outputs are not recorded runs.
-- GPU SKU and quota needs. These come from the model cards, which were not checked.
-- That the Entra path works end-to-end against your endpoint's auth mode.
-- Whether `fara-run` stops cleanly on an endpoint error mid-trajectory.
-- The Azure CLI install commands in step 0 are general Azure CLI guidance, not taken from TOKN source.
+`tokn doctor --provider azure-openai` can inspect static configuration; it
+does not prove that credentials, network access, quota or a live deployment
+work. `tokn license features` reports the current entitlement. The dry-run
+output is an expected example, not a recorded run. Endpoint readiness,
+authentication, GPU quota and model behavior must be checked with your own
+deployment. Do not publish endpoint names, URLs, keys or account details.

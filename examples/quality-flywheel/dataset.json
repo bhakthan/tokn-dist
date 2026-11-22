@@ -4,27 +4,27 @@
     {
       "name": "ping-pong",
       "input": "Reply with exactly one word and nothing else: PONG",
-      "expect_contains": ["pong"]
+      "expect_equals": "PONG"
     },
     {
       "name": "arithmetic",
       "input": "What is 17 + 25? Reply with only the number, no words.",
-      "expect_contains": ["42"]
+      "expect_equals": "42"
     },
     {
       "name": "capital-japan",
-      "input": "What is the capital of Japan? Reply with only the city name, one word.",
-      "expect_contains": ["tokyo"]
+      "input": "What is the capital of Japan? Reply with only the city name, one word, no punctuation.",
+      "expect_equals": "Tokyo"
     },
     {
       "name": "color-echo",
       "input": "Reply with only this word in all capital letters: BLUE",
-      "expect_contains": ["blue"]
+      "expect_equals": "BLUE"
     },
     {
       "name": "revision-honored",
-      "input": "Write the word 'cat'. Correction: ignore that — instead write only the word 'dog'. Reply with just the final word.",
-      "expect_contains": ["dog"]
+      "input": "Write the word 'cat'. Correction: ignore that — instead write only the word 'dog'. Reply with just the final word, in lower case, no punctuation.",
+      "expect_equals": "dog"
     }
   ]
 }

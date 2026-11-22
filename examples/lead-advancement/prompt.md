@@ -18,6 +18,7 @@ The data is synthetic but realistic. Everything you need is in `demo-input/`:
 - `advance_with_caveats`: the gate ran and is not hard-blocked, but at least one advisory criterion (Lipinski, PSA, QED, LogS) failed. Name it.
 - `reject`: the gate ran and returned `hard_blocked: true` (Ames-positive).
 - `hold`: a TOKN safety hook (hERG, CYP450 or PAINS) refused the gate call. Name the hook and what would be needed to clear it.
+- `unassessed`: the gate tool was unavailable or failed to return a result. Do not infer a disposition from the input values.
 
 ## Rules
 
@@ -25,8 +26,9 @@ The data is synthetic but realistic. Everything you need is in `demo-input/`:
 2. Never add `mitigation`, `mitigation_notes`, `ddi_analysis_done: true` or `pains_justified` yourself — that would fabricate evidence to get past a gate.
 3. Precedence: `hold` > `reject` > `advance_with_caveats` > `advance`. A refused call is a `hold`, however good the other numbers look.
 4. Limits are inclusive: a value exactly on a Lipinski limit passes.
-5. `compute_2d_properties` is optional and needs RDKit. If it reports a missing dependency, quote the error and rely on the supplied properties.
-6. Use calibrated language: predicted IC50 values indicate risk; they do not prove safety.
+5. `compute_2d_properties` is optional and needs RDKit; its absence does not prevent assessing a returned gate result because the records already contain the gate inputs.
+6. If `check_advancement_gate` is unavailable or fails, mark that item `unassessed`; do not infer a result from the supplied values or describe the gate as passed.
+7. Use calibrated language: predicted IC50 values indicate risk; they do not prove safety.
 
 ## Deliverable
 

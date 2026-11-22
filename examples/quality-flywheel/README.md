@@ -12,7 +12,7 @@ It uses the flywheel's core loop: **prepare → infer → grade → compare**.
 | Feature | What it does here |
 |---|---|
 | **Flywheel run** (`tokn flywheel run`) | Runs the dataset through your candidate command, grades every answer, and writes a cycle report. |
-| **Deterministic grader** (`expect_contains`) | Passes a case when the answer contains the expected text, ignoring case. No model grades anything. |
+| **Deterministic grader** (`expect_equals`) | Passes a case only when the trimmed answer equals the expected text exactly. No model grades anything. |
 | **Baseline gate** (`--baseline`) | Compares cycle 2 with cycle 1. The gate blocks the cycle when the target metric does not improve. |
 | **Cycle reports** (`cycle-N.json`) | One file per cycle, which you can keep, diff and compare. |
 
@@ -26,12 +26,24 @@ single, unambiguous answer.
 | Requirement | Why | Check |
 |---|---|---|
 | TOKN **v0.3.57 or newer** | Ships `tokn flywheel run` and `--candidate-cmd` | `tokn version` |
-| An LLM provider and key | The candidate runs each case through `tokn agent-run` | see [SETUP.md](../../SETUP.md) |
+| An LLM provider and key (step 2 onwards only) | The candidate runs each case through `tokn agent-run`. Use a model capable of the required tool calls; provider charges and number of turns depend on the run. A missing/failed tool result is unassessed, not a pass. | `tokn doctor --provider anthropic` |
 | `python3` (macOS / Linux only) | `candidate.sh` reads the run log with the standard library | `python3 --version` |
 
 Trial and Community tiers both run this example; the flywheel command has no
 license gate. If a command refuses to run, start the 14-day trial with
 `tokn license trial`. Model calls are billed by your own provider, not by TOKN.
+
+**Start with no model at all.** The built-in demo runs two cycles with a local
+fake adapter: no provider, no network, no key. It writes its reports to the
+folder you name:
+
+```bash
+tokn flywheel run --demo --out-dir demo-cycles --yes
+```
+
+Observed on v0.3.118: cycle 1 passes 1/4 cases and sets the baseline; cycle 2
+passes 4/4 and the gate reports `PASSED`. Run it without `--yes` first if you
+want to read the plan before anything runs.
 
 > **What leaves your machine.** Each case's prompt is sent to the provider you
 > configure in step 2, and nothing else. The grading is local: the `expect_contains`
@@ -55,40 +67,49 @@ You now have:
 
 ```text
 quality-flywheel/
-  dataset.json      # five cases, each with an input and expect_contains
+  dataset.json      # five cases, each with an input and expect_equals
   candidate.sh      # the candidate for macOS / Linux
   candidate.ps1     # the candidate for Windows PowerShell
   .gitignore        # keeps the scratch folder and cycle reports out of git
 ```
 
-The candidate creates a `scratch/` folder for each run of `agent-run`.
-Nothing is written outside this folder.
+The candidate creates a new `scratch/run-<id>/` folder for every call to
+`agent-run`, so one case's answer can never be read as another's. It runs the
+agent with `--permission-mode plan` (read-only: the answers need no file writes
+or commands) and `--output-format json`, and it uses only the final `result` of
+a run whose `status` is `success`. A failed, blocked or empty run is a failed
+case, never a fallback to some earlier turn. Nothing is written outside this
+folder.
 
 ## 2. Configure the LLM
 
 Follow [SETUP.md](../../SETUP.md) for your provider. For Anthropic, for example:
 
 ```bash
-export NOSPACE_MODEL_PROVIDER=anthropic
-export NOSPACE_MODEL_NAME=<a model you have access to>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_PROVIDER='anthropic'
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+read -rs -p 'Anthropic key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
 export TOKN_BIN=tokn            # or the full path to your tokn binary
 ```
 
 ```powershell
 $env:NOSPACE_MODEL_PROVIDER = "anthropic"
-$env:NOSPACE_MODEL_NAME     = "<a model you have access to>"
-$env:ANTHROPIC_API_KEY      = "<your key>"
+$env:NOSPACE_MODEL_NAME     = "YOUR_MODEL_ID"
+$env:ANTHROPIC_API_KEY      = Read-Host 'Anthropic key' -MaskInput   # pwsh 7.1+; or read it from your secret store
 $env:TOKN_BIN               = "C:\path\to\tokn.exe"   # or just tokn if it is on PATH
 ```
 
 Use your shell or `~/.tokn/config/credentials.env` for keys. Never commit a key.
 
-Check that TOKN can see the provider. This makes no model call:
+Check the provider configuration. This is a static check: it makes no model
+call and does not prove the key works:
 
 ```bash
-tokn agent-run --help
+tokn doctor --provider anthropic
 ```
+
+The first real run is the only test that the key works. For the agent flags the
+candidates use, see `tokn agent-run --help-all`.
 
 ## 3. Preview the plan (no model call)
 
@@ -124,7 +145,9 @@ tokn flywheel run --dataset dataset.json --candidate-cmd "powershell -NoProfile 
 ```
 
 With no `--baseline`, cycle 1 becomes the reference. It writes `cycles/cycle-1.json`.
-Expect a few seconds per case.
+Expect a few seconds per case. Every case is graded by exact match, so `Tokyo.`
+fails where `Tokyo` passes: the prompts ask for the bare answer, and that is
+what is graded.
 
 ## 5. Run cycle 2 against the baseline
 
@@ -155,7 +178,7 @@ Each cycle writes `cycles/cycle-<N>.json`. Open it and look for:
 | Field | What it tells you |
 |---|---|
 | `pass_rate` | The fraction of cases that passed. `1.0` means all five passed. |
-| Per-case results | Which case failed, with the output it produced and the expected text |
+| Per-case results | Which case failed, with the output it produced and the expected text (`cycle-<N>.md` shows them in readable form) |
 | `gate` | Whether the cycle was accepted or blocked, and why |
 
 To see a failure, make the candidate weaker on purpose, for example by setting
@@ -164,15 +187,24 @@ show which cases the model got wrong.
 
 ### What one of our runs looked like
 
-Our internal run used a fast frontier model. Cycle 1 passed 5/5 cases and cycle 2
-was blocked because nothing changed. Your numbers will differ.
+Historical observed run, with an earlier version of this example that graded
+by substring: a fast frontier model passed 5/5 in cycle 1, and cycle 2 was
+blocked because nothing changed. It has not been re-run with the exact-match
+dataset, so treat it as illustration only. Your numbers will differ.
+
+To grade answers you already have instead of calling a model, give every case
+a recorded `trace` field (the output to grade). When every case carries one,
+`tokn flywheel run` skips inference and grades the traces, so you can grade
+production sessions you recorded earlier without any provider calls.
 
 ## What to look for
 
 - **The gate is strict on purpose.** A cycle that passes the same cases is
   blocked. Improvements must show up in the metric.
-- **The grader is not a model.** Each case passes or fails on the text. If you
-  change a case's expected text, the grade changes with it.
+- **The grader is not a model.** Each case passes or fails on an exact match
+  of the trimmed answer. If you change a case's expected text, the grade
+  changes with it. Use `expect_contains` only for cases where a substring is
+  really what you promised.
 - **Failures are data.** A failed case is an input for the next cycle, not a
   reason to hide the report.
 
@@ -182,7 +214,7 @@ was blocked because nothing changed. Your numbers will differ.
 |---|---|
 | Every case fails with `candidate: NOSPACE_MODEL_PROVIDER is not set` | Set the variables in step 2 in the same shell that runs `tokn flywheel run` |
 | `candidate: tokn not found` | Set `TOKN_BIN` to the full path of your tokn binary |
-| `candidate: no assistant answer` | The provider call failed. Check the key and model name, then read `scratch/agent.err` |
+| `candidate: no successful result` or `empty result` | The provider call failed or the run was blocked. Check the key and model name, then read `agent.err` and `result.json` in the newest `scratch/run-*` folder |
 | `python3 not found` (macOS / Linux) | Install Python 3 or use the PowerShell candidate on Windows |
 | `flywheel gate BLOCKED` in cycle 2 | Expected when the metric did not improve. Read `gate` in `cycle-2.json` for the reason |
 | `unknown flag` | Upgrade to v0.3.57 or newer, then run `tokn flywheel run --help` |

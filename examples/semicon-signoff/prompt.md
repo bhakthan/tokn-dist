@@ -1,4 +1,4 @@
-I'm the physical-design signoff lead on a mixed-signal SoC (open 130 nm PDK).
+I'm the physical-design signoff lead on a fictional mixed-signal SoC.
 Six hard macros just came back from place-and-route, and the programme manager
 needs a signoff status for each one before the integration freeze tomorrow.
 
@@ -25,4 +25,6 @@ fill in missing files yourself.
 
 Write `RESULT.md` with a table of block, status and the evidence for it, plus a
 short note for the programme manager. Every number must come from a tool result
-or the input files.
+or the input files. If a required tool result is missing or fails, report the
+block as unassessed; do not infer a pass. These synthetic results do not
+authorize tapeout; a qualified human must make the actual signoff decision.

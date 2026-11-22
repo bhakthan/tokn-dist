@@ -12,27 +12,29 @@ Set-Location -Path $PSScriptRoot
 function Fail($msg) { Write-Host "[!] $msg" -ForegroundColor Red; exit 1 }
 function Note($msg) { Write-Host "[*] $msg" -ForegroundColor Cyan }
 
-# Load .env (KEY=VALUE lines) without overriding variables already set.
+# Load only the documented API keys; never import routing or token values.
 if (Test-Path ".env") {
-    Get-Content ".env" | Where-Object { $_ -match '^\s*[A-Za-z_][A-Za-z0-9_]*=' } | ForEach-Object {
+    Get-Content ".env" | Where-Object { $_ -match '^\s*(OPENAI_API_KEY|ANTHROPIC_API_KEY)=' } | ForEach-Object {
         $k, $v = $_ -split '=', 2
-        if (-not [Environment]::GetEnvironmentVariable($k.Trim())) {
-            [Environment]::SetEnvironmentVariable($k.Trim(), $v.Trim().Trim('"'))
+        $k = $k.Trim()
+        $v = $v.Trim().Trim('"').Trim("'")
+        if ($v -and -not [Environment]::GetEnvironmentVariable($k)) {
+            [Environment]::SetEnvironmentVariable($k, $v)
         }
     }
 }
 
 # 1. TOKN on PATH.
-if (-not (Get-Command tokn -ErrorAction SilentlyContinue)) {
-    Fail "tokn is not on your PATH. Install TOKN, open a new terminal, and run 'tokn version'."
+$required = @("tokn", "git")
+if ($Provider -eq "ollama") { $required += "ollama" }
+$missing = @($required | Where-Object { -not (Get-Command $_ -ErrorAction SilentlyContinue) })
+if ($missing.Count -gt 0) {
+    Fail "Missing required commands: $($missing -join ', '). TOKN v0.3.90+ and Git are required; Ollama is also required for the local provider. Install all using the OS-specific commands in README.md, then retry."
 }
 Note "tokn found: $((tokn version 2>$null | Select-Object -First 1))"
 
 # 2. Provider.
 if ($Provider -eq "ollama") {
-    if (-not (Get-Command ollama -ErrorAction SilentlyContinue)) {
-        Fail "Ollama is not installed. Windows: winget install Ollama.Ollama  (or https://ollama.com/download). Then run: ollama pull $Model"
-    }
     try {
         $tags = Invoke-RestMethod -Uri "http://127.0.0.1:11434/api/tags" -TimeoutSec 5
     } catch {
@@ -43,10 +45,13 @@ if ($Provider -eq "ollama") {
     }
     Note "Ollama is running and '$Model' is available."
 } else {
-    Note "Provider '$Provider': make sure its API key is set in .env (see .env.example)."
+    Note "Provider '$Provider': set its API key in your trusted process environment; only documented key names are imported from an untracked .env."
 }
 
 # 3. Shared token, created for this run only if not set (never written to disk).
+if ($env:TOKN_WORKER_TOKEN -match '(?i)(<.*>|your|placeholder)') {
+    Fail "TOKN_WORKER_TOKEN looks like a placeholder. Remove it and let the script generate a per-run token, or set a real token in the process environment."
+}
 if (-not $env:TOKN_WORKER_TOKEN) {
     $b = New-Object byte[] 32
     [System.Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($b)
@@ -54,12 +59,16 @@ if (-not $env:TOKN_WORKER_TOKEN) {
     Note "Created a one-off TOKN_WORKER_TOKEN for this run."
 }
 
-$scratch = Join-Path $PSScriptRoot "scratch"
+$scratch = Join-Path ([IO.Path]::GetTempPath()) "toknish-$([guid]::NewGuid().ToString('N'))"
+$exampleDir = $PSScriptRoot
+New-Item -ItemType Directory -Path $scratch | Out-Null
+Note "Scratch workspace: $scratch"
 $repo = Join-Path $scratch "repo"
 $wState = Join-Path $scratch "worker-state"
 $lState = Join-Path $scratch "leader-state"
 New-Item -ItemType Directory -Force $repo, $wState, $lState | Out-Null
 Set-Content -Path (Join-Path $repo "README.md") -Value "Sample repository for the toknish walkthrough."
+Set-Location $scratch
 
 # 4. Start the worker in the background and wait for it to listen.
 $worker = Start-Process -FilePath "tokn" -PassThru -WindowStyle Hidden -ArgumentList @(
@@ -99,5 +108,5 @@ try {
 Note "Running the smoke bench..."
 tokn tkm bench --provider $Provider --model $Model --sample
 Note "Running the dataset bench (writes bench-report.json)..."
-tokn tkm bench --provider $Provider --model $Model --dataset (Join-Path $PSScriptRoot "dataset.json") --out (Join-Path $scratch "bench-report.json")
-Note "Done. Results are in scratch\. Read the bench fields in README.md."
+tokn tkm bench --provider $Provider --model $Model --dataset (Join-Path $exampleDir "dataset.json") --out (Join-Path $scratch "bench-report.json")
+Note "Done. Results remain in the printed scratch workspace for review."

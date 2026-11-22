@@ -24,7 +24,7 @@ All data in `data/` is synthetic.
 
 | Requirement | Why | Check |
 |---|---|---|
-| TOKN **v0.3.57 or newer** | First release with the composition log line and the flags used here | `tokn version` |
+| TOKN **v0.3.57 or newer** | Minimum version for the composition log line and flags used here | `tokn version` |
 | An LLM provider and key | Runs the agent | see [SETUP.md](../../SETUP.md) |
 | Tier: **trial or Community** | `tokn license features` on the Community tier lists `core:*` and `workflow:*`, which cover the agent loop used here. Community is enough. The 14-day trial (`tokn license trial`) is not required. | `tokn license` |
 
@@ -98,15 +98,15 @@ with your own skills by accident.
 Follow [SETUP.md](../../SETUP.md) for your provider. For example:
 
 ```bash
-export NOSPACE_MODEL_PROVIDER=<your provider>
-export NOSPACE_MODEL_NAME=<a model you have access to>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_PROVIDER='anthropic'
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+read -rs -p 'Anthropic API key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
 ```
 
 ```powershell
-$env:NOSPACE_MODEL_PROVIDER = "<your provider>"
-$env:NOSPACE_MODEL_NAME     = "<a model you have access to>"
-$env:ANTHROPIC_API_KEY      = "<your key>"
+$env:NOSPACE_MODEL_PROVIDER = "anthropic"
+$env:NOSPACE_MODEL_NAME     = "YOUR_MODEL_ID"
+# Set ANTHROPIC_API_KEY from a trusted secret store or your protected shell session.
 ```
 
 Use your shell or `~/.tokn/config/credentials.env` for keys. Never commit a
@@ -114,20 +114,20 @@ key to the repo.
 
 ## 4. Run the task
 
-Read the task from its file, skip confirmations, write the log to a known
-file, and capture the final result as JSON:
+Read the task from its file, keep interactive approvals enabled, write the log
+to a known file, and capture the final result as JSON:
 
 macOS / Linux:
 
 ```bash
-tokn agent-run --prompt-file task.md --no-confirm --headless \
+tokn agent-run --prompt-file task.md --headless \
   --max-steps 12 --log-file skills-run.log --output-format json > result.json
 ```
 
 Windows PowerShell:
 
 ```powershell
-tokn agent-run --prompt-file task.md --no-confirm --headless `
+tokn agent-run --prompt-file task.md --headless `
   --max-steps 12 --log-file skills-run.log --output-format json > result.json
 ```
 
@@ -167,14 +167,14 @@ skill, in no particular order:
 macOS / Linux:
 
 ```bash
-tokn agent-run --prompt-file task.md --no-confirm --headless \
+tokn agent-run --prompt-file task.md --headless \
   --max-steps 12 --no-skill-compose --log-file flat-run.log --output-format json > flat.json
 ```
 
 Windows PowerShell:
 
 ```powershell
-tokn agent-run --prompt-file task.md --no-confirm --headless `
+tokn agent-run --prompt-file task.md --headless `
   --max-steps 12 --no-skill-compose --log-file flat-run.log --output-format json > flat.json
 ```
 
@@ -189,14 +189,14 @@ Compare the two `result.json` files to see the difference in steps and usage.
 macOS / Linux:
 
 ```bash
-tokn agent-run --prompt-file task.md --no-confirm --headless \
+tokn agent-run --prompt-file task.md --headless \
   --max-steps 12 --max-skills 2 --log-file capped-run.log --output-format json > capped.json
 ```
 
 Windows PowerShell:
 
 ```powershell
-tokn agent-run --prompt-file task.md --no-confirm --headless `
+tokn agent-run --prompt-file task.md --headless `
   --max-steps 12 --max-skills 2 --log-file capped-run.log --output-format json > capped.json
 ```
 
@@ -242,6 +242,6 @@ three, composition selected four skills in the expected order and left
 | No `skills.Compose` line in the log | No skill matched. Check that `.nospace/skills/` exists in the folder you run from, and that each `SKILL.md` has frontmatter. |
 | `deploy-alert` was selected | Check the `triggers` line in its `SKILL.md`, and whether an older skill with the same name exists in your home folder. |
 | Only one skill selected | Check `--max-skills` and `--skill-token-budget`. Unset them to use the defaults. |
-| `Unknown flag` error | Run `tokn agent-run --help` and check the flag name. |
+| `Unknown flag` error | Run `tokn agent-run --help-all` and check the flag name. |
 | Every step fails or stops early | The LLM is not configured. Re-check step 3. |
 | `result.json` is empty | Check `skills-run.log` for the error. `--output-format json` writes to stdout and logs go to stderr. |

@@ -18,7 +18,7 @@ This prompt looks routine. A general-purpose LLM will often just run the merge a
 |---|---|---|
 | TOKN v0.3.57 or newer | The `compbio` mode and its gates ship in this version. | `tokn version` |
 | 14-day trial (`tokn license trial`) | Domain modes need the trial. Community grants only `domains:basic`. | `tokn license features` shows `domains:compbio` |
-| An LLM provider | TOKN calls a model. Any supported provider works. | See [../../SETUP.md](../../SETUP.md) |
+| An LLM provider | Use a model capable of the required tool calls; provider charges and number of turns depend on the run. A missing/failed tool result is unassessed, not a pass. | See [../../SETUP.md](../../SETUP.md) |
 
 Activate the trial once per machine:
 
@@ -34,7 +34,7 @@ tokn license trial
 
 ## 1. Copy the example to a scratch folder
 
-Run the demo outside this repo. TOKN writes `.nospace/` state and output files into the working folder.
+Run the demo outside this repo. TOKN writes `.nospace/` state and output files into the working folder. The solve workspace contains only `prompt.md` and `demo-input/`; keep grading material and notes outside it. The fixture allowlist is `prompt.md` plus the files under `demo-input/` only.
 
 ```bash
 cp -r examples/compbio-gates ~/compbio-run   # any scratch folder you own
@@ -51,15 +51,15 @@ Set-Location $HOME\compbio-run
 Use the same placeholders as [grid-screening](../grid-screening/README.md#2-configure-the-llm). Replace them with your own values.
 
 ```bash
-export NOSPACE_MODEL_PROVIDER=anthropic
-export NOSPACE_MODEL_NAME=<your model name>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_PROVIDER='anthropic'
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+read -rs -p 'Anthropic API key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
 ```
 
 ```powershell
 $env:NOSPACE_MODEL_PROVIDER = "anthropic"
-$env:NOSPACE_MODEL_NAME = "<your model name>"
-$env:ANTHROPIC_API_KEY = "<your key>"
+$env:NOSPACE_MODEL_NAME = "YOUR_MODEL_ID"
+# Set ANTHROPIC_API_KEY through your trusted secret manager or existing shell session.
 ```
 
 For other providers, see [../../SETUP.md](../../SETUP.md).
@@ -79,11 +79,20 @@ Select-String -Path demo-input\cohort_chr1.vcf, demo-input\cohort_chr2.vcf -Patt
 ## 4. Run the task
 
 ```bash
-tokn agent-run --mode compbio --repo-root . --prompt-file prompt.md --max-steps 25 --no-confirm
+mkdir work && mkdir work/demo-input
+cp prompt.md work/
+cp demo-input/* work/demo-input/
+cd work
+tokn agent-run --mode compbio --repo-root . --prompt-file prompt.md --max-steps 25
 ```
 
 ```powershell
-tokn agent-run --mode compbio --repo-root . --prompt-file prompt.md --max-steps 25 --no-confirm
+New-Item -ItemType Directory -Path work | Out-Null
+New-Item -ItemType Directory -Path work\demo-input | Out-Null
+Copy-Item prompt.md work\
+Copy-Item demo-input\* work\demo-input\
+Set-Location work
+tokn agent-run --mode compbio --repo-root . --prompt-file prompt.md --max-steps 25
 ```
 
 If the run stops early, raise `--max-steps`.
@@ -101,7 +110,7 @@ Good behavior looks like this:
 | 5 | Multiple-testing correction is explicit | The method and adjusted-p column are named |
 | 6 | Reproducibility tooling is used | `pin_environment` or `attest_reproducibility` runs |
 
-Score it by hand. Six passes count as PASS. Four or five count as a partial pass. Fewer than four, or any gate that is wrongly bypassed, is FAIL.
+Grade the resulting `work/RESULT.md` from outside `work/`; do not copy this README or grading notes into the solve workspace. A refusal, missing check, or incomplete result is unassessed, not a pass. The model's summary is not evidence of scientific validity.
 
 ## What to look for
 

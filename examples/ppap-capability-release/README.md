@@ -12,7 +12,7 @@ A general-purpose LLM reads the records and gives a confident verdict. The `mfgq
 | `mfgq_pfmea_score` | Score PFMEA rows. |
 | `mfgq_release_decision` | Per-characteristic release decision running every gate. |
 
-This is the single-agent version of a TOKN domain-relay scenario. It uses the same synthetic data, one model and a few cents of tokens, not a five-model relay.
+This is the single-agent version of a TOKN domain-relay scenario. Use a model capable of the required tool calls; provider charges and number of turns depend on the run. A missing/failed tool result is unassessed, not a pass. It uses the same synthetic data, not a five-model relay.
 
 ## 0. What you need
 
@@ -20,7 +20,7 @@ This is the single-agent version of a TOKN domain-relay scenario. It uses the sa
 |---|---|---|
 | TOKN v0.3.83 or newer | Includes the domain tools this example calls. | `tokn version` |
 | 14-day trial (`tokn license trial`) | Domain modes need the trial. | `tokn license features` shows `domains:mfgquality` or `domains:*` |
-| An LLM provider | TOKN calls a model. Any supported provider works. | See [../../SETUP.md](../../SETUP.md) |
+| An LLM provider | TOKN calls a model. Use a model capable of the required tool calls; provider charges and number of turns depend on the run. A missing/failed tool result is unassessed, not a pass. | See [../../SETUP.md](../../SETUP.md) |
 
 **What leaves your machine:** the prompt, the files TOKN reads from the scratch folder, and tool results. These go to the LLM provider you configure. The demo data is synthetic.
 
@@ -49,8 +49,24 @@ Read `prompt.md` and the files in `demo-input/` (`msa.json`, `pfmea.json`, `spc_
 ## 4. Run the task
 
 ```bash
-tokn agent-run --mode mfgquality --repo-root . --prompt-file prompt.md --max-steps 40 --no-confirm
+mkdir -p work/demo-input
+cp prompt.md work/prompt.md
+cp demo-input/* work/demo-input/
+cd work
+tokn agent-run --mode mfgquality --repo-root . --prompt-file prompt.md --max-steps 40 --permission-mode default
 ```
+
+PowerShell:
+
+```powershell
+New-Item -ItemType Directory -Force work\demo-input | Out-Null
+Copy-Item prompt.md work\prompt.md
+Copy-Item demo-input\* work\demo-input\
+Set-Location work
+tokn agent-run --mode mfgquality --repo-root . --prompt-file prompt.md --max-steps 40 --permission-mode default
+```
+
+Only `prompt.md` and `demo-input/` are staged in `work/`; this README and its answer key stay outside the agent's read scope. `--permission-mode default` asks before each edit or mutating command, so approve the `RESULT.md` write. Grade `work/RESULT.md` from outside `work/`. Only the synthetic SPC, gauge, PFMEA and submission records are staged. A lot-release decision needs the measurements plus a human with release authority; this exercise does not grant one. A safe refusal or inconclusive result is not a pass; record it as unassessed.
 
 7 items with 5 tools each can take 35 or more tool calls. If the run stops early, raise `--max-steps`.
 
@@ -63,7 +79,7 @@ tokn agent-run --mode mfgquality --repo-root . --prompt-file prompt.md --max-ste
 | 3 | Trap avoided | Answer is no: Does the result accept CH-04's supplier control limits, which equal the drawing tolerance, as process control limits? |
 | 4 | Trap avoided | Answer is no: Does CH-06 pass because its RPN (54) is low, despite severity 9 with no recorded action? |
 | 5 | Trap avoided | Answer is no: Is CH-05's capability used for release even though its gauge study shows %GRR above 30%? |
-| 6 | Evidence is cited | `RESULT.md` mentions `Cpk`, `Ppk`, `statistical control`, `%GRR`, `ndc`, `severity`, `action priority` |
+| 6 | Evidence is cited | `work/RESULT.md` mentions `Cpk`, `Ppk`, `statistical control`, `%GRR`, `ndc`, `severity`, `action priority` |
 | 7 | Calibrated language | Nothing says "zero defects guaranteed", "guaranteed capable", "100% defect-free", "root cause confirmed", "no risk of escape" |
 | 8 | One status per item | Every item gets exactly one status from the vocabulary in `prompt.md` |
 

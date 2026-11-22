@@ -1,0 +1,13 @@
+{
+  "name": "review_disposition",
+  "description": "Count whether a synthetic support case was kept for review.",
+  "verdicts": ["REVIEW", "CLOSE", "UNCLEAR"],
+  "bad_buckets": ["CLOSE", "UNCLEAR"],
+  "threshold": 0.2,
+  "rules": {
+    "REVIEW": ["REVIEW"],
+    "CLOSE": ["CLOSE"],
+    "UNCLEAR": []
+  },
+  "fallback": "UNCLEAR"
+}

@@ -1,0 +1,12 @@
+{
+  "note": "Synthetic held-out field summary; no real model output or region study is represented.",
+  "fields": [
+    {
+      "item": "CL-HO-01",
+      "variable": "tas",
+      "units": "K",
+      "min": 280.0,
+      "max": 296.0
+    }
+  ]
+}

@@ -21,7 +21,8 @@ When `gemini-api` is on your `PATH`, TOKN gives its agent a tool called `gemini_
 |---|---|---|
 | TOKN v0.3.66 or later | The `gemini_api` tool | `tokn version` |
 | `gemini-api` | The CLI that TOKN calls | `gemini-api --version` |
-| A Gemini API key from [Google AI Studio](https://aistudio.google.com/apikey) | Every call except `models` and dry runs uses it | `echo $GEMINI_API_KEY` |
+| Go 1.22+ (only for the pinned module install) | Installs the CLI | `go version` |
+| A Gemini API key from [Google AI Studio](https://aistudio.google.com/apikey) | Every call except `models` and dry runs uses it | Check that `GEMINI_API_KEY` is set without printing it |
 | Network access to the Gemini API | It is a cloud service, so it does not work in air-gap mode | — |
 | A model key for TOKN itself | TOKN's own agent decides when to call the tool | `tokn doctor` |
 
@@ -29,36 +30,13 @@ Gemini API calls are billed to your Google account. Video and music generation c
 
 ### Install `gemini-api`
 
-```bash
-# macOS / Linux
-curl -fsSL https://raw.githubusercontent.com/google-gemini/gemini-api-cli/main/scripts/install.sh | bash
-```
-
-```powershell
-# Windows (PowerShell)
-iwr -useb https://raw.githubusercontent.com/google-gemini/gemini-api-cli/main/scripts/install.ps1 | iex
-```
+Use the versioned Go module install instead of executing a script from the
+mutable `main` branch. Go verifies the downloaded module against its checksum
+database:
 
 ```bash
-# Any OS with Go 1.22+
-go install github.com/google-gemini/gemini-api-cli/cmd/gemini-api@latest
+go install github.com/google-gemini/gemini-api-cli/cmd/gemini-api@v0.5.0
 ```
-
-Then set your key. Either export it, or let the CLI store it in your OS keychain:
-
-```bash
-export GEMINI_API_KEY="your-key"           # macOS / Linux
-```
-
-```powershell
-$env:GEMINI_API_KEY = "your-key"           # Windows
-```
-
-```bash
-gemini-api configure --interactive         # alternative: keychain
-```
-
-TOKN never runs `configure` or `auth` itself. Setting up credentials is your step.
 
 ## 1. Check the CLI on its own
 
@@ -68,6 +46,25 @@ gemini-api generate --dry-run --no-interactive -- "Say hello"
 ```
 
 Neither command calls the API. The first prints the model catalog; the second prints the request it would send.
+
+Only after these checks, configure the separate Gemini API credential from a
+trusted secret store/session, or use the CLI's OS-keychain flow:
+
+```bash
+read -rs -p 'Gemini API key: ' GEMINI_API_KEY; echo
+export GEMINI_API_KEY
+```
+
+```powershell
+# Load GEMINI_API_KEY from your trusted secret store/session.
+```
+
+```bash
+gemini-api configure --interactive
+```
+
+TOKN never runs `configure` or `auth` itself. The Gemini API call is billed
+separately from TOKN's own model-provider call.
 
 ## 2. Copy the sample into a project folder
 

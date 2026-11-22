@@ -10,19 +10,9 @@ note() { printf '[*] %s\n' "$1"; }
 SYSTEM_ONE=0
 [ "${1:-}" = "--system-one" ] && SYSTEM_ONE=1
 
-# Load .env without overriding shell variables. SYSTEMONE_* keys are skipped:
-# they must be set in the shell.
-if [ -f .env ]; then
-  while IFS= read -r line || [ -n "$line" ]; do
-    line="${line%$'\r'}"
-    case "$line" in ''|\#*|*[!=]*) continue ;; esac
-    key="${line%%=*}"; val="${line#*=}"
-    key="$(printf '%s' "$key" | tr -d '[:space:]')"
-    val="$(printf '%s' "$val" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' -e 's/^"//' -e 's/"$//')"
-    case "$key" in SYSTEMONE_*) continue ;; esac
-    if [ -z "${!key:-}" ]; then export "$key=$val"; fi
-  done < .env
-fi
+# Only the non-routing model ID may be loaded from repository data.
+source ./load-safe-env.sh
+load_safe_env .env TOKN_MODEL
 
 problems=()
 loopback_re='^(127\.[0-9]+\.[0-9]+\.[0-9]+|localhost|\[::1\])(:[0-9]+)?$'
@@ -48,9 +38,16 @@ fi
 
 # 4. llama.cpp server health
 BASE="${GGUF_SERVER_URL:-http://127.0.0.1:8080/v1}"
+authority="$(printf '%s' "$BASE" | sed -E 's#^[a-zA-Z]+://##; s#/.*$##')"
+base_ok=0
+if ! printf '%s' "$authority" | grep -Eq "$loopback_re"; then
+  problems+=("GGUF_SERVER_URL must point to a loopback host for this local-only example (127.x, localhost or [::1]). Set it in your trusted shell.")
+else
+  base_ok=1
+fi
 HEALTH="${BASE%/v1}/health"
 HEALTH="${HEALTH%/}"
-if command -v curl >/dev/null 2>&1; then
+if [ "$base_ok" = 1 ] && command -v curl >/dev/null 2>&1; then
   if ! curl -s --max-time 5 "$HEALTH" 2>/dev/null | grep -q '"ok"'; then
     problems+=("Missing: llama.cpp server is not responding at $HEALTH.
   Why:   TOKN sends model requests to this server (GGUF_SERVER_URL).
@@ -90,7 +87,7 @@ note "Preflight passed. Model: $MODEL  Server: $BASE"
 
 args=(agent-run --model-provider gguf --model-name "$MODEL" --prompt-file task.md
       --repo-root ./workspace --max-steps 15 --run-timeout 0 --output-format text)
-[ "$SYSTEM_ONE" = 1 ] && args+=(--system-one --no-confirm)
+[ "$SYSTEM_ONE" = 1 ] && args+=(--system-one)
 
 note "Running: $TOKN ${args[*]}"
 "$TOKN" "${args[@]}" 2>&1 | tee run-output.txt

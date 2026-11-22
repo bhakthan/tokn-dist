@@ -1,0 +1,8 @@
+Observed event-oracle run (TOKN 0.3.118):
+- recorded cases: 3
+- reversed candidate: 3 mismatches, all order violations
+- reference candidate: 3 matches
+- ratchet: 3 known gaps closed
+
+The corpus digest and fixture IDs are intentionally omitted because they vary
+with the exact fixture bytes and runtime.

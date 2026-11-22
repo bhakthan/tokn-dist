@@ -3,7 +3,7 @@
 > "Call the deterministic materiality tool, draft a qualified briefing, ask System One one structured review request, then deliver the briefing with its signals."
 
 This example runs TOKN's **finrisk** domain on a synthetic case. The model calls a deterministic
-materiality tool, drafts a briefing, sends one `system_one_evaluate` request with three typed
+materiality tool, drafts a briefing, sends one structured review request with three typed
 questions, and then writes a final briefing that reflects the returned signals. A grader checks
 the run trace: order, arithmetic, and that the model made one review request instead of several.
 
@@ -56,22 +56,22 @@ trial is already used or expired, you need a licence to continue. Contact your T
 
 ## 2. Configure the LLM
 
-Configure the LLM with placeholders. Replace each `<...>` with your own value. See [SETUP.md](../../SETUP.md)
-for provider details. Any supported LLM provider works. This example was run with a frontier
-OpenAI model.
+Use a model capable of the required tool calls; provider charges and number of
+turns depend on the run. A missing/failed tool result is unassessed, not a pass.
+See [SETUP.md](../../SETUP.md) for provider setup.
 
 **bash**
 ```bash
-export NOSPACE_MODEL_PROVIDER=<your provider, for example openai>
-export NOSPACE_MODEL_NAME=<your model name>
-export ANTHROPIC_API_KEY=<your key>   # use the key variable for your provider
+export NOSPACE_MODEL_PROVIDER='YOUR_PROVIDER_ID'
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+# Load the provider-specific secret from a trusted secret store/session.
 ```
 
 **PowerShell**
 ```powershell
-$env:NOSPACE_MODEL_PROVIDER = "<your provider, for example openai>"
-$env:NOSPACE_MODEL_NAME = "<your model name>"
-$env:ANTHROPIC_API_KEY = "<your key>"   # use the key variable for your provider
+$env:NOSPACE_MODEL_PROVIDER = "YOUR_PROVIDER_ID"
+$env:NOSPACE_MODEL_NAME = "YOUR_MODEL_ID"
+# Load the provider-specific secret from a trusted secret store/session.
 ```
 
 ## 3. Choose the System One backend
@@ -80,17 +80,22 @@ Set `SYSTEMONE_BACKEND` and the matching key. Use placeholders only; never commi
 
 | Backend | `SYSTEMONE_BACKEND` | Set these variables |
 |---|---|---|
-| Jev (default) | `jev` | `JEV_API_KEY=<your key>` |
-| Bespoke hosted Nimble, via a compatible backend | `compatible` | `DECISION_API_ENDPOINT=<your endpoint>`, `DECISION_API_KEY=<your key>` |
+| Jev (default) | `jev` | `JEV_API_KEY` |
+| Bespoke hosted Nimble, via a compatible backend | `compatible` | `DECISION_API_ENDPOINT` (trusted shell), `DECISION_API_KEY` |
 | Microsoft decision-1 | `microsoft` | `<see your Microsoft deployment>` |
-| OpenAI Decisions | `openai` | `OPENAI_API_KEY=<your key>` |
+| OpenAI Decisions | `openai` | `OPENAI_API_KEY` |
 
 **PowerShell example (Jev):**
 ```powershell
 $env:SYSTEMONE_BACKEND = "jev"
-$env:JEV_API_KEY = "<your key>"
+# Load JEV_API_KEY from your trusted secret store/session.
 tokn system-one status
 ```
+
+Use `tokn doctor --provider <id>` for static provider configuration checks
+and `tokn license features` to inspect entitlement. These checks do not prove a
+live credential or model call will succeed. Agent-model calls and System One
+review calls use separate backends and may have separate charges.
 
 ## 4. Run the agent
 
@@ -99,7 +104,7 @@ Run the prompt against the case workspace. Stream the events to a file so `check
 **bash**
 ```bash
 tokn agent-run --mode finrisk --system-one --repo-root workspace \
-  --prompt-file prompt.md --max-steps 12 --no-confirm \
+  --prompt-file prompt.md --max-steps 12 \
   --output-format stream-json > events.ndjson
 AGENT_EXIT=$?
 echo "agent exit code: $AGENT_EXIT"
@@ -108,18 +113,18 @@ echo "agent exit code: $AGENT_EXIT"
 **PowerShell**
 ```powershell
 tokn agent-run --mode finrisk --system-one --repo-root workspace `
-  --prompt-file prompt.md --max-steps 12 --no-confirm `
+  --prompt-file prompt.md --max-steps 12 `
   --output-format stream-json > events.ndjson
 $AgentExit = $LASTEXITCODE
 Write-Host "agent exit code: $AgentExit"
 ```
 
-Flags used (checked with `tokn agent-run --help`):
+Flags used (see `tokn agent-run --help-all` for advanced options):
 
 - `--mode finrisk` selects the domain. `--system-one` enables the review request.
 - `--repo-root workspace` is where the run log is written (`workspace/.nospace/runs/`).
 - `--prompt-file prompt.md` loads the prompt. `--max-steps 12` caps the loop.
-- `--no-confirm` skips interactive prompts. `--output-format stream-json` writes events to stdout.
+- Default interactive approvals remain enabled. `--output-format stream-json` writes events to stdout.
 
 Each executed tool adds a governance cooldown, so one run takes around a minute and a half.
 

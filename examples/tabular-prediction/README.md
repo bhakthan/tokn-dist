@@ -1,7 +1,8 @@
 # Example: local tabular prediction next to the LLM
 
 TOKN can predict from a labelled table without a model call. A small local
-kNN baseline runs with Python only. Optional foundation-model backends (NVIDIA
+kNN baseline is the worked offline path and runs with Python only. Optional,
+guided foundation-model backends (NVIDIA
 Kumo-Tabular and Google TabFM) run offline once their weights are staged. The
 LLM does not predict; it only reads the typed result.
 
@@ -15,6 +16,9 @@ LLM does not predict; it only reads the typed result.
 | **Problem spec** (`problem.json`) | The explicit schema, target and features. Nothing is inferred. |
 
 The prediction backends do not download weights at run time or call an LLM.
+No foundation-model weights ship with this example. The query rows are kept
+out of training and used only for prediction; predicted classes are not
+observed labels.
 This does not disable TOKN's separate startup registration or update checks;
 set `TOKN_NO_REGISTER=1` and `TOKN_NO_UPDATE_CHECK=1` for an offline session.
 
@@ -49,19 +53,27 @@ TOKN refuses to run TabFM until you acknowledge that exact string.
 
 ## 1. Preflight: check the tools
 
-Run this from the `tokn-dist` root. `--root` must be an **absolute** path.
-Set it once for the rest of the walkthrough:
+From the `tokn-dist` root, copy only the synthetic inputs to a new scratch
+folder. `--root` must be an **absolute** path. Run the walkthrough from that
+folder so outputs and TOKN state stay outside the checkout.
 
 macOS / Linux:
 
 ```bash
-TABULAR_ROOT="$PWD/examples/tabular-prediction"
+TABULAR_ROOT="$HOME/tokn-tabular-$(date +%Y%m%d%H%M%S)-$$"
+mkdir "$TABULAR_ROOT"
+cp examples/tabular-prediction/context.csv examples/tabular-prediction/query.csv \
+  examples/tabular-prediction/problem.json "$TABULAR_ROOT/"
+cd "$TABULAR_ROOT"
 ```
 
 PowerShell:
 
 ```powershell
-$TABULAR_ROOT = (Resolve-Path examples\tabular-prediction).Path
+$TABULAR_ROOT = Join-Path $env:TEMP "tokn-tabular-$([guid]::NewGuid().ToString('N'))"
+New-Item -ItemType Directory -Path $TABULAR_ROOT | Out-Null
+Copy-Item examples\tabular-prediction\context.csv, examples\tabular-prediction\query.csv, examples\tabular-prediction\problem.json $TABULAR_ROOT
+Set-Location $TABULAR_ROOT
 ```
 
 bash or PowerShell (same command):
@@ -252,3 +264,8 @@ the prediction can be checked without a model call.
 
 Expected, not a recorded run. Outputs are shown as shape only, because the exact
 numbers depend on your TOKN build.
+
+For adjacent local-inference examples, see
+[local llama.cpp setup](../local-llamacpp/README.md) and
+[ONNX-based routing](../auto-route-grid/README.md). They have separate
+dependencies and do not imply that ONNX or foundation-model weights ship here.

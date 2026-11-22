@@ -6,7 +6,7 @@ metadata:
 spec:
     git:
         - name: app
-          repo: https://github.com/me/app.git
+          repo: https://YOUR_GIT_HOST/YOUR_REPOSITORY.git
           branch: main
 ---
 apiVersion: ax.io/v1alpha1
@@ -25,7 +25,7 @@ spec:
     egress:
         allowlist:
             hosts:
-                - host: api.anthropic.com
+                - host: YOUR_PROVIDER_API_HOST
                   port: 443
                 - host: github.com
                   port: 443
@@ -36,8 +36,8 @@ metadata:
     name: fix-flake-model
     atespace: default
 spec:
-    provider: anthropic
-    model: claude-opus-5
+    provider: YOUR_PROVIDER
+    model: YOUR_MODEL_ID
     secretKey:
         name: llm-keys
         key: ANTHROPIC_API_KEY
@@ -53,9 +53,9 @@ spec:
         - name: TOKN_AX_BUDGET_USD
           value: "5"
         - name: TOKN_AX_PROVIDER
-          value: anthropic
+          value: YOUR_PROVIDER
         - name: TOKN_AX_MODEL
-          value: claude-opus-5
+          value: YOUR_MODEL_ID
     workspaces:
         - name: fix-flake-workspace
           path: /workspace

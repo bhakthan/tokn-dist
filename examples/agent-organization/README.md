@@ -215,11 +215,14 @@ TOKN can run the whole organization on your own hardware. Each worker names its 
 |---|---|
 | `ollama:qwen3:8b` | Ollama on its default local port |
 | `gguf:qwen3-8b@http://127.0.0.1:8080/v1` | a llama.cpp `llama-server` |
-| `openai:Qwen/Qwen3-32B@http://vllm.lan:8000/v1` | any OpenAI-compatible server on your network, such as vLLM |
+| `openai:Qwen/Qwen3-32B@http://YOUR_TRUSTED_HOST:8000/v1` | an OpenAI-compatible server on your network; this is a template, not a real host |
 
 `--airgap` refuses every worker endpoint with a public address. The check happens when TOKN connects, and proxy settings are ignored. It covers the workers' model traffic only.
 
-**Step A — get a model onto the machine.** Install or stage Ollama or
+**Step A — get a model onto the machine.** Start with loopback on the local
+machine. Remote endpoints are an advanced option: use a trusted HTTPS endpoint
+and issue a separate token to each worker. Never use a copied placeholder host.
+Install or stage Ollama or
 `llama-server` first, along with a tool-capable model and enough memory for
 it. See [local-llamacpp](../local-llamacpp/README.md) for server setup and
 dependency checks. On a connected machine, download the model; copy all
@@ -232,7 +235,8 @@ tokn models download unsloth/Qwen3-8B-GGUF --quant UD-Q4_K_XL --name qwen3-8b
 tokn models import /staged/Qwen3-8B-UD-Q4_K_XL.gguf --name qwen3-8b
 ```
 
-Inside a closed network, `HF_ENDPOINT=https://<your hub mirror>` points `search` and `download` at an internal mirror. `LLAMA_SERVER_PATH` points at a pre-staged `llama-server`.
+Inside a closed network, set `HF_ENDPOINT` to a trusted mirror in your shell;
+`LLAMA_SERVER_PATH` points at a pre-staged `llama-server`.
 
 **Step B — serve it sized for an organization.** Concurrent workers share
 server capacity. Choose `--parallel` and `--ctx-size` to fit your hardware;
@@ -313,7 +317,7 @@ appropriate to your deployment; this is not configured by the example.
 On each worker machine, with a clone of the same repository and its own model server:
 
 ```bash
-tokn agora org work --url https://<host>:8787 --ca-cert ca.pem --token-file worker-3.token \
+tokn agora org work --url "https://YOUR_TRUSTED_HOST:8787" --ca-cert ca.pem --token-file worker-3.token \
   --model "gguf:qwen3-8b@http://127.0.0.1:8080/v1" \
   --repo /src/textstats --workdir "$HOME/tokn-org-demo/worker-3" --airgap
 ```

@@ -22,7 +22,7 @@ is fictional: the compound, sponsor, indication and data.
 | Requirement | Why | Check |
 |---|---|---|
 | TOKN v0.3.57 or later | Earlier builds lack the flags used here | `tokn version` |
-| Model provider configured | The agent needs an LLM to write the package | See [SETUP.md](../../SETUP.md) |
+| Model provider configured | The agent needs an LLM to write the package. Use a model capable of the required tool calls; provider charges and number of turns depend on the run. A missing/failed tool result is unassessed, not a pass. | `tokn doctor --provider anthropic` (static; see [SETUP.md](../../SETUP.md)) |
 | Python 3.8+ (optional) | Only for the checker in step 5 | `python --version` |
 
 **Tier:** this example uses `--mode default`, which relies on the `core:*`
@@ -59,70 +59,102 @@ See [SETUP.md](../../SETUP.md) for the provider list.
 
 **bash**
 ```bash
-export NOSPACE_MODEL_PROVIDER=<your provider>
-export NOSPACE_MODEL_NAME=<your model>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_PROVIDER='anthropic'
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+read -rs -p 'Anthropic key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
 ```
 
 **PowerShell**
 ```powershell
-$env:NOSPACE_MODEL_PROVIDER = "<your provider>"
-$env:NOSPACE_MODEL_NAME     = "<your model>"
-$env:ANTHROPIC_API_KEY      = "<your key>"
+$env:NOSPACE_MODEL_PROVIDER = "anthropic"
+$env:NOSPACE_MODEL_NAME     = "YOUR_MODEL_ID"
+$env:ANTHROPIC_API_KEY      = Read-Host 'Anthropic key' -MaskInput   # pwsh 7.1+; or read it from your secret store
 ```
 
 Use the key variable that matches your provider. Do not commit your key.
+`tokn doctor --provider anthropic` checks the configuration statically; it does
+not prove the key works.
 
 ### 3. Run the agent
 
-The run reads the brief from `inputs/task-prompt.md` and writes the package to
-`analysis-package/`.
+Stage only `inputs/` into a new `work/` folder and run from there. This README
+(with the expected labels) and `check_gate.py` stay outside the agent's read
+scope. The run reads the brief from `inputs/task-prompt.md` and writes the
+package to `work/analysis-package/`.
 
 **bash**
 ```bash
-mkdir -p analysis-package
+mkdir work
+cp -r inputs work/
+cd work
+mkdir analysis-package
 tokn agent-run --mode default --repo-root . \
   --prompt-file inputs/task-prompt.md \
   --model-provider "$NOSPACE_MODEL_PROVIDER" \
   --model-name "$NOSPACE_MODEL_NAME" \
-  --no-confirm --max-steps 12 \
+  --permission-mode default --max-steps 12 \
   --capture-trajectory --export json
+cd ..
 ```
 
 **PowerShell**
 ```powershell
-New-Item -ItemType Directory -Force analysis-package | Out-Null
+New-Item -ItemType Directory work | Out-Null
+Copy-Item inputs work\ -Recurse
+Set-Location work
+New-Item -ItemType Directory analysis-package | Out-Null
 tokn agent-run --mode default --repo-root . `
   --prompt-file inputs/task-prompt.md `
   --model-provider $env:NOSPACE_MODEL_PROVIDER `
   --model-name $env:NOSPACE_MODEL_NAME `
-  --no-confirm --max-steps 12 `
+  --permission-mode default --max-steps 12 `
   --capture-trajectory --export json
+Set-Location ..
 ```
 
+`--permission-mode default` asks before each file write or command, so approve
+only writes into `analysis-package/`. `mkdir work` fails if `work/` already
+exists; rename or delete the old one first. `--max-steps` limits turns; it is
+not a spend cap.
+
 Flags used: `--mode`, `--repo-root`, `--prompt-file`, `--model-provider`,
-`--model-name`, `--no-confirm`, `--max-steps`, `--capture-trajectory`,
-`--export`. All were checked with `tokn agent-run --help`.
+`--model-name`, `--permission-mode`, `--max-steps`, `--capture-trajectory`,
+`--export`. `--capture-trajectory` and `--export` are advanced flags: they are
+listed by `tokn agent-run --help-all`, not by the short `--help`.
+
+Before you accept the fictional package, grade it from outside `work/` with the
+fixture checker (step 5), and record who signed off. A model's sign-off text is
+not human sign-off.
 
 ### 4. Review the package
 
-Open `analysis-package/endpoint-register.json` and `decision-memo.md`. Check
-that every claim has an SAP source and that the LAWFUL / QUARANTINED labels
-match the SAP.
+Open `work/analysis-package/endpoint-register.json` and `decision-memo.md`.
+Check that every claim has an SAP source and that the LAWFUL / QUARANTINED
+labels match the SAP.
+
+The package is acceptable only when **all** of these hold:
+
+1. Every claim in the register names its endpoint source in the SAP excerpt or
+   the locked Phase 2 summary. A claim with no traceable source is rejected,
+   whatever its label.
+2. The checker in step 5 exits `0`.
+3. A named human reviewer, not the model, has read the memo and recorded the
+   decision and the date outside `work/`. Without that sign-off the package
+   stays a draft, even when 1 and 2 pass.
 
 ### 5. Run the checker (optional)
 
-The checker tests each claim against the SAP rules. It reads only
-`analysis-package/endpoint-register.json`.
+The checker tests each claim against the SAP rules. Run it from this folder,
+outside `work/`. It reads only the register you pass it.
 
 **bash**
 ```bash
-python check_gate.py analysis-package/endpoint-register.json
+python check_gate.py work/analysis-package/endpoint-register.json
 ```
 
 **PowerShell**
 ```powershell
-python check_gate.py analysis-package\endpoint-register.json
+python check_gate.py work\analysis-package\endpoint-register.json
 ```
 
 Exit code `0` means no green-light claim was quarantined. Exit code `1` means
@@ -159,6 +191,6 @@ The default posture is deny. A green-light needs every SAP rule to pass.
 | `tokn: command not found` | Put the `tokn` binary on your PATH, or run `./tokn` from its folder |
 | `tokn version` shows an older build | Download v0.3.57 or later from the distribution repo |
 | Model or key error at step 3 | Re-check step 2; see [SETUP.md](../../SETUP.md) |
-| `missing: analysis-package\endpoint-register.json` | The run did not finish. Re-run step 3 and check its output |
+| `missing: work\analysis-package\endpoint-register.json` | The run did not finish, or a write was declined. Re-run step 3 in a fresh `work/` and check its output |
 | Checker exits `2` | Run it from the `pharma-phase3` folder, or pass the full path |
 | Checker exits `1` | Expected if the agent marked a quarantined claim as green-light. Review the memo |

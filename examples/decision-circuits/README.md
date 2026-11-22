@@ -33,7 +33,7 @@ This walkthrough uses only the offline subcommands of `tokn circuit`:
 
 | Requirement | Why | Check |
 |---|---|---|
-| TOKN v0.3.68 or later | Ships `tokn circuit` | `tokn circuit --help` |
+| TOKN v0.3.68 or later | Ships `tokn circuit` | `tokn circuit --help-all` |
 | This folder | Fixture circuit, vectors, code, table, trace and ledger | — |
 | Python 3.9 or later (step 7 only) | Runs the generated module's tests | `python --version` (or `python3 --version`) |
 
@@ -73,10 +73,22 @@ Set-Location "$HOME\tokn-circuits"
 | `refund-triage.vectors.json` | Seven test vectors: recorded answers and the expected label |
 | `app/refund_handler.py` | A small handler that decides with keyword lists and regexes |
 | `tickets.csv` | Twelve synthetic refund tickets |
-| `sample-trace.json` | A hand-written trace in the shape `circuit run` prints |
-| `sample-ledger.jsonl` | Three hand-written ledger records in the shape `circuit run --ledger` writes |
+| `sample-trace.json` | A hand-written synthetic trace in the shape `circuit run` prints |
+| `sample-ledger.jsonl` | Three hand-written synthetic records, not a live run log |
 
 The commands below are the same in bash and PowerShell unless both are shown.
+
+Start with this worked, no-key test-vector replay. It is deterministic and
+does not call a model:
+
+```bash
+tokn circuit test refund-triage.circuit.json --vectors refund-triage.vectors.json
+```
+
+The expected output is shown in step 6. Then change one vector in your scratch
+copy and predict the result before rerunning. The later model-backed `run`,
+`batch` and `eval` steps are optional; any decisions remain advisory and need
+the application's own checks and human review.
 
 ## 2. Start from a built-in starter pack
 

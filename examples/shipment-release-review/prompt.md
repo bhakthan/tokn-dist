@@ -11,7 +11,8 @@ All data is synthetic. Every company, person, address and country code (`XN`, `X
 | `demo-input/country_chart.json` | A synthetic country chart. It gives the reason-for-control columns per destination (NS1, NS2, MT1, NP1, CB1, RS1, AT1), embargo and military-end-use flags, reasons for control per ECCN, and advisory license-exception rules. |
 | `demo-input/control_criteria.json` | Synthetic technical criteria. Each one places an item in a USML category or an ECCN when every condition on its specs holds. |
 
-Pass the reference files to the tools by path, for example `screening_list_path: "tests/domain-relay-live/scenarios/tradecomp/inputs/screening_list.json"`. The paths are relative to the repository root.
+Pass the reference files to the tools by their paths under `demo-input/` in
+this staged work folder (for example `demo-input/screening_list.json`).
 
 ## Items to assess
 
@@ -38,6 +39,7 @@ Pass the reference files to the tools by path, for example `screening_list_path:
 6. HS codes must be structurally valid: 2/4/6 digits internationally, with 8/10-digit national extensions. Chapter 77 is reserved, and no heading ends in 00.
 7. Use `trade_party_screen`, `trade_ownership_aggregate`, `trade_classification_check`, `trade_jurisdiction_review`, `trade_license_determination`, `trade_red_flag_check` and `trade_hs_validate`, or `trade_shipment_review`, which runs them together. Every number you report must come from a tool call or the input files.
 8. Use calibrated language. These are decision-support results, not legal determinations. Never write that a shipment is cleared or approved for export. A screening hit or red flag is a risk signal for the compliance officer, never an accusation.
+9. If a required tool result is missing or fails, report the affected item as unassessed and do not assign a passing disposition. A compliance officer must review every result; this exercise never authorizes release.
 
 ## Deliverable
 

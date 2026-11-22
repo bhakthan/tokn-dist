@@ -3,23 +3,20 @@
 > "Stop before a risky step when the answer matters, notice when the agent is going in circles, and fall back to a safer posture."
 
 This example explains four behaviours that govern how much an agent does on its own. Two of them
-you can see and tune from the command line. The other two live inside the agent and are only
-visible through their effects. Most of what proves these behaviours is an offline Go test suite in
-the source repository, which you cannot run from the released binary. This walkthrough shows what
-you can check with the released binary, with no model call, and then an optional short model step.
+you can see and tune from the command line. The other two are visible through their effects. This
+walkthrough shows what you can check with the released binary, with no model call, and then an
+optional short model step.
 
 | Frame | What it does | How you see it with the released binary |
 |---|---|---|
-| Permission grants | Each tool approval is recorded, and a grant can expire | `--no-confirm` auto-approves; `--headless` denies any action that would prompt (exit code 3) |
+| Permission grants | Each tool approval is recorded, and a grant can expire | Normal interactive approvals ask before tool calls; `--no-confirm` auto-approves all tool calls; `--headless` denies any action that would prompt (exit code 3) |
 | Ask-or-act (value of information) | Asks the human only when the answer is worth the interruption | Internal. You see it as a question versus an action. No flag |
 | Posture ladder | plan, default, accept_edits, autopilot; a stuck signal moves toward plan | Internal to the host approval flow. No `agent-run` flag |
 | Stuck detection | Counts steps with no progress and offers a help cue | `--stuck-threshold` (default 3, 0 disables) and `--plan-stale-steps` (default 6, 0 disables) |
 
 ## What this example does and does not prove
 
-The offline proof in the source repository is a set of Go tests, one per frame, that drive the
-decision functions directly. The released `tokn` binary does not expose a command that runs those
-tests. So this walkthrough does two things:
+The release exposes no command to run the underlying offline unit tests. This walkthrough does two things:
 
 1. **Offline (no model, no network):** confirm the version and the flags that control each frame,
    and read the exit-code contract that governs headless runs.
@@ -31,7 +28,7 @@ tests. So this walkthrough does two things:
 | Requirement | Why | Check |
 |---|---|---|
 | TOKN v0.3.57 or newer | The flags below are in this version | `tokn version` |
-| Community tier (the default) | Steps 1 and 3 use `default` mode, which the free tier includes | `tokn license status` |
+| Community tier (the default) | Steps 1 and 3 use `default` mode, which the free tier includes | `tokn license features` |
 | An LLM provider (step 3 only) | The agent loop calls a model | See step 3 |
 | Nothing else for steps 1 and 2 | Steps 1 and 2 do not call a model | n/a |
 
@@ -46,13 +43,13 @@ Run these from any folder.
 **bash**
 ```bash
 tokn version
-tokn agent-run --help | grep -E "stuck-threshold|plan-stale-steps|headless|no-confirm|deny-tool"
+tokn agent-run --help-all | grep -E "stuck-threshold|plan-stale-steps|headless|no-confirm|deny-tool"
 ```
 
 **PowerShell**
 ```powershell
 tokn version
-tokn agent-run --help | Select-String -Pattern "stuck-threshold|plan-stale-steps|headless|no-confirm|deny-tool"
+tokn agent-run --help-all | Select-String -Pattern "stuck-threshold|plan-stale-steps|headless|no-confirm|deny-tool"
 ```
 
 Expected, not a recorded run: the help lines show the defaults `3` for stuck threshold and `6`
@@ -73,6 +70,9 @@ would prompt".
 Exit code 3 is the permission frame made visible: the run stopped rather than acting without
 approval. Nothing to run here. Keep this table for step 3.
 
+With normal approvals, TOKN requests approval before a tool call. In `--headless`
+mode, a tool call that would require approval is denied; it is not silently allowed.
+
 ## 3. Optional: a short model run with a stuck cue and headless approvals
 
 Configure the LLM with placeholders. Replace each `<...>` with your own value. See
@@ -81,15 +81,16 @@ Configure the LLM with placeholders. Replace each `<...>` with your own value. S
 **bash**
 ```bash
 export NOSPACE_MODEL_PROVIDER=anthropic
-export NOSPACE_MODEL_NAME=<your model name>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_NAME='YOUR_MODEL_NAME'
+read -rs -p 'Anthropic API key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
 ```
 
 **PowerShell**
 ```powershell
 $env:NOSPACE_MODEL_PROVIDER = "anthropic"
-$env:NOSPACE_MODEL_NAME = "<your model name>"
-$env:ANTHROPIC_API_KEY = "<your key>"
+$env:NOSPACE_MODEL_NAME = "YOUR_MODEL_NAME"
+$secret = Read-Host "Anthropic API key" -AsSecureString
+$env:ANTHROPIC_API_KEY = [System.Net.NetworkCredential]::new('', $secret).Password
 ```
 
 Create a small synthetic workspace with one text file, then run the agent against it.
@@ -151,7 +152,7 @@ the run stop with exit code 3 rather than act.
 | Symptom | Likely cause | Fix |
 |---|---|---|
 | `tokn: command not found` | TOKN is not on your PATH | Reinstall from the release page, or add its folder to PATH |
-| Exit code 2 | A flag is misspelled or a value is missing | Re-run `tokn agent-run --help` and copy the flag names exactly |
+| Exit code 2 | A flag is misspelled or a value is missing | Re-run `tokn agent-run --help-all` and copy the flag names exactly |
 | Exit code 3 on step 3 when you expected success | An approval was needed and denied in headless mode | Expected behaviour. To allow the action, remove the matching `--deny-tool` entry and review the action first |
 | No model response | The LLM variables are not set in this shell | Set them again (they do not persist between shells) |
 | `frames-demo` already exists | You ran step 3 before | Delete the folder and re-create it, or pick a new name |

@@ -32,7 +32,7 @@ All data in `mission_spec.json` is synthetic.
 
 | Requirement | Why | Check |
 |---|---|---|
-| TOKN **v0.3.57 or newer** | Current release with the robotics mode | `tokn version` |
+| TOKN **v0.3.57 or newer** | Minimum version for this walkthrough's robotics mode | `tokn version` |
 | An LLM provider and key | Runs the agent | see [SETUP.md](../../SETUP.md) |
 | **14-day trial** (`tokn license trial`) | `--mode robotics` is a domain mode. Community grants only `domains:basic`. | `tokn license features` |
 
@@ -74,14 +74,14 @@ Follow [SETUP.md](../../SETUP.md) for your provider. For Anthropic, for example:
 
 ```bash
 export NOSPACE_MODEL_PROVIDER=anthropic
-export NOSPACE_MODEL_NAME=<a Claude model you have access to>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+read -rs -p 'Anthropic API key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
 ```
 
 ```powershell
 $env:NOSPACE_MODEL_PROVIDER = "anthropic"
-$env:NOSPACE_MODEL_NAME     = "<a Claude model you have access to>"
-$env:ANTHROPIC_API_KEY      = "<your key>"
+$env:NOSPACE_MODEL_NAME     = "YOUR_MODEL_ID"
+# Set ANTHROPIC_API_KEY from a trusted secret store or your protected shell session.
 ```
 
 Use your shell or `~/.tokn/config/credentials.env` for keys. Never commit a
@@ -128,6 +128,10 @@ tokn agent-run --mode robotics --repo-root . --prompt-file task-prompt.txt --max
 Leave tool confirmation on (the default), so you see each tool call before it runs.
 Do not approve a deployment step by hand. The point of this example is that the
 gates should refuse it.
+
+The fixture is a synthetic simulation only. A refusal here is not permission
+to deploy; only qualified people using the actual validated hardware process
+can authorize deployment.
 
 ## 5. Read the result
 

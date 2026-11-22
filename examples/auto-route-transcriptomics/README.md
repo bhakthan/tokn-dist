@@ -1,4 +1,4 @@
-# Example: route one RNA-seq case across the Claude 5.5 family step by step
+# Example: route one RNA-seq case across model rungs step by step
 
 This example uses TOKN's opt-in `--auto-route` flag on one biomolecular task: a
 bulk RNA-seq differential expression study. TOKN wrote the case study in a first
@@ -11,12 +11,14 @@ so the answer key is known exactly and the solution can be graded.
 
 ## The rungs
 
+The rung names below describe capability roles, not prescribed model names.
+
 | Rung | Model | Used for |
 |---|---|---|
-| fast | `claude-haiku-5-5` | Read-only steps: listing files, reading data and notes, small follow-ups |
-| standard | `claude-sonnet-5-5` | Writing and running analysis code, the default for ordinary work |
-| frontier | `claude-opus-5-5` | Planning at step 0, and hard steps; also the configured model (`--model-name`) |
-| apex | `claude-fable-5-2` | The ceiling, reached only after repeated failed steps |
+| fast | A faster configured model | Read-only steps: listing files, reading data and notes, small follow-ups |
+| standard | Your configured model | Writing and running analysis code, the default for ordinary work |
+| frontier | A higher-capability configured model | Planning and hard steps |
+| apex | An optional ceiling model | Reached only after repeated failed steps |
 
 Deploy any subset of these models. In the absence of a rung, its work moves one
 rung up. The run in this example never needed the apex rung.
@@ -32,7 +34,7 @@ uses the one model you name.
 |---|---|---|
 | TOKN **v0.3.102 or newer** | Release with `--auto-route` | `tokn version` |
 | **14-day trial** (`tokn license trial`) | `--mode transcriptomics` is a domain mode | `tokn license features` |
-| An **Anthropic API key**, or an **Anthropic-compatible gateway** (`ANTHROPIC_BASE_URL` and `ANTHROPIC_API_KEY`) | Authentication and model access. Azure API Management gateways are detected automatically and use the `api-key` header; set `ANTHROPIC_AUTH_HEADER` to override. | A short test run |
+| A configured model provider and endpoint | Use an endpoint and model alias approved for your environment. The doctor check does not verify live authentication or connectivity. | `tokn doctor --provider <id>` |
 | **Python 3** with **numpy** | The agent writes and runs the analysis scripts. The grader uses only the standard library. | `python --version` |
 
 > **What the model endpoint receives.** The task text and the files the agent reads
@@ -42,25 +44,29 @@ uses the one model you name.
 
 ## 1. Configure the endpoint
 
-From the example folder, copy the template and fill in your own values. Never commit `.env`; the folder's
-`.gitignore` already excludes it.
+`.env.example` is a reference only. Set provider, model, endpoint and credentials
+directly in a trusted shell or secret store. Do not load a repository `.env` file.
+Never commit credentials.
 
 PowerShell:
 
 ```powershell
-Copy-Item .env.example .env
-Get-Content .env | Where-Object { $_ -match '^\s*[^#\s][^=]*=' } | ForEach-Object {
-  $k, $v = $_ -split '=', 2
-  Set-Item -Path "env:$($k.Trim())" -Value $v.Trim()
-}
+# Set only trusted, provider-specific variables in this shell; do not import .env.
 ```
 
 bash:
 
 ```bash
-cp .env.example .env
-set -a; source .env; set +a
+# Set only trusted, provider-specific variables in this shell; do not source .env.
 ```
+
+`.env.example` is a reference template only; do not copy or load it. Never
+commit a populated `.env`.
+
+If you set `ANTHROPIC_BASE_URL` to a custom endpoint, explicitly pair it with
+the credential issued for that endpoint. For the standard service, clear the
+override and set its credential instead. Do not let an existing key silently
+follow a deployment override.
 
 ## 2. Two phases, both run by TOKN
 
@@ -82,8 +88,8 @@ New-Item -ItemType Directory -Path author-run | Out-Null
 Copy-Item author\AUTHOR.md author-run\AUTHOR.md
 Set-Location author-run
 tokn agent-run --mode transcriptomics --auto-route `
-  --model-provider anthropic --model-name claude-opus-5-5 `
-  --repo-root . --prompt-file AUTHOR.md --max-steps 40 --no-confirm
+  --model-provider YOUR_PROVIDER --model-name 'YOUR_CONFIGURED_MODEL' `
+  --repo-root . --prompt-file AUTHOR.md --max-steps 40
 ```
 
 bash:
@@ -92,8 +98,8 @@ bash:
 mkdir author-run && cp author/AUTHOR.md author-run/AUTHOR.md
 cd author-run
 tokn agent-run --mode transcriptomics --auto-route \
-  --model-provider anthropic --model-name claude-opus-5-5 \
-  --repo-root . --prompt-file AUTHOR.md --max-steps 40 --no-confirm
+  --model-provider YOUR_PROVIDER --model-name 'YOUR_CONFIGURED_MODEL' \
+  --repo-root . --prompt-file AUTHOR.md --max-steps 40
 ```
 
 The run writes `make_case.py`, `case/` and `answer_key/` into `author-run/`. The
@@ -106,36 +112,41 @@ skip phase 1 and go straight to phase 2.
 
 ### Phase 2: solve the case
 
-The solver gets only `case/`. The answer key must stay outside its workspace, so
-do not copy `answer_key/` into the solve folder.
+The solver gets only a fresh `work/` containing the solver task and the synthetic
+count/sample data. The answer key must stay outside its workspace, so do not copy
+this README, `answer_key/`, or any grading materials into `work/`.
 
 PowerShell:
 
 ```powershell
-New-Item -ItemType Directory -Path solve-run | Out-Null
-Copy-Item -Recurse case solve-run\case
-Set-Location solve-run
+New-Item -ItemType Directory -Path solve-run\work\case | Out-Null
+Copy-Item case\TASK.md solve-run\work\case\TASK.md
+Copy-Item case\counts.tsv, case\samples.tsv solve-run\work\case\
+Set-Location solve-run\work
 tokn agent-run --mode transcriptomics --auto-route `
-  --model-provider anthropic --model-name claude-opus-5-5 `
-  --repo-root . --prompt-file case/TASK.md --max-steps 50 --no-confirm
+  --model-provider YOUR_PROVIDER --model-name 'YOUR_CONFIGURED_MODEL' `
+  --repo-root . --prompt-file case/TASK.md --max-steps 50
 ```
 
 bash:
 
 ```bash
-mkdir solve-run && cp -r case solve-run/case
-cd solve-run
+mkdir -p solve-run/work/case
+cp case/TASK.md case/counts.tsv case/samples.tsv solve-run/work/case/
+cd solve-run/work
 tokn agent-run --mode transcriptomics --auto-route \
-  --model-provider anthropic --model-name claude-opus-5-5 \
-  --repo-root . --prompt-file case/TASK.md --max-steps 50 --no-confirm
+  --model-provider YOUR_PROVIDER --model-name 'YOUR_CONFIGURED_MODEL' \
+  --repo-root . --prompt-file case/TASK.md --max-steps 50
 ```
 
 The solver writes `solution/results.tsv`, `solution/report.md` and its code into
-`solve-run/solution/`.
+`solve-run/work/solution/`.
 
 ## 3. What happened in our run
 
-**Phase 1, author.** 28 steps, $1.31, 371k tokens. Step 0 ran on Opus for planning.
+The following runs are historical observations, not current defaults.
+
+**Phase 1, author (historical observation).** 28 steps, $1.31, 371k tokens. Step 0 ran on Opus for planning.
 Steps 1 to 27 ran on Sonnet while TOKN wrote the generator, the grader, reference
 solvers and the thresholds. The case it produced:
 
@@ -146,7 +157,8 @@ solvers and the thresholds. The case it produced:
 - A strong batch shift on 60% of genes.
 - Nine numeric acceptance criteria in `case/TASK.md`.
 
-**Phase 2, solve (routed).** The routing trace for the solve run:
+**Phase 2, solve (routed; historical observed run).** The following model names,
+trace and measurements describe that run, not recommended defaults:
 
 | Step | Model | Rung | What the step did |
 |---|---|---|---|
@@ -181,13 +193,13 @@ side. Point it at the solve run's output:
 PowerShell:
 
 ```powershell
-python answer_key\grade.py solve-run\solution\results.tsv --report solve-run\solution\report.md
+python answer_key\grade.py solve-run\work\solution\results.tsv --report solve-run\work\solution\report.md
 ```
 
 bash:
 
 ```bash
-python answer_key/grade.py solve-run/solution/results.tsv --report solve-run/solution/report.md
+python answer_key/grade.py solve-run/work/solution/results.tsv --report solve-run/work/solution/report.md
 ```
 
 The grader checks the schema and integrity of `results.tsv`, the accuracy against
@@ -239,13 +251,12 @@ PowerShell:
 
 ```powershell
 Remove-Item -Recurse -Force author-run, solve-run -ErrorAction SilentlyContinue
-Remove-Item -Force .env -ErrorAction SilentlyContinue
 ```
 
 bash:
 
 ```bash
-rm -rf author-run solve-run .env
+rm -rf author-run solve-run
 ```
 
 ## Troubleshooting

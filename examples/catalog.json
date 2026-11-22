@@ -1,0 +1,2583 @@
+{
+  "schema": "tokn-dist.examples-catalog/1",
+  "reviewed_against": "0.3.118",
+  "examples": [
+    {
+      "id": "adas-safety-gate",
+      "url": "adas-safety-gate/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "tokn",
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch work/RESULT.md and .nospace state",
+      "minimum_version": "0.3.82",
+      "last_verified": null,
+      "evidence_kind": "external RESULT.md disposition and V&V evidence review",
+      "next": [
+        "appsec-triage",
+        "battery-passport"
+      ]
+    },
+    {
+      "id": "agent-loop-essentials",
+      "url": "agent-loop-essentials/README.md",
+      "family": "start",
+      "level": "worked-guided-problem",
+      "tier": "community",
+      "requires": [
+        "tokn",
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch project and .nospace predictability report",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "predictability report and contract checker",
+      "next": [
+        "checkpoints",
+        "agent-team"
+      ]
+    },
+    {
+      "id": "agent-organization",
+      "url": "agent-organization/README.md",
+      "family": "coordinate",
+      "level": "guided",
+      "tier": null,
+      "requires": [
+        "tokn",
+        "git",
+        "python3"
+      ],
+      "model": "optional",
+      "remote_calls": "optional",
+      "writes": "none for plan; optional worker clones and outputs",
+      "minimum_version": "0.3.60",
+      "last_verified": null,
+      "evidence_kind": "deterministic plan JSON",
+      "next": [
+        "agent-team",
+        "checkpoints"
+      ]
+    },
+    {
+      "id": "agent-team",
+      "url": "agent-team/README.md",
+      "family": "coordinate",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "tokn",
+        "git",
+        "python3"
+      ],
+      "model": "optional",
+      "remote_calls": "optional",
+      "writes": "scratch worktrees and integration branch",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "dry-run org output and local checker",
+      "next": [
+        "agent-organization",
+        "checkpoints"
+      ]
+    },
+    {
+      "id": "air-quality",
+      "url": "air-quality/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "tokn",
+        "python3",
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch analysis scripts and report",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "offline evaluation-metrics checker",
+      "next": [
+        "climate-ensemble",
+        "change-tracking"
+      ]
+    },
+    {
+      "id": "airgap-model-preflight",
+      "url": "airgap-model-preflight/README.md",
+      "family": "model-safety",
+      "level": "worked-guided-problem",
+      "tier": "community",
+      "requires": [
+        "python3",
+        "local-model"
+      ],
+      "model": "optional",
+      "remote_calls": "none",
+      "writes": "scratch files; optional user model registry/server state",
+      "minimum_version": null,
+      "last_verified": "2026-11-22",
+      "evidence_kind": "provider doctor output and model server status",
+      "next": [
+        "local-llamacpp",
+        "tabular-prediction"
+      ]
+    },
+    {
+      "id": "always-on-claims-desks",
+      "url": "always-on-claims-desks/README.md",
+      "family": "coordinate",
+      "level": "guided",
+      "tier": null,
+      "requires": [
+        "tokn",
+        "python3",
+        "git",
+        "azure-cli"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch desk workspaces and local state; optional timer",
+      "minimum_version": "0.3.100",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "state audit and documented run receipt",
+      "next": [
+        "always-on-claims-intake",
+        "claims-reserving-review"
+      ]
+    },
+    {
+      "id": "always-on-claims-intake",
+      "url": "always-on-claims-intake/README.md",
+      "family": "integration",
+      "level": "guided",
+      "tier": null,
+      "requires": [
+        "tokn",
+        "python3",
+        "azure-cli"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch workspace and persistent local state",
+      "minimum_version": "0.3.99",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "check.py state audit",
+      "next": [
+        "always-on-claims-desks",
+        "claim-scrub"
+      ]
+    },
+    {
+      "id": "appsec-triage",
+      "url": "appsec-triage/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "tokn",
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch work/RESULT.md and .nospace state",
+      "minimum_version": "0.3.82",
+      "last_verified": null,
+      "evidence_kind": "external disposition and fixture-evidence review",
+      "next": [
+        "authority-frames",
+        "claim-scrub"
+      ]
+    },
+    {
+      "id": "authority-frames",
+      "url": "authority-frames/README.md",
+      "family": "model-safety",
+      "level": "worked-guided-problem",
+      "tier": "community",
+      "requires": [
+        "tokn"
+      ],
+      "model": "optional",
+      "remote_calls": "optional",
+      "writes": "none offline; optional .nospace run state",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "CLI help output and headless exit code",
+      "next": [
+        "agent-loop-essentials",
+        "autodesign"
+      ]
+    },
+    {
+      "id": "auto-route-grid",
+      "url": "auto-route-grid/README.md",
+      "family": "integration",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "tokn",
+        "python3",
+        "provider-credentials"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch solver, data files, and GRID_REPORT.md",
+      "minimum_version": "0.3.102",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "historical observed routing receipt",
+      "next": [
+        "auto-route-transcriptomics",
+        "air-quality"
+      ]
+    },
+    {
+      "id": "auto-route-transcriptomics",
+      "url": "auto-route-transcriptomics/README.md",
+      "family": "integration",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "tokn",
+        "python3",
+        "numpy",
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch analysis code, results, and report",
+      "minimum_version": "0.3.102",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "offline answer-key grader",
+      "next": [
+        "auto-route-grid",
+        "biomolecular-modeling"
+      ]
+    },
+    {
+      "id": "autodesign",
+      "url": "autodesign/README.md",
+      "family": "build-prove",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "tokn",
+        "python3",
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "copied landing page and .nospace experiment artifacts",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "local score and gate report",
+      "next": [
+        "change-tracking",
+        "agent-loop-essentials"
+      ]
+    },
+    {
+      "id": "ax-runner",
+      "url": "ax-runner/README.md",
+      "family": "integration",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "tokn",
+        "git",
+        "curl"
+      ],
+      "model": "none",
+      "remote_calls": "optional",
+      "writes": "scratch workspace and optional manifests or image",
+      "minimum_version": "0.3.68",
+      "last_verified": null,
+      "evidence_kind": "runner status and usage record",
+      "next": [
+        "agent-organization",
+        "agent-team"
+      ]
+    },
+    {
+      "id": "battery-passport",
+      "url": "battery-passport/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "tokn",
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch work/RESULT.md and .nospace state",
+      "minimum_version": "0.3.82",
+      "last_verified": null,
+      "evidence_kind": "external policy-clause review",
+      "next": [
+        "claims-reserving-review",
+        "air-quality"
+      ]
+    },
+    {
+      "id": "biomolecular-modeling",
+      "url": "biomolecular-modeling/README.md",
+      "family": "knowledge",
+      "level": "worked",
+      "tier": null,
+      "requires": [
+        "tokn"
+      ],
+      "model": "optional",
+      "remote_calls": "optional",
+      "writes": "none for catalog/preflight; optional adapter outputs",
+      "minimum_version": "0.3.69",
+      "last_verified": null,
+      "evidence_kind": "catalog and preflight output",
+      "next": [
+        "change-tracking",
+        "clintrial"
+      ]
+    },
+    {
+      "id": "change-tracking",
+      "url": "change-tracking/README.md",
+      "family": "measure-improve",
+      "level": "worked-guided-problem",
+      "tier": null,
+      "requires": [
+        "tokn",
+        "python3",
+        "pillow",
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch frame PNGs and tracking results",
+      "minimum_version": "0.3.105",
+      "last_verified": null,
+      "evidence_kind": "expected/observed receipt JSON and held-out counts",
+      "next": [
+        "climate-ensemble",
+        "autodesign"
+      ]
+    },
+    {
+      "id": "checkpoints",
+      "url": "checkpoints/README.md",
+      "family": "start",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "tokn",
+        "git",
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch repository and local checkpoint state",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "checkpoint continuation and session-list output",
+      "next": [
+        "agent-loop-essentials",
+        "agent-team"
+      ]
+    },
+    {
+      "id": "cited-local-knowledge",
+      "url": "cited-local-knowledge/README.md",
+      "family": "knowledge",
+      "level": "worked-guided-problem",
+      "tier": "community",
+      "requires": [],
+      "model": "none",
+      "remote_calls": "none",
+      "writes": "scratch knowledge config and local index",
+      "minimum_version": null,
+      "last_verified": "2026-11-22",
+      "evidence_kind": "local search citations",
+      "next": [
+        "knowledge-bundles",
+        "skillpack-preflight"
+      ]
+    },
+    {
+      "id": "claim-scrub",
+      "url": "claim-scrub/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "tokn",
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch work/RESULT.md and .nospace state",
+      "minimum_version": "0.3.83",
+      "last_verified": null,
+      "evidence_kind": "external blocked/referred disposition review",
+      "next": [
+        "claims-reserving-review",
+        "clintrial"
+      ]
+    },
+    {
+      "id": "claims-reserving-review",
+      "url": "claims-reserving-review/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "tokn",
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch work/RESULT.md and .nospace state",
+      "minimum_version": "0.3.83",
+      "last_verified": null,
+      "evidence_kind": "external policy-clause and human-disposition review",
+      "next": [
+        "always-on-claims-desks",
+        "claim-scrub"
+      ]
+    },
+    {
+      "id": "cli-session-lab",
+      "url": "cli-session-lab/README.md",
+      "family": "start",
+      "level": "worked-guided-problem",
+      "tier": "community",
+      "requires": [
+        "anthropic-key"
+      ],
+      "model": "optional",
+      "remote_calls": "optional",
+      "writes": "scratch copy and optional session state/logs",
+      "minimum_version": null,
+      "last_verified": "2026-11-22",
+      "evidence_kind": "agent-run and agent-repl help output",
+      "next": [
+        "first-ten-minutes",
+        "session-review"
+      ]
+    },
+    {
+      "id": "climate-ensemble",
+      "url": "climate-ensemble/README.md",
+      "family": "measure-improve",
+      "level": "worked-guided-problem",
+      "tier": "trial",
+      "requires": [
+        "tokn",
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch work/RESULT.md; grading key stays outside",
+      "minimum_version": "0.3.82",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "held-out expected JSON and external evidence grading",
+      "next": [
+        "air-quality",
+        "change-tracking"
+      ]
+    },
+    {
+      "id": "clinical-council",
+      "url": "clinical-council/README.md",
+      "family": "model-safety",
+      "level": "worked",
+      "tier": "trial",
+      "requires": [
+        "tokn",
+        "python3"
+      ],
+      "model": "optional",
+      "remote_calls": "optional",
+      "writes": "none for offline chair; optional illustration files",
+      "minimum_version": "0.3.57",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "offline fixture checker and chair convergence output",
+      "next": [
+        "clintrial",
+        "claims-reserving-review"
+      ]
+    },
+    {
+      "id": "clintrial",
+      "url": "clintrial/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "tokn",
+        "python3",
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch run output and local state",
+      "minimum_version": "0.3.57",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "synthetic input checker and provenance fixture",
+      "next": [
+        "clinical-council",
+        "claims-reserving-review"
+      ]
+    },
+    {
+      "id": "codebase-graph",
+      "url": "codebase-graph/README.md",
+      "family": "build-prove",
+      "level": "worked-guided-problem",
+      "tier": "community",
+      "requires": [
+        "git"
+      ],
+      "model": "none",
+      "remote_calls": "none",
+      "writes": "scratch graph and advisory plan",
+      "minimum_version": "0.3.57",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "graph output and migration plan",
+      "next": [
+        "coding-clis",
+        "decision-circuits"
+      ]
+    },
+    {
+      "id": "coding-clis",
+      "url": "coding-clis/README.md",
+      "family": "integration",
+      "level": "guided",
+      "tier": null,
+      "requires": [
+        "peer-cli",
+        "nodejs"
+      ],
+      "model": "optional",
+      "remote_calls": "optional",
+      "writes": "local run records and peer-controlled repo changes",
+      "minimum_version": "0.3.63",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "MCP tool listing and peer run record",
+      "next": [
+        "custom-hooks",
+        "domain-plugin"
+      ]
+    },
+    {
+      "id": "compbio-gates",
+      "url": "compbio-gates/README.md",
+      "family": "model-safety",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "provider-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "isolated work results; grading outside work",
+      "minimum_version": "0.3.57",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "grader disposition and synthetic evidence",
+      "next": [
+        "criticality-package",
+        "domain-relay"
+      ]
+    },
+    {
+      "id": "computer-use-models",
+      "url": "computer-use-models/README.md",
+      "family": "integration",
+      "level": "worked",
+      "tier": "community",
+      "requires": [
+        "azure-cli",
+        "azure-ml",
+        "azure-subscription",
+        "chrome"
+      ],
+      "model": "required",
+      "remote_calls": "provider+web",
+      "writes": "approved browser actions and user-owned Azure endpoints",
+      "minimum_version": "0.3.57",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "dry-run action and optional trajectory",
+      "next": [
+        "coding-clis",
+        "event-trigger"
+      ]
+    },
+    {
+      "id": "credit-underwriting",
+      "url": "credit-underwriting/README.md",
+      "family": "domain",
+      "level": "worked",
+      "tier": "trial",
+      "requires": [
+        "python3",
+        "provider-key"
+      ],
+      "model": "optional",
+      "remote_calls": "optional",
+      "writes": "scratch ratio results and optional training memo",
+      "minimum_version": "0.3.57",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "ratio checker and memo",
+      "next": [
+        "diligence-pack",
+        "decision-council"
+      ]
+    },
+    {
+      "id": "criticality-package",
+      "url": "criticality-package/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "provider-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "isolated work report; grading outside work",
+      "minimum_version": "0.3.82",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "grader disposition and evidence",
+      "next": [
+        "dft-candidate-screen",
+        "energy-board-pack"
+      ]
+    },
+    {
+      "id": "critique",
+      "url": "critique/README.md",
+      "family": "measure-improve",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "provider-key",
+        "python3"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch role reports and checker output",
+      "minimum_version": "0.3.57",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "role findings and checker result",
+      "next": [
+        "decision-council",
+        "evidence-earned-prompting"
+      ]
+    },
+    {
+      "id": "custom-hooks",
+      "url": "custom-hooks/README.md",
+      "family": "integration",
+      "level": "worked",
+      "tier": null,
+      "requires": [
+        "provider-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch repo and local hook audit log",
+      "minimum_version": "0.3.57",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "hook result and audit log",
+      "next": [
+        "domain-plugin",
+        "cybersec"
+      ]
+    },
+    {
+      "id": "cybersec",
+      "url": "cybersec/README.md",
+      "family": "model-safety",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "provider-key",
+        "python3"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch result report",
+      "minimum_version": "0.3.57",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "expected gate outcomes and checker",
+      "next": [
+        "custom-hooks",
+        "criticality-package"
+      ]
+    },
+    {
+      "id": "dataflow",
+      "url": "dataflow/README.md",
+      "family": "integration",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "provider-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch composition and local run logs",
+      "minimum_version": "0.3.57",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "node order and run log",
+      "next": [
+        "dynamic-workflows",
+        "custom-hooks"
+      ]
+    },
+    {
+      "id": "decision-circuits",
+      "url": "decision-circuits/README.md",
+      "family": "build-prove",
+      "level": "worked",
+      "tier": "community",
+      "requires": [
+        "python3"
+      ],
+      "model": "optional",
+      "remote_calls": "optional",
+      "writes": "generated module, tests, and local ledger",
+      "minimum_version": "0.3.68",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "vector test output and ledger",
+      "next": [
+        "decisions-api",
+        "decision-council"
+      ]
+    },
+    {
+      "id": "decision-council",
+      "url": "decision-council/README.md",
+      "family": "coordinate",
+      "level": "worked-guided-problem",
+      "tier": "community",
+      "requires": [
+        "python3",
+        "provider-key",
+        "decision-model-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "workspace vote and council outputs",
+      "minimum_version": "0.3.57",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "merged votes and crew plan",
+      "next": [
+        "delegation-and-signoff",
+        "critique"
+      ]
+    },
+    {
+      "id": "decisions-api",
+      "url": "decisions-api/README.md",
+      "family": "integration",
+      "level": "worked",
+      "tier": null,
+      "requires": [
+        "python3",
+        "openai-package",
+        "openai-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "typed response to stdout and local CLI logs",
+      "minimum_version": "0.3.59",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "typed JSON response",
+      "next": [
+        "decision-council",
+        "coding-clis"
+      ]
+    },
+    {
+      "id": "delegation-and-signoff",
+      "url": "delegation-and-signoff/README.md",
+      "family": "coordinate",
+      "level": "worked",
+      "tier": "community",
+      "requires": [
+        "git"
+      ],
+      "model": "none",
+      "remote_calls": "none",
+      "writes": "proof and sign-off record in scratch .nospace",
+      "minimum_version": "0.3.68",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "signed record and drift result",
+      "next": [
+        "decision-council",
+        "diligence-pack"
+      ]
+    },
+    {
+      "id": "dft-candidate-screen",
+      "url": "dft-candidate-screen/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "provider-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "isolated work results; grading outside work",
+      "minimum_version": "0.3.82",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "candidate status and grader result",
+      "next": [
+        "compbio-gates",
+        "criticality-package"
+      ]
+    },
+    {
+      "id": "diligence-pack",
+      "url": "diligence-pack/README.md",
+      "family": "knowledge",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "provider-key",
+        "python3"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch diligence outputs",
+      "minimum_version": "0.3.57",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "evidence checker exit code",
+      "next": [
+        "decision-council",
+        "codebase-graph"
+      ]
+    },
+    {
+      "id": "domain-plugin",
+      "url": "domain-plugin/README.md",
+      "family": "domain",
+      "level": "worked",
+      "tier": "community",
+      "requires": [
+        "python3"
+      ],
+      "model": "optional",
+      "remote_calls": "optional",
+      "writes": "plugin bundle and optional user discovery-root install",
+      "minimum_version": "0.3.57",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "validate, list, and checker output",
+      "next": [
+        "custom-hooks",
+        "compbio-gates"
+      ]
+    },
+    {
+      "id": "domain-relay",
+      "url": "domain-relay/README.md",
+      "family": "measure-improve",
+      "level": "worked-guided-problem",
+      "tier": "trial",
+      "requires": [
+        "python3",
+        "azure-cli",
+        "provider-key",
+        "gateway-keys",
+        "decision-model-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "explicit --out directory",
+      "minimum_version": null,
+      "last_verified": "2026-11-22",
+      "evidence_kind": "evaluation.json and run receipt",
+      "next": [
+        "critique",
+        "energy-board-pack"
+      ]
+    },
+    {
+      "id": "dynamic-workflows",
+      "url": "dynamic-workflows/README.md",
+      "family": "coordinate",
+      "level": "worked-guided-problem",
+      "tier": "community",
+      "requires": [
+        "provider-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": ".tokn workflow state and .nospace saved workflows",
+      "minimum_version": "0.3.67",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "workflow node trace",
+      "next": [
+        "dataflow",
+        "event-trigger"
+      ]
+    },
+    {
+      "id": "energy-board-pack",
+      "url": "energy-board-pack/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "provider-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "isolated board packet; grading outside work",
+      "minimum_version": "0.3.82",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "board disposition and evidence check",
+      "next": [
+        "criticality-package",
+        "domain-relay"
+      ]
+    },
+    {
+      "id": "event-trigger",
+      "url": "event-trigger/README.md",
+      "family": "integration",
+      "level": "worked",
+      "tier": null,
+      "requires": [
+        "azure-cli",
+        "azure-service-bus"
+      ],
+      "model": "optional",
+      "remote_calls": "optional",
+      "writes": "local queue files or messages to user-owned broker",
+      "minimum_version": "0.3.57",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "queue dispatch and dead-letter counts",
+      "next": [
+        "dynamic-workflows",
+        "custom-hooks"
+      ]
+    },
+    {
+      "id": "evidence-earned-prompting",
+      "url": "evidence-earned-prompting/README.md",
+      "family": "measure-improve",
+      "level": "worked-guided-problem",
+      "tier": "community",
+      "requires": [
+        "provider-key",
+        "python3"
+      ],
+      "model": "optional",
+      "remote_calls": "optional",
+      "writes": "per-run scratch directory and episode log",
+      "minimum_version": null,
+      "last_verified": "2026-11-22",
+      "evidence_kind": "episode log and verifier result",
+      "next": [
+        "decision-circuits",
+        "critique"
+      ]
+    },
+    {
+      "id": "expedited-case-triage",
+      "url": "expedited-case-triage/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "provider-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "isolated case reports; grading outside work",
+      "minimum_version": "0.3.83",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "case grader disposition",
+      "next": [
+        "compbio-gates",
+        "domain-relay"
+      ]
+    },
+    {
+      "id": "factory-evidence-tour",
+      "url": "factory-evidence-tour/README.md",
+      "family": "build-prove",
+      "level": "worked-guided-problem",
+      "tier": "community",
+      "requires": [
+        "git",
+        "python3"
+      ],
+      "model": "none",
+      "remote_calls": "none",
+      "writes": "scratch demo repository and store",
+      "minimum_version": null,
+      "last_verified": "2026-11-22",
+      "evidence_kind": "Factory verify JSON receipt",
+      "next": [
+        "rnaseq-software-factory",
+        "migration-parity"
+      ]
+    },
+    {
+      "id": "federation",
+      "url": "federation/README.md",
+      "family": "coordinate",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "git",
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "worker worktrees and report; optional staged patch",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "dry-run wave plan and staged diff",
+      "next": [
+        "flows",
+        "loop-engineering"
+      ]
+    },
+    {
+      "id": "figure-extraction",
+      "url": "figure-extraction/README.md",
+      "family": "measure-improve",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "python3",
+        "matplotlib",
+        "numpy",
+        "chrome",
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "fsc.png and out/ artifacts",
+      "minimum_version": "0.3.105",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "chart crossing and pipeline structure checker",
+      "next": [
+        "figure-honesty",
+        "geospatial"
+      ]
+    },
+    {
+      "id": "figure-honesty",
+      "url": "figure-honesty/README.md",
+      "family": "model-safety",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "python3",
+        "numpy",
+        "matplotlib",
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "goal scope and figure/run artifacts",
+      "minimum_version": null,
+      "last_verified": null,
+      "evidence_kind": "figure gate verdict and measured FSC crossing",
+      "next": [
+        "figure-extraction",
+        "local-llamacpp"
+      ]
+    },
+    {
+      "id": "finrisk-system-one",
+      "url": "finrisk-system-one/README.md",
+      "family": "integration",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "python3",
+        "anthropic-key",
+        "decision-model-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "workspace run state and events.ndjson",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "check.py trace verdict",
+      "next": [
+        "judgments",
+        "lead-advancement"
+      ]
+    },
+    {
+      "id": "first-ten-minutes",
+      "url": "first-ten-minutes/README.md",
+      "family": "start",
+      "level": "worked",
+      "tier": "community",
+      "requires": [],
+      "model": "optional",
+      "remote_calls": "optional",
+      "writes": "scratch notes and session artifacts",
+      "minimum_version": "0.3.116",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "local Community preview output",
+      "next": [
+        "judgments",
+        "full-stack-app"
+      ]
+    },
+    {
+      "id": "flows",
+      "url": "flows/README.md",
+      "family": "coordinate",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "workflow state and results",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "workflow result and held-out criterion",
+      "next": [
+        "federation",
+        "loop-engineering"
+      ]
+    },
+    {
+      "id": "full-stack-app",
+      "url": "full-stack-app/README.md",
+      "family": "build-prove",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "python3",
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "generated TaskFlow tree in scratch directory",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "check_taskflow.py offline result",
+      "next": [
+        "hands-off-run",
+        "loop-engineering"
+      ]
+    },
+    {
+      "id": "gemini-api",
+      "url": "gemini-api/README.md",
+      "family": "integration",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "go",
+        "gemini-api-cli",
+        "gemini-api-key",
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "generated media under .nospace/gemini-api",
+      "minimum_version": "0.3.66",
+      "last_verified": null,
+      "evidence_kind": "CLI dry-run and tool output",
+      "next": [
+        "first-ten-minutes",
+        "local-llamacpp"
+      ]
+    },
+    {
+      "id": "geospatial",
+      "url": "geospatial/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "python3",
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "run-output.txt and local run state",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "check_output.py marker report",
+      "next": [
+        "grounded-decisions",
+        "figure-extraction"
+      ]
+    },
+    {
+      "id": "ghg-inventory-check",
+      "url": "ghg-inventory-check/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "RESULT.md and result.json",
+      "minimum_version": "0.3.83",
+      "last_verified": null,
+      "evidence_kind": "domain tool results and external rubric",
+      "next": [
+        "green-project-screen",
+        "lead-advancement"
+      ]
+    },
+    {
+      "id": "green-project-screen",
+      "url": "green-project-screen/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "RESULT.md and result.json",
+      "minimum_version": "0.3.82",
+      "last_verified": null,
+      "evidence_kind": "tool results and human funding review",
+      "next": [
+        "ghg-inventory-check",
+        "grid-screening"
+      ]
+    },
+    {
+      "id": "grid-screening",
+      "url": "grid-screening/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "git",
+        "anthropic-key",
+        "decision-model-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": ".nospace candidate results; optional harness adoption",
+      "minimum_version": "0.3.56",
+      "last_verified": null,
+      "evidence_kind": "evolve result and judge scores",
+      "next": [
+        "grid-surrogate-trust",
+        "interconnection-screen"
+      ]
+    },
+    {
+      "id": "grid-surrogate-trust",
+      "url": "grid-surrogate-trust/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "RESULT.md and result.json in work directory",
+      "minimum_version": "0.3.82",
+      "last_verified": null,
+      "evidence_kind": "verifier tool results and human rubric",
+      "next": [
+        "grid-screening",
+        "interconnection-screen"
+      ]
+    },
+    {
+      "id": "grounded-decisions",
+      "url": "grounded-decisions/README.md",
+      "family": "knowledge",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "decision-model-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider+web",
+      "writes": "evidence snapshots and replay outputs",
+      "minimum_version": "0.3.79",
+      "last_verified": null,
+      "evidence_kind": "snapshot hash and offline circuit vectors",
+      "next": [
+        "knowledge-bundles",
+        "judgments"
+      ]
+    },
+    {
+      "id": "hands-off-run",
+      "url": "hands-off-run/README.md",
+      "family": "build-prove",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "python3",
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch code, tests, and run-result.json",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "unit tests and check_finish.py",
+      "next": [
+        "full-stack-app",
+        "loop-engineering"
+      ]
+    },
+    {
+      "id": "insurance-loss-inspection",
+      "url": "insurance-loss-inspection/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "local-model",
+        "llama.cpp",
+        "curl",
+        "python3"
+      ],
+      "model": "required",
+      "remote_calls": "optional",
+      "writes": "local reports, logs, and worklist",
+      "minimum_version": "0.3.96",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "check.py and PowerShell schema verdicts",
+      "next": [
+        "local-llamacpp",
+        "figure-honesty"
+      ]
+    },
+    {
+      "id": "interconnection-screen",
+      "url": "interconnection-screen/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "RESULT.md and result.json in work directory",
+      "minimum_version": "0.3.82",
+      "last_verified": null,
+      "evidence_kind": "domain gate tool results and human rubric",
+      "next": [
+        "grid-screening",
+        "grid-surrogate-trust"
+      ]
+    },
+    {
+      "id": "judgments",
+      "url": "judgments/README.md",
+      "family": "start",
+      "level": "worked",
+      "tier": "community",
+      "requires": [],
+      "model": "none",
+      "remote_calls": "optional",
+      "writes": "bundle.json and optional absolute audit file",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "applied=false output and CLI exit codes",
+      "next": [
+        "knowledge-bundles",
+        "first-ten-minutes"
+      ]
+    },
+    {
+      "id": "knowledge-bundles",
+      "url": "knowledge-bundles/README.md",
+      "family": "knowledge",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "python3"
+      ],
+      "model": "optional",
+      "remote_calls": "optional",
+      "writes": "local RDF dataset and exported bundles",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "check_bundle.py structural result",
+      "next": [
+        "grounded-decisions",
+        "judgments"
+      ]
+    },
+    {
+      "id": "lead-advancement",
+      "url": "lead-advancement/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "RESULT.md and result.json in work directory",
+      "minimum_version": "0.3.82",
+      "last_verified": null,
+      "evidence_kind": "check_advancement_gate results",
+      "next": [
+        "finrisk-system-one",
+        "legal-analysis"
+      ]
+    },
+    {
+      "id": "legal-analysis",
+      "url": "legal-analysis/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "python3",
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "run output and memo in scratch directory",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "check_output.py marker report",
+      "next": [
+        "lead-advancement",
+        "grounded-decisions"
+      ]
+    },
+    {
+      "id": "local-llamacpp",
+      "url": "local-llamacpp/README.md",
+      "family": "model-safety",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "local-model",
+        "llama.cpp",
+        "curl"
+      ],
+      "model": "required",
+      "remote_calls": "optional",
+      "writes": "workspace/reorder.md and local run state",
+      "minimum_version": null,
+      "last_verified": "2026-11-22",
+      "evidence_kind": "check.py item comparison",
+      "next": [
+        "figure-honesty",
+        "gemini-api"
+      ]
+    },
+    {
+      "id": "loop-engineering",
+      "url": "loop-engineering/README.md",
+      "family": "measure-improve",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "python3",
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "shortlist.csv and loop state",
+      "minimum_version": "0.3.57",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "check_shortlist.py exit code",
+      "next": [
+        "full-stack-app",
+        "hands-off-run"
+      ]
+    },
+    {
+      "id": "loop-graph",
+      "url": "loop-graph/README.md",
+      "family": "measure-improve",
+      "level": "worked",
+      "tier": "community",
+      "requires": [
+        "tokn",
+        "python"
+      ],
+      "model": "none",
+      "remote_calls": "none",
+      "writes": "scratch copy of the folder",
+      "minimum_version": "0.3.57",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "observed reference receipts + crosscheck",
+      "next": [
+        "quality-flywheel",
+        "loops-and-ship-ready"
+      ]
+    },
+    {
+      "id": "loops-and-ship-ready",
+      "url": "loops-and-ship-ready/README.md",
+      "family": "build-prove",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "tokn",
+        "git",
+        "python",
+        "model-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "fixture repo in a scratch folder",
+      "minimum_version": "0.3.60",
+      "last_verified": null,
+      "evidence_kind": "ship-ready verdict + unittest output",
+      "next": [
+        "loop-graph",
+        "replay-worlds"
+      ]
+    },
+    {
+      "id": "mcp-server",
+      "url": "mcp-server/README.md",
+      "family": "integration",
+      "level": "worked",
+      "tier": "community",
+      "requires": [
+        "tokn",
+        "python"
+      ],
+      "model": "none",
+      "remote_calls": "none",
+      "writes": "nothing (stdio/loopback client)",
+      "minimum_version": "0.3.57",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "observed client transcript",
+      "next": [
+        "rnaseq-mcp-server",
+        "openshell"
+      ]
+    },
+    {
+      "id": "meeting-to-poc",
+      "url": "meeting-to-poc/README.md",
+      "family": "build-prove",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "tokn",
+        "python",
+        "go",
+        "model-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "work/ plan and poc scaffold",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "check_poc.py structural checker",
+      "next": [
+        "rnaseq-goal-engineering",
+        "peer-collab"
+      ]
+    },
+    {
+      "id": "memory",
+      "url": "memory/README.md",
+      "family": "knowledge",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "tokn",
+        "git",
+        "model-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "throwaway TOKN_HOME profile + scratch repo",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "recall in a fresh session",
+      "next": [
+        "peer-collab",
+        "quality-flywheel"
+      ]
+    },
+    {
+      "id": "migration-parity",
+      "url": "migration-parity/README.md",
+      "family": "build-prove",
+      "level": "worked-guided-problem",
+      "tier": "community",
+      "requires": [
+        "python3"
+      ],
+      "model": "none",
+      "remote_calls": "none",
+      "writes": "scratch fixtures and ratchet ledger",
+      "minimum_version": null,
+      "last_verified": "2026-11-22",
+      "evidence_kind": "oracle mismatches, matches, and ratchet ledger",
+      "next": [
+        "factory-evidence-tour",
+        "verified-completion"
+      ]
+    },
+    {
+      "id": "mission-compliance",
+      "url": "mission-compliance/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "tokn",
+        "python",
+        "model-key",
+        "trial"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "work/ staging folder",
+      "minimum_version": "0.3.82",
+      "last_verified": null,
+      "evidence_kind": "checker exit code on agent output",
+      "next": [
+        "neuro-recording-qc",
+        "ppap-capability-release"
+      ]
+    },
+    {
+      "id": "neuro-recording-qc",
+      "url": "neuro-recording-qc/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "tokn",
+        "python",
+        "model-key",
+        "trial"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "work/ staging folder",
+      "minimum_version": "0.3.82",
+      "last_verified": null,
+      "evidence_kind": "checker exit code on agent output",
+      "next": [
+        "rnaseq-qc",
+        "mission-compliance"
+      ]
+    },
+    {
+      "id": "oncology-governance",
+      "url": "oncology-governance/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "tokn",
+        "python",
+        "model-key",
+        "trial"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "work/ staging folder",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "gate events in session logs + scenario checker",
+      "next": [
+        "precmed-variant",
+        "pharma-phase3"
+      ]
+    },
+    {
+      "id": "ontology-from-tables",
+      "url": "ontology-from-tables/README.md",
+      "family": "knowledge",
+      "level": "worked",
+      "tier": "community",
+      "requires": [
+        "tokn",
+        "python",
+        "docker-optional"
+      ],
+      "model": "optional",
+      "remote_calls": "optional",
+      "writes": "out/ ontology artifacts",
+      "minimum_version": "0.3.77",
+      "last_verified": null,
+      "evidence_kind": "ontology report + review queue",
+      "next": [
+        "postgresql-auto-ontology",
+        "ontology-sparql"
+      ]
+    },
+    {
+      "id": "ontology-sparql",
+      "url": "ontology-sparql/README.md",
+      "family": "knowledge",
+      "level": "worked-guided-problem",
+      "tier": "community",
+      "requires": [
+        "tokn",
+        "python",
+        "model-key-optional"
+      ],
+      "model": "optional",
+      "remote_calls": "optional",
+      "writes": "work/ and result.json",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "expected_answers checker incl. --answer grading",
+      "next": [
+        "ontology-from-tables",
+        "postgresql-auto-ontology"
+      ]
+    },
+    {
+      "id": "openshell",
+      "url": "openshell/README.md",
+      "family": "integration",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "tokn",
+        "openshell",
+        "docker",
+        "model-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "generated .tokn-openshell/ artifacts + sandbox",
+      "minimum_version": "0.3.58",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "dry-run plan (live sandbox not verified)",
+      "next": [
+        "mcp-server",
+        "peer-collab"
+      ]
+    },
+    {
+      "id": "peer-collab",
+      "url": "peer-collab/README.md",
+      "family": "coordinate",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "tokn",
+        "model-key-optional"
+      ],
+      "model": "optional",
+      "remote_calls": "optional",
+      "writes": "local exchange/ folder",
+      "minimum_version": "0.3.57",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "peer send dry-run JSON + trust-graded notes",
+      "next": [
+        "memory",
+        "physai-fleet"
+      ]
+    },
+    {
+      "id": "pharma-phase3",
+      "url": "pharma-phase3/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "tokn",
+        "python",
+        "model-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "work/ analysis package",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "package checker + named human sign-off",
+      "next": [
+        "oncology-governance",
+        "precmed-variant"
+      ]
+    },
+    {
+      "id": "physai-fleet",
+      "url": "physai-fleet/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "tokn",
+        "python",
+        "model-key",
+        "trial"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch folder with safety/ module",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "compileall + unittest on generated code",
+      "next": [
+        "peer-collab",
+        "quantum-experiment"
+      ]
+    },
+    {
+      "id": "postgresql-auto-ontology",
+      "url": "postgresql-auto-ontology/README.md",
+      "family": "knowledge",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "tokn",
+        "python",
+        "postgresql",
+        "docker-optional",
+        "model-key-optional"
+      ],
+      "model": "optional",
+      "remote_calls": "optional",
+      "writes": "out/ and csv-demo/ artifacts",
+      "minimum_version": "0.3.101",
+      "last_verified": null,
+      "evidence_kind": "ontology report + explicit certification",
+      "next": [
+        "ontology-from-tables",
+        "ontology-sparql"
+      ]
+    },
+    {
+      "id": "ppap-capability-release",
+      "url": "ppap-capability-release/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "tokn",
+        "python",
+        "model-key",
+        "trial"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "work/ staging folder",
+      "minimum_version": "0.3.83",
+      "last_verified": null,
+      "evidence_kind": "checker exit code on agent output",
+      "next": [
+        "mission-compliance",
+        "pharma-phase3"
+      ]
+    },
+    {
+      "id": "precmed-variant",
+      "url": "precmed-variant/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "tokn",
+        "python",
+        "model-key",
+        "trial"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "work/ and result.json in a home scratch folder",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "check_gates.py on plan-mode result",
+      "next": [
+        "oncology-governance",
+        "rnaseq-qc"
+      ]
+    },
+    {
+      "id": "quality-flywheel",
+      "url": "quality-flywheel/README.md",
+      "family": "measure-improve",
+      "level": "worked-guided-problem",
+      "tier": "community",
+      "requires": [
+        "tokn",
+        "model-key-optional"
+      ],
+      "model": "optional",
+      "remote_calls": "optional",
+      "writes": "demo-cycles/ and scratch/",
+      "minimum_version": "0.3.57",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "flywheel cycle reports (demo 1/4 -> 4/4)",
+      "next": [
+        "loop-graph",
+        "replay-worlds"
+      ]
+    },
+    {
+      "id": "quantum-experiment",
+      "url": "quantum-experiment/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "tokn",
+        "python",
+        "model-key",
+        "trial"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "work/ and result.json",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "check_plan.py vs plan-mode result",
+      "next": [
+        "precmed-variant",
+        "physai-fleet"
+      ]
+    },
+    {
+      "id": "replay-worlds",
+      "url": "replay-worlds/README.md",
+      "family": "measure-improve",
+      "level": "worked",
+      "tier": "community",
+      "requires": [
+        "tokn",
+        "model-key-optional"
+      ],
+      "model": "optional",
+      "remote_calls": "optional",
+      "writes": "worlds/ and axis-check/ in a scratch copy",
+      "minimum_version": "0.3.68",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "offline replay/rank output",
+      "next": [
+        "quality-flywheel",
+        "loop-graph"
+      ]
+    },
+    {
+      "id": "rnaseq-goal-engineering",
+      "url": "rnaseq-goal-engineering/README.md",
+      "family": "build-prove",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "tokn",
+        "python",
+        "model-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "work/ solution folders",
+      "minimum_version": null,
+      "last_verified": null,
+      "evidence_kind": "grader script on agent output",
+      "next": [
+        "rnaseq-qc",
+        "rnaseq-mcp-server"
+      ]
+    },
+    {
+      "id": "rnaseq-mcp-server",
+      "url": "rnaseq-mcp-server/README.md",
+      "family": "integration",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "tokn",
+        "python",
+        "model-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "new work dir chosen by the user",
+      "minimum_version": null,
+      "last_verified": null,
+      "evidence_kind": "check.py + historical live run",
+      "next": [
+        "mcp-server",
+        "rnaseq-qc"
+      ]
+    },
+    {
+      "id": "rnaseq-qc",
+      "url": "rnaseq-qc/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "tokn",
+        "python",
+        "model-key",
+        "trial"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "work/ staging folder",
+      "minimum_version": "0.3.82",
+      "last_verified": null,
+      "evidence_kind": "checker exit code on agent output",
+      "next": [
+        "rnaseq-goal-engineering",
+        "neuro-recording-qc"
+      ]
+    },
+    {
+      "id": "rnaseq-software-factory",
+      "url": "rnaseq-software-factory/README.md",
+      "family": "build-prove",
+      "level": "guided",
+      "tier": null,
+      "requires": [
+        "python3",
+        "git",
+        "anthropic-key",
+        "openai-key",
+        "decision-model-key",
+        "local-model"
+      ],
+      "model": "optional",
+      "remote_calls": "optional",
+      "writes": "user-owned RUN_DIR outside checkout",
+      "minimum_version": "0.3.115",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "offline grader and spec-validation JSON",
+      "next": [
+        "single-agent-loop",
+        "tabular-prediction"
+      ]
+    },
+    {
+      "id": "robotics-twin",
+      "url": "robotics-twin/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "anthropic-key",
+        "license-trial"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch workspace results and .nospace state",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "synthetic gate dispositions",
+      "next": [
+        "physai-fleet",
+        "semicon-signoff"
+      ]
+    },
+    {
+      "id": "science-review",
+      "url": "science-review/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "python3",
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch events.ndjson and .nospace state",
+      "minimum_version": "0.3.57",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "check.py structured-event verdict",
+      "next": [
+        "structural-biology",
+        "wgs-report-readiness"
+      ]
+    },
+    {
+      "id": "sdk-generation",
+      "url": "sdk-generation/README.md",
+      "family": "build-prove",
+      "level": "worked",
+      "tier": "community",
+      "requires": [
+        "python3",
+        "nodejs",
+        "npm",
+        "typescript"
+      ],
+      "model": "none",
+      "remote_calls": "optional",
+      "writes": "scratch generated SDK and optional build outputs",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "IR hash and compile report",
+      "next": [
+        "solution-graphs",
+        "t3code"
+      ]
+    },
+    {
+      "id": "self-improvement",
+      "url": "self-improvement/README.md",
+      "family": "measure-improve",
+      "level": "problem-only",
+      "tier": "community",
+      "requires": [
+        "git",
+        "anthropic-key",
+        "evaluator"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch bundle, run history, and exported diff",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "held-out evaluator metrics",
+      "next": [
+        "single-agent-loop",
+        "verified-completion"
+      ]
+    },
+    {
+      "id": "semicon-signoff",
+      "url": "semicon-signoff/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "anthropic-key",
+        "license-trial"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch RESULT.md and .nospace state; grader external",
+      "minimum_version": "0.3.82",
+      "last_verified": null,
+      "evidence_kind": "tool-result dispositions",
+      "next": [
+        "tool-contract",
+        "shipment-release-review"
+      ]
+    },
+    {
+      "id": "session-drift-lab",
+      "url": "session-drift-lab/README.md",
+      "family": "measure-improve",
+      "level": "worked-guided-problem",
+      "tier": "community",
+      "requires": [],
+      "model": "none",
+      "remote_calls": "none",
+      "writes": "scratch cycle reports",
+      "minimum_version": null,
+      "last_verified": "2026-11-22",
+      "evidence_kind": "offline flywheel demo plan",
+      "next": [
+        "quality-flywheel",
+        "verified-completion"
+      ]
+    },
+    {
+      "id": "session-review",
+      "url": "session-review/README.md",
+      "family": "model-safety",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "python3",
+        "git",
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch git fixture, edits, and session state",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "review checklist and diff",
+      "next": [
+        "verified-completion",
+        "single-agent-loop"
+      ]
+    },
+    {
+      "id": "shipment-release-review",
+      "url": "shipment-release-review/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "anthropic-key",
+        "license-trial"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch RESULT.md and .nospace state; grader external",
+      "minimum_version": "0.3.83",
+      "last_verified": null,
+      "evidence_kind": "synthetic dispositions and citations",
+      "next": [
+        "semicon-signoff",
+        "well-work-orders"
+      ]
+    },
+    {
+      "id": "single-agent-loop",
+      "url": "single-agent-loop/README.md",
+      "family": "measure-improve",
+      "level": "worked",
+      "tier": "community",
+      "requires": [],
+      "model": "optional",
+      "remote_calls": "optional",
+      "writes": "scratch demo export and reports",
+      "minimum_version": "0.3.67",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "synthetic traces and paired eval rows",
+      "next": [
+        "self-improvement",
+        "verified-completion"
+      ]
+    },
+    {
+      "id": "skill-compose",
+      "url": "skill-compose/README.md",
+      "family": "coordinate",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch repo, skill files, logs, and results",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "composition log and result JSON",
+      "next": [
+        "workflow-discovery",
+        "single-agent-loop"
+      ]
+    },
+    {
+      "id": "skillpack-preflight",
+      "url": "skillpack-preflight/README.md",
+      "family": "integration",
+      "level": "worked-guided-problem",
+      "tier": "community",
+      "requires": [],
+      "model": "none",
+      "remote_calls": "optional",
+      "writes": "scratch prompt override",
+      "minimum_version": null,
+      "last_verified": "2026-11-22",
+      "evidence_kind": "license, pack status, and prompt audit output",
+      "next": [
+        "skill-compose",
+        "domain-plugin"
+      ]
+    },
+    {
+      "id": "solution-graphs",
+      "url": "solution-graphs/README.md",
+      "family": "build-prove",
+      "level": "worked",
+      "tier": "community",
+      "requires": [
+        "python3"
+      ],
+      "model": "optional",
+      "remote_calls": "optional",
+      "writes": "chosen scratch root with generated app and results",
+      "minimum_version": "0.3.68",
+      "last_verified": null,
+      "evidence_kind": "plan validation and measured checks",
+      "next": [
+        "tabular-prediction",
+        "sdk-generation"
+      ]
+    },
+    {
+      "id": "structural-biology",
+      "url": "structural-biology/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "python3",
+        "anthropic-key",
+        "license-trial"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch results and .nospace state",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "FSC checker and gate events",
+      "next": [
+        "science-review",
+        "wgs-report-readiness"
+      ]
+    },
+    {
+      "id": "t3code",
+      "url": "t3code/README.md",
+      "family": "integration",
+      "level": "guided",
+      "tier": null,
+      "requires": [
+        "t3-code",
+        "local-model"
+      ],
+      "model": "required",
+      "remote_calls": "optional",
+      "writes": "workspace edits and ACP transcripts in user profile",
+      "minimum_version": "0.3.62",
+      "last_verified": null,
+      "evidence_kind": "ACP session probe",
+      "next": [
+        "web-agent",
+        "skill-compose"
+      ]
+    },
+    {
+      "id": "tabular-prediction",
+      "url": "tabular-prediction/README.md",
+      "family": "build-prove",
+      "level": "worked",
+      "tier": "community",
+      "requires": [
+        "python3"
+      ],
+      "model": "none",
+      "remote_calls": "optional",
+      "writes": "scratch root and optional generated scaffold",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "typed predictions and evaluation JSON",
+      "next": [
+        "solution-graphs",
+        "single-agent-loop"
+      ]
+    },
+    {
+      "id": "toknish",
+      "url": "toknish/README.md",
+      "family": "coordinate",
+      "level": "guided",
+      "tier": null,
+      "requires": [
+        "git",
+        "local-model",
+        "openai-key",
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "optional",
+      "writes": "unique scratch exchange, run records, and reports",
+      "minimum_version": "0.3.90",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "audit JSON and benchmark report",
+      "next": [
+        "single-agent-loop",
+        "tool-contract"
+      ]
+    },
+    {
+      "id": "tool-contract",
+      "url": "tool-contract/README.md",
+      "family": "model-safety",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "git",
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch repo and logs; stats file in home",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "tool-contract telemetry and JSON result",
+      "next": [
+        "skill-compose",
+        "verified-completion"
+      ]
+    },
+    {
+      "id": "verified-completion",
+      "url": "verified-completion/README.md",
+      "family": "measure-improve",
+      "level": "guided",
+      "tier": null,
+      "requires": [
+        "python3",
+        "go",
+        "git",
+        "anthropic-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "marked disposable workspaces under system temp",
+      "minimum_version": "0.3.112",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "grader JSON and go test results",
+      "next": [
+        "session-review",
+        "single-agent-loop"
+      ]
+    },
+    {
+      "id": "visual-perception-loop",
+      "url": "visual-perception-loop/README.md",
+      "family": "build-prove",
+      "level": "worked",
+      "tier": null,
+      "requires": [
+        "chrome",
+        "anthropic-key"
+      ],
+      "model": "optional",
+      "remote_calls": "optional",
+      "writes": "scratch PNGs and generated HTML",
+      "minimum_version": "0.3.105",
+      "last_verified": null,
+      "evidence_kind": "vision diff and held-out DOM check",
+      "next": [
+        "webwright",
+        "web-agent"
+      ]
+    },
+    {
+      "id": "web-agent",
+      "url": "web-agent/README.md",
+      "family": "integration",
+      "level": "guided",
+      "tier": "community",
+      "requires": [
+        "python3",
+        "playwright",
+        "chromium",
+        "provider-key"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch agent state and output",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "heading and link response",
+      "next": [
+        "webwright",
+        "t3code"
+      ]
+    },
+    {
+      "id": "webwright",
+      "url": "webwright/README.md",
+      "family": "integration",
+      "level": "guided",
+      "tier": null,
+      "requires": [
+        "python3",
+        "playwright",
+        "chromium",
+        "openai-key"
+      ],
+      "model": "optional",
+      "remote_calls": "optional",
+      "writes": "scratch result, screenshot, and agent state",
+      "minimum_version": "0.3.57",
+      "last_verified": "2026-11-22",
+      "evidence_kind": "result JSON and screenshot",
+      "next": [
+        "web-agent",
+        "visual-perception-loop"
+      ]
+    },
+    {
+      "id": "well-work-orders",
+      "url": "well-work-orders/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "anthropic-key",
+        "license-trial"
+      ],
+      "model": "required",
+      "remote_calls": "provider",
+      "writes": "scratch RESULT.md and .nospace state; grader external",
+      "minimum_version": "0.3.82",
+      "last_verified": null,
+      "evidence_kind": "tool evidence and simulated disposition",
+      "next": [
+        "shipment-release-review",
+        "wgs-report-readiness"
+      ]
+    },
+    {
+      "id": "wgs-report-readiness",
+      "url": "wgs-report-readiness/README.md",
+      "family": "domain",
+      "level": "guided",
+      "tier": "trial",
+      "requires": [
+        "anthropic-key",
+        "license-trial"
+      ],
+      "model": "required",
+      "remote_calls": "provider+web",
+      "writes": "scratch RESULT.md and .nospace state; grader external",
+      "minimum_version": "0.3.82",
+      "last_verified": null,
+      "evidence_kind": "readiness status with consent and QC evidence",
+      "next": [
+        "science-review",
+        "structural-biology"
+      ]
+    },
+    {
+      "id": "workflow-discovery",
+      "url": "workflow-discovery/README.md",
+      "family": "knowledge",
+      "level": "worked",
+      "tier": null,
+      "requires": [
+        "python3"
+      ],
+      "model": "none",
+      "remote_calls": "none",
+      "writes": "scratch skeleton.json and graph edits",
+      "minimum_version": "0.3.57",
+      "last_verified": null,
+      "evidence_kind": "structural checker output",
+      "next": [
+        "skill-compose",
+        "single-agent-loop"
+      ]
+    }
+  ]
+}

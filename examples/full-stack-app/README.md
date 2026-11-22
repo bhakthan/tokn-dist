@@ -48,15 +48,15 @@ Use the same placeholders as [grid-screening](../grid-screening/README.md#2-conf
 Replace them with your own values.
 
 ```bash
-export NOSPACE_MODEL_PROVIDER=anthropic
-export NOSPACE_MODEL_NAME=<your model name>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_PROVIDER='anthropic'
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+# Load the provider secret from a trusted secret store/session.
 ```
 
 ```powershell
 $env:NOSPACE_MODEL_PROVIDER = "anthropic"
-$env:NOSPACE_MODEL_NAME = "<your model name>"
-$env:ANTHROPIC_API_KEY = "<your key>"
+$env:NOSPACE_MODEL_NAME = "YOUR_MODEL_ID"
+# Load ANTHROPIC_API_KEY from a trusted secret store/session.
 ```
 
 For other providers, see [../../SETUP.md](../../SETUP.md).
@@ -67,15 +67,17 @@ The agent writes into the current folder, so use a scratch copy. Run it with
 `--mode rw`. This mode is the one that allows file writes.
 
 ```bash
-tokn agent-run --mode rw --repo-root . --prompt-file prompt.md --max-steps 60 --no-confirm
+tokn agent-run --mode rw --repo-root . --prompt-file prompt.md --max-steps 60
 ```
 
 ```powershell
-tokn agent-run --mode rw --repo-root . --prompt-file prompt.md --max-steps 60 --no-confirm
+tokn agent-run --mode rw --repo-root . --prompt-file prompt.md --max-steps 60
 ```
 
-`--no-confirm` approves tool calls without prompting, so use it only in a scratch
-copy. If the run stops early, raise `--max-steps`.
+The run uses interactive approvals for file writes and other mutating actions.
+Review each request. If the run stops early, raise `--max-steps`. For repeated
+delivery work, see the [RNA-seq software factory example](../rnaseq-software-factory/README.md);
+it is not required here.
 
 ## 4. Check the output offline
 

@@ -39,14 +39,11 @@ match the 0.143 crossing.
 
 ```powershell
 cd examples\figure-honesty
-copy .env.example .env
-# edit .env: set ANTHROPIC_API_KEY (and ANTHROPIC_BASE_URL if you use a gateway)
 ```
 
-`TOKN_VISION_PROVIDER` and `TOKN_VISION_MODEL` choose the model that checks figures.
-The defaults in `.env.example` are `anthropic` and `claude-haiku-5-5`. Make these
-values available to TOKN in your shell before running it, for example by setting
-them as environment variables. Never commit `.env`.
+`.env.example` is reference-only. Load the API key from a trusted secret store
+and set `TOKN_VISION_PROVIDER` and `TOKN_VISION_MODEL` in your shell. Never
+source a repository `.env` or commit one.
 
 The agent model is the one in your normal TOKN config, or the one you pass with
 `--model-provider` and `--model-name`.
@@ -164,10 +161,16 @@ tokn vision doctor
 
 `tokn vision doctor` shows which vision provider and model are configured.
 
-## Example run
+## Recorded maintainer run (observed)
 
-These numbers are from one maintainer run of this scenario. The model was Claude
-Haiku 5.5, and your wording and values may differ slightly.
+These results are from one recorded maintainer run of this synthetic scenario
+with Claude Haiku 5.5. They are not a guarantee of another run.
+
+| Check | Observed result |
+|---|---|
+| Initial incorrect 2.8 Å title | Blocked: `fsc-resolution-match` (high severity, confidence 0.95) |
+| Corrected figure in the same run | Passed after recheck; measured crossing 0.2898 1/Å (3.45 Å) |
+| Limitation | One synthetic curve and one model run; not an experimental validation |
 
 - **Run 1**: the prompt asked for a 2.8 Å title. The gate flagged
   `fsc-resolution-match` (severity high, confidence 0.95). The agent recomputed the

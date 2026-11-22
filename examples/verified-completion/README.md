@@ -15,60 +15,66 @@ confirm each result yourself.
 > - Python 3.9 or newer (standard library only)
 > - Git
 > - A model key: Anthropic, or Azure OpenAI
->
-> Runs cost roughly $1–2 in total on Opus-class models.
+
+Use a model capable of the required tool calls; provider charges and number of
+turns depend on the run. A missing/failed tool result is unassessed, not a pass.
+The costs shown later are observations from specific historical runs, not
+estimates or guarantees.
 
 ## Files
 
 | File | What it is |
 |------|------------|
-| `fixtures.py` | Builds four Go git repositories (`mean-bug`, `max-bug`, `mean-impossible`, `mean-correct`) and checks that `go test` fails or passes as expected. |
+| `fixtures.py` | Creates four new Go git repositories in a unique marked workspace and checks that `go test` fails or passes as expected. It refuses to overwrite an existing workspace. |
+| `cleanup.py` | Removes only a marked workspace with the expected name under the system temp directory. |
 | `seed_failures.py` | Writes six seed run logs into a workspace, so `self-harness` has failing runs to mine. |
 | `eval_live.py` | Eval command for `self-harness`. Runs the real agent on two tasks and reports accuracy and tokens. |
 | `eval_cheat.py` | A deliberately misleading eval that never runs TOKN. Used to show why the gate needs a witness. |
 | `compare_runs.py` | Builds the paired-case input for `tokn flywheel compare` from two eval logs. |
 | `check.py` | Independent grader. Runs `go test` and lists changed files with `git diff`. |
 | `tokn_agent.py` | Shared helper: reads the TOKN path and model settings from the environment. |
-| `.env.example` | Placeholder settings. Copy it to `.env`, then export the values in your shell. |
+| `.env.example` | Reference-only settings. The scripts use the trusted process environment and do not read `.env`. |
 
 ## Setup
 
-Copy the settings file and fill in your values:
-
-```powershell
-Copy-Item .env.example .env
-```
-
-The scripts do not read `.env` for you. Export the variables in your shell.
+Use `.env.example` as a reference only. Do not put real credentials in a file
+under the checkout. The scripts do not read `.env`; provide settings through
+your protected process environment.
 
 PowerShell:
 
 ```powershell
-$env:ANTHROPIC_API_KEY='your-anthropic-key'
-$env:TOKN_EXAMPLE_PROVIDER='anthropic'
-$env:TOKN_EXAMPLE_MODEL='claude-opus-5-5'
-$env:TOKN='C:\path\to\tokn.exe'   # optional if tokn is on PATH
+$secret = Read-Host 'Anthropic API key' -AsSecureString
+$ptr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secret)
+try { $env:ANTHROPIC_API_KEY = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($ptr) }
+finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($ptr) }
+$env:TOKN_EXAMPLE_PROVIDER = 'anthropic'
+$env:TOKN_EXAMPLE_MODEL = 'YOUR_MODEL_ID'
+$env:TOKN = 'C:\path\to\tokn.exe'   # optional if tokn is on PATH
 ```
 
 macOS or Linux:
 
 ```bash
-export ANTHROPIC_API_KEY=your-anthropic-key
-export TOKN_EXAMPLE_PROVIDER=anthropic
-export TOKN_EXAMPLE_MODEL=claude-opus-5-5
-export TOKN=/path/to/tokn                 # optional if tokn is on PATH
+read -rs -p 'Anthropic API key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
+export TOKN_EXAMPLE_PROVIDER='anthropic'
+export TOKN_EXAMPLE_MODEL='YOUR_MODEL_ID'
+export TOKN='/path/to/tokn'                 # optional if tokn is on PATH
 ```
 
 For Azure OpenAI, set `TOKN_EXAMPLE_PROVIDER=azure-openai`,
-`TOKN_EXAMPLE_MODEL=gpt-6-astra`, `AZURE_OPENAI_ENDPOINT`, and
+`TOKN_EXAMPLE_MODEL=YOUR_MODEL_ID`, `AZURE_OPENAI_ENDPOINT`, and
 `AZURE_OPENAI_API_KEY`. `ANTHROPIC_BASE_URL` is optional and points at an
 Anthropic-compatible gateway.
 
-Create the fixtures in a folder of your choice. Run the self-check as part of
-this step; it does not call a model:
+Create a unique workspace under the system temp directory. Do not reuse an
+existing directory; the script refuses non-empty paths and will not delete
+prior work. Run the self-check as part of this step; it does not call a model:
 
 ```powershell
-python fixtures.py "$env:TEMP\verified-completion"
+$runId = [guid]::NewGuid().ToString('N')
+$WS = Join-Path $env:TEMP "tokn-verified-completion-$runId"
+python fixtures.py $WS
 ```
 
 Expected output:
@@ -89,11 +95,10 @@ Each fixture is a small Go module committed to its own git repository:
 - `mean-correct`: already passes.
 
 The commands below use two variables. `$EX` is this example folder and `$WS` is
-the fixtures folder:
+the unique marked fixtures folder from the setup step:
 
 ```powershell
 $EX = (Get-Location).Path                 # run this from examples/verified-completion
-$WS = "$env:TEMP\verified-completion"
 ```
 
 ## Walkthrough
@@ -203,8 +208,7 @@ six runs that all fail the same way: the agent claimed success without
 re-running the tests.
 
 ```powershell
-$SH = "$env:TEMP\verified-completion\self-harness"
-New-Item -ItemType Directory -Force $SH | Out-Null
+$SH = Join-Path $WS 'self-harness'
 python "$EX\seed_failures.py" $SH
 Set-Location $SH
 $common = @('--repo-root', '.', '--mode', 'default', '--metric', 'accuracy', '--min-cluster', '3',
@@ -259,12 +263,20 @@ the default `--max-token-growth 0.10` cap (+10%), so the decision was
 #### B4. A real, witnessed evaluation
 
 `eval_live.py` runs real `tokn agent-run` bug fixes on `mean-bug` and `max-bug`
-with the completion gate on. It grades each fix itself with `go test`. Set the
-log folder first so step C can reuse the per-case numbers:
+with the completion gate on. It grades each fix itself with `go test`. This
+step makes model calls and may incur provider charges. It deliberately opts
+into noninteractive approvals only for disposable fixture repositories under
+the system temp directory; `tokn_agent.py` refuses this opt-in outside that
+directory. Set the log folder first so step C can reuse the per-case numbers:
 
 ```powershell
-$env:TOKN_EXAMPLE_EVAL_LOG = "$env:TEMP\verified-completion\evallogs"
-tokn self-harness @common --eval-harness "python `"$EX\eval_live.py`"" --require-witness
+$env:TOKN_EXAMPLE_EVAL_LOG = Join-Path $WS 'evallogs'
+$env:TOKN_EXAMPLE_NO_CONFIRM = '1'
+try {
+    tokn self-harness @common --eval-harness "python `"$EX\eval_live.py`"" --require-witness
+} finally {
+    Remove-Item Env:TOKN_EXAMPLE_NO_CONFIRM -ErrorAction SilentlyContinue
+}
 ```
 
 Observed in 162 s:
@@ -279,7 +291,7 @@ Observed in 162 s:
 
 ```powershell
 Set-Location $EX
-python compare_runs.py $env:TOKN_EXAMPLE_EVAL_LOG
+python compare_runs.py (Join-Path $WS 'evallogs')
 ```
 
 `compare_runs.py` turns B4's logs into paired cases and runs
@@ -330,10 +342,11 @@ The full Opus run took about 6 minutes and cost about $1.50.
 
 ## Cleanup
 
-Delete the temporary workspaces when you are done:
+Remove only the marked workspace created in setup. The helper refuses other
+paths, symlinks, and directories without its marker:
 
 ```powershell
-Remove-Item -Recurse -Force "$env:TEMP\verified-completion"
+python "$EX\cleanup.py" $WS
 ```
 
 The `.nospace/` and `.tokn/` folders hold run records. Do not commit them. The

@@ -1,0 +1,12 @@
+{
+  "version": "0.3.118",
+  "input_digest": "sha256:f1c5b45a39c75714a2129af855c1be6e594dc8bbd92a614b656ef8615b306967",
+  "digest_scope": "SHA-256 of '__invocation__' + NUL + UTF-8 'tokn factory demo --dir demo' + LF + NUL",
+  "scenario": "deterministic local Factory demo",
+  "checker": "tokn factory verify --repo-root demo/repo --json",
+  "status": "observed local run; 13/13 steps and evidence verification passed",
+  "limitations": [
+    "IDs, timestamps, and digests vary between runs.",
+    "A synthetic demo does not validate a real deployment."
+  ]
+}

@@ -4,9 +4,10 @@
 local preview, then optionally ask an agent to read a tiny file.
 Everything here is available on **Community**; do not activate a trial for it.
 
-Updated for **v0.3.100**. Results below are expectations, not a recorded model
-transcript. Downloading, verifying a release or preparing a model may take
-longer than ten minutes.
+The no-model preview works on older builds; the current CLI examples below
+require **v0.3.116 or newer**. Results below are expectations, not a recorded
+model transcript. Downloading, verifying a release or preparing a model may
+take longer than ten minutes.
 
 ```mermaid
 flowchart TD
@@ -71,7 +72,7 @@ tokn license status
 
 Look for the installed version, OS/architecture and `variant: public` in
 `tokn version`. The public build excludes the embedded wiki, not the built-in
-lessons. This guide describes v0.3.100; use `tokn --help` for your build.
+lessons. Use `tokn --help-all` for the commands and advanced flags in your build.
 `tokn update` installs a newer release and requires network access.
 
 Community is sufficient. An existing paid licence also works; you do not need
@@ -114,13 +115,14 @@ steps. Replace every uppercase placeholder before running.
 ```powershell
 $env:NOSPACE_MODEL_PROVIDER = "anthropic"
 $env:NOSPACE_MODEL_NAME = "YOUR_MODEL_ID"
-$env:ANTHROPIC_API_KEY = "YOUR_ANTHROPIC_API_KEY"
+# Supply the key from a trusted secret store or existing secure session.
 ```
 
 ```bash
-export NOSPACE_MODEL_PROVIDER="anthropic"
-export NOSPACE_MODEL_NAME="YOUR_MODEL_ID"
-export ANTHROPIC_API_KEY="YOUR_ANTHROPIC_API_KEY"
+export NOSPACE_MODEL_PROVIDER='anthropic'
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+read -rs -p 'Anthropic API key: ' ANTHROPIC_API_KEY; echo
+export ANTHROPIC_API_KEY
 ```
 
 Use an API model ID available to your account, not a subscription's display
@@ -155,8 +157,38 @@ tokn auth status
 ```
 
 This reports configuration; it is not proof that the next model call will
-succeed. `tokn doctor --provider anthropic` (or `ollama`) can diagnose the
-selected provider and may contact its endpoint.
+succeed. `tokn doctor --provider anthropic` (or `ollama`) checks static
+provider configuration; it does not prove that a live credential or endpoint
+works.
+
+### Current CLI (v0.3.116+)
+
+With both stdin and stdout connected to a terminal, bare `tokn` opens the
+interactive REPL. For a single request, `tokn -p "Summarize NOTES.md"` runs
+once and exits.
+
+To pass a file as input without starting a REPL:
+
+```powershell
+Get-Content -Raw NOTES.md | tokn agent-run -p "Summarize the supplied data"
+```
+
+```bash
+tokn agent-run -p "Summarize the supplied data" < NOTES.md
+```
+
+Continue the last unfinished checkpoint in the current repository with
+`tokn agent-run -c`. It fails when no unfinished checkpoint exists; it is not
+a way to reopen a completed transcript. To browse past sessions instead:
+
+```sh
+tokn list-sessions
+tokn load-session SESSION_ID
+```
+
+`load-session` displays a past session; it does not restart it. For advanced
+options, use `tokn --help-all` or `tokn agent-run --help-all`. Do not combine
+piped stdin with `-c`.
 
 ## 4. Ask the agent to read one file
 
@@ -231,7 +263,7 @@ features is optional; the local preview is already a complete first success.
 | Symptom | What to do |
 |---|---|
 | `tokn` is not found | Add its directory to `PATH`, then reopen the terminal |
-| The public commands are missing | Check `tokn version`, update and consult that build's `--help` |
+| The public commands are missing | Check `tokn version`, update and consult that build's `--help-all` |
 | The trial expired | Community still runs this walkthrough; do not start another trial |
 | Provider/key/model error | Replace placeholders, keep variables in the current terminal and use `tokn doctor --provider <id>` |
 | Ollama is unavailable or the model cannot use tools | Start the prepared runtime and choose a suitable installed model; see [SETUP.md](../../SETUP.md) |

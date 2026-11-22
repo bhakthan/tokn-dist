@@ -21,14 +21,14 @@ namespace.
 | Requirement | Why | Check |
 |---|---|---|
 | TOKN v0.3.57 or later | The `events` command tree is in this version line | `tokn version` |
-| Licence tier: **community** for the local path | `events` has no licence gate in the source | `tokn license --help` |
+| Licence tier | Check your current feature entitlement | `tokn license features` |
 | An LLM you have access to (for the live run only) | The live run calls a model; the dry run does not | See [../../SETUP.md](../../SETUP.md) |
 | Azure CLI (Service Bus path only) | Signs you in with Entra ID | `az version` |
 | Azure Service Bus namespace you own (Service Bus path only) | Your own broker, your own cost | Your Azure portal |
 
-**Tier note.** The local directory queue and the Service Bus source are both
-reachable in community, because the source has no licence gate on `events`. You
-still need network access and RBAC for Service Bus, and an LLM for any live run.
+**Tier note.** Check `tokn license features` for your current entitlement. The
+local directory queue is model-free; a live run also needs a configured model.
+Service Bus additionally requires network access and RBAC.
 
 **What leaves your machine.** The local path writes files under your workspace
 only. A live run sends the prompt to the model provider you configure. The
@@ -53,15 +53,15 @@ Set-Location "$HOME\tokn-demo\restock-events"
 ## 2. Read the events commands
 
 ```bash
-tokn events --help
-tokn events publish --help
-tokn events run --help
+tokn events --help-all
+tokn events publish --help-all
+tokn events run --help-all
 ```
 
 ```powershell
-tokn events --help
-tokn events publish --help
-tokn events run --help
+tokn events --help-all
+tokn events publish --help-all
+tokn events run --help-all
 ```
 
 Expected, not a recorded run: subcommands `run`, `publish`, `peek`, and
@@ -107,7 +107,7 @@ routes:
 '@ | Set-Content -Encoding utf8 .nospace\eventsource.yaml
 ```
 
-What the fields mean, from source:
+Field behavior:
 
 - `mode` must be a registered agent mode. `default` is always valid.
 - `filters` must match every entry to dispatch. The last route must have
@@ -182,15 +182,15 @@ Replace them with your own values. See [../../SETUP.md](../../SETUP.md).
 
 ```bash
 export NOSPACE_MODEL_PROVIDER=anthropic
-export NOSPACE_MODEL_NAME=<a model you have access to>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+read -rs -p 'Anthropic API key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
 tokn events run --config .nospace/eventsource.yaml --source dir --dir .nospace/eventsource/queue
 ```
 
 ```powershell
 $env:NOSPACE_MODEL_PROVIDER = "anthropic"
-$env:NOSPACE_MODEL_NAME = "<a model you have access to>"
-$env:ANTHROPIC_API_KEY = "<your key>"
+$env:NOSPACE_MODEL_NAME = "YOUR_MODEL_ID"
+# Set ANTHROPIC_API_KEY through your trusted secret manager or existing shell session.
 tokn events run --config .nospace\eventsource.yaml --source dir --dir .nospace\eventsource\queue
 ```
 
@@ -211,7 +211,7 @@ without it.
 | Tool | Why | Check | Install (Windows) | Install (macOS) | Install (Linux) |
 |---|---|---|---|---|---|
 | Azure CLI | Signs you in with Entra ID | `az version` | `winget install -e --id Microsoft.AzureCLI` | `brew install azure-cli` | `curl -sL https://aka.ms/InstallAzureCLIDeb \| sudo bash` |
-| Network to the broker | Messages travel over AMQP/TLS | `az servicebus namespace show --name <your-namespace> --resource-group <your-resource-group>` | Same | Same | Same |
+| Network to the broker | Messages travel over AMQP/TLS | `az servicebus namespace show --name 'YOUR_NAMESPACE' --resource-group 'YOUR_RESOURCE_GROUP'` | Same | Same | Same |
 
 If `az` is not found after install, open a new terminal.
 
@@ -243,11 +243,11 @@ The source comes from the command line, not the YAML, so the config stays
 unchanged. Keep the namespace as a fully qualified host.
 
 ```bash
-tokn events run --source servicebus --namespace <your-namespace>.servicebus.windows.net --queue <your-queue> --config .nospace/eventsource.yaml
+tokn events run --source servicebus --namespace 'YOUR_NAMESPACE.servicebus.windows.net' --queue 'YOUR_QUEUE' --config .nospace/eventsource.yaml
 ```
 
 ```powershell
-tokn events run --source servicebus --namespace <your-namespace>.servicebus.windows.net --queue <your-queue> --config .nospace\eventsource.yaml
+tokn events run --source servicebus --namespace 'YOUR_NAMESPACE.servicebus.windows.net' --queue 'YOUR_QUEUE' --config .nospace\eventsource.yaml
 ```
 
 Expected, not a recorded run: the consumer connects with your Entra ID
@@ -261,14 +261,14 @@ Entra ID is the default. If you cannot use it, pass a connection string from an
 environment variable. Never paste the value into a file or a command you share.
 
 ```bash
-export YOUR_SB_CONNECTION_STRING=<your connection string>
-tokn events run --source servicebus --connection-string "$YOUR_SB_CONNECTION_STRING" --queue <your-queue> --config .nospace/eventsource.yaml
+read -rs -p 'Service Bus connection string: ' YOUR_SB_CONNECTION_STRING; echo; export YOUR_SB_CONNECTION_STRING
+tokn events run --source servicebus --connection-string "$YOUR_SB_CONNECTION_STRING" --queue 'YOUR_QUEUE' --config .nospace/eventsource.yaml
 unset YOUR_SB_CONNECTION_STRING
 ```
 
 ```powershell
-$env:YOUR_SB_CONNECTION_STRING = "<your connection string>"
-tokn events run --source servicebus --connection-string $env:YOUR_SB_CONNECTION_STRING --queue <your-queue> --config .nospace\eventsource.yaml
+# Set YOUR_SB_CONNECTION_STRING through a trusted secret manager or existing shell session.
+tokn events run --source servicebus --connection-string "$env:YOUR_SB_CONNECTION_STRING" --queue 'YOUR_QUEUE' --config .nospace\eventsource.yaml
 Remove-Item Env:YOUR_SB_CONNECTION_STRING
 ```
 

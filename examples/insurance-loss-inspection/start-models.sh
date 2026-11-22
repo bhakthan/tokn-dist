@@ -11,18 +11,9 @@ cd "$(dirname "$0")"
 fail() { printf '[!] %s\n' "$1" >&2; exit 1; }
 note() { printf '[*] %s\n' "$1"; }
 
-# Load .env without overriding shell variables (only CODER_HF_MODEL is read from it here).
-if [ -f .env ]; then
-  while IFS= read -r line || [ -n "$line" ]; do
-    line="${line%$'\r'}"
-    case "$line" in ''|\#*|*[!=]*) continue ;; esac
-    key="${line%%=*}"; val="${line#*=}"
-    key="$(printf '%s' "$key" | tr -d '[:space:]')"
-    val="$(printf '%s' "$val" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' -e 's/^"//' -e 's/"$//')"
-    case "$key" in SYSTEMONE_*|TOKN_INSPECT_*) continue ;; esac
-    if [ -z "${!key:-}" ]; then export "$key=$val"; fi
-  done < .env
-fi
+# Only a model ID may be loaded from repository data; model source stays trusted-shell only.
+source ./load-safe-env.sh
+load_safe_env .env TOKN_MODEL
 
 START=0
 [ "${1:-}" = "--start" ] && START=1
@@ -55,7 +46,7 @@ fi
 CODER="${CODER_HF_MODEL:-}"
 case "$CODER" in ''|'<'*'>')
   problems+=("Missing: CODER_HF_MODEL. Set it to the Hugging Face repo and quant of a coder GGUF, for example:
-         export CODER_HF_MODEL=<hf-repo>:<quant>
+         export CODER_HF_MODEL='YOUR_HF_REPO:YOUR_QUANT'
   Why:   the coding model drives the TOKN agent in insurance mode (run-agent).
   Pick:  a Qwen coder GGUF that fits your memory (see the README hardware notes).") ;;
 esac

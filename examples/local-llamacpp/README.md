@@ -133,7 +133,8 @@ curl http://127.0.0.1:8080/v1/models
 
 ## 5. Install and configure this example
 
-From `examples/local-llamacpp`, copy the settings template and edit it:
+From `examples/local-llamacpp`, copy the reference template and set the model
+ID reported by your local server:
 
 ```bash
 cp .env.example .env
@@ -145,16 +146,16 @@ PowerShell:
 Copy-Item .env.example .env
 ```
 
-Set `TOKN_MODEL` in `.env` to the model id from the previous step. The other
-values can stay as they are:
+Set `TOKN_MODEL` in `.env` to the model ID from the previous step:
 
 ```
-GGUF_SERVER_URL=http://127.0.0.1:8080/v1
-TOKN_MODEL=<your-model-id>
+TOKN_MODEL=your-local-model-id
 ```
 
-`.env` is git-ignored. The scripts load it without overriding variables you
-have already set in your shell.
+The scripts read only `TOKN_MODEL` from `.env`. Set `GGUF_SERVER_URL` and
+`TOKN_BIN` only in your trusted shell; the endpoint must use a loopback host.
+An untrusted repository file cannot select a destination or executable. `.env`
+is git-ignored.
 
 ## 6. Run the sample task
 
@@ -279,9 +280,8 @@ tokn system-one status
 ./run-local.sh --system-one
 ```
 
-This optional path enables unattended tool approval (`--no-confirm`) in the
-wrapper. Use it only in this disposable example, review the task first, and
-do not treat decision-model output as a sandbox.
+The wrapper keeps normal interactive approvals for this optional path. Review
+each requested action; decision-model output is not a sandbox.
 
 Tip: running the agent model and the decision model on one GPU slows both. If
 you can, put the decision model on a second GPU or on the CPU.
@@ -345,6 +345,9 @@ startup registration and update checks. Review or disable other configured
 integrations (`--mcp-disabled` disables outbound MCP discovery connections
 when running TOKN directly). A loopback model URL alone is not a
 zero-egress guarantee.
+
+For staged GGUF/ONNX model preparation and checks, see
+[Tabular prediction](../tabular-prediction/README.md).
 
 The wrapper writes `run-output.txt`, the agent writes `workspace/reorder.md`,
 and TOKN may create session logs or state. Offline does not mean read-only.

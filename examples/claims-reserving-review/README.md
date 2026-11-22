@@ -17,7 +17,7 @@ A general-purpose LLM reads the records and gives a confident verdict. The `insu
 | `ins_reserve_range` | Range of reasonable reserve estimates across methods (chain ladder with four LDF averages; Bornhuetter-Ferguson and expected loss ratio when earned_premium + expected_loss_ratio are given). |
 | `ins_reserve_report` | Reserve figure gate (ASOP No. 43-style documentation concept): every figure must carry a method and its assumptions (missing → BLOCKED); a point estimate without a low/high range is a WARNING; an inconsistent range is blocked. |
 
-This is the single-agent version of a TOKN domain-relay scenario. It uses the same synthetic data, one model and a few cents of tokens, not a five-model relay.
+This is the single-agent version of a TOKN domain-relay scenario. Use a model capable of the required tool calls; provider charges and number of turns depend on the run. A missing/failed tool result is unassessed, not a pass. It uses the same synthetic data, not a five-model relay.
 
 ## 0. What you need
 
@@ -25,7 +25,7 @@ This is the single-agent version of a TOKN domain-relay scenario. It uses the sa
 |---|---|---|
 | TOKN v0.3.83 or newer | Includes the domain tools this example calls. | `tokn version` |
 | 14-day trial (`tokn license trial`) | Domain modes need the trial. | `tokn license features` shows `domains:insurance` or `domains:*` |
-| An LLM provider | TOKN calls a model. Any supported provider works. | See [../../SETUP.md](../../SETUP.md) |
+| An LLM provider | TOKN calls a model. Use a model capable of the required tool calls; provider charges and number of turns depend on the run. A missing/failed tool result is unassessed, not a pass. | See [../../SETUP.md](../../SETUP.md) |
 
 **What leaves your machine:** the prompt, the files TOKN reads from the scratch folder, and tool results. These go to the LLM provider you configure. The demo data is synthetic.
 
@@ -54,8 +54,24 @@ Read `prompt.md` and the files in `demo-input/` (`claims.json`, `policies.json`,
 ## 4. Run the task
 
 ```bash
-tokn agent-run --mode insurance --repo-root . --prompt-file prompt.md --max-steps 40 --no-confirm
+mkdir -p work/demo-input
+cp prompt.md work/prompt.md
+cp demo-input/* work/demo-input/
+cd work
+tokn agent-run --mode insurance --repo-root . --prompt-file prompt.md --max-steps 40
 ```
+
+PowerShell:
+
+```powershell
+New-Item -ItemType Directory -Force work\demo-input | Out-Null
+Copy-Item prompt.md work\prompt.md
+Copy-Item demo-input\* work\demo-input\
+Set-Location work
+tokn agent-run --mode insurance --repo-root . --prompt-file prompt.md --max-steps 40
+```
+
+Only `prompt.md` and `demo-input/` are staged in `work/`; do not copy this README or its answer key into the agent's read scope. Grade each cited clause against `demo-input/policies.json` from outside `work/`; the `RESULT.md` schema must retain `human_disposition: pending_human_review`. No final coverage determination is made. A safe refusal or inconclusive result is unassessed, not a pass.
 
 18 items with 10 tools each can take 180 or more tool calls. If the run stops early, raise `--max-steps`.
 
@@ -77,6 +93,7 @@ tokn agent-run --mode insurance --repo-root . --prompt-file prompt.md --max-step
 | 12 | Evidence is cited | `RESULT.md` mentions `sublimit`, `endorsement`, `exclusion`, `clause`, `four-fifths`, `reason code`, `IBNR`, `range`, `decision support` |
 | 13 | Calibrated language | Nothing says "is covered", "is not covered", "claim is denied", "we hereby deny", "final determination", "guaranteed", "reserves are adequate" |
 | 14 | One status per item | Every item gets exactly one status from the vocabulary in `prompt.md` |
+| 15 | Human disposition retained | Each output row says `pending_human_review`; the model does not make the final decision |
 
 <details>
 <summary>Answer key (open after your run)</summary>

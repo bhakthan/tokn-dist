@@ -4,13 +4,16 @@
 
 A general-purpose LLM reads the records and gives a confident verdict. The `grideng` domain mode runs each item through deterministic domain tools and gates, so the status comes from a tool result, not from the model's impression of the numbers.
 
+All inputs are synthetic. This screen is not an authorization to connect; any
+real interconnection decision belongs to the responsible grid operator.
+
 | Tool | What it does |
 |---|---|
 | `powergrid_n1_1_screen` | Screens N-1-1 outage pairs against post-contingency voltage and thermal limits and grades each violation HIGH or CRITICAL. |
 | `powergrid_ibr_stability_gate` | Blocks an expansion that adds grid-following capacity with no grid-forming capacity and pushes zonal GFL penetration past the threshold. |
 | `run_n1_contingency_screen` | N-1 contingency screen over a network model or supplied single-outage results. |
 
-This is the single-agent version of the [powergrid relay walkthrough](../domain-relay/walkthroughs/powergrid/README.md). It uses the same synthetic data, one model and a few cents of tokens, not a five-model relay.
+This is the single-agent version of the [powergrid relay walkthrough](../domain-relay/walkthroughs/powergrid/README.md). It uses the same synthetic data with one model, not a five-model relay. Use a model capable of the required tool calls; provider charges and number of turns depend on the run. A missing/failed tool result is unassessed, not a pass.
 
 ## 0. What you need
 
@@ -18,22 +21,28 @@ This is the single-agent version of the [powergrid relay walkthrough](../domain-
 |---|---|---|
 | TOKN v0.3.82 or newer | Includes the domain tools this example calls. | `tokn version` |
 | 14-day trial (`tokn license trial`) | Domain modes need the trial. | `tokn license features` shows `domains:grideng` or `domains:*` |
-| An LLM provider | TOKN calls a model. Any supported provider works. | See [../../SETUP.md](../../SETUP.md) |
+| An LLM provider | TOKN calls a model capable of the required tool calls. | See [../../SETUP.md](../../SETUP.md) |
 
 **What leaves your machine:** the prompt, the files TOKN reads from the scratch folder, and tool results. These go to the LLM provider you configure. The demo data is synthetic.
 
 ## 1. Copy the example to a scratch folder
 
-TOKN writes `.nospace/` state and output files into the working folder, so run it outside this repo.
+TOKN writes `.nospace/` state and output files into the working folder, so run
+it outside this repo. Stage only `prompt.md` and `demo-input/` in the fresh
+`work/` folder; keep this README and its answer key outside the agent's scope.
 
 ```bash
-cp -r examples/interconnection-screen ~/interconnection-screen-run
-cd ~/interconnection-screen-run
+mkdir -p ~/interconnection-screen-run/work/demo-input
+cp examples/interconnection-screen/prompt.md ~/interconnection-screen-run/work/
+cp -R examples/interconnection-screen/demo-input/. ~/interconnection-screen-run/work/demo-input/
+cd ~/interconnection-screen-run/work
 ```
 
 ```powershell
-Copy-Item -Recurse examples\interconnection-screen $HOME\interconnection-screen-run
-Set-Location $HOME\interconnection-screen-run
+New-Item -ItemType Directory -Force $HOME\interconnection-screen-run\work\demo-input | Out-Null
+Copy-Item examples\interconnection-screen\prompt.md $HOME\interconnection-screen-run\work\
+Copy-Item examples\interconnection-screen\demo-input\* $HOME\interconnection-screen-run\work\demo-input\
+Set-Location $HOME\interconnection-screen-run\work
 ```
 
 ## 2. Configure the LLM
@@ -47,7 +56,7 @@ Read `prompt.md` and the files in `demo-input/` (`ibr_registry.json`, `n11_study
 ## 4. Run the task
 
 ```bash
-tokn agent-run --mode grideng --repo-root . --prompt-file prompt.md --max-steps 40 --no-confirm
+tokn agent-run --mode grideng --repo-root . --prompt-file prompt.md --max-steps 40
 ```
 
 5 items with 3 tools each can take 15 or more tool calls. If the run stops early, raise `--max-steps`.

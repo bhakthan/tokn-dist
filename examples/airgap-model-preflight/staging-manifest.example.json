@@ -1,0 +1,7 @@
+{
+  "artifact_path": "staged-model.gguf",
+  "format": "GGUF",
+  "sha256": "REPLACE_WITH_TRUSTED_64_CHARACTER_SHA256",
+  "license_reviewed": false,
+  "source_note": "Fill from your trusted local staging record."
+}

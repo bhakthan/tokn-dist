@@ -80,15 +80,16 @@ the Troubleshooting table.
 Follow [SETUP.md](../../SETUP.md) for your provider. For Anthropic, for example:
 
 ```bash
-export NOSPACE_MODEL_PROVIDER=anthropic
-export NOSPACE_MODEL_NAME=<a Claude model you have access to>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_PROVIDER='anthropic'
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+read -rs -p 'Anthropic API key: ' ANTHROPIC_API_KEY; echo
+export ANTHROPIC_API_KEY
 ```
 
 ```powershell
 $env:NOSPACE_MODEL_PROVIDER = "anthropic"
-$env:NOSPACE_MODEL_NAME     = "<a Claude model you have access to>"
-$env:ANTHROPIC_API_KEY      = "<your key>"
+$env:NOSPACE_MODEL_NAME     = "YOUR_MODEL_ID"
+# Load ANTHROPIC_API_KEY from a trusted secret store/session.
 ```
 
 Use your shell or `~/.tokn/config/credentials.env` for keys. Never commit a
@@ -122,14 +123,12 @@ Flags used:
 | `--max-steps 25` | Stops the run after 25 agent steps |
 | `--output-format text` | Plain text output, which the checker can read |
 
-If you want to skip interactive confirmations, add `--no-confirm`. This example
-does not need it. The agent only reads `inputs/`.
+The run uses normal interactive approvals. The agent only reads `inputs/`.
 
 ## 5. Check the result
 
-Expected gate outcomes are taken from the domain's hooks and error messages in
-`environment-manager/internal/agent/domains/geospatial/`. They are not a recorded
-run.
+Expected: check CRS and masking against the supplied fixtures; compare the
+checker output. These are expectations, not a recorded run.
 
 | Step in `prompt.md` | Expected gate behaviour | Message to look for |
 |---|---|---|

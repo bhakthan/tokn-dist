@@ -10,8 +10,6 @@ $ErrorActionPreference = 'Stop'
 
 $here    = Split-Path -Parent $MyInvocation.MyCommand.Path
 $toknExe = if ($env:TOKN_BIN) { $env:TOKN_BIN } else { 'tokn' }
-$repo    = Join-Path $here 'scratch'
-$pFile   = Join-Path $repo 'prompt.txt'
 
 function Fail([string]$msg) {
   [Console]::Error.WriteLine("candidate: $msg")
@@ -27,6 +25,9 @@ if ([string]::IsNullOrWhiteSpace($env:NOSPACE_MODEL_NAME))     { Fail 'NOSPACE_M
 $prompt = [Console]::In.ReadToEnd()
 if ([string]::IsNullOrWhiteSpace($prompt)) { Fail 'empty prompt on stdin' }
 
+$runId  = [Guid]::NewGuid().ToString('N')
+$repo   = Join-Path $here "scratch\runs\$runId"
+$pFile  = Join-Path $repo 'prompt.txt'
 New-Item -ItemType Directory -Force $repo | Out-Null
 Set-Content -Path $pFile -Value $prompt -Encoding utf8 -NoNewline
 
@@ -38,25 +39,13 @@ $aErr = Join-Path $repo 'agent.err'
   --model-provider $env:NOSPACE_MODEL_PROVIDER `
   --model-name $env:NOSPACE_MODEL_NAME `
   --max-steps 2 `
-  --no-confirm `
+  --output-format json `
   --quiet 1>$aOut 2>$aErr
 if ($LASTEXITCODE -ne 0) { Fail "agent-run failed, see $aErr" }
 
-# agent-run writes one JSON line per event to .nospace\runs\<timestamp>.jsonl.
-$runLog = Get-ChildItem (Join-Path $repo '.nospace\runs') -Filter *.jsonl -ErrorAction SilentlyContinue |
-  Sort-Object LastWriteTime | Select-Object -Last 1
-if (-not $runLog) { Fail "no run log under $repo\.nospace\runs" }
-
-$final = ''
-$last  = ''
-foreach ($line in Get-Content $runLog.FullName) {
-  try { $event = $line | ConvertFrom-Json } catch { continue }
-  if ($event.role -ne 'assistant' -or $null -eq $event.content) { continue }
-  $last = [string]$event.content
-  if ($event.event -eq 'final') { $final = $last }
-}
-if ([string]::IsNullOrWhiteSpace($final)) { $final = $last }
-$answer = $final.Trim()
-
-if ([string]::IsNullOrWhiteSpace($answer)) { Fail "no assistant answer in $($runLog.FullName) (check provider auth)" }
+try { $result = Get-Content -Raw -Path $aOut | ConvertFrom-Json }
+catch { Fail "agent-run returned invalid JSON (see $aErr)" }
+if ($result.status -ne 'success' -or $result.exit_code -ne 0) { Fail "agent-run did not report terminal success (see $aErr)" }
+$answer = [string]$result.result
+if ([string]::IsNullOrWhiteSpace($answer)) { Fail 'successful agent-run result is empty' }
 [Console]::Out.Write($answer)

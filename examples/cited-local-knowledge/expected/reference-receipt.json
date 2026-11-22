@@ -1,0 +1,12 @@
+{
+  "version": "0.3.118",
+  "input_digest": "sha256:ddb0bab6a80e235f24c2be7de13bc1eafd7e64101a53775787843c1bfe9bdf19",
+  "digest_scope": "policies/*.md and knowledge.example.yaml; sorted relative path + NUL + bytes + NUL",
+  "scenario": "offline retrieval from two synthetic policy revisions",
+  "checker": "tokn knowledge search --air-gap --repo-root .",
+  "status": "local hashing search observed with a synthetic policy; this fixture replay is expected",
+  "limitations": [
+    "Hashing is lexical-grade, not semantic understanding.",
+    "A citation requires human review of its source and revision."
+  ]
+}

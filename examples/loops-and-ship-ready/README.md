@@ -20,11 +20,12 @@ This walkthrough covers recent interactive features (TOKN v0.3.60), on a tiny Py
 | TOKN v0.3.60 or later | Ships these commands and keys | `tokn version` |
 | Git | `/rewind` snapshots the working tree; `ship-ready` reads `git status` | `git --version` |
 | Python 3.8+ | Creates the fixture and runs its tests | `python --version` |
-| A model provider | Every step inside the REPL calls a model. `tokn ship-ready` (step 2) does not | see [SETUP.md](../../SETUP.md) |
+| A model provider | Every step inside the REPL calls a model. `tokn ship-ready` (step 2) does not. Use a model capable of the required tool calls; provider charges and number of turns depend on the run. A missing/failed tool result is unassessed, not a pass. | `tokn doctor --provider anthropic` (static; does not prove the key works) |
 
 ### What leaves your machine
 
 - `tokn ship-ready` is read-only and local. It never commits, pushes or changes files, and makes no model call. Only `--deep` (REPL only) starts a model-backed review.
+- `READY` means the working tree passed these local checks. It is **ready, not shipped**: repeated passing checks are not evidence that anything was released or deployed. Keep delivery receipts separate; the [rnaseq-software-factory](../rnaseq-software-factory/README.md) evidence tour shows what actual delivery receipts look like.
 - In the REPL, prompts and the files the agent reads go to the model provider you configured.
 - `/rewind` snapshots are local git objects under `refs/tokn/checkpoints/`. Nothing is pushed.
 
@@ -169,6 +170,8 @@ Watch it and read the answer:
 
 Expected, not a recorded run: the answer ends with a tally such as `N finding(s) independently challenged — X survived, Y refuted, Z inconclusive`. Likely survivors for this module are float rounding of money values and negative quantities in `order_total`. A run that challenged nothing is labelled UNVERIFIED.
 
+Keep the dissent. Copy the refuted and inconclusive findings, with the skeptic's reason, into your notes beside the survivors. A refuted finding is a recorded disagreement, not proof the code is correct, and "Needs human review" items stay open until a person closes them.
+
 `/ship-ready --deep` runs the static checks from step 2, then starts the same workflow over your uncommitted diff.
 
 ## 7. Prompt loops: more time, not more eyes
@@ -210,10 +213,10 @@ Screenshot paste needs a clipboard helper. TOKN names the one that is missing an
 |---|---|
 | `python -m unittest` before | `FAILED (failures=3)` |
 | `tokn ship-ready --quick` before | `NOT READY`, `server.log` listed, exit 1 |
-| `tokn ship-ready --quick` after the fix | `READY`, exit 0 |
+| `tokn ship-ready --quick` after the fix | `READY`, exit 0 (ready, not shipped) |
 | `/loop run` | Stops when `python -m unittest` prints `OK` |
 | `/rewind <checkpoint>` | The rename is gone from files and conversation |
-| find-and-refute result | A tally of survived, refuted and inconclusive findings |
+| find-and-refute result | A tally of survived, refuted and inconclusive findings; refuted and inconclusive ones kept in your notes |
 
 ## Troubleshooting
 
@@ -231,3 +234,4 @@ Screenshot paste needs a clipboard helper. TOKN names the one that is missing an
 - [loop-engineering](../loop-engineering/README.md): `/loop define` in more depth.
 - [checkpoints](../checkpoints/README.md): checkpoints, `/undo` and `/rewind`.
 - [session-review](../session-review/README.md): `/review` of an agent session.
+- [rnaseq-software-factory](../rnaseq-software-factory/README.md): delivery receipts, as opposed to ship-readiness.

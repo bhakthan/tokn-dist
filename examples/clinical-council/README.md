@@ -19,7 +19,7 @@ For the precision-medicine mode itself, including the trial, the case lifecycle 
 | Requirement | Why | Check |
 |---|---|---|
 | TOKN v0.3.57 or newer | The `council` and `docs illustrate` commands ship in this version. | `tokn version` |
-| 14-day trial (`tokn license trial`) | The case follows the `precmed` domain mode, which needs the trial. The `council` command itself was not checked for a licence gate. | `tokn license` |
+| 14-day trial (`tokn license trial`) | The case follows the `precmed` domain mode, which needs the trial. The `council` command itself was not checked for a licence gate. | `tokn license features` |
 | Image endpoint (optional) | Needed only for the infographic step. Without it the step is skipped. | See step 5 |
 | An LLM provider | Not needed for the convergence step. Only needed if you produce new verdicts. | See [../../SETUP.md](../../SETUP.md) |
 
@@ -61,6 +61,11 @@ The question is `SYN-Q-0001`: may the summary list an uncertain variant as actio
 | `reviewer-beta` | research-methods reviewer | approve_with_notes | 0.78 |
 | `reviewer-gamma` | data-governance reviewer | approve_with_notes | 0.70 |
 
+The supplied JSON is a worked, offline fixture—not a live review. For example,
+`verdicts/peer-alpha.json` records `SYN-Q-0001`,
+`consumesSpec: "synthetic-spec-0001"`, `disposition: "approve"`, and
+`convergenceMetric: 0.82`.
+
 ## 3. Check the bundles offline
 
 This check reads local files only. It confirms the schema tag, the disposition values, the convergence range, and that each bundle names a `consumesSpec`.
@@ -87,7 +92,7 @@ tokn council chair verdicts\peer-alpha.json verdicts\peer-beta.json verdicts\pee
 
 The defaults are a convergence threshold of 0.75 and a minimum of 2 grounded verdicts. Add `--json` for a machine-readable consensus. The chair does not call a model.
 
-Expected, not a recorded run: a consensus with three verdicts and a majority disposition of approval. The exact printed layout was not checked against a live run.
+Expected, not a recorded run: a consensus with three verdicts and a majority disposition of approval. Majority agreement is not clinical correctness. The exact printed layout was not checked against a live run.
 
 ## 5. Optional: render the infographics
 
@@ -104,14 +109,14 @@ tokn docs illustrate --spec illustrate-spec.json --dry-run
 To render for real, set two placeholders. Replace them with your own values. Do not commit them.
 
 ```bash
-export AZURE_OPENAI_ENDPOINT=<your image endpoint URL>
-export AZURE_OPENAI_IMAGE_DEPLOYMENT=<your image deployment name>
+export AZURE_OPENAI_ENDPOINT='YOUR_TRUSTED_ENDPOINT'
+export AZURE_OPENAI_IMAGE_DEPLOYMENT='YOUR_IMAGE_DEPLOYMENT'
 tokn docs illustrate --spec illustrate-spec.json --out-dir images --format png --limit 2
 ```
 
 ```powershell
-$env:AZURE_OPENAI_ENDPOINT = "<your image endpoint URL>"
-$env:AZURE_OPENAI_IMAGE_DEPLOYMENT = "<your image deployment name>"
+$env:AZURE_OPENAI_ENDPOINT = "YOUR_TRUSTED_ENDPOINT"
+$env:AZURE_OPENAI_IMAGE_DEPLOYMENT = "YOUR_IMAGE_DEPLOYMENT"
 tokn docs illustrate --spec illustrate-spec.json --out-dir images --format png --limit 2
 ```
 
@@ -128,6 +133,8 @@ tokn docs watermark images\synthetic-case-functional.png
 ```
 
 Skip this step if you have no endpoint. Steps 3 and 4 do not depend on it.
+
+Generating new opinions is a separate, optional model-backed lane.
 
 ## What to look for
 
@@ -159,4 +166,4 @@ This is research and decision support. It is not clinical advice, and nothing in
 | Consensus does not reach the threshold | Expected for weak verdicts. Check each `convergenceMetric`. |
 | `docs illustrate` prints guidance and exits | No image endpoint is set. This is the graceful path. Steps 3 and 4 still work. |
 | `docs illustrate` fails after setting the endpoint | Check the endpoint and deployment placeholders, then see the authentication note in step 5. |
-| `precmed` mode refused | Run `tokn license trial` (once per machine), then `tokn license` to confirm. |
+| `precmed` mode refused | Run `tokn license trial` (once per machine), then `tokn license features` to confirm. |

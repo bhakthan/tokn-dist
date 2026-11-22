@@ -5,3 +5,5 @@ out/
 __pycache__/
 before.png
 after.png
+unseen-before.png
+unseen-after.png

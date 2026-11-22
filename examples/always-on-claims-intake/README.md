@@ -29,7 +29,9 @@ have:
 
 TOKN keeps the agent loop the same. The always-on runtime adds the inbox, the
 worker, sessions, budgets and the unattended policy around it. The concept page
-is *Always-on agents* in the TOKN wiki (`tokn wiki serve`).
+is *Always-on agents* in the TOKN documentation. Check `tokn version` first:
+only a `full` build has the embedded wiki for `tokn wiki serve`; the public
+build uses hosted documentation.
 
 ## What you will learn
 
@@ -73,7 +75,7 @@ missing item, so you do not fix them one at a time.
 |---|---|---|---|---|
 | **tokn v0.3.99 or later** | Runs `tokn always-on`; the `tools:` allowlist in the config needs v0.3.99 | Download `tokn_windows_amd64.exe` from [the releases page](https://github.com/bhakthan/tokn-dist/releases/latest), rename it `tokn.exe` and put it on `PATH` (or set `TOKN_BIN`) | Download `tokn_darwin_arm64` (Apple Silicon) or `tokn_darwin_amd64` (Intel) from [the releases page](https://github.com/bhakthan/tokn-dist/releases/latest), then `chmod +x` it and move it to `/usr/local/bin/tokn` | Download `tokn_linux_amd64` (or `tokn_linux_arm64`) from [the releases page](https://github.com/bhakthan/tokn-dist/releases/latest), `chmod +x` it, and move it to `/usr/local/bin/tokn` |
 | **Python 3.10+** (only for `check.py`; standard library only) | Grades the run | `winget install Python.Python.3.12` | `brew install python` | `sudo apt install python3` |
-| **Azure CLI** (Azure path only) | Signs you in to Azure OpenAI with `az login` | `winget install Microsoft.AzureCLI` | `brew install azure-cli` | `curl -sL https://aka.ms/InstallAzureCLIDeb \| sudo bash` |
+| **Azure CLI** (Azure path only) | Signs you in to Azure OpenAI with `az login`; protect the CLI credential cache | `winget install Microsoft.AzureCLI` | `brew install azure-cli` | Follow Microsoft's signed package instructions at [Install Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) |
 | **An Azure OpenAI deployment** (Azure path only) | The model. Any tool-calling chat deployment works; this example uses `gpt-6-astra` | Your Azure resource | Your Azure resource | Your Azure resource |
 | **llama.cpp `llama-server`** (local path only) | Serves a local model on loopback; see [the local variant](#local-or-air-gapped-variant-not-live-tested) | `winget install ggml.llamacpp` | `brew install llama.cpp` | Build it: [llama.cpp build guide](https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md) |
 | **PowerShell** (Windows) or **bash** with `curl` (macOS, Linux) | Runs `run.ps1` or `run.sh` | Windows PowerShell 5.1 is built in | Bash and curl are built in | Bash and curl are usually installed |
@@ -108,21 +110,21 @@ authenticates. So export the values in your real shell:
 
 ```powershell
 az login
-$env:AZURE_OPENAI_ENDPOINT = "https://<your-resource>.openai.azure.com/openai/v1"
+$env:AZURE_OPENAI_ENDPOINT = "YOUR_TRUSTED_ENDPOINT"
 $env:AZURE_OPENAI_DEPLOYMENT = "gpt-6-astra"
 $env:AZURE_OPENAI_USE_DEFAULT_CREDENTIAL = "true"
 ```
 
 ```bash
 az login
-export AZURE_OPENAI_ENDPOINT="https://<your-resource>.openai.azure.com/openai/v1"
+export AZURE_OPENAI_ENDPOINT='YOUR_TRUSTED_ENDPOINT'
 export AZURE_OPENAI_DEPLOYMENT="gpt-6-astra"
 export AZURE_OPENAI_USE_DEFAULT_CREDENTIAL="true"
 ```
 
 - `AZURE_OPENAI_USE_DEFAULT_CREDENTIAL=true` makes TOKN use your `az login`
-  identity instead of a key. The credential refreshes itself, which a
-  long-running worker needs. A static token expires after about an hour.
+  identity instead of a static API key. The credential refreshes itself, which a
+  long-running worker needs. Protect the Azure CLI credential cache.
 - `AZURE_OPENAI_DEPLOYMENT` must equal `model.model` in the config (the next step).
 - Nothing here is a secret. Do not paste a key into `.env`.
 
@@ -420,8 +422,8 @@ Look at `runs/` and `sessions/` to see the same facts without reading the answer
 
 ## Local or air-gapped variant (not live-tested)
 
-Run the same agent on a local model with nothing leaving the machine. This
-variant is **not live-tested** in this example. Its checks are the
+Run the same agent on a local model. Local inference still calls your local
+model; it is not model-free. This variant is **not live-tested** in this example. Its checks are the
 same, and doctor verifies the setup before a run.
 
 1. Start a tool-calling GGUF model on loopback with llama.cpp. Use a model
@@ -520,4 +522,4 @@ Clear your Azure shell variables when you finish:
 
 - [Insurance loss inspection](../insurance-loss-inspection/README.md): a different insurance walkthrough, using photos and local models
 - [Event trigger](../event-trigger/README.md): starting agent runs from events, another way to wire inbound events
-- Always-on agents, in the TOKN wiki (`tokn wiki serve`): the concept page
+- Always-on agents, in the TOKN documentation: the concept page

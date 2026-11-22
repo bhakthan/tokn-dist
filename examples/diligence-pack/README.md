@@ -39,16 +39,19 @@ network calls.
 
 ### 1. Get the example
 
-Work in the `examples/diligence-pack` folder of your TOKN distribution.
+Copy the example to a fresh folder you own outside the distribution checkout,
+then run it there so generated files and logs stay out of the published example.
 
 **bash**
 ```bash
-cd examples/diligence-pack
+cp -r examples/diligence-pack "$HOME/diligence-pack-work"
+cd "$HOME/diligence-pack-work"
 ```
 
 **PowerShell**
 ```powershell
-cd examples\diligence-pack
+Copy-Item -Recurse examples\diligence-pack "$HOME\diligence-pack-work"
+Set-Location "$HOME\diligence-pack-work"
 ```
 
 ### 2. Configure the model
@@ -58,16 +61,16 @@ Replace the placeholders with your own values. See
 
 **bash**
 ```bash
-export NOSPACE_MODEL_PROVIDER=<your provider>
-export NOSPACE_MODEL_NAME=<your model>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_PROVIDER='YOUR_PROVIDER'
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+read -rs -p 'Anthropic API key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
 ```
 
 **PowerShell**
 ```powershell
-$env:NOSPACE_MODEL_PROVIDER = "<your provider>"
-$env:NOSPACE_MODEL_NAME     = "<your model>"
-$env:ANTHROPIC_API_KEY      = "<your key>"
+$env:NOSPACE_MODEL_PROVIDER = "YOUR_PROVIDER"
+$env:NOSPACE_MODEL_NAME     = "YOUR_MODEL_ID"
+# Set ANTHROPIC_API_KEY through your trusted secret manager or existing shell session.
 ```
 
 Use the key variable that matches your provider. Do not commit your key.
@@ -84,7 +87,7 @@ tokn agent-run --mode default --repo-root . \
   --prompt-file inputs/task-prompt.md \
   --model-provider "$NOSPACE_MODEL_PROVIDER" \
   --model-name "$NOSPACE_MODEL_NAME" \
-  --no-confirm --max-steps 12 \
+  --max-steps 12 \
   --capture-trajectory --export json
 ```
 
@@ -95,13 +98,14 @@ tokn agent-run --mode default --repo-root . `
   --prompt-file inputs/task-prompt.md `
   --model-provider $env:NOSPACE_MODEL_PROVIDER `
   --model-name $env:NOSPACE_MODEL_NAME `
-  --no-confirm --max-steps 12 `
+  --max-steps 12 `
   --capture-trajectory --export json
 ```
 
 Flags used: `--mode`, `--repo-root`, `--prompt-file`, `--model-provider`,
-`--model-name`, `--no-confirm`, `--max-steps`, `--capture-trajectory`,
-`--export`. All were checked with `tokn agent-run --help`.
+`--model-name`, `--max-steps`, `--capture-trajectory`, and `--export`. Check
+advanced options with `tokn agent-run --help-all`. Leave default approvals on
+for the pack's file writes.
 
 ### 4. Review the pack
 

@@ -13,7 +13,7 @@ A general-purpose LLM reads the records and gives a confident verdict. The `ener
 | `en_scenario_model` | Define and run energy transition scenarios — technology mix, demand trajectory, policy assumptions. |
 | `en_demand_forecast` | Forecast energy demand by carrier, end-use sector, and time granularity. |
 
-This is the single-agent version of the [energy relay walkthrough](../domain-relay/walkthroughs/energy/README.md). It uses the same synthetic data, one model and a few cents of tokens, not a five-model relay.
+This is the single-agent version of the [energy relay walkthrough](../domain-relay/walkthroughs/energy/README.md). It uses the same synthetic data and one model, not a five-model relay. Use a model capable of the required tool calls; provider charges and number of turns depend on the run. A missing/failed tool result is unassessed, not a pass.
 
 ## 0. What you need
 
@@ -21,13 +21,13 @@ This is the single-agent version of the [energy relay walkthrough](../domain-rel
 |---|---|---|
 | TOKN v0.3.82 or newer | Includes the domain tools this example calls. | `tokn version` |
 | 14-day trial (`tokn license trial`) | Domain modes need the trial. | `tokn license features` shows `domains:energy` or `domains:*` |
-| An LLM provider | TOKN calls a model. Any supported provider works. | See [../../SETUP.md](../../SETUP.md) |
+| An LLM provider | TOKN calls a model; see the calibrated cost and tool-result note above. | See [../../SETUP.md](../../SETUP.md) |
 
 **What leaves your machine:** the prompt, the files TOKN reads from the scratch folder, and tool results. These go to the LLM provider you configure. The demo data is synthetic.
 
 ## 1. Copy the example to a scratch folder
 
-TOKN writes `.nospace/` state and output files into the working folder, so run it outside this repo.
+TOKN writes `.nospace/` state and output files into the working folder, so run it outside this repo. The solve workspace must contain only `prompt.md` and `demo-input/`; keep this README and its answer key outside it.
 
 ```bash
 cp -r examples/energy-board-pack ~/energy-board-pack-run
@@ -49,8 +49,23 @@ Read `prompt.md` and the files in `demo-input/` (`analysis_requests.json`, `rele
 
 ## 4. Run the task
 
+Stage only the task and synthetic input files in a fresh `work/` folder, then run with that folder as the repository root.
+
 ```bash
-tokn agent-run --mode energy --repo-root . --prompt-file prompt.md --max-steps 40 --no-confirm
+mkdir work && mkdir work/demo-input
+cp prompt.md work/
+cp demo-input/* work/demo-input/
+cd work
+tokn agent-run --mode energy --repo-root . --prompt-file prompt.md --max-steps 40
+```
+
+```powershell
+New-Item -ItemType Directory -Path work | Out-Null
+New-Item -ItemType Directory -Path work\demo-input | Out-Null
+Copy-Item prompt.md work\
+Copy-Item demo-input\* work\demo-input\
+Set-Location work
+tokn agent-run --mode energy --repo-root . --prompt-file prompt.md --max-steps 40
 ```
 
 6 items with 6 tools each can take 36 or more tool calls. If the run stops early, raise `--max-steps`.
@@ -83,6 +98,8 @@ All 6 correct counts as PASS. Missing any trap item (`EN-2`, `EN-3`, `EN-4`, `EN
 </details>
 
 ## Reflect
+
+The answer key remains in this README, outside `work/`. A refused tool call, missing evidence, or incomplete result is blocked or unassessed—not a pass. These sample outputs are advisory and do not establish board approval.
 
 - Which item did you get wrong in step 3, and which number or field misled you?
 - Pick one trap item, edit its record in `demo-input/` so the deciding check passes, and predict the new status before you rerun. Did the tool agree?

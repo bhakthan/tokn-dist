@@ -34,15 +34,17 @@ reproduced that paper's benchmarks and claims none of its results.
 |---|---|---|
 | TOKN v0.3.68 or later | Ships `tokn worlds` | `tokn worlds --help` |
 | This folder | Three small evolve pools in `pools/` | `ls pools` |
-| A model provider (step 8 only) | A real `tokn evolve --run` asks a model for changes | see [SETUP.md](../../SETUP.md) |
+| A model provider (step 8 only) | A real `tokn evolve --run` asks a model for changes. Use a model capable of the required tool calls; provider charges and number of turns depend on the run. A missing/failed tool result is unassessed, not a pass. | `tokn doctor --provider anthropic` (static; does not prove the key works) |
 
 It runs on every tier, including the free Community tier.
 
 ### What leaves your machine
 
-Nothing, in steps 1–7. They read local files and write JSON files under
-`./worlds` and `./axis-check`. Step 8 runs `tokn evolve --run`, which sends
-your package's code and the task to the model provider you configured.
+Nothing, in steps 1–7. They start from the checked-in `pools/`, execute no
+code and call no model, and write JSON files under `./worlds` and `./axis-check`
+in your scratch copy. Step 8 is separate: it generates **fresh live history**
+with `tokn evolve --run`, which sends your package's code and the task to the
+model provider you configured (provider charges apply) and edits that package.
 
 ## 1. Get the pools
 
@@ -54,15 +56,21 @@ bash:
 
 ```bash
 git clone https://github.com/bhakthan/tokn-dist
-cd tokn-dist/examples/replay-worlds
+cp -r tokn-dist/examples/replay-worlds ~/tokn-replay-worlds
+cd ~/tokn-replay-worlds
 ```
 
 PowerShell:
 
 ```powershell
 git clone https://github.com/bhakthan/tokn-dist
-Set-Location tokn-dist\examples\replay-worlds
+Copy-Item -Recurse tokn-dist\examples\replay-worlds $HOME\tokn-replay-worlds
+Set-Location $HOME\tokn-replay-worlds
 ```
+
+Work in the scratch copy, so the files later steps write (`worlds/`, `axis-check/`,
+`pools/evolve-demo.jsonl`, `.tokn/logs/`) stay out of the clone. Delete the folder
+when you are done.
 
 The folder has three **synthetic** pools. They are hand-written test data in
 the real pool format, not the output of a real run. Every line says
@@ -75,7 +83,8 @@ the real pool format, not the output of a real run. Every line says
 | `pools/chain.jsonl` | 4 attempts, one after another | A single chain: no policy has a choice to make |
 
 Now make one **real** pool. `tokn evolve --demo` runs a fixed, offline
-scenario and saves its pool:
+scenario and saves its pool. It calls no model and builds or tests no code; on
+v0.3.118 the only file it wrote was the `--pool` path, here in your scratch copy:
 
 ```bash
 tokn evolve --demo --pool pools/evolve-demo.jsonl
@@ -401,6 +410,10 @@ The full text also covers what a world is, off-record probes, degenerate
 worlds, and what replay does **not** show.
 
 ## 8. Optional: record a world from your own evolve run
+
+> **Live history generation.** Unlike steps 1–7, this step spends provider tokens
+> and changes code in the package you point it at. Skip it unless you want a world
+> from your own project.
 
 A real pool comes from `tokn evolve --run`, which asks a model for changes to
 a package, measures each one, and keeps or rolls it back. Run it from the

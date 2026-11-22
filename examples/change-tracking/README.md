@@ -3,23 +3,41 @@
 `tokn vision track` compares two frames and lists what changed. TOKN measures
 where the pixels changed; the vision model names each change (moved, appeared,
 disappeared) and boxes the objects; TOKN then measures each named change from
-the pixels. This example uses two synthetic frames, so you can check the
-result against the known answer.
+the pixels. The frames are synthetic. Run only from a scratch copy; generated
+images and model results must not be written into the distribution checkout.
 
 ## Files
 
 | File | What it is |
 |------|------------|
-| `make_frames.py` | Draws `before.png` and `after.png` with Pillow. |
-| `.env.example` | Placeholder settings. Copy it to `.env` and add your key. |
+| `make_frames.py` | Draws the worked pair and an unseen synthetic pair with Pillow. |
+| `.env.example` | Reference settings; supply credentials through a trusted shell or secret store. |
+| `grading/` | Sanitized expected counts and a historical observed receipt; keep outside model input. |
 
 ## Setup
+
+Make a scratch copy outside the distribution checkout before generating images.
+All commands below run from that copy:
+
+PowerShell:
+
+```powershell
+Copy-Item -Recurse examples\change-tracking $HOME\change-tracking-run
+Set-Location $HOME\change-tracking-run
+```
+
+macOS / Linux:
+
+```bash
+cp -r examples/change-tracking ~/change-tracking-run
+cd ~/change-tracking-run
+```
 
 You need:
 
 - TOKN v0.3.105 or newer on your `PATH`.
 - Python 3.9 or newer, with Pillow (for `make_frames.py`).
-- An Anthropic API key, or an Anthropic-compatible gateway.
+- A configured vision provider and model.
 
 Install Pillow:
 
@@ -32,21 +50,22 @@ Set your key for this session.
 PowerShell:
 
 ```powershell
-$env:ANTHROPIC_API_KEY='your-anthropic-api-key'
+$secure = Read-Host 'Provider API key' -AsSecureString
+$env:ANTHROPIC_API_KEY = [System.Net.NetworkCredential]::new('', $secure).Password
 $env:TOKN_VISION_PROVIDER='anthropic'
-$env:TOKN_VISION_MODEL='claude-haiku-5-5'
+$env:TOKN_VISION_MODEL='YOUR_CONFIGURED_VISION_MODEL'
 ```
 
 macOS or Linux:
 
 ```bash
-export ANTHROPIC_API_KEY=your-anthropic-api-key
+read -rs -p 'Provider API key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
 export TOKN_VISION_PROVIDER=anthropic
-export TOKN_VISION_MODEL=claude-haiku-5-5
+export TOKN_VISION_MODEL='YOUR_CONFIGURED_VISION_MODEL'
 ```
 
-The commands below work the same on every system. Only the environment-variable
-syntax above differs. Run them from this folder.
+The remaining commands run from the scratch copy. Only the
+environment-variable syntax above differs.
 
 ## Walkthrough
 
@@ -56,11 +75,13 @@ syntax above differs. Run them from this folder.
 python make_frames.py
 ```
 
-This writes `before.png` and `after.png`:
+This writes `before.png`, `after.png`, `unseen-before.png` and
+`unseen-after.png`:
 
 - In `before.png`, there is a red disc, a blue disc, and no green square.
 - In `after.png`, the blue disc has moved right, and a green square has appeared.
 - The red disc stays where it is.
+- The unseen pair has one moved square, one disappeared disc and one unchanged disc.
 
 ### 2. Track the changes
 
@@ -72,7 +93,8 @@ The `--query` text tells TOKN what kind of objects to look for.
 
 ### 3. Read the result
 
-The result for this pair of frames:
+Historical observed output for the first pair (TOKN v0.3.105, one vision-model
+run; not a current guarantee):
 
 - `changes`:
   - One **moved** change: the blue circle. `magnitude` 0.3818, `dx` 0.1872,
@@ -95,8 +117,10 @@ the model listed was confirmed by the pixels.
 
 ### 4. Compare with the known answer
 
-The script draws every shape at a known position. Here is how the result
-compares. Positions are fractions of the frame, from 0 to 1.
+The first pair is the worked case. `grading/first-pair-receipt.json` records its
+synthetic expected counts separately from the historical measured counts. The
+receipt labels the run and its limitations; model-written names and boxes are
+not expected to repeat exactly. Positions are fractions of the frame, from 0 to 1.
 
 | Object | What the script drew | What TOKN reported |
 |--------|----------------------|--------------------|
@@ -104,12 +128,24 @@ compares. Positions are fractions of the frame, from 0 to 1.
 | Green square | Appeared, at `[0.75,0.12,0.875,0.32]` | Appeared, region `[0.75,0.12,0.876,0.322]` |
 | Red disc | Unchanged, at `[0.15,0.36,0.275,0.56]` | Not listed as a change (`dx` 0) |
 
-The measured positions match the drawn ones to within about 0.002.
+The measured positions in that historical run matched the drawn ones to within
+about 0.002. This is one observation, not a general accuracy claim.
+
+Now score the unseen pair without reading `grading/` first:
+
+```powershell
+tokn vision track unseen-before.png unseen-after.png --query "shapes"
+```
+
+Compare the returned moved/appeared/disappeared counts and the unchanged-object
+count with `grading/unseen-expected.json` from outside the model input. This
+held-out synthetic pair is for independent scoring; it is not biological or
+real-world validation.
 
 ## About these outputs
 
-These outputs come from one maintainer run with Claude Haiku 5.5 as the vision
-model on TOKN v0.3.105. Requires TOKN v0.3.105 or newer.
+The receipt describes one historical maintainer observation with a vision model
+on TOKN v0.3.105. Requires TOKN v0.3.105 or newer.
 
 Model-written fields can vary from run to run: the object names, the wording of
 each change, and the boxes (so `region` and `dx` too). Pixel-measured fields are

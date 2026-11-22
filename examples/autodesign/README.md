@@ -53,16 +53,17 @@ Follow [SETUP.md](../../SETUP.md) and set your provider. The shape is:
 
 **bash**
 ```bash
-export NOSPACE_MODEL_PROVIDER=<your provider, e.g. anthropic>
-export NOSPACE_MODEL_NAME=<your model name>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_PROVIDER='YOUR_PROVIDER'
+export NOSPACE_MODEL_NAME='YOUR_MODEL_NAME'
+read -rs -p 'Provider API key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
 ```
 
 **PowerShell**
 ```powershell
-$env:NOSPACE_MODEL_PROVIDER = "<your provider, e.g. anthropic>"
-$env:NOSPACE_MODEL_NAME = "<your model name>"
-$env:ANTHROPIC_API_KEY = "<your key>"
+$env:NOSPACE_MODEL_PROVIDER = "YOUR_PROVIDER"
+$env:NOSPACE_MODEL_NAME = "YOUR_MODEL_NAME"
+$secret = Read-Host "Provider API key" -AsSecureString
+$env:ANTHROPIC_API_KEY = [System.Net.NetworkCredential]::new('', $secret).Password
 ```
 
 ## 3. Run the autodesign experiment
@@ -71,15 +72,16 @@ The prompt is in `prompt.md`. The brief, the gates, and the budget are in `desig
 
 **bash**
 ```bash
-tokn agent-run --mode autodesign --repo-root . --prompt-file prompt.md --max-steps 25 --no-confirm
+tokn agent-run --mode autodesign --repo-root . --prompt-file prompt.md --max-steps 25
 ```
 
 **PowerShell**
 ```powershell
-tokn agent-run --mode autodesign --repo-root . --prompt-file prompt.md --max-steps 25 --no-confirm
+tokn agent-run --mode autodesign --repo-root . --prompt-file prompt.md --max-steps 25
 ```
 
-`--no-confirm` skips the per-tool approval prompts. Remove it if you want to approve each edit by hand.
+Tool-call approvals are interactive by default. Review each proposed edit. Run only on a fresh
+copy of `landing/` so the original page stays unchanged.
 
 ## 4. Read the results
 
@@ -137,15 +139,15 @@ These values come from reading the harness logic and the starting page. They wer
 | Starting page (`landing/`) | `has_title` pass; **`has_h1` fail** (two `<h1>`); **`lang_set` fail**; **`img_alt` fail**; **`contrast_ok` fail** (`#777` on `#fff` is about 4.48:1); `no_external` pass; `cta_present` pass | Rejected. The scorer reports `has_h1` as the rejection gate, because it is the first failing gate in brief order. A rejected experiment's total score is 0. |
 | A design that fixes the gates (one `<h1>`, `lang="en"`, alt text, body colour `#505050` on white, about 8:1) | All seven pass | Kept, with dimension scores near 100 in each dimension |
 
-The frontier is the set of kept designs that no other kept design beats on every dimension. A design that is better on one dimension and worse on another stays on the frontier. Check `report.md` for the exact entries.
+The frontier is the set of kept designs that no other kept design beats on every dimension. A design that is better on one dimension and worse on another stays on the frontier. Check `report.md` for the exact entries. Compare one measured candidate against the unchanged baseline; the scores describe iterations and do not establish an optimal design.
 
 ## What to look for
 
 - **The baseline is rejected, and that is the point.** A design that fails a gate cannot win on the weighted score, however good its other dimensions are.
 - **Gates are ordered.** The rejection reason is the first failing gate in the brief, not every failing gate. Fix `has_h1` first and the next failing gate becomes visible.
-- **Dimension scores are in the iteration logs, not in `results.json`.** Open `run-*/iterations/iter-N.json` to inspect one experiment's per-dimension and per-gate detail. (Check the file in your run; this layout comes from the source, not from a recorded run.)
+- **Dimension scores are in the iteration logs, not in `results.json`.** Open `run-*/iterations/iter-N.json` to inspect one experiment's per-dimension and per-gate detail.
 - **The frontier is a trade-off, not a winner.** Read `report.md` to see which designs trade readability against concision, for example.
-- **Intent themes are not confirmed here.** TOKN's source includes intent-aware strategies (reframe, fix, expand, and others), but this walkthrough does not verify that they change the run. Do not rely on them for the outcome.
+- **This walkthrough does not test intent themes.** Judge the result from the measured baseline and candidate artifacts, not from an assumed strategy.
 
 ## Troubleshooting
 

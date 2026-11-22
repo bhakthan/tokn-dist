@@ -2,20 +2,21 @@
 
 This walkthrough runs one deep-domain task, a 6-bus N-1 transmission screen, with
 TOKN's opt-in `--auto-route` flag. Instead of paying frontier price for every step,
-TOKN picks a model rung for each step: a cheap rung for read-only work, the
-configured frontier model for planning and hard steps, and a higher rung only when
+TOKN picks a model rung for each step: a faster rung for read-only work, the
+configured model for ordinary work and planning, and a higher rung only when
 steps keep failing. The agent solves the power flow, runs the contingency study and
-writes a report. The run was made with Azure OpenAI GPT-6 deployments.
+writes a report. The model names and costs below are from a historical observed run;
+they are not current defaults.
 
 The network in `workspace/` is **synthetic**: six buses and eight lines,
 invented for this example. It is not a real grid.
 
 | Rung | Model | Used for |
 |---|---|---|
-| fast | `gpt-6-luna` | Read-only steps: listing files, reading CSVs and notes |
-| standard | `gpt-6.1-terra` | The default for ordinary work steps |
-| frontier | `gpt-6.1-sol` | Planning and hard steps; also covers standard work when `gpt-6.1-terra` is not deployed |
-| apex | `gpt-6-astra` | The ceiling, reached only after repeated failed steps |
+| fast | A faster configured model | Read-only steps: listing files, reading CSVs and notes |
+| standard | Your configured model | The default for ordinary work steps |
+| frontier | A higher-capability configured model | Planning and hard steps |
+| apex | An optional ceiling model | Reached only after repeated failed steps |
 
 Routing is opt-in. Without `--auto-route` (or `TOKN_AUTO_ROUTE=1`) every step uses
 the one model you name.
@@ -27,8 +28,8 @@ the one model you name.
 | Requirement | Why | Check |
 |---|---|---|
 | TOKN **v0.3.102 or newer** | Release with `--auto-route` | `tokn version` |
-| An **Azure AI Foundry** resource with an `/openai/v1` endpoint | Per-request model routing needs the v1 endpoint. Deployments are named after the models (`gpt-6.1-sol` is the minimum). Deploy as many rungs as you like; TOKN routes across the ones you have. | Foundry portal, deployments page |
-| `az login`, or an API key | Authentication | `az account show` |
+| A configured model provider and endpoint | Per-request model routing needs a provider that supports the selected models and routing endpoint. | `tokn doctor --provider <id>` checks static configuration only |
+| Provider authentication | Use the provider's supported credential source. | Use a provider-specific authenticated probe only when you choose to verify live access |
 | **14-day trial** (`tokn license trial`) | `--mode grideng` is a domain mode | `tokn license features` |
 | **Python 3** on PATH | The agent writes and runs a solver script | `python --version` |
 
@@ -42,41 +43,16 @@ standard library, so no packages are installed.
 
 ## 1. Configure the endpoint
 
-Copy the template and fill in your own values:
-
-macOS / Linux:
-
-```bash
-cd examples/auto-route-grid
-cp .env.example .env
-```
-
-Windows PowerShell:
-
-```powershell
-Set-Location examples\auto-route-grid
-Copy-Item .env.example .env
-```
-
-Edit `.env`. Use your own resource name, and use either a key or the Azure AD
-token path. Never commit `.env`; the folder's `.gitignore` already excludes it.
+Use `.env.example` as a reference template only; do not copy, source or import
+it. Set endpoint, deployment and credential values directly in a trusted shell
+for the provider you selected. Never commit a populated `.env`.
 
 ## 2. Load the settings into your shell
 
-macOS / Linux:
-
-```bash
-set -a; source .env; set +a
-```
-
-Windows PowerShell:
-
-```powershell
-Get-Content .env | Where-Object { $_ -match '^\s*[^#\s][^=]*=' } | ForEach-Object {
-  $k, $v = $_ -split '=', 2
-  Set-Item -Path "env:$($k.Trim())" -Value $v.Trim()
-}
-```
+Set only the values for your selected provider in your interactive shell. For
+example, use your provider's documented endpoint and deployment alias, and
+enter any secret through a trusted secret store or hidden prompt. Do not copy
+placeholders such as `YOUR_TRUSTED_HOST` unchanged.
 
 ## 3. Run the agent with auto-route
 
@@ -87,8 +63,8 @@ macOS / Linux:
 ```bash
 cd workspace
 tokn agent-run --mode grideng --auto-route \
-  --model-provider azure-openai --model-name gpt-6.1-sol \
-  --prompt-file TASK.md --max-steps 40 --no-confirm \
+  --model-provider YOUR_PROVIDER --model-name 'YOUR_CONFIGURED_MODEL' \
+  --prompt-file TASK.md --max-steps 40 \
   --output-format json --repo-root .
 ```
 
@@ -97,14 +73,13 @@ Windows PowerShell:
 ```powershell
 Set-Location workspace
 tokn agent-run --mode grideng --auto-route `
-  --model-provider azure-openai --model-name gpt-6.1-sol `
-  --prompt-file TASK.md --max-steps 40 --no-confirm `
+  --model-provider YOUR_PROVIDER --model-name 'YOUR_CONFIGURED_MODEL' `
+  --prompt-file TASK.md --max-steps 40 `
   --output-format json --repo-root .
 ```
 
-`--model-name` is the configured model. It is the frontier rung, and it takes over the
-standard rung's work when `gpt-6.1-terra` is not deployed. The agent should finish with `dcflow.py`, `GRID_REPORT.md`
-and a summary in the output.
+`--model-name` is your configured model. Review and approve tool calls interactively.
+The agent should finish with `dcflow.py`, `GRID_REPORT.md` and a summary in the output.
 
 ## 4. Read the routing trace
 
@@ -125,7 +100,11 @@ grep -h -E 'auto_route' .nospace/runs/*.jsonl
 
 ## What happened in our run
 
-The run used the same task and the same configured model as above. Its routing trace:
+The following is a historical observed run, not a current default or a promise
+of routing, model availability, or cost.
+
+The historical run used Azure OpenAI GPT-6 deployments. Its observed routing trace
+and deployment names are examples only, not current defaults:
 
 | Step | Model | Rung | What the step did |
 |---|---|---|---|
@@ -138,7 +117,7 @@ The run used the same task and the same configured model as above. Its routing t
 **Outcome:** success, 14 steps, 15 tool calls, no tool errors, about 3 minutes.
 No step had all of its tool calls fail, so the run never moved to `gpt-6-astra`.
 
-**Cost:** about **$0.099** with `--auto-route`, against about **$0.202** for the same
+**Observed cost:** about **$0.099** with `--auto-route`, against about **$0.202** for the same
 task with every step on `gpt-6.1-sol`. This is one run each. The two runs took
 different paths, so treat the numbers as indicative, not as a benchmark.
 
@@ -173,7 +152,7 @@ approximation, and the report's limitations section says so.
 ## Try it differently
 
 - **Compare the cost.** Run the same command without `--auto-route`. Every step then
-  uses `gpt-6.1-sol`. Compare the cost in the run's output with the figures above.
+  uses your configured model. Compare your run's output with the historical figures above.
   Expect different trajectories, so compare several runs before drawing a conclusion.
 - **Use the environment variable instead of the flag.** Set `TOKN_AUTO_ROUTE=1` in
   your shell (`$env:TOKN_AUTO_ROUTE = "1"` in PowerShell, `export TOKN_AUTO_ROUTE=1`
@@ -199,8 +178,6 @@ bash:
 rm -rf workspace/.nospace workspace/.tokn workspace/__pycache__
 rm -f workspace/dcflow.py workspace/GRID_REPORT.md workspace/dcflow_results.json
 ```
-
-Also delete `.env` if you are sharing the folder. Keep only `.env.example`.
 
 ## Troubleshooting
 

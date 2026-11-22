@@ -108,14 +108,16 @@ the OpenAI / Azure OpenAI Decisions API. The [decisions-api](../decisions-api/RE
 example shows each configuration. For example, OpenAI:
 
 ```bash
-export SYSTEMONE_BACKEND=openai
-export OPENAI_API_KEY=<your OpenAI key>
+export SYSTEMONE_BACKEND='openai'
+read -rs -p 'OpenAI API key: ' OPENAI_API_KEY; echo
+export OPENAI_API_KEY
 ```
 
 **Web search (optional).** Set your WebIQ key:
 
 ```bash
-export WEBIQ_API_KEY=<your WebIQ key>
+read -rs -p 'WebIQ API key: ' WEBIQ_API_KEY; echo
+export WEBIQ_API_KEY
 ```
 
 TOKN also reads the name `WEB-IQ-KEY`, which suits `credentials.env` (most shells cannot
@@ -247,6 +249,10 @@ Expected (illustrative and trimmed; the advisory level is whatever the site says
   "decision_calls": 1
 }
 ```
+
+For a live result, record the retrieval date and source URL alongside the
+receipt. A saved snapshot and its replay are historical evidence of what was
+retrieved then, not a statement of today's advisory.
 
 Put the two runs side by side:
 

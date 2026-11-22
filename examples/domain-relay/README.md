@@ -31,9 +31,12 @@ Twice in every run, **TOKN reflects on TOKN**:
 
 ## Walkthroughs
 
-Each walkthrough is a real, graded run. It includes the inputs, every stage's artifact, the decision probabilities, the critique-and-response table and the grader's checks. Read one end to end before running your own.
+There are 19 available scenario folders under `scenarios/`; 11 have entries in
+the historical roster of published walkthroughs below. A `PASS` is the verdict
+recorded in that walkthrough, not a fresh run or evidence that every available
+scenario passed. Receipts are examples, not certification.
 
-| Domain | Problem | Verdict |
+| Domain | Problem | Recorded verdict |
 |---|---|---|
 | [batterypass](walkthroughs/batterypass/README.md) | Gate-check six EU Battery Passport drafts before publication | PASS |
 | [climsci](walkthroughs/climsci/README.md) | Check five CMIP6 regional claims for plausibility, model independence and likelihood wording | PASS |
@@ -48,7 +51,7 @@ Each walkthrough is a real, graded run. It includes the inputs, every stage's ar
 | [powergrid](walkthroughs/powergrid/README.md) | N-1-1 contingency and grid-forming stability screen for an interconnection cluster | PASS |
 <!-- walkthrough rows -->
 
-Start with **[batterypass](walkthroughs/batterypass/README.md)**. Its six drafts include one whose declared chemistry contradicts its cathode, which only a cross-section check catches.
+Start with **[batterypass](walkthroughs/batterypass/README.md)**. Its supplied receipt illustrates a cross-section inconsistency check; it is not a product certification.
 
 ## What is in this folder
 
@@ -59,7 +62,7 @@ Start with **[batterypass](walkthroughs/batterypass/README.md)**. Its six drafts
 | [`prompts/`](prompts/) | One prompt per stage. Prompts are data: edit them, not the code. |
 | [`scenarios/<domain>/`](scenarios/) | `brief.md`, synthetic `inputs/`, and `scenario.json` (ground truth, expected tools, traps). |
 | [`walkthroughs/<domain>/`](walkthroughs/) | Published runs: a step-by-step README plus every artifact in `run/`. |
-| [`.env.example`](.env.example) | Every key the relay needs, with placeholders only. |
+| [`.env.example`](.env.example) | Reference list of the hosted configuration variables; the driver does not load it. |
 
 All data is synthetic. No real patients, compounds, sites, assets or organisations appear.
 
@@ -72,7 +75,7 @@ All data is synthetic. No real patients, compounds, sites, assets or organisatio
 | TOKN with a domain license | Domain modes need the trial or a paid license | Download from this repo's releases, then `tokn license trial` |
 | Python 3.11+ | Runs the driver and grader (standard library only) | Windows: `winget install Python.Python.3.12` · macOS: `brew install python@3.12` · Linux: your package manager |
 | Azure CLI, logged in | Gets a short-lived token for gpt-6.1-sol | Install from <https://aka.ms/azcli>, then `az login` |
-| Model access | Your own gateway or endpoints for the six models | Copy `.env.example` to `.env` and fill in every key |
+| Model access | Credentials and endpoints for the configured model stages | Set the listed values in a trusted shell session or secret manager; do not load a repository `.env` file |
 
 Some domain tools also use optional Python packages, for example `rdkit` for drugdisc's PAINS cross-check. When one is missing, the tool returns the exact install command and the run records the check as **unassessed** rather than passing it. That is the behaviour the walkthroughs show.
 
@@ -80,16 +83,17 @@ Some domain tools also use optional Python packages, for example `rdkit` for dru
 
 ```powershell
 cd examples/domain-relay
-copy .env.example .env        # then edit .env; never commit it
-python run.py --domains drugdisc --out C:\tmp\relay-drugdisc
-python run.py --domains drugdisc,matsci --parallel 2 --out C:\tmp\relay-two
+python run.py --domains drugdisc --out "$HOME\relay-drugdisc" --approve-all-tools
+python run.py --domains drugdisc,matsci --parallel 2 --out "$HOME\relay-two" --approve-all-tools
 ```
 
-- `--out` must be an absolute path to a folder that does not exist yet.
+- This script is unattended. Without `--approve-all-tools`, agent tool calls are not auto-approved and stages that need tools may stop. The opt-in maps to TOKN's `--no-confirm`, which auto-approves **all** tool calls; use it only after reviewing the scenario and only with a new, dedicated output directory containing no other files. MCP is disabled, but model endpoints still receive prompts and synthetic inputs. Do not include real or sensitive data.
+- For a new run, `--out` must be an absolute path to a new, dedicated directory outside the example checkout, with an existing parent directory that you own. The driver preflights the binary, license, selected scenarios, and trusted-shell credentials before creating it.
+- The endpoint variables must be configured by the operator in a trusted shell and use HTTPS. The reference `.env.example` is not loaded by the driver.
 - `--resume-from N` restarts an existing run at stage N.
 - `--stages 0,1` runs only the stages you list.
 
-Each domain writes `<out>/<domain>/ws/`, which holds every artifact plus `TRACE.json`. It also writes `logs/` and `evaluation.json`. A results matrix lands in `results/`.
+Each domain writes only beneath `<out>/<domain>/`; the run receipt is `<out>/SUMMARY.md`. The driver does not write results beside its source files. Keep this output private unless you have reviewed and scrubbed the selected material before sharing.
 
 Expect 20–60 minutes per domain, and paid model calls on every stage except grading.
 

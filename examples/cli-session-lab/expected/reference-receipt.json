@@ -1,0 +1,12 @@
+{
+  "version": "0.3.118",
+  "input_digest": "sha256:e50ebb3335e839eefe2ac7423c9c5ca97fbd2e147818b8e907b533e59f365600",
+  "digest_scope": "changes.txt; sorted relative path + NUL + bytes + NUL",
+  "scenario": "offline discovery plus optional summary of a synthetic changelog",
+  "checker": "tokn agent-run --help-all and tokn agent-repl --help-all",
+  "status": "command help observed; no live model run performed",
+  "limitations": [
+    "The optional summary depends on the selected model and may be billed.",
+    "No session transcript or model answer is represented by this receipt."
+  ]
+}

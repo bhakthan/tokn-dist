@@ -1,6 +1,6 @@
 {
   "note": "All values are synthetic, generated for a TOKN live-test scenario. No real model output, region study or institution is represented.",
-  "family_reference": "Family map copied from TOKN climsci ModelFamilies (validation.go). A source_id not in this map is its own family.",
+  "family_reference": "Synthetic family grouping for this exercise. A source_id not in this map is its own family.",
   "model_families": {
     "ACCESS-CM2": "ACCESS",
     "ACCESS-ESM1-5": "ACCESS",

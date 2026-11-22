@@ -21,7 +21,7 @@ tests.
 | `run-agent.ps1` | PowerShell (pwsh 7+) runner: preflight, fresh `work/` copy, run TOKN, run the checker. |
 | `run-agent.sh` | Bash runner with the same steps. |
 | `check.py` | Starts `server.py` as an MCP client and checks it against an answer key it computes itself. |
-| `.env.example` | Template for your API key and optional gateway settings. Copy it to `.env`. |
+| `.env.example` | Reference template. The runners read only `ANTHROPIC_API_KEY` from a local `.env`; gateway settings come from your shell. |
 | `.gitignore` | Keeps `.env`, `work/` and `data/` out of git. |
 
 `data/` and `work/` are generated. The runner rebuilds both, and both are
@@ -50,29 +50,35 @@ leave the rest alone.
 - **Python 3.10 or newer.** No pip packages are needed. The example is
   standard library only.
 - **An Anthropic API key**, or the key from an Anthropic-compatible gateway.
+  Use a model capable of the required tool calls; provider charges and number
+  of turns depend on the run. A missing/failed tool result is unassessed, not
+  a pass.
 - **PowerShell 7+** if you use `run-agent.ps1`. Bash is enough for `run-agent.sh`.
 
 ## Setup
 
 PowerShell:
 
+Set the key in your session, not in a file. In PowerShell, read it from your
+secret store (for example `Get-Secret` from the SecretManagement module):
+
 ```powershell
 cd examples\rnaseq-mcp-server
-copy .env.example .env
-# Edit .env: set ANTHROPIC_API_KEY, and ANTHROPIC_BASE_URL if you use a gateway
+$env:ANTHROPIC_API_KEY = Get-Secret -Name AnthropicKey -AsPlainText
 ```
 
-bash:
+bash (the key is typed without echo and kept out of shell history):
 
 ```bash
 cd examples/rnaseq-mcp-server
-cp .env.example .env
-# Edit .env: set ANTHROPIC_API_KEY, and ANTHROPIC_BASE_URL if you use a gateway
+read -rs ANTHROPIC_API_KEY && export ANTHROPIC_API_KEY
 ```
 
-A gateway value looks like `https://your-gateway.example.com/anthropic`. Use
-your own endpoint here. Never commit `.env`. It is git-ignored, but check
-with `git status` before you push.
+If you use an Anthropic-compatible gateway, also set `ANTHROPIC_BASE_URL`
+(and `ANTHROPIC_AUTH_HEADER` if your gateway needs it) in the same trusted
+shell. The runners never read endpoint or routing settings from a file in
+this folder. A local `.env` with only `ANTHROPIC_API_KEY=` is still accepted
+as a fallback; it is git-ignored, but check with `git status` before you push.
 
 ## Step 1: Read the request
 
@@ -135,32 +141,53 @@ The script does five things, in order.
 
 1. **Preflight.** It checks that `tokn` and Python are installed. If either is
    missing, it lists every missing dependency and stops.
-2. **Load `.env`.** It reads `KEY=value` lines and does not override variables
-   you already set. It stops if `ANTHROPIC_API_KEY` is still empty.
-3. **Fresh `work/` copy.** It deletes the old `work/`, regenerates `data/`,
-   and copies only `data/` and `task.md` into it. The agent never sees
+2. **Key.** If `ANTHROPIC_API_KEY` is not already set, it reads that one line
+   from a local `.env`. Every other line, including any base URL, is ignored.
+   It stops if the key is empty or still a placeholder.
+3. **Fresh `work/` copy.** A previous `work/` is renamed to `work.prev-<timestamp>/`,
+   not deleted, so a failed run's evidence survives. The script regenerates `data/`
+   and copies only `data/` and `task.md` into the new `work/`. The agent never sees
    `check.py` or the rest of this folder.
 4. **Run TOKN.** It runs the agent inside `work/`. The command is:
 
    ```bash
-   tokn agent-run --model-provider anthropic --model-name claude-haiku-5-5 \
+   tokn agent-run --model-provider anthropic --model-name claude-haiku-5.5 \
      --repo-root . --prompt-file task.md \
-     --max-steps 40 --no-confirm --mcp-disabled
+     --max-steps 40 --permission-mode default --mcp-disabled
    ```
 
-   `--no-confirm` skips the approval prompts, so the run is unattended.
+   `--permission-mode default` asks you before each file write or command.
+   To run unattended, opt in with `-Unattended` (PowerShell) or `UNATTENDED=1`
+   (bash), which swaps in `--no-confirm` and auto-approves every tool call. Do
+   that only on a throwaway machine or folder.
    `--mcp-disabled` keeps the agent from connecting to other MCP servers.
-5. **Check.** It runs `check.py` on `work/` and exits with its result.
+5. **Check.** It runs `check.py` on `work/`. The overall result passes only if
+   the agent exited 0 **and** `check.py` passed. A failed agent run exits non-zero
+   even when `check.py` passes.
 
 To try another model, pass `-Model` in PowerShell or set `MODEL` in bash:
 
 ```powershell
-pwsh ./run-agent.ps1 -Model claude-sonnet-5-5
+pwsh ./run-agent.ps1 -Model claude-sonnet-5.5
 ```
 
 ```bash
-MODEL=claude-sonnet-5-5 ./run-agent.sh
+MODEL=claude-sonnet-5.5 ./run-agent.sh
 ```
+
+To keep the agent's working copy outside this folder, give a new path. The
+runner refuses a path that already exists:
+
+```powershell
+pwsh ./run-agent.ps1 -WorkDir $HOME\rnaseq-mcp-work
+```
+
+```bash
+WORK_DIR=~/rnaseq-mcp-work ./run-agent.sh
+```
+
+Then pass the same path to `check.py` in Step 4.
+
 
 If you prefer to run TOKN by hand, create `work/` yourself, copy `data/` and
 `task.md` into it, then run the `tokn agent-run` command above from inside
@@ -168,9 +195,10 @@ If you prefer to run TOKN by hand, create `work/` yourself, copy `data/` and
 
 ## Step 3: What a real run looked like
 
-This is one live run on Claude Haiku 5.5:
+This is one historical live run on Claude Haiku 5.5, recorded with an earlier
+unattended version of the runner. It is not a guarantee of cost or outcome:
 
-- 20 agent steps, about 5 minutes, about US$0.10.
+- 20 agent steps, about 5 minutes. Provider charges for your run will differ.
 - 30 tool calls. The agent exited with code 0.
 - The agent wrote `server.py` (579 lines) and `test_server.py` (273 lines,
   19 `unittest` tests, all passing).
@@ -360,13 +388,13 @@ committed.
 PowerShell:
 
 ```powershell
-Remove-Item -Recurse -Force work, data
+Remove-Item -Recurse -Force work, data, work.prev-* -ErrorAction SilentlyContinue
 ```
 
 bash:
 
 ```bash
-rm -rf work data
+rm -rf work work.prev-* data
 ```
 
 The `.env` file holds your key. Delete it too if you do not need it.

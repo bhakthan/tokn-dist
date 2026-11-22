@@ -44,7 +44,7 @@ Result + recorded evidence -> audit the exchange
 | TOKN (`tokn`) on your PATH, v0.3.90 or later | Ships `agent-worker`, `agent-leader`, `toknish` and `tkm` | `tokn version` |
 | Git | Creates the committed synthetic repository sent to the worker | `git --version` |
 | Ollama with a model pulled (recommended, offline) | Runs the bench and the worker's model locally | `ollama list` |
-| *or* a cloud provider key in `.env` (optional) | Use a hosted model instead of Ollama | see `.env.example` |
+| *or* a cloud provider key in your trusted process environment (optional) | Use a hosted model instead of Ollama | see `.env.example` |
 | A shared token, `TOKN_WORKER_TOKEN` | Authenticates leader and worker | set by the scripts for the session |
 
 For the bash wrapper, also have `curl` available for the Ollama health check
@@ -53,13 +53,21 @@ For the bash wrapper, also have `curl` available for the Ollama health check
 (`openssl version`); PowerShell uses its built-in random generator.
 Run the commands below from `examples/toknish`.
 
+If Git is missing, install it before continuing: Windows
+`winget install Git.Git`, macOS `brew install git`, or Debian/Ubuntu
+`sudo apt-get install -y git`. For the Bash wrapper, install missing `curl`
+with `brew install curl` on macOS or `sudo apt-get install -y curl` on
+Debian/Ubuntu. The Linux Ollama install uses a versioned package from its
+official download page; verify the checksum rather than piping an installer
+script into a shell.
+
 ### Install Ollama and pull a model
 
 Pick the command for your system, then pull the model:
 
 - **Windows:** `winget install Ollama.Ollama`, or download the installer from https://ollama.com/download
 - **macOS:** `brew install ollama`, or download the app from https://ollama.com/download
-- **Linux:** `curl -fsSL https://ollama.com/install.sh | sh`
+- **Linux:** Choose a specific Ollama release package from the [official download page](https://ollama.com/download), verify its published checksum, install it, then check `ollama --version`. Do not pipe a downloaded installer directly into a shell.
 
 Then, on every system:
 
@@ -74,13 +82,21 @@ compact-answer reliability; the worker run and benchmark test those separately.
 
 ### Install TOKN
 
-Follow the TOKN install instructions for your OS, then open a new terminal and run `tokn version`. If `tokn` is not found, the run scripts stop with a message telling you what to fix.
+Use TOKN v0.3.90 or newer. Download a numbered release from the
+[public releases page](https://github.com/bhakthan/tokn-dist/releases), verify
+its published checksum, then add the binary to `PATH`. Do not pipe a mutable
+remote installer into a shell. Open a new terminal and run `tokn version`.
+If `tokn` is not found, the run scripts stop with an actionable hint.
 
 ## 1. Try it: a two-terminal loopback federation
 
 This runs one worker and one leader on the same machine, talking over `127.0.0.1`. Both sides share one token.
 
 ### Step 1: set the shared token (both terminals)
+
+The wrappers generate this token for one run if it is unset. If you set it
+manually, use a unique secret in the process environment; `.env` is not read
+for this value.
 
 bash:
 
@@ -103,65 +119,80 @@ Never write the token into a file you commit.
 ### Step 2: start the worker (terminal A)
 
 The worker keeps run records in `--federation-dir`, which must be an absolute
-path. Use a fresh `scratch/` folder. Create and commit a tiny repository so
-the leader can explicitly send that content to the worker in step 3.
+path. Create a unique scratch folder under your system temp directory, outside
+the example checkout. Create and commit a tiny repository so the leader can
+explicitly send that content to the worker in step 3.
 
 bash:
 
 ```bash
-mkdir -p "$PWD/scratch/worker-state" "$PWD/scratch/repo"
-printf 'Synthetic TOKNish example.\n' > "$PWD/scratch/repo/README.md"
-git -C "$PWD/scratch/repo" init -q
-git -C "$PWD/scratch/repo" add README.md
-git -C "$PWD/scratch/repo" -c user.name=demo -c user.email=demo@example.invalid commit -qm "sample"
+EXAMPLE_DIR="$PWD"
+SCRATCH="${TMPDIR:-/tmp}/toknish-manual-$(date +%Y%m%d%H%M%S)-$$"
+mkdir -m 700 "$SCRATCH"
+mkdir -p "$SCRATCH/worker-state" "$SCRATCH/repo"
+printf 'Synthetic TOKNish example.\n' > "$SCRATCH/repo/README.md"
+git -C "$SCRATCH/repo" init -q
+git -C "$SCRATCH/repo" add README.md
+git -C "$SCRATCH/repo" -c user.name=demo -c user.email=demo@example.invalid commit -qm "sample"
+printf 'In terminal B, set SCRATCH to: %s\n' "$SCRATCH"
+cd "$SCRATCH"
 tokn agent-worker --listen 127.0.0.1:8099 --worker-id w1 \
-  --repo-root "$PWD/scratch/repo" \
+  --repo-root "$SCRATCH/repo" \
   --provider ollama --model qwen3:8b \
-  --federation-dir "$PWD/scratch/worker-state"
+  --federation-dir "$SCRATCH/worker-state"
 ```
 
 PowerShell:
 
 ```powershell
-New-Item -ItemType Directory -Force "$PWD\scratch\worker-state", "$PWD\scratch\repo" | Out-Null
-Set-Content "$PWD\scratch\repo\README.md" "Synthetic TOKNish example."
-git -C "$PWD\scratch\repo" init -q
-git -C "$PWD\scratch\repo" add README.md
-git -C "$PWD\scratch\repo" -c user.name=demo -c user.email=demo@example.invalid commit -qm "sample"
+$EXAMPLE_DIR = (Get-Location).Path
+$SCRATCH = Join-Path ([IO.Path]::GetTempPath()) "toknish-manual-$([guid]::NewGuid().ToString('N'))"
+New-Item -ItemType Directory -Path (Join-Path $SCRATCH 'worker-state'), (Join-Path $SCRATCH 'repo') | Out-Null
+Set-Content (Join-Path $SCRATCH 'repo\README.md') "Synthetic TOKNish example."
+git -C (Join-Path $SCRATCH 'repo') init -q
+git -C (Join-Path $SCRATCH 'repo') add README.md
+git -C (Join-Path $SCRATCH 'repo') -c user.name=demo -c user.email=demo@example.invalid commit -qm "sample"
+Write-Output "In terminal B, set SCRATCH to: $SCRATCH"
+Set-Location $SCRATCH
 tokn agent-worker --listen 127.0.0.1:8099 --worker-id w1 `
-  --repo-root "$PWD\scratch\repo" `
+  --repo-root (Join-Path $SCRATCH 'repo') `
   --provider ollama --model qwen3:8b `
-  --federation-dir "$PWD\scratch\worker-state"
+  --federation-dir (Join-Path $SCRATCH 'worker-state')
 ```
 
 The worker offers the toknish profile by default. Add `--no-toknish` to turn it off and serve plain JSON only.
 
 ### Step 3: run the leader (terminal B)
 
+Set `SCRATCH` to the exact unique path printed by terminal A.
 Use `--wire auto`. The leader uses toknish with every worker that offers it, and plain JSON with the others.
 
 bash:
 
 ```bash
+SCRATCH='/paste/the/printed/path'
+cd "$SCRATCH"
 tokn agent-leader \
   --worker w1=http://127.0.0.1:8099 \
   --wire auto \
-  --seed-repo "$PWD/scratch/repo" \
-  --federation-dir "$PWD/scratch/leader-state" \
+  --seed-repo "$SCRATCH/repo" \
+  --federation-dir "$SCRATCH/leader-state" \
   --prompt "List the files in the repository root and say which one looks like a README." \
-  --out "$PWD/scratch/results.json"
+  --out "$SCRATCH/results.json"
 ```
 
 PowerShell:
 
 ```powershell
+$SCRATCH = 'PASTE_THE_PRINTED_PATH'
+Set-Location $SCRATCH
 tokn agent-leader `
   --worker w1=http://127.0.0.1:8099 `
   --wire auto `
-  --seed-repo "$PWD\scratch\repo" `
-  --federation-dir "$PWD\scratch\leader-state" `
+  --seed-repo (Join-Path $SCRATCH 'repo') `
+  --federation-dir (Join-Path $SCRATCH 'leader-state') `
   --prompt "List the files in the repository root and say which one looks like a README." `
-  --out "$PWD\scratch\results.json"
+  --out (Join-Path $SCRATCH 'results.json')
 ```
 
 `--prompt` runs one ad-hoc task. For several dependent tasks, write a plan with `tokn workplan` and pass it with `--plan`. See the [federation walkthrough](../federation/README.md).
@@ -177,13 +208,13 @@ a successful exchange alone does not establish a correct response.
 - **Audit log.** The leader writes one subdirectory per session under `--federation-dir`. Its name is the session ID. Verify the chain offline:
 
 ```bash
-tokn toknish audit "SESSION_ID" --dir "$PWD/scratch/leader-state"
+tokn toknish audit "SESSION_ID" --dir "$SCRATCH/leader-state"
 ```
 
 PowerShell:
 
 ```powershell
-tokn toknish audit "SESSION_ID" --dir "$PWD\scratch\leader-state"
+tokn toknish audit "SESSION_ID" --dir (Join-Path $SCRATCH 'leader-state')
 ```
 
 Replace `SESSION_ID` with the session directory name.
@@ -197,7 +228,9 @@ or task completion.
 
 ### Step 5: clean up
 
-Press Ctrl+C in terminal A to stop the worker. The `scratch/` folder is git-ignored. Delete it when you are done.
+Press Ctrl+C in terminal A to stop the worker. Review the printed temp path,
+then remove only that run's folder when finished. No runtime output is written
+into the example checkout.
 
 ## 2. Try it: benchmark compact model answers (toknish-M)
 
@@ -205,6 +238,26 @@ toknish-M asks the model for a compact structured answer. The bench runs
 the same questions twice, once as prose and once in the compact format.
 It checks answer quality, answer size and format compliance. It does not
 compress or claim savings on the model's reasoning.
+
+For a standalone bench, run TOKN from a fresh temp folder so run records and
+reports stay out of this checkout. Keep `EXAMPLE_DIR` pointed at this folder;
+reuse a unique `SCRATCH` path only for this run.
+
+From the example folder, set these in the shell that will run the commands:
+
+```bash
+EXAMPLE_DIR="$PWD"
+SCRATCH="${TMPDIR:-/tmp}/toknish-bench-$(date +%Y%m%d%H%M%S)-$$"
+mkdir -m 700 "$SCRATCH"
+cd "$SCRATCH"
+```
+
+```powershell
+$EXAMPLE_DIR = (Get-Location).Path
+$SCRATCH = Join-Path ([IO.Path]::GetTempPath()) "toknish-bench-$([guid]::NewGuid().ToString('N'))"
+New-Item -ItemType Directory -Path $SCRATCH | Out-Null
+Set-Location $SCRATCH
+```
 
 ### (a) Smoke test with the built-in sample
 
@@ -226,19 +279,23 @@ The sample is a small embedded set. It is a smoke test that shows the pipeline w
 
 ```bash
 tokn tkm bench --provider ollama --model qwen3:8b \
-  --dataset dataset.json --out bench-report.json
+  --dataset "$EXAMPLE_DIR/dataset.json" --out "$SCRATCH/bench-report.json"
 ```
 
 PowerShell:
 
 ```powershell
 tokn tkm bench --provider ollama --model qwen3:8b `
-  --dataset dataset.json --out bench-report.json
+  --dataset (Join-Path $EXAMPLE_DIR 'dataset.json') --out (Join-Path $SCRATCH 'bench-report.json')
 ```
 
 Add `--n` to cap how many cases run, `--retries` to set re-asks, and `--seed` to make the bootstrap repeatable. Use `--json` to print the whole report instead of the summary.
 
-To bench a cloud model, set `--provider` and `--model` to your provider's values and put its key in `.env`. The scripts read `.env` for you.
+To bench a cloud model, set `--provider` and `--model` to your provider's
+values. The scripts import only `OPENAI_API_KEY` and `ANTHROPIC_API_KEY` from
+an untracked `.env`; keep credentials in a trusted process environment and put
+any other provider key directly in the trusted process environment.
+The worker token is never loaded from `.env`.
 
 ### Reading the bench report
 
@@ -270,7 +327,7 @@ The JSON report written by `--out` contains every row. Use it for the exact defi
 `run-local.ps1` (PowerShell) and `run-local.sh` (bash) do the whole loopback run and the bench in one go. Before doing anything, they check for:
 
 1. `tokn` on your PATH.
-2. The provider: Ollama installed and reachable, with the model pulled. For a cloud provider, they remind you to set its key in `.env`.
+2. The provider: Ollama installed and reachable, with the model pulled. For a cloud provider, they remind you to set its key in the trusted process environment or in an optional, allowlisted `.env`.
 3. A shared token. If `TOKN_WORKER_TOKEN` is not set, they create one for the run only and do not write it to disk.
 
 If something is missing, they stop with a message naming the problem and the command that fixes it.
@@ -288,8 +345,9 @@ PowerShell:
 ```
 
 The bash wrapper takes `[MODEL] [PROVIDER]`; PowerShell uses `-Model` and
-`-Provider`. These scripts start a worker, run model calls and write
-`scratch/` outputs. They are not read-only preflight commands. Each stops
+`-Provider`. These scripts start a worker, run model calls and write to a unique folder
+under the system temp directory, outside the checkout. They are not read-only
+preflight commands. Each stops
 its worker on exit. Check individual command results: the wrapper's final
 message alone does not establish an audit or benchmark pass.
 Unlike the manual walkthrough, the wrappers do not pass `--seed-repo`.
@@ -303,7 +361,7 @@ repository content; the wrapper's file-listing answer does not establish that.
 | `README.md` | This walkthrough |
 | `dataset.json` | 12 synthetic cases for the bench, with `context` on four |
 | `run-local.ps1`, `run-local.sh` | Preflight and the full local run |
-| `.env.example` | Placeholders for a cloud provider key. Copy to `.env`. |
+| `.env.example` | Blank cloud-provider key fields. The wrappers load only the listed API keys. |
 | `.gitignore` | Keeps `scratch/`, `.env` and bench reports out of git |
 
 ## Troubleshooting

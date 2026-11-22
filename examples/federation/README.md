@@ -47,12 +47,18 @@ Commit sample -> preview plan -> run workers -> staged changes -> your review
 Configure the model on each worker through environment variables. Use placeholders only:
 
 ```
-NOSPACE_MODEL_PROVIDER=anthropic
-NOSPACE_MODEL_NAME=<a model you have access to>
-ANTHROPIC_API_KEY=<your key>
+NOSPACE_MODEL_PROVIDER='anthropic'
+NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
 ```
 
-Put these in your shell before starting each worker, or in a `.env` file that TOKN reads from the repository root. See [SETUP.md](../../SETUP.md).
+Load the provider secret into each worker's trusted shell/session. Do not source
+a repository `.env` file; it is data, not executable configuration. See
+[SETUP.md](../../SETUP.md).
+
+Use the loopback dry run first. Worker credentials and TLS settings are
+topology-specific; configure remote workers only with trusted endpoints and
+individual credentials. Applying patches is optional; inspect the diff before
+accepting any worker changes.
 
 ### What leaves your machine
 

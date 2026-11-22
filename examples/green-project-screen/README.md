@@ -4,6 +4,9 @@
 
 A general-purpose LLM reads the records and gives a confident verdict. The `greenenergy` domain mode runs each item through deterministic domain tools and gates, so the status comes from a tool result, not from the model's impression of the numbers.
 
+All project data is synthetic. A tool's eligibility disposition is a screen,
+not a funding approval; a human decision-maker must make any funding decision.
+
 | Tool | What it does |
 |---|---|
 | `compute_hydrogen_production` | Compute electrolytic hydrogen output, LCOH and carbon-intensity gate. |
@@ -11,7 +14,10 @@ A general-purpose LLM reads the records and gives a confident verdict. The `gree
 | `run_solar_yield` | Run an hourly PVWatts v5 solar yield simulation. |
 | `run_wind_yield` | Compute wind-farm AEP from a power curve and wind distribution. |
 
-This is the single-agent version of a TOKN domain-relay scenario. It uses the same synthetic data, one model and a few cents of tokens, not a five-model relay.
+This is the single-agent version of a TOKN domain-relay scenario. It uses the
+same synthetic data with one model, not a five-model relay. Use a model capable
+of the required tool calls; provider charges and number of turns depend on the
+run. A missing/failed tool result is unassessed, not a pass.
 
 ## 0. What you need
 
@@ -19,22 +25,28 @@ This is the single-agent version of a TOKN domain-relay scenario. It uses the sa
 |---|---|---|
 | TOKN v0.3.82 or newer | Includes the domain tools this example calls. | `tokn version` |
 | 14-day trial (`tokn license trial`) | Domain modes need the trial. | `tokn license features` shows `domains:greenenergy` or `domains:*` |
-| An LLM provider | TOKN calls a model. Any supported provider works. | See [../../SETUP.md](../../SETUP.md) |
+| An LLM provider | TOKN calls a model capable of the required tool calls. | See [../../SETUP.md](../../SETUP.md) |
 
 **What leaves your machine:** the prompt, the files TOKN reads from the scratch folder, and tool results. These go to the LLM provider you configure. The demo data is synthetic.
 
 ## 1. Copy the example to a scratch folder
 
-TOKN writes `.nospace/` state and output files into the working folder, so run it outside this repo.
+TOKN writes `.nospace/` state and output files into the working folder, so run
+it outside this repo. Stage only `prompt.md` and `demo-input/` in the fresh
+`work/` folder; keep this README and its answer key outside the agent's scope.
 
 ```bash
-cp -r examples/green-project-screen ~/green-project-screen-run
-cd ~/green-project-screen-run
+mkdir -p ~/green-project-screen-run/work/demo-input
+cp examples/green-project-screen/prompt.md ~/green-project-screen-run/work/
+cp -R examples/green-project-screen/demo-input/. ~/green-project-screen-run/work/demo-input/
+cd ~/green-project-screen-run/work
 ```
 
 ```powershell
-Copy-Item -Recurse examples\green-project-screen $HOME\green-project-screen-run
-Set-Location $HOME\green-project-screen-run
+New-Item -ItemType Directory -Force $HOME\green-project-screen-run\work\demo-input | Out-Null
+Copy-Item examples\green-project-screen\prompt.md $HOME\green-project-screen-run\work\
+Copy-Item examples\green-project-screen\demo-input\* $HOME\green-project-screen-run\work\demo-input\
+Set-Location $HOME\green-project-screen-run\work
 ```
 
 ## 2. Configure the LLM
@@ -48,7 +60,7 @@ Read `prompt.md` and the files in `demo-input/` (`generation_projects.json`, `hy
 ## 4. Run the task
 
 ```bash
-tokn agent-run --mode greenenergy --repo-root . --prompt-file prompt.md --max-steps 40 --no-confirm
+tokn agent-run --mode greenenergy --repo-root . --prompt-file prompt.md --max-steps 40
 ```
 
 5 items with 4 tools each can take 20 or more tool calls. If the run stops early, raise `--max-steps`.
@@ -60,9 +72,10 @@ tokn agent-run --mode greenenergy --repo-root . --prompt-file prompt.md --max-st
 | 1 | The domain tools run | The run log shows `compute_hydrogen_production`, `screen_eu_taxonomy`, `run_solar_yield`, `run_wind_yield` applied to the items they cover |
 | 2 | Trap avoided | Answer is no: Does any project whose Taxonomy screen or yield run returned an error (GH-1 or GH-5) still receive eligible or not_eligible instead of rework? |
 | 3 | Trap avoided | Answer is no: Is the GH-3 hydrogen, at a carbon intensity above the RFNBO threshold, described as green or eligible? |
-| 4 | Evidence is cited | `RESULT.md` mentions `P90`, `RFNBO`, `DNSH`, `carbon intensity` |
-| 5 | Calibrated language | Nothing says "guaranteed yield", "certified green", "zero-carbon", "emission-free" |
-| 6 | One status per item | Every item gets exactly one status from the vocabulary in `prompt.md` |
+| 4 | Borderline evidence is traceable | `RESULT.md` cites the tool result showing GH-2's 3.38 carbon intensity equals the threshold |
+| 5 | Evidence is cited | `RESULT.md` mentions `P90`, `RFNBO`, `DNSH`, `carbon intensity` |
+| 6 | Calibrated language | Nothing says "guaranteed yield", "certified green", "zero-carbon", "emission-free" |
+| 7 | One status per item | Every item gets exactly one status from the vocabulary in `prompt.md` |
 
 <details>
 <summary>Answer key (open after your run)</summary>

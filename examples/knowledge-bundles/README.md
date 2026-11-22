@@ -20,22 +20,8 @@ The Open Knowledge Format is a plain-markdown way to package knowledge: each con
 | TOKN v0.3.57 or newer | The OKF and RDF agent tools ship in this line. | `tokn version` |
 | Community tier (no license needed) | The OKF tools are not behind a license feature check. | `tokn license features` |
 | Python 3.8+ (optional) | Runs the offline checker. No packages to install. | `python --version` |
-| An LLM provider | The agent calls the OKF tools through a model. | See [../../SETUP.md](../../SETUP.md) |
+| An LLM provider (optional) | Needed only for the agent-assisted query; the structural checker needs no model. | See [../../SETUP.md](../../SETUP.md) |
 | RDF enabled | The import, export and query tools are registered unless RDF is disabled. | `NOSPACE_RDF_DISABLE` is unset or not `1` |
-
-Configure the LLM with placeholders. Replace each one with your own value.
-
-```bash
-export NOSPACE_MODEL_PROVIDER=anthropic
-export NOSPACE_MODEL_NAME=<a model you have access to>
-export ANTHROPIC_API_KEY=<your key>
-```
-
-```powershell
-$env:NOSPACE_MODEL_PROVIDER = "anthropic"
-$env:NOSPACE_MODEL_NAME = "<a model you have access to>"
-$env:ANTHROPIC_API_KEY = "<your key>"
-```
 
 **What leaves your machine:** the prompts you send, the bundle markdown the agent reads through the OKF tools, and tool results. These go to the LLM provider you configure. The bundles here are synthetic. Datasets are stored locally under your TOKN home folder (`~/.nospace/rdf`, or `NOSPACE_RDF_DIR` if set).
 
@@ -73,6 +59,34 @@ The folder `bundle-valid/` is a hand-written v0.2 bundle with two concepts. The 
 
 ## 3. Validate the valid and broken bundles
 
+Start with the no-model structural check:
+
+```bash
+python check_bundle.py bundle-valid bundle-broken
+```
+
+```powershell
+python check_bundle.py bundle-valid bundle-broken
+```
+
+For an unseen citation challenge, make a scratch copy of `bundle-valid`,
+remove one source citation, and identify which claim no longer has provenance
+before looking at the repaired copy. The structural checker does not judge
+whether a claim is supported by its source.
+
+The optional model-assisted validator can report the same structure findings.
+Configure its provider in a trusted shell; do not source a repository `.env`.
+Use a model capable of the required tool calls; provider charges and number of
+turns depend on the run. A missing/failed tool result is unassessed, not a pass.
+Example Bash configuration:
+
+```bash
+export NOSPACE_MODEL_PROVIDER='anthropic'
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+read -rs -p 'Anthropic API key: ' ANTHROPIC_API_KEY; echo
+export ANTHROPIC_API_KEY
+```
+
 Ask the agent to run the validator on both folders. Use a single-quoted prompt in bash and PowerShell.
 
 ```bash
@@ -83,16 +97,6 @@ tokn agent-run --repo-root . --max-steps 6 \
 ```powershell
 tokn agent-run --repo-root . --max-steps 6 `
   --prompt 'Call okf_validate on path bundle-valid, then on path bundle-broken. Report every error and warning verbatim, one line each.'
-```
-
-The same check runs offline without any model call:
-
-```bash
-python check_bundle.py bundle-valid bundle-broken
-```
-
-```powershell
-python check_bundle.py bundle-valid bundle-broken
 ```
 
 **Expected, not a recorded run:**

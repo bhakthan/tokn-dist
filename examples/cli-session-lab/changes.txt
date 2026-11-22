@@ -1,0 +1,12 @@
+Fictional changelog — Sample Notes 2.4
+
+Released
+- Exported saved views as CSV.
+- Added a keyboard shortcut to reopen the last workspace.
+
+Planned, not released
+- Team-level retention controls are still in review.
+- Mobile offline editing is under investigation.
+
+Known limitation
+- CSV exports include the current view's visible columns only.

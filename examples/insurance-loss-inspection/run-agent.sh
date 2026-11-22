@@ -9,18 +9,9 @@ cd "$(dirname "$0")"
 fail() { printf '[!] %s\n' "$1" >&2; exit 1; }
 note() { printf '[*] %s\n' "$1"; }
 
-# Load .env without overriding shell variables. TOKN_INSPECT_* and SYSTEMONE_* are skipped.
-if [ -f .env ]; then
-  while IFS= read -r line || [ -n "$line" ]; do
-    line="${line%$'\r'}"
-    case "$line" in ''|\#*|*[!=]*) continue ;; esac
-    key="${line%%=*}"; val="${line#*=}"
-    key="$(printf '%s' "$key" | tr -d '[:space:]')"
-    val="$(printf '%s' "$val" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' -e 's/^"//' -e 's/"$//')"
-    case "$key" in SYSTEMONE_*|TOKN_INSPECT_*) continue ;; esac
-    if [ -z "${!key:-}" ]; then export "$key=$val"; fi
-  done < .env
-fi
+# Only a non-routing model ID may be loaded from the repository .env file.
+source ./load-safe-env.sh
+load_safe_env .env TOKN_MODEL
 
 problems=()
 
@@ -45,9 +36,17 @@ fi
 
 # 4. Coding server responds at /health
 BASE="${GGUF_SERVER_URL:-http://127.0.0.1:8083/v1}"
+loopback_re='^(127\.[0-9]+\.[0-9]+\.[0-9]+|localhost|\[::1\])(:[0-9]+)?$'
+authority="$(printf '%s' "$BASE" | sed -E 's#^[a-zA-Z]+://##; s#/.*$##')"
+base_ok=0
+if printf '%s' "$authority" | grep -Eq "$loopback_re"; then
+  base_ok=1
+else
+  problems+=("GGUF_SERVER_URL must point to a loopback host for this local-only example. Set it in your trusted shell.")
+fi
 HEALTH="${BASE%/v1}/health"
 HEALTH="${HEALTH%/}"
-if command -v curl >/dev/null 2>&1; then
+if [ "$base_ok" = 1 ] && command -v curl >/dev/null 2>&1; then
   if ! curl -s --max-time 5 "$HEALTH" 2>/dev/null | grep -q '"ok"'; then
     problems+=("Missing: coding model server is not responding at $HEALTH.
   Why:   TOKN sends the agent's model requests to this server (GGUF_SERVER_URL).

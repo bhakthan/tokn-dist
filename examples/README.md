@@ -4,8 +4,10 @@ Synthetic, non-sensitive input files referenced by
 [GETTING_STARTED.md](../GETTING_STARTED.md), plus step-by-step walkthroughs
 that each run one real task end to end. None of them contain real data.
 
-For the current public release, **v0.3.115**, use the requirements on each
-walkthrough rather than treating an older minimum version as obsolete.
+Reviewed against **v0.3.118**; see the
+[releases page](https://github.com/bhakthan/tokn-dist/releases/latest) for the
+latest binary. Minimum versions are per walkthrough; an older minimum is not
+release news.
 Hosted-model examples need your own provider access and may incur charges;
 local-model examples need a running model server and staged weights.
 Offline/catalog examples explicitly say when no model call is needed.
@@ -21,8 +23,39 @@ cleanup notes; do not commit generated run records or credentials.
 
 New to TOKN? Start with [first-ten-minutes](first-ten-minutes/README.md).
 
+## Learning lanes
+
+Pick the outcome you want, then follow the lane left to right. Each step needs
+less help than the one before it. Every folder has a `.env.example` that lists
+exactly what that walkthrough needs.
+
+| Lane | Path | Needs a model? |
+|---|---|---|
+| **Start without a model** | [first-ten-minutes](first-ten-minutes/README.md) → [judgments](judgments/README.md) → [factory-evidence-tour](factory-evidence-tour/README.md) | No (one optional live step) |
+| **Talk to a model safely** | [cli-session-lab](cli-session-lab/README.md) → [airgap-model-preflight](airgap-model-preflight/README.md) → [checkpoints](checkpoints/README.md) | Optional, then yes |
+| **Build and prove a change** | [full-stack-app](full-stack-app/README.md) → [verified-completion](verified-completion/README.md) → [migration-parity](migration-parity/README.md) | Yes, then no |
+| **Measure and improve** | [loop-engineering](loop-engineering/README.md) → [quality-flywheel](quality-flywheel/README.md) → [session-drift-lab](session-drift-lab/README.md) | Yes, then optional, then no |
+| **Know what you can use** | [skillpack-preflight](skillpack-preflight/README.md) → [cited-local-knowledge](cited-local-knowledge/README.md) → [knowledge-bundles](knowledge-bundles/README.md) | No (last step optional) |
+| **Coordinate** | [flows](flows/README.md) → [peer-collab](peer-collab/README.md) → [agent-organization](agent-organization/README.md) → [federation](federation/README.md) | Varies |
+| **Apply a domain** | Pick a domain row in the table below. Check its entitlement, tools and which decisions stay with a human. | Usually |
+
+**What the levels mean.** *Worked*: a supplied fixture, the exact command and an
+expected receipt. *Guided*: a changed input, a partial scaffold and an external
+checker. *Problem-only*: a new input and a stop condition, with no answer or grader
+visible to the agent. A machine-readable index of every walkthrough, including
+level, model, network and writes, is in [catalog.json](catalog.json).
+
+## All walkthroughs
+
 | Walkthrough | What it shows | Extra requirements |
 |---|---|---|
+| [factory-evidence-tour](factory-evidence-tour/README.md) | The built-in Software Factory demo walked as an evidence chain: status, store verification and a receipt you check yourself | TOKN v0.3.118+, Python 3, Git; no model |
+| [migration-parity](migration-parity/README.md) | Port a small program without silently changing behaviour: record legacy outputs, verify a candidate, ratchet a known-gaps ledger, plus guided `atmchem` and `batterypass` oracles | TOKN v0.3.118+, Python 3; no model |
+| [cli-session-lab](cli-session-lab/README.md) | The CLI front door: REPL, one-shot `-p`, piped input, continue vs resume vs browsing a saved session | none offline; a model for the optional live steps |
+| [airgap-model-preflight](airgap-model-preflight/README.md) | Check what a staged local model can do with no internet: provider doctors, checksums, licence review, then an optional local run | a staged local model for the optional run |
+| [session-drift-lab](session-drift-lab/README.md) | Grade recorded sessions with a categorical expectation and raise a drift alarm across six cycles, without a new model call | none |
+| [skillpack-preflight](skillpack-preflight/README.md) | Find out what your licence, skill packs, prompts and wiki variant allow before changing your machine | none |
+| [cited-local-knowledge](cited-local-knowledge/README.md) | Index two policy files locally and retrieve a cited answer without sending them to a model | none |
 | [rnaseq-software-factory](rnaseq-software-factory/README.md) | A gated agent pipeline turns RNA-seq CI failures and incidents into reviewed, tested, human-approved releases, mixing frontier, open-weights and local models per role | TOKN v0.3.115+, Python 3.10+ + numpy/pandas/scipy/pytest/pyyaml, Git; live profiles: trial, model keys |
 | [decision-council](decision-council/README.md) | Several decision models vote in parallel; a council escalates disagreements to an LLM | 2+ decision-model keys |
 | [postgresql-auto-ontology](postgresql-auto-ontology/README.md) | Infer an OWL/RDFS ontology from PostgreSQL tables, then review it by explicit ID | Azure PostgreSQL you control; optional Azure OpenAI or decision-model access (billed) |

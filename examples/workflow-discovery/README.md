@@ -2,7 +2,7 @@
 
 > "Classify the synthetic case, draft a research summary, and record a reviewer sign-off."
 
-A model can follow a clinical-style workflow only if the workflow is written down as a graph of states and actions. This example shows how to write that graph, check it, and see what a model would be shown at each step. TOKN's `procgraph` package does this. Its evolver, which searches for a better graph, is only exercised by Go tests, so this walkthrough covers the user-reachable part.
+A model can follow a clinical-style workflow only if the workflow is written down as a graph of states and actions. This example shows how to write that graph, check it, and see what a model would be shown at each step. TOKN's `procgraph` commands provide these local operations.
 
 | Capability | What the command does |
 |---|---|
@@ -16,22 +16,13 @@ A model can follow a clinical-style workflow only if the workflow is written dow
 
 | Requirement | Why | Check |
 |---|---|---|
-| TOKN v0.3.57 or newer | The `procgraph` commands ship in this version. | `tokn version` |
-| 14-day trial (`tokn license trial`) | The workflow mirrors the `precmed` domain mode, which needs the trial. The `procgraph` commands were not checked for a licence gate of their own. | `tokn license` |
+| TOKN v0.3.57 or newer | Minimum version for the `procgraph` commands in this walkthrough. | `tokn version` |
+| Licence | These local graph operations are shown without a model or domain mode. Check actual feature access with `tokn license features`. | `tokn license features` |
 | Python 3.8 or newer | Optional offline checker. Standard library only. | `python --version` |
 | An LLM provider | Not needed. These steps make no model calls. | Not required |
 
-Activate the trial once per machine:
-
-```bash
-tokn license trial
-```
-
-```powershell
-tokn license trial
-```
-
-**What leaves your machine:** the `procgraph` commands read local JSON and print to the terminal, with no model calls. Starting the trial sends a one-time anonymous install registration (as described in [../precmed-variant/README.md](../precmed-variant/README.md)). The graph is synthetic.
+**What leaves your machine:** the `procgraph` commands read local JSON and
+print to the terminal, with no model calls. The graph is synthetic.
 
 ## 1. Copy the example to a scratch folder
 
@@ -124,8 +115,7 @@ Expected, not a recorded run: a line `localized at "classify_case"` with a match
 
 ## Scope and limits
 
-- The iterative refiner (`procgraph.Evolver`) is **not** a CLI command. It is exercised by Go tests only (`internal/agent/procgraph`). This walkthrough does not run it.
-- A live discovery run, in which a model proposes graph edits, needs a separate build tag and a model endpoint. It is not part of this example.
+- This exercise validates and localizes issues in the supplied graph; it does not execute a refinement loop. For a public loop exercise, see [single-agent-loop](../single-agent-loop/README.md).
 - The mirror of the precmed workflow lives in the `precmed` domain. The graph here is a small synthetic stand-in, not that workflow.
 - This is a process-map exercise. It is not clinical guidance. The gate behaviour that TOKN enforces in `precmed` is described in [../precmed-variant/README.md](../precmed-variant/README.md).
 
@@ -138,4 +128,4 @@ Expected, not a recorded run: a line `localized at "classify_case"` with a match
 | `validate` reports an unknown tool | Add the name with `--tool`, or check the spelling against the ACTION node ID. |
 | `localize` prints `FALLBACK` | The name does not match any node ID. Check the spelling. |
 | `parse procedural graph` error | The JSON is malformed. Run `python check_graph.py graph.json` for a clearer message. |
-| Tier shows Community | Run `tokn license trial` (once per machine), then `tokn license` to confirm. |
+| A command is unavailable | Check `tokn version` and `tokn license features`; the offline checker remains usable without the CLI. |

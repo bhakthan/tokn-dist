@@ -19,7 +19,7 @@ A plain agent can guess at structure it has not read. This walkthrough gives TOK
 |---|---|---|
 | TOKN v0.3.57 or newer | The RDF commands and tools shown here ship in this version. | `tokn version` |
 | Community tier (no trial) | The RDF store, SPARQL engine, reasoner, and warehouse tools are not gated by a license feature. | `tokn agent-repl` starts and `/rdf` lists |
-| An LLM provider (step 6 only) | The agent step calls a model. Steps 1 to 5 and 7 do not. | See [../../SETUP.md](../../SETUP.md) |
+| An LLM provider (step 6 only) | The agent step calls a model. Steps 1 to 5 and 7 do not. Use a model capable of the required tool calls; provider charges and number of turns depend on the run. A missing/failed tool result is unassessed, not a pass. | `tokn doctor --provider anthropic` (static; see [../../SETUP.md](../../SETUP.md)) |
 | Python 3.9+ (step 7 only) | Runs the offline checker. Standard library only. | `python --version` |
 | Warehouse account (optional) | Only for the warehouse section. Not needed for the core walkthrough. | See section 8 |
 
@@ -102,31 +102,41 @@ Run the same 04 and 05 queries again. They now return rows:
 
 ## 6. Let the agent answer from the graph
 
-Configure the LLM with placeholders. Replace each one with your own value. See [../../SETUP.md](../../SETUP.md) for other providers.
+Configure the LLM. Replace the model id with your own value; the key is read without echo. See [../../SETUP.md](../../SETUP.md) for other providers.
 
 ```bash
-export NOSPACE_MODEL_PROVIDER=anthropic
-export NOSPACE_MODEL_NAME=<your model name>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_PROVIDER='anthropic'
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+read -rs -p 'Anthropic key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
 ```
 
 ```powershell
 $env:NOSPACE_MODEL_PROVIDER = "anthropic"
-$env:NOSPACE_MODEL_NAME = "<your model name>"
-$env:ANTHROPIC_API_KEY = "<your key>"
+$env:NOSPACE_MODEL_NAME = "YOUR_MODEL_ID"
+$env:ANTHROPIC_API_KEY = Read-Host 'Anthropic key' -MaskInput   # pwsh 7.1+; or read it from your secret store
 ```
 
-Run the agent with the prompt in `prompt.md`:
+Stage only the prompt and the data into a new `work/` folder, so `expected_answers.json`, the queries and this README are outside the agent's read scope. Run from there and save the result one level up:
 
 ```bash
-tokn agent-run --repo-root . --prompt-file prompt.md --no-confirm --max-steps 8
+mkdir work
+cp -r prompt.md data work/
+cd work
+tokn agent-run --repo-root . --prompt-file prompt.md --permission-mode default \
+  --max-steps 8 --output-format json > ../result.json
+cd ..
 ```
 
 ```powershell
-tokn agent-run --repo-root . --prompt-file prompt.md --no-confirm --max-steps 8
+New-Item -ItemType Directory work | Out-Null
+Copy-Item prompt.md, data work\ -Recurse
+Set-Location work
+tokn agent-run --repo-root . --prompt-file prompt.md --permission-mode default `
+  --max-steps 8 --output-format json > ..\result.json
+Set-Location ..
 ```
 
-The prompt asks the agent to load `data/plant.ttl` as `plant`, then query it. The agent should call `rdf_load`, then `rdf_query` (and `rdf_reason` if it needs inferred triples). `--no-confirm` auto-approves tool calls, so use it only on this copy. Watch the tool calls in the output to confirm the agent queried the graph rather than answering from memory.
+The prompt asks the agent to load `data/plant.ttl` as `plant`, then query it. The agent should call `rdf_load`, then `rdf_query` (and `rdf_reason` if it needs inferred triples). `--permission-mode default` asks before any mutating tool call, so you see each one; approve the RDF load and query calls. Watch the tool calls to confirm the agent queried the graph rather than answering from memory. `mkdir work` fails if `work/` exists; rename or delete the old one first.
 
 ## 7. Check the walkthrough offline
 
@@ -140,7 +150,17 @@ python check_walkthrough.py
 python check_walkthrough.py
 ```
 
-The checker counts the triples in `data/plant.ttl` and confirms that each query file is one line with a valid SELECT or ASK form. It does not run SPARQL. `expected_answers.json` is a hand-computed expectation, not a recorded run.
+The checker counts the triples in `data/plant.ttl` and confirms that each query file is one line with a valid SELECT or ASK form. This is **syntax and fixture sanity only**. It does not run SPARQL and does not grade answers. `expected_answers.json` is a hand-computed expectation, not a recorded run.
+
+**Grade the agent run** from this folder, outside `work/`:
+
+```bash
+python check_walkthrough.py --answer result.json
+```
+
+It uses the run's final `result` only when `status` is `success`; anything else is unassessed. It then checks that the answer names exactly the turbines bound by queries 01 and 04 (WT-01, WT-02) and the parts bound by query 05 (GB-01, GEN-01), taken from `expected_answers.json`. An extra id fails the check; read the answer, because mentioning WT-04 as *excluded* is acceptable.
+
+**Grade the REPL rows** from steps 4 and 5 by comparing each printed binding with the `before_reasoning` and `after_reasoning` lists in `expected_answers.json`. There is no non-interactive `tokn rdf` command, so this comparison is by eye.
 
 ## 8. Optional: warehouse connectors
 

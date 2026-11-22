@@ -4,6 +4,9 @@
 
 A general-purpose LLM reads the records and gives a confident verdict. The `esg` domain mode runs each item through deterministic domain tools and gates, so the status comes from a tool result, not from the model's impression of the numbers.
 
+All demo data is synthetic. The report is decision support for internal review,
+not ESG certification, assurance, or a compliance conclusion.
+
 | Tool | What it does |
 |---|---|
 | `esg_scope1_calculate` | Scope 1 direct emissions: activity × emission factor per gas, CO2e via GWP100 of the explicit gwp_set. |
@@ -13,7 +16,10 @@ A general-purpose LLM reads the records and gives a confident verdict. The `esg`
 | `esg_scope3_calculate` | Scope 3 calculation. |
 | `esg_claim_language_check` | Anti-greenwashing claim check. |
 
-This is the single-agent version of a TOKN domain-relay scenario. It uses the same synthetic data, one model and a few cents of tokens, not a five-model relay.
+This is the single-agent version of a TOKN domain-relay scenario. It uses the
+same synthetic data with one model, not a five-model relay. Use a model capable
+of the required tool calls; provider charges and number of turns depend on the
+run. A missing/failed tool result is unassessed, not a pass.
 
 ## 0. What you need
 
@@ -21,22 +27,28 @@ This is the single-agent version of a TOKN domain-relay scenario. It uses the sa
 |---|---|---|
 | TOKN v0.3.83 or newer | Includes the domain tools this example calls. | `tokn version` |
 | 14-day trial (`tokn license trial`) | Domain modes need the trial. | `tokn license features` shows `domains:esg` or `domains:*` |
-| An LLM provider | TOKN calls a model. Any supported provider works. | See [../../SETUP.md](../../SETUP.md) |
+| An LLM provider | TOKN calls a model capable of the required tool calls. | See [../../SETUP.md](../../SETUP.md) |
 
 **What leaves your machine:** the prompt, the files TOKN reads from the scratch folder, and tool results. These go to the LLM provider you configure. The demo data is synthetic.
 
 ## 1. Copy the example to a scratch folder
 
-TOKN writes `.nospace/` state and output files into the working folder, so run it outside this repo.
+TOKN writes `.nospace/` state and output files into the working folder, so run
+it outside this repo. Stage only `prompt.md` and `demo-input/` in the fresh
+`work/` folder; keep this README and its answer key outside the agent's scope.
 
 ```bash
-cp -r examples/ghg-inventory-check ~/ghg-inventory-check-run
-cd ~/ghg-inventory-check-run
+mkdir -p ~/ghg-inventory-check-run/work/demo-input
+cp examples/ghg-inventory-check/prompt.md ~/ghg-inventory-check-run/work/
+cp -R examples/ghg-inventory-check/demo-input/. ~/ghg-inventory-check-run/work/demo-input/
+cd ~/ghg-inventory-check-run/work
 ```
 
 ```powershell
-Copy-Item -Recurse examples\ghg-inventory-check $HOME\ghg-inventory-check-run
-Set-Location $HOME\ghg-inventory-check-run
+New-Item -ItemType Directory -Force $HOME\ghg-inventory-check-run\work\demo-input | Out-Null
+Copy-Item examples\ghg-inventory-check\prompt.md $HOME\ghg-inventory-check-run\work\
+Copy-Item examples\ghg-inventory-check\demo-input\* $HOME\ghg-inventory-check-run\work\demo-input\
+Set-Location $HOME\ghg-inventory-check-run\work
 ```
 
 ## 2. Configure the LLM
@@ -50,7 +62,7 @@ Read `prompt.md` and the files in `demo-input/` (`claims.json`, `factor_register
 ## 4. Run the task
 
 ```bash
-tokn agent-run --mode esg --repo-root . --prompt-file prompt.md --max-steps 40 --no-confirm
+tokn agent-run --mode esg --repo-root . --prompt-file prompt.md --max-steps 40
 ```
 
 6 items with 6 tools each can take 36 or more tool calls. If the run stops early, raise `--max-steps`.

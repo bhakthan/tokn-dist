@@ -28,12 +28,12 @@ All data in `synthetic/` is invented.
 | Requirement | Why | Check |
 |---|---|---|
 | TOKN **v0.3.57 or newer** | First release with this example's flags | `tokn version` |
-| **Trial** licence (premium mode) | Critique is a premium mode. Community does not include `mode:critique`. | `tokn license status` |
+| **Trial** licence (premium mode) | Critique is a premium mode. Community does not include `mode:critique`. | `tokn license features` |
 | An LLM provider and key | Runs the roles | see [SETUP.md](../../SETUP.md) |
 | Python 3 (optional) | Runs the stdlib checker in step 5 | `python --version` |
 
 **Tier:** critique mode needs the 14-day trial. Start it once with
-`tokn license trial`.
+`tokn license trial`, then inspect entitlement with `tokn license features`.
 
 **Multi-model is optional.** One provider runs all eight roles on that model.
 Two or more providers (via `--council-members`) switch to the council path,
@@ -69,11 +69,13 @@ Set-Location $HOME\tokn-critique
 ```bash
 tokn license trial
 tokn license status
+tokn license features
 ```
 
 ```powershell
 tokn license trial
 tokn license status
+tokn license features
 ```
 
 ## 3. Configure the LLM
@@ -82,22 +84,24 @@ Follow [SETUP.md](../../SETUP.md) for your provider. For Anthropic, for example:
 
 ```bash
 export NOSPACE_MODEL_PROVIDER=anthropic
-export NOSPACE_MODEL_NAME=<a Claude model you have access to>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+read -rs -p 'Anthropic API key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
 ```
 
 ```powershell
 $env:NOSPACE_MODEL_PROVIDER = "anthropic"
-$env:NOSPACE_MODEL_NAME     = "<a Claude model you have access to>"
-$env:ANTHROPIC_API_KEY      = "<your key>"
+$env:NOSPACE_MODEL_NAME     = "YOUR_MODEL_ID"
+# Set ANTHROPIC_API_KEY through your trusted secret manager or existing shell session.
 ```
 
-Keep keys in your shell or `~/.tokn/config/credentials.env`. Never commit one.
+Keep credentials in a trusted secret store or existing shell session. Never put a populated `.env` file in the example or commit a key.
+For a static configuration check, run `tokn doctor --provider anthropic`;
+it does not prove a live credential or endpoint works.
 
 ## 4. Run the critique
 
-Flags come from `tokn agent-run --help`: `--mode`, `--prompt-file`,
-`--repo-root`, `--max-steps`, `--no-confirm`, `--output-format`. Logs go to
+Advanced flags come from `tokn agent-run --help-all`: `--mode`, `--prompt-file`,
+`--repo-root`, `--max-steps`, `--permission-mode`, `--output-format`. Logs go to
 stderr, and `--output-format json` writes one final JSON object to stdout.
 
 Single model (the default):
@@ -106,14 +110,14 @@ bash:
 
 ```bash
 tokn agent-run --mode critique --prompt-file prompt.md --repo-root . \
-  --max-steps 20 --no-confirm --output-format json > result.json
+  --permission-mode plan --max-steps 20 --output-format json > result.json
 ```
 
 PowerShell:
 
 ```powershell
 tokn agent-run --mode critique --prompt-file prompt.md --repo-root . `
-  --max-steps 20 --no-confirm --output-format json > result.json
+  --permission-mode plan --max-steps 20 --output-format json > result.json
 ```
 
 Optional council (two or more `provider:model` specs; each provider needs its
@@ -122,17 +126,19 @@ own credentials, see [SETUP.md](../../SETUP.md)). Replace the placeholders:
 ```bash
 tokn agent-run --mode critique --prompt-file prompt.md --repo-root . \
   --council-members "anthropic:<model-a>,openai:<model-b>" \
-  --max-steps 20 --no-confirm --output-format json > result.json
+  --permission-mode plan --max-steps 20 --output-format json > result.json
 ```
 
 ```powershell
 tokn agent-run --mode critique --prompt-file prompt.md --repo-root . `
   --council-members "anthropic:<model-a>,openai:<model-b>" `
-  --max-steps 20 --no-confirm --output-format json > result.json
+  --permission-mode plan --max-steps 20 --output-format json > result.json
 ```
 
-`--no-confirm` auto-approves tool calls. The agent here only needs to read one
-file, so this is safe for the example.
+Plan mode is used because this exercise reads the proposal and returns a report
+to stdout; it is not expected to write files. The eight roles are prompt roles,
+not independent factual verification. Preserve unresolved dissent and have a
+human adjudicate consequential conclusions.
 
 ## 5. Check the result (optional)
 

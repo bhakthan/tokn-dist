@@ -23,7 +23,7 @@ for arg in "$@"; do
 done
 
 note() { printf '[*] %s\n' "$1"; }
-abort() { printf '[!] %s\n' "$1" >&2; rm -rf "$STATE"; exit 1; }
+abort() { printf '[!] %s\n' "$1" >&2; printf '[*] State is preserved at %s for diagnosis. Use --reset only when you explicitly want to discard it.\n' "$STATE" >&2; exit 1; }
 
 # 1. Preflight: every missing dependency is listed before anything runs.
 problems=()
@@ -52,11 +52,19 @@ if [ "$LOCAL" = 1 ]; then
   CFG="config/claims-intake.local.yaml"
   AIR=(--airgap)
 else
-  [ -n "${AZURE_OPENAI_ENDPOINT:-}" ] || problems+=("AZURE_OPENAI_ENDPOINT is not set in this shell. Export your Azure OpenAI resource endpoint (README step 1). It is not read from .env.")
-  [ -n "${AZURE_OPENAI_DEPLOYMENT:-}" ] || problems+=("AZURE_OPENAI_DEPLOYMENT is not set in this shell (for example gpt-6-astra).")
+  if [ -z "${AZURE_OPENAI_ENDPOINT:-}" ]; then
+    problems+=("AZURE_OPENAI_ENDPOINT is not set in this shell. Export your Azure OpenAI resource endpoint (README step 1). It is not read from .env.")
+  elif [[ "$AZURE_OPENAI_ENDPOINT" == *YOUR_* || "$AZURE_OPENAI_ENDPOINT" == *placeholder* || "$AZURE_OPENAI_ENDPOINT" == *PLACEHOLDER* || "$AZURE_OPENAI_ENDPOINT" == *'<'* || "$AZURE_OPENAI_ENDPOINT" == *'>'* ]]; then
+    problems+=("AZURE_OPENAI_ENDPOINT is still a placeholder. Set a trusted endpoint in this shell.")
+  fi
+  if [ -z "${AZURE_OPENAI_DEPLOYMENT:-}" ]; then
+    problems+=("AZURE_OPENAI_DEPLOYMENT is not set in this shell (for example gpt-6-astra).")
+  elif [[ "$AZURE_OPENAI_DEPLOYMENT" == *YOUR_* || "$AZURE_OPENAI_DEPLOYMENT" == *placeholder* || "$AZURE_OPENAI_DEPLOYMENT" == *PLACEHOLDER* || "$AZURE_OPENAI_DEPLOYMENT" == *'<'* || "$AZURE_OPENAI_DEPLOYMENT" == *'>'* ]]; then
+    problems+=("AZURE_OPENAI_DEPLOYMENT is still a placeholder. Set a trusted deployment alias in this shell.")
+  fi
   [ "${AZURE_OPENAI_USE_DEFAULT_CREDENTIAL:-}" = "true" ] || problems+=("AZURE_OPENAI_USE_DEFAULT_CREDENTIAL=true is not set in this shell (README step 1).")
   if ! command -v az >/dev/null 2>&1; then
-    problems+=("Missing: Azure CLI. Install: brew install azure-cli (macOS) or curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash (Debian/Ubuntu). Then run az login.")
+    problems+=("Missing: Azure CLI. Install it using Microsoft's signed package instructions for your OS: https://learn.microsoft.com/cli/azure/install-azure-cli. Then run az login.")
   elif ! az account show -o none >/dev/null 2>&1; then
     problems+=("Azure CLI is not signed in. Run az login, then rerun.")
   fi

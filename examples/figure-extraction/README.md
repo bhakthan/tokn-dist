@@ -1,36 +1,33 @@
 # Figure extraction
 
-TOKN can read a picture of a figure and turn it back into data. This example
-covers three cases:
+This guided example has one worked figure and one new synthetic figure:
 
-- A line chart becomes a series of numbers, with axis fits and reference lines.
-- A circuit diagram becomes OpenQASM code.
-- A flow diagram becomes Mermaid code.
+1. The worked FSC chart demonstrates extracting measured data and checking its
+   crossing against the synthetic source.
+2. The new pipeline diagram is the guided round-trip exercise. Its expected
+   Mermaid structure is checked by a small offline script.
 
-Each conversion is checked with a round trip. TOKN rebuilds the model from the
-extracted text, renders it, and compares the result with the original picture.
-The score is measured from the two images, so it is not the model's own opinion.
+The model infers content from pixels. A round trip checks whether TOKN's
+extracted representation can reproduce the input; it is not independent
+verification of what the figure means.
 
 ## Files
 
 | File | What it is |
 |------|------------|
-| `make_chart.py` | Draws a synthetic FSC curve (a cryo-EM resolution plot) as `fsc.png`. |
-| `bell.svg` | A two-qubit circuit: a Hadamard gate, a CNOT, and two measurements. |
-| `pipeline.svg` | A four-step flow: raw reads, trim and QC, align, count matrix. |
-| `crossing.py` | Reads the chart JSON and finds where the curve crosses a level. |
-| `.env.example` | Placeholder settings. Copy it to `.env` and add your key. |
+| `make_chart.py` | Draws the synthetic FSC curve as `fsc.png`. |
+| `crossing.py` | Finds where the extracted curve crosses the 0.143 level. |
+| `pipeline.svg` | A synthetic four-step flow diagram for the guided exercise. |
+| `check_pipeline.py` | Checks the extracted Mermaid nodes and edges. |
+| `.env.example` | Reference settings template. Do not source it or put secrets in it. |
 
-All data is synthetic. No real measurements are included.
+No real measurements or project data are included.
 
 ## Setup
 
-You need:
-
 - TOKN v0.3.105 or newer on your `PATH`.
-- Python 3.9 or newer, with `matplotlib` and `numpy` (for `make_chart.py`).
-- Google Chrome or Chromium. The render step uses headless Chromium.
-  `tokn vision doctor` shows whether it was found.
+- Python 3.9 or newer, with `matplotlib` and `numpy`.
+- Google Chrome or Chromium. `tokn vision doctor` checks whether it was found.
 - An Anthropic API key, or an Anthropic-compatible gateway.
 
 Install the Python packages:
@@ -39,133 +36,87 @@ Install the Python packages:
 python -m pip install matplotlib numpy
 ```
 
-Set your key for this session.
+Set the key for this session without placing it in shell history.
 
-PowerShell:
+PowerShell: load the key from your approved secret store into this session; do
+not place the secret in a command or repository file.
 
 ```powershell
-$env:ANTHROPIC_API_KEY='your-anthropic-api-key'
 $env:TOKN_VISION_PROVIDER='anthropic'
-$env:TOKN_VISION_MODEL='claude-haiku-5-5'
+$env:TOKN_VISION_MODEL='YOUR_MODEL_ID'
 ```
 
 macOS or Linux:
 
 ```bash
-export ANTHROPIC_API_KEY=your-anthropic-api-key
-export TOKN_VISION_PROVIDER=anthropic
-export TOKN_VISION_MODEL=claude-haiku-5-5
+read -rs -p 'Anthropic API key: ' ANTHROPIC_API_KEY; echo
+export ANTHROPIC_API_KEY
+export TOKN_VISION_PROVIDER='anthropic'
+export TOKN_VISION_MODEL='YOUR_MODEL_ID'
 ```
 
-The commands below are the same on every system. Only the environment-variable
-syntax above differs. Run them from this folder.
+Run the commands below from this folder. `fsc.png` is generated here; the
+pipeline image and JSON go under `out/`. Keep generated files out of source
+control.
 
 ## Walkthrough
 
-### 1. Render the two SVG figures
+### 1. Worked figure: extract and check the FSC chart
+
+Generate the synthetic chart and extract its data:
+
+<a id="1-render-the-two-svg-figures"></a>
+
+<a id="2-make-the-chart"></a>
 
 ```powershell
 New-Item -ItemType Directory -Force out | Out-Null
-tokn vision render --kind svg --source bell.svg --out out\bell.png --width 900 --height 300
-tokn vision render --kind svg --source pipeline.svg --out out\pipeline.png --width 1000 --height 260
-```
-
-On macOS or Linux, use `mkdir -p out` and `out/` instead.
-
-### 2. Make the chart
-
-```powershell
 python make_chart.py
 ```
 
-This writes `fsc.png`, a curve with a dashed reference line at 0.143. The curve
-falls from near 1 to near 0 as spatial frequency rises.
-
-### 3. Extract the chart data
+<a id="3-extract-the-chart-data"></a>
 
 ```powershell
-tokn vision extract fsc.png --kind chart --hint "cryo-EM FSC curve; resolution where FSC crosses 0.143" > chart.json
+tokn vision extract fsc.png --kind chart --hint "cryo-EM FSC curve; resolution where FSC crosses 0.143" > out\chart.json
 ```
 
-The `> chart.json` part saves the result to a file. Use it in step 4.
-
-The result, shortened:
-
-- `measured`: true. The points come from the pixels.
-- `approximate`: false.
-- `chart_type`: `"line"`.
-- `reference_lines`: one dashed line at `y` 0.14321.
-- `x_axis`: label `"Spatial frequency (1/A)"`, scale `"linear"`, `fit_r2` 0.999999.
-- `y_axis`: label `"FSC"`, `fit_r2` 1.
-- `series`: one series, named `"series 1"`, with `measured` true.
-- `csv`: 500 points, one row each, with `series,x,y` columns.
-
-Here is the top of the `csv` field:
-
-```text
-series,x,y
-series 1,0.000639125,0.997531
-...
-```
-
-The `x_ticks` and `y_ticks` fields hold the detected tick values. The `...` marks
-parts left out for length.
-
-### 4. Find the 0.143 crossing
+<a id="4-find-the-0143-crossing"></a>
 
 ```powershell
-python crossing.py chart.json
+python crossing.py out\chart.json
 ```
 
-The script reads the JSON file, interpolates between the two points where the
-curve crosses the level, and prints the crossing in 1/Å and the resolution in
-Å (one divided by the crossing).
+On macOS or Linux, run `mkdir -p out` first and use `out/chart.json` instead of
+`out\chart.json`.
 
-The maintainer's run gave a crossing at 0.2895 1/Å, which is 3.45 Å. The true
-crossing of this synthetic curve is 0.2898 1/Å, also 3.45 Å.
+The maintainer's run measured a crossing at about `0.2895 1/Å`, corresponding
+to `3.45 Å`. The synthetic source's known crossing is `0.2898 1/Å`, also
+`3.45 Å`. The small difference is extraction error, not proof that the
+measurement is exact. The curve values are measured from pixels; labels and
+interpretation may be inferred by the model.
 
-The script expects UTF-8 with or without a byte-order mark. PowerShell's `>`
-redirect can add one, and the script handles it.
+<a id="5-convert-the-circuit-to-openqasm"></a>
 
-### 5. Convert the circuit to OpenQASM
+The older circuit-conversion section has been removed to keep this walkthrough
+to one worked figure and one guided figure.
+
+<a id="6-convert-the-flow-diagram-to-mermaid"></a>
+
+### 2. New synthetic figure: extract the pipeline
+
+Render the new figure, extract it, and request a round trip:
 
 ```powershell
-tokn vision extract out\bell.png --kind circuit --verify
+New-Item -ItemType Directory -Force out | Out-Null
+tokn vision render --kind svg --source pipeline.svg --out out\pipeline.png --width 1000 --height 260
+tokn vision extract out\pipeline.png --kind graph --hint "RNA-seq processing pipeline" --verify > out\pipeline.json
+python check_pipeline.py out\pipeline.json
 ```
 
-The result, shortened:
+On macOS or Linux, use `mkdir -p out`, `out/pipeline.png`, and
+`out/pipeline.json`.
 
-- `gates`: `H` on q0, `CNOT` on q0→q1, `measure` on q0, `measure` on q1, each with
-  a box.
-- `qubits`: 2. `clbits`: 2.
-- `qasm`:
-
-```text
-OPENQASM 2.0;
-include "qelib1.inc";
-qreg q[2];
-creg c[2];
-h q[0];
-cx q[0],q[1];
-measure q[0] -> c[0];
-measure q[1] -> c[1];
-```
-
-With `--verify`, TOKN also reports the round trip:
-
-- `fidelity`: 0.9927.
-- `verified`: true.
-- `semantic` score: 1. `structural` score: 1.
-
-### 6. Convert the flow diagram to Mermaid
-
-```powershell
-tokn vision extract out\pipeline.png --kind graph --hint "RNA-seq processing pipeline" --verify
-```
-
-The result:
-
-- `mermaid`:
+The machine-checkable expected structure is:
 
 ```text
 flowchart LR
@@ -178,28 +129,27 @@ flowchart LR
     n2 --> n3
 ```
 
-- With `--verify`: `fidelity` 0.9942, `verified` true, `edge_f1` 1, `node_f1` 1.
+`check_pipeline.py` checks the direction, four labels, and three connections;
+node IDs and whitespace may vary. Inspect `pipeline.json` to compare TOKN's
+extraction with the source SVG.
 
 ## Why the round trip matters
 
-A round trip is TOKN's check on its own output. It does these steps:
-
-1. Rebuilds the model (the QASM or Mermaid text) from what it read.
-2. Renders the rebuilt model.
-3. Reads the render again and compares it with the original, both by structure
-   (same gates or nodes and edges) and by pixels.
-
-The fidelity score comes from that comparison, so it is measured. It is not the
-model saying "this looks right". A low fidelity means the extracted text does
-not reproduce the figure, even if it looks plausible on the page.
+`--verify` rebuilds and re-renders the extracted graph, then compares it with
+the original pixels. That is a round-trip self-check, not an independent source
+of truth.
 
 ## About these outputs
 
-These outputs come from one maintainer run with Claude Haiku 5.5 as the vision
-model on TOKN v0.3.105. Requires TOKN v0.3.105 or newer.
+These are synthetic figures. Model-written labels and graph structure can vary
+between runs. The checker only validates the expected pipeline structure; a
+passing result does not establish that the same interpretation is valid for a
+real scientific figure.
 
-Model-written fields, such as the QASM text, the Mermaid labels, and the gate
-and node boxes, can vary from run to run. Chart values and axis fits are measured
-from the pixels, so they are deterministic for the same image. The fidelity score
-is measured too, but it scores whatever the model extracted on that run, so a
-weaker extraction gets a lower score.
+The FSC extraction value above came from a prior maintainer run with Claude
+Haiku 5.5 on TOKN v0.3.105; it is one observed run, not a current validation.
+The pipeline check is an expected result, not a recorded run.
+
+If extraction fails, check `tokn vision doctor`, the configured provider and
+model, and that Chrome or Chromium is available. Model calls may incur provider
+charges.

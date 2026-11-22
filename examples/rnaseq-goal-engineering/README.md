@@ -26,18 +26,49 @@ that is correct on one design can be wrong on another.
 
 - TOKN installed and on your `PATH` (`tokn version` should print).
 - Python 3.9 or newer with `numpy` (`pip install numpy`). The grader needs it too.
-- An Anthropic API key, or access to an Anthropic-compatible gateway.
+- A model provider that can make tool calls. The live runs below used Anthropic;
+  `.env.example` lists the names. Use a model capable of the required tool calls;
+  provider charges and number of turns depend on the run. A missing/failed tool
+  result is unassessed, not a pass. Check static configuration with
+  `tokn doctor --provider anthropic` (it does not prove the key works).
 
 ## Setup
 
-```powershell
-cd examples\rnaseq-goal-engineering
-copy .env.example .env
-# edit .env: set ANTHROPIC_API_KEY (and ANTHROPIC_BASE_URL if you use a gateway)
+Build a run-owned scratch root **outside this repository**, and a separate grading
+root the agent never gets. Both must be new; `mkdir` fails if they exist, which is
+what you want. The goal scope store is pointed into the run root too, so lessons
+from this exercise do not leak into your other scopes (`~/.tokn/goalscopes/`).
+
+```bash
+RUN=~/rnaseq-goal-run; GRADE=~/rnaseq-goal-grading
+EX=examples/rnaseq-goal-engineering          # from the tokn-dist root
+mkdir "$RUN" "$GRADE"
+cp -r "$EX/case" "$EX/checks" "$EX/make_case.py" "$RUN/"
+cp -r "$EX/answer_key/." "$GRADE/"
+export TOKN_GOALSCOPE_DIR="$RUN/scopes"
+export NOSPACE_MODEL_PROVIDER='anthropic'
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+read -rs -p 'Anthropic key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
+cd "$RUN"
 ```
 
-Make these values available to TOKN in your shell before running it (for example,
-set them as environment variables). Never commit `.env`.
+```powershell
+$RUN = "$HOME\rnaseq-goal-run"; $GRADE = "$HOME\rnaseq-goal-grading"
+$EX = "examples\rnaseq-goal-engineering"     # from the tokn-dist root
+New-Item -ItemType Directory $RUN, $GRADE | Out-Null
+Copy-Item -Recurse "$EX\case", "$EX\checks", "$EX\make_case.py" $RUN
+Copy-Item -Recurse "$EX\answer_key\*" $GRADE
+$env:TOKN_GOALSCOPE_DIR = "$RUN\scopes"
+$env:NOSPACE_MODEL_PROVIDER = "anthropic"
+$env:NOSPACE_MODEL_NAME = "YOUR_MODEL_ID"
+# Supply ANTHROPIC_API_KEY from a trusted secret store or session, not a command containing the key.
+Set-Location $RUN
+```
+
+If you use an Anthropic-compatible gateway, set `ANTHROPIC_BASE_URL` in the same
+trusted shell. Do not source `.env.example` or commit a populated `.env`. Keep
+`TOKN_GOALSCOPE_DIR` set in every shell you use for steps 1 to 6. All commands
+below run from `$RUN` unless they say otherwise.
 
 ## 1. Create the scope
 
@@ -67,40 +98,42 @@ tokn goal scope lint bulk-rnaseq-de-batch
 tokn goal scope list
 ```
 
-Scopes are stored under `~/.tokn/goalscopes/<name>/` (override with
-`TOKN_GOALSCOPE_DIR`).
+Scopes are stored under `~/.tokn/goalscopes/<name>/` by default; with the setup
+above they go to `$RUN/scopes/<name>/` instead, and you delete them with the run root.
 
 ## 2. Run the agent
 
-Work in a fresh copy of the case so the solver never sees the answer key:
+Give the solver a fresh `work/` that holds only the case. The answer key is in
+`$GRADE`, outside the solver's repository root:
 
 ```bash
-mkdir work
-cp -r case work/case
+mkdir work && cp -r case work/case
 ```
 
 Run TOKN on the brief. `--auto-route` sends each step to the cheapest model that can
-handle it, and `--goal-scope` attaches the scope to the run:
+handle it, and `--goal-scope` attaches the scope to the run. `--permission-mode
+default` asks before each edit or mutating command, so you approve the analysis code
+the agent writes and runs:
 
 ```bash
 tokn agent-run --goal-scope bulk-rnaseq-de-batch --auto-route \
   --repo-root work \
   --prompt-file work/case/TASK.md \
-  --no-confirm
+  --max-steps 40 --permission-mode default
 ```
 
-Setting `TOKN_GOAL_SCOPE=bulk-rnaseq-de-batch` has the same effect as `--goal-scope`.
-The agent writes its outputs to `work/solution/`. Copy `solution/results.tsv` and
-`solution/report.md` back into this folder, or grade them from `work/`.
+Do not add `--no-confirm` here: it auto-approves every tool call. Setting
+`TOKN_GOAL_SCOPE=bulk-rnaseq-de-batch` has the same effect as `--goal-scope`. The
+agent writes its outputs to `work/solution/`. Raise `--max-steps` if the run stops
+early.
 
 ## 3. Grade
 
-Move the answer key out of the working tree first. Only the grader should read it:
+Grade from outside `work/`, with the grader and truth from `$GRADE`:
 
 ```bash
-mv answer_key ../answer_key-rnaseq
-python ../answer_key-rnaseq/grade.py work/solution/results.tsv \
-  --counts case/counts.tsv --report work/solution/report.md
+python "$GRADE/grade.py" work/solution/results.tsv \
+  --truth "$GRADE/truth.tsv" --counts case/counts.tsv --report work/solution/report.md
 ```
 
 The grader checks precision, FDR, recall, the log2 fold-change correlation, the
@@ -127,8 +160,11 @@ tokn review correct --scope bulk-rnaseq-de-batch R002 --category calibration \
 ```
 
 `tokn review correct` takes the lesson text in `--note`. The lesson is saved as a
-verified lesson for the scope. Add a lesson by hand with `tokn goal scope lesson add`
-if you prefer.
+verified lesson and injected into **every** later run of the scope, so write only a
+rule that holds for the task type. Keep case-specific observations (this run's FDR,
+a sample that looked odd) out of lessons: `tokn review accept --note` and
+`tokn review reject --note` record a note on the run without creating a lesson. Add
+a lesson by hand with `tokn goal scope lesson add` if you prefer.
 
 Other review decisions:
 
@@ -140,22 +176,27 @@ tokn review reject --scope bulk-rnaseq-de-batch R005
 ## 5. Run a new instance
 
 Generate a different instance. The seed and the replicate count change the design.
-Put it in its own folder, outside `case/`:
+Generate it inside the grading root, because it writes its own answer key, then
+give the solver only its case:
 
 ```bash
-python make_case.py --seed 7 --replicates 4 --out instance-s7
+python make_case.py --seed 7 --replicates 4 --out "$GRADE/instance-s7"
+mkdir work-s7 && cp -r "$GRADE/instance-s7/case" work-s7/case
+tokn agent-run --goal-scope bulk-rnaseq-de-batch --auto-route \
+  --repo-root work-s7 --prompt-file work-s7/case/TASK.md \
+  --max-steps 40 --permission-mode default
 ```
 
-This writes `instance-s7/case/` (counts, sample sheet, brief) and
-`instance-s7/answer_key/truth.tsv`. Run the agent on the new brief, the same way
-as in step 2, with a new working folder. The scope lesson is applied automatically.
+`make_case.py` writes `instance-s7/case/` (counts, sample sheet, brief) and
+`instance-s7/answer_key/truth.tsv`. The scope lesson is applied automatically;
+`tokn goal scope preamble bulk-rnaseq-de-batch` prints exactly what is injected.
 
 Grade the new run against its own truth and counts:
 
 ```bash
-python ../answer_key-rnaseq/grade.py work-s7/solution/results.tsv \
-  --truth instance-s7/answer_key/truth.tsv \
-  --counts instance-s7/case/counts.tsv \
+python "$GRADE/grade.py" work-s7/solution/results.tsv \
+  --truth "$GRADE/instance-s7/answer_key/truth.tsv" \
+  --counts work-s7/case/counts.tsv \
   --report work-s7/solution/report.md
 ```
 
@@ -172,8 +213,9 @@ example's live runs are below.
 
 ## Results from the live runs
 
-Live runs used Claude models through TOKN with auto-routing. The scope had no lessons
-until R002 was corrected.
+Historical observed live runs (Claude models through TOKN with auto-routing), recorded
+when this example was written; they are not re-run by this guide and your models,
+versions and numbers will differ. The scope had no lessons until R002 was corrected.
 
 | Run | Instance | Lesson applied | Reference used | Empirical FDR | Precision | Recall | Outcome |
 |-----|----------|----------------|----------------|---------------|-----------|--------|---------|
@@ -218,7 +260,7 @@ relative gap (binary checks, including zero invalid tokens, use +1/−1). A gate
 | `lfc_agreement_r` | `off-line-zero` | advisory: correlation with batch-adjusted log2(CPM+1) OLS on tested genes with mean count ≥ 10. Different normalisation, shrinkage or count models can disagree without batch leakage |
 | `c2s_invalid_token_rate`, `c2s_euler_discrepancy` | `analytic-continuation` | only with `--c2s-audit`: unknown gene tokens or labels marked unverified by the supplied audit (not independently recomputed); use only with a matching gene index |
 
-Record the check command on a new scope. Run it from this example directory before review; recording `--check` alone is not evidence that it ran:
+Record the check command on a new scope. Run it from `$RUN` before review; recording `--check` alone is not evidence that it ran:
 
 ```bash
 tokn goal scope create bulk-rnaseq-de-batch-stress \
@@ -251,7 +293,7 @@ fails on `reference_stated` and `residual_df`, before any reviewer or answer key
 involved. The answer-key grader now also prints each criterion's relative margin and
 the minimum, flagging near misses below 0.05. The margins never change its verdict.
 
-These paths assume the layout from step 2. Keep `checks/` outside the solver's `work/` directory and retain the check output with the review. The check cannot establish whether the report describes the analysis that actually ran.
+These paths assume the layout from Setup and step 2. Keep `checks/` outside the solver's `work/` directory and retain the check output with the review. The check cannot establish whether the report describes the analysis that actually ran.
 
 ## What to try next
 
@@ -265,8 +307,10 @@ These paths assume the layout from step 2. Keep `checks/` outside the solver's `
 
 ## Notes
 
-- `.nospace/` and `.tokn/` hold local run state. They are git-ignored.
-- `solution/`, `work/`, `instance-*/` and `solve-*/` are generated outputs. They are
-  git-ignored too.
+- With the Setup above, run state, scopes and generated outputs live in `$RUN` and
+  answer keys in `$GRADE`, outside this repository. Delete both folders when you are
+  done; that also removes the isolated scope and its lessons.
+- If you do run inside the checkout, `.nospace/`, `.tokn/`, `solution/`, `work/`,
+  `instance-*/` and `solve-*/` are git-ignored.
 - The case files are synthetic. The example shows how a scope improves a method. It
   does not show that the method works on real assays.

@@ -143,12 +143,14 @@ llama-server --version
 cp .env.example .env
 ```
 
-Edit `.env`. Set `TOKN_MODEL` and `CODER_HF_MODEL` (the coding model you chose).
-The rest of `.env` is loopback addresses that can stay as they are.
+Edit `.env` and set `TOKN_MODEL` to the ID reported by the coding server.
+Set `CODER_HF_MODEL`, `TOKN_BIN`, and any server URLs in your trusted shell,
+not in the repository file.
 
-**Set the model settings in your shell, not in `.env`.** TOKN refuses routing
-and destination keys from a repository `.env`, and the scripts skip them on
-purpose. Use the block for your shell.
+**Set model routing, endpoint and executable settings in your trusted shell,
+not in `.env`.** The launchers load only the non-routing `TOKN_MODEL` value
+from `.env`; they never import URLs, binary paths, or credentials from the
+repository file. Use loopback URLs for local servers.
 
 PowerShell:
 
@@ -313,7 +315,8 @@ You should see something like:
 
 ```
 PASS: structure ok (7 points, 49 records, claim CLM-DEMO-0001).
-Referrals: 49 of 49. Every referral needs an adjuster.
+Expected synthetic result: all 49 records may be referred for adjuster review
+without calibration. That is not evidence of 49 proven losses.
 
 point              referrals  top three P(yes)                            ground truth
 windshield                 7  crack* 0.xx, broken* 0.xx, ...               broken, crack
@@ -435,7 +438,7 @@ tokn system-one evaluate --file ____________ | tee out/triage-response.json   # 
 
 There are two decisions to make. First, the blank is the file that
 `make-triage-request.py` wrote. Second, decide whether `evaluate` should take
-`--air-gap`. Read the `--air-gap` help text in `tokn system-one --help` before
+`--air-gap`. Read the `--air-gap` help text in `tokn --help-all` before
 you decide, and compare it with the note in the triage script.
 
 Then run the script that does all three steps and check your answers:
@@ -595,49 +598,12 @@ the next section). Limited-capability mode turns on automatically for models of
 
 The same flow works with hosted models. Only the three model roles change.
 
-**Vision scorer (OpenAI, or Azure OpenAI).** The scorer needs a vision chat
-model that accepts images and returns token logprobs. Reasoning models usually
-do not return logprobs.
-
-OpenAI, PowerShell:
-
-```powershell
-$env:TOKN_INSPECT_SCORER = "logprob"
-$env:TOKN_INSPECT_BASE_URL = "https://api.openai.com/v1"
-$env:TOKN_INSPECT_API_KEY = "<your-key>"
-$env:TOKN_INSPECT_MODEL = "<vision chat model with logprobs>"
-```
-
-Azure OpenAI adds one header setting:
-
-```powershell
-$env:TOKN_INSPECT_BASE_URL = "https://<your-resource>.openai.azure.com/openai/v1"
-$env:TOKN_INSPECT_API_KEY_HEADER = "api-key"
-$env:TOKN_INSPECT_MODEL = "<deployment name>"
-```
-
-Two changes are needed for a hosted scorer. Remove `TOKN_INSPECT_ALLOW_LOCAL`,
-because it is for loopback only. Remove `--air-gap` from the `run` call in
-`run-inspection`, because `--air-gap` refuses any scorer that is not on this
-machine. The example is then no longer fully local, so say so in your notes.
-
-**Vision scorer (Gemini Decisions API).** Use the systemone scorer:
-
-```powershell
-$env:TOKN_INSPECT_SCORER = "systemone"
-$env:SYSTEMONE_BACKEND = "gemini"
-$env:GEMINI_API_KEY = "<your-key>"
-```
-
-The same `--air-gap` rule applies.
-
-**Decision model.** Use another System One backend, set in the shell. The
-`openai`, `azure`, `microsoft` and `gemini` backends are listed in
-`tokn system-one --help`.
-
-**Coding model.** Use any provider `tokn agent-run` supports. Anthropic models
-expose no logprobs, so they cannot be the vision scorer. They can still be the
-coding model. Check the `--model-provider` values in `tokn agent-run --help`.
+This walkthrough is intentionally local-only. Its launchers require trusted
+loopback URLs and reject remote scorer destinations. Do not remove the
+loopback check or `--air-gap` to route these photos to a hosted service.
+Provider setup for other, approved data is documented in [SETUP.md](../../SETUP.md).
+The agent launcher also uses the model ID for the local server; it does not
+permit a repository `.env` to select the server URL or executable.
 
 ## Limits of this example
 

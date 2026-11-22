@@ -12,7 +12,7 @@ A general-purpose LLM reads the numbers and ranks the blocks. The `semicon` doma
 | `lvs_check` | Layout-versus-schematic check, zero tolerance. |
 | `enforce_constraints_present` hook | Blocks a timing run that has no SDC constraints file, because its slack means nothing. |
 
-This is the single-agent version of the [semicon relay walkthrough](../domain-relay/walkthroughs/semicon/README.md). It uses the same synthetic data, one model and a few cents of tokens, not a five-model relay.
+This is the single-agent version of the [semicon relay walkthrough](../domain-relay/walkthroughs/semicon/README.md). It uses the same synthetic data and one model, not a five-model relay.
 
 ## 0. What you need
 
@@ -20,21 +20,30 @@ This is the single-agent version of the [semicon relay walkthrough](../domain-re
 |---|---|---|
 | TOKN v0.3.82 or newer | Includes the semicon guard and tool fixes this example relies on. | `tokn version` |
 | 14-day trial (`tokn license trial`) | Domain modes need the trial. | `tokn license features` shows `domains:semicon` or `domains:*` |
-| An LLM provider | TOKN calls a model. Any supported provider works. | See [../../SETUP.md](../../SETUP.md) |
+| An LLM provider | TOKN calls a model. | See [../../SETUP.md](../../SETUP.md) |
+
+Use a model capable of the required tool calls; provider charges and number of
+turns depend on the run. A missing/failed tool result is unassessed, not a pass.
 
 **What leaves your machine:** the prompt, the files TOKN reads from the scratch folder, and tool results. These go to the LLM provider you configure. The demo data is synthetic. No real design data, PDK files or EDA licenses are needed.
 
 ## 1. Copy the example to a scratch folder
 
-TOKN writes `.nospace/` state and output files into the working folder, so run it outside this repo.
+Create a new work folder outside this checkout. Copy only `prompt.md` and
+`demo-input/` into it; do not copy this README or `grading/`. TOKN writes
+`.nospace/` state and output files into the work folder.
 
 ```bash
-cp -r examples/semicon-signoff ~/semicon-run
+mkdir -p ~/semicon-run/demo-input
+cp examples/semicon-signoff/prompt.md ~/semicon-run/
+cp -r examples/semicon-signoff/demo-input/. ~/semicon-run/demo-input/
 cd ~/semicon-run
 ```
 
 ```powershell
-Copy-Item -Recurse examples\semicon-signoff $HOME\semicon-run
+New-Item -ItemType Directory -Force $HOME\semicon-run\demo-input | Out-Null
+Copy-Item examples\semicon-signoff\prompt.md $HOME\semicon-run\
+Copy-Item examples\semicon-signoff\demo-input\* $HOME\semicon-run\demo-input\
 Set-Location $HOME\semicon-run
 ```
 
@@ -42,14 +51,14 @@ Set-Location $HOME\semicon-run
 
 ```bash
 export NOSPACE_MODEL_PROVIDER=anthropic
-export NOSPACE_MODEL_NAME=<your model name>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+read -rs -p 'Anthropic API key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
 ```
 
 ```powershell
 $env:NOSPACE_MODEL_PROVIDER = "anthropic"
-$env:NOSPACE_MODEL_NAME = "<your model name>"
-$env:ANTHROPIC_API_KEY = "<your key>"
+$env:NOSPACE_MODEL_NAME = "YOUR_MODEL_ID"
+# Set ANTHROPIC_API_KEY from a trusted secret store or your protected shell session.
 ```
 
 For other providers, see [../../SETUP.md](../../SETUP.md).
@@ -61,11 +70,11 @@ Open the three files in `demo-input/` and assign a status to each block yourself
 ## 4. Run the task
 
 ```bash
-tokn agent-run --mode semicon --repo-root . --prompt-file prompt.md --max-steps 40 --no-confirm
+tokn agent-run --mode semicon --repo-root . --prompt-file prompt.md --max-steps 40
 ```
 
 ```powershell
-tokn agent-run --mode semicon --repo-root . --prompt-file prompt.md --max-steps 40 --no-confirm
+tokn agent-run --mode semicon --repo-root . --prompt-file prompt.md --max-steps 40
 ```
 
 Six blocks with four tools each need about 24 tool calls. If the run stops early, raise `--max-steps`.
@@ -84,17 +93,7 @@ Six blocks with four tools each need about 24 tool calls. If the run stops early
 <details>
 <summary>Answer key (open after your run)</summary>
 
-| Block | Status | Why |
-|---|---|---|
-| `BLK-CPU` | `tapeout_ready` | All checks clean. |
-| `BLK-DSP` | `tapeout_ready` | WNS 0.000 ns is closed, and 0.80 utilization is not above the 80% target. Both sit exactly on a boundary. |
-| `BLK-USB` | `fail_signoff` | Best timing in the batch, but 2 LVS discrepancies. |
-| `BLK-SRAMCTL` | `ready_with_caveats` | Utilization 0.82 is above the target but within the 84% limit: a warning, not a failure. |
-| `BLK-DMA` | `fail_signoff` | WNS −0.003 ns. Rounding it to zero is the trap. |
-| `BLK-PCIE` | `blocked` | Clean DRC/LVS and +0.150 ns WNS look ready, but the STA run has no SDC, so the slack is unconstrained. Rerun timing with constraints. |
-
-Six correct counts as PASS. Calling `BLK-PCIE` ready, or `BLK-USB`/`BLK-DMA` anything but `fail_signoff`, is a FAIL even if the rest are right.
-
+See the [grader-only answer key](grading/answer-key.md). It is outside the staged work folder.
 </details>
 
 ## Reflect
@@ -102,6 +101,7 @@ Six correct counts as PASS. Calling `BLK-PCIE` ready, or `BLK-USB`/`BLK-DMA` any
 - Which block did you get wrong in step 3? Most people trust `BLK-PCIE`'s slack or round `BLK-DMA` to zero.
 - The best-looking timing (`BLK-USB`) failed on a different check. What does that say about ranking blocks by one metric?
 - Edit `demo-input/sta_runs.json` to give `BLK-PCIE` an SDC path (for example `constraints/blk_pcie.sdc`) and rerun. It should move from `blocked` to `tapeout_ready`, because the hook now lets `static_timing` judge the recorded slack. In a real flow, the timing run itself would have to be redone with constraints.
+- A missing or failed tool result is unassessed, not a pass. These synthetic checks do not authorize a tapeout; a qualified human signoff is still required.
 
 ## Troubleshooting
 

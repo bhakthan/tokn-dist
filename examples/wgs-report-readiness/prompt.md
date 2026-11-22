@@ -45,6 +45,7 @@ Use the values in `run_qc.json` exactly as given. Do not round, impute or re-der
 4. Check consent from `consent_manifest.json`. Analysis toward a clinical report must not proceed if any consent verification fails.
 5. This genomics session does not classify, sign or return results. `report_ready` means ready for hand-off to clinical sign-out, not signed. Do not assert pathogenicity.
 6. Every number you report must come from a tool call or the input files. Use calibrated language: passing QC means the data is fit for review, not that a call is correct.
+7. Missing consent, a failed consent check, or a missing/failed tool result is never a pass. Report an affected item as blocked or unassessed as applicable; do not imply clinical sign-out.
 
 ## Deliverable
 

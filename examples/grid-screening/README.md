@@ -71,15 +71,16 @@ tokn-grid/
 Follow [SETUP.md](../../SETUP.md) for your provider. For Anthropic, for example:
 
 ```bash
-export NOSPACE_MODEL_PROVIDER=anthropic
-export NOSPACE_MODEL_NAME=<a Claude model you have access to>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_PROVIDER='anthropic'
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+read -rs -p 'Anthropic API key: ' ANTHROPIC_API_KEY; echo
+export ANTHROPIC_API_KEY
 ```
 
 ```powershell
 $env:NOSPACE_MODEL_PROVIDER = "anthropic"
-$env:NOSPACE_MODEL_NAME     = "<a Claude model you have access to>"
-$env:ANTHROPIC_API_KEY      = "<your key>"
+$env:NOSPACE_MODEL_NAME     = "YOUR_MODEL_ID"
+# Load ANTHROPIC_API_KEY from a trusted secret store/session.
 ```
 
 Use your shell or `~/.tokn/config/credentials.env` for keys. Never commit a
@@ -106,7 +107,9 @@ Destinations such as `SYSTEMONE_BACKEND` and `DECISION_API_ENDPOINT` are
 **never** read from a repository `.env`. Set them in your shell or in
 `~/.tokn/config/credentials.env`.
 
-Verify the backend without making a call:
+Check static provider configuration with `tokn doctor --provider anthropic`.
+This does not prove a live credential or endpoint works. Verify the decision
+backend without making a call:
 
 ```bash
 tokn system-one status
@@ -234,7 +237,7 @@ tokn harness library --repo-root . --domain power-distribution-planning
 | Symptom | Fix |
 |---|---|
 | `unknown command "harness"` | Upgrade to v0.3.56 or newer |
-| Every stage reports `fell_back` | The LLM is not configured. Re-check step 2, then run `tokn agent-run --help` |
+| Every stage reports `fell_back` | The LLM is not configured. Run `tokn doctor --provider anthropic` for static configuration, then consult `tokn agent-run --help-all` for advanced flags |
 | No `system_one_*` in `tool_names` | The decision backend is not set. Run `tokn system-one status` |
 | `seal violated` | Something changed `data/` or `.nospace/` during the run. Restore them with `git checkout .` and run again |
 | Rate-limit (`429`) messages | TOKN retries them automatically. Lower your concurrency or try again later |

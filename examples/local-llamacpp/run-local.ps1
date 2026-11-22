@@ -10,20 +10,9 @@ Set-Location -LiteralPath $PSScriptRoot
 function Fail([string]$Msg) { Write-Host "[!] $Msg" -ForegroundColor Red; exit 1 }
 function Note([string]$Msg) { Write-Host "[*] $Msg" -ForegroundColor Cyan }
 
-# Load .env without overriding variables already set in the shell.
-# SYSTEMONE_* keys are skipped on purpose: they must come from the shell.
-if (Test-Path ".env") {
-    foreach ($line in Get-Content ".env") {
-        $t = $line.Trim()
-        if (-not $t -or $t.StartsWith("#") -or -not $t.Contains("=")) { continue }
-        $k, $v = $t.Split("=", 2)
-        $k = $k.Trim(); $v = $v.Trim().Trim('"')
-        if ($k.StartsWith("SYSTEMONE_")) { continue }
-        if (-not [Environment]::GetEnvironmentVariable($k)) {
-            [Environment]::SetEnvironmentVariable($k, $v)
-        }
-    }
-}
+# Only the non-routing model ID may be loaded from repository data.
+. (Join-Path $PSScriptRoot "load-safe-env.ps1")
+Load-SafeEnv ".env" @("TOKN_MODEL")
 
 $problems = @()
 $loopbackPattern = '^(127\.\d+\.\d+\.\d+|localhost|\[::1\])(:\d+)?$'
@@ -57,8 +46,14 @@ if (-not $curl) {
 
 # 4. llama.cpp server responds at /health
 $base = if ($env:GGUF_SERVER_URL) { $env:GGUF_SERVER_URL } else { "http://127.0.0.1:8080/v1" }
+$authority = ""
+try { $authority = ([Uri]$base).Authority } catch { }
+$baseOk = $authority -match $loopbackPattern
+if (-not $baseOk) {
+    $problems += "GGUF_SERVER_URL must point to a loopback host for this local-only example. Set it in your trusted shell."
+}
 $healthUrl = ($base -replace '/v1/?$', '') + "/health"
-if ($curl) {
+if ($baseOk -and $curl) {
     $health = & curl.exe -s --max-time 5 $healthUrl 2>$null
     if ($LASTEXITCODE -ne 0 -or $health -notmatch '"ok"') {
         $problems += @"
@@ -111,7 +106,7 @@ $runArgs = @(
     "--run-timeout", "0",
     "--output-format", "text"
 )
-if ($SystemOne) { $runArgs += @("--system-one", "--no-confirm") }
+if ($SystemOne) { $runArgs += @("--system-one") }
 
 Note "Running: tokn $($runArgs -join ' ')"
 $ErrorActionPreference = "Continue"

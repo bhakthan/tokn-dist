@@ -3,3 +3,5 @@ data-keys/
 workshop.db
 parquet/
 .tokn/
+.env
+.nospace/

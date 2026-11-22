@@ -1,0 +1,12 @@
+{
+  "version": "0.3.118",
+  "input_digest": "sha256:18c2ac378684970c60dfa0c820725f27827e76b7cbd0b11cd9f7ff64a8757dba",
+  "digest_scope": "inputs/*.json; sorted relative path + NUL + bytes + NUL",
+  "scenario": "three synthetic per-order event streams",
+  "checker": "tokn migrate verify --fixtures fixtures.json --oracle events --event-key order_id",
+  "status": "observed local run; three reversed-order mismatches, then three matches after repair",
+  "limitations": [
+    "The digest covers the input files, not the generated fixture corpus or candidate scripts.",
+    "A passing fixture corpus is not proof of equivalence outside its cases."
+  ]
+}

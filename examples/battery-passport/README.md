@@ -12,7 +12,7 @@ A general-purpose LLM reads the records and gives a confident verdict. The `batt
 | `bp_check_chemistry` | Standalone cathode-element consistency check validates declared chemistry (LFP/NMC/NCA/etc.) agrees with the cathode active material formula. |
 | `bp_query_passport` | Query a single field from a Battery Passport payload. |
 
-This is the single-agent version of the [batterypass relay walkthrough](../domain-relay/walkthroughs/batterypass/README.md). It uses the same synthetic data, one model and a few cents of tokens, not a five-model relay.
+This is the single-agent version of the [batterypass relay walkthrough](../domain-relay/walkthroughs/batterypass/README.md). Use a model capable of the required tool calls; provider charges and number of turns depend on the run. A missing/failed tool result is unassessed, not a pass. It uses the same synthetic data, not a five-model relay.
 
 ## 0. What you need
 
@@ -20,7 +20,7 @@ This is the single-agent version of the [batterypass relay walkthrough](../domai
 |---|---|---|
 | TOKN v0.3.82 or newer | Includes the domain tools this example calls. | `tokn version` |
 | 14-day trial (`tokn license trial`) | Domain modes need the trial. | `tokn license features` shows `domains:batterypass` or `domains:*` |
-| An LLM provider | TOKN calls a model. Any supported provider works. | See [../../SETUP.md](../../SETUP.md) |
+| An LLM provider | TOKN calls a model. Use a model capable of the required tool calls; provider charges and number of turns depend on the run. A missing/failed tool result is unassessed, not a pass. | See [../../SETUP.md](../../SETUP.md) |
 
 **What leaves your machine:** the prompt, the files TOKN reads from the scratch folder, and tool results. These go to the LLM provider you configure. The demo data is synthetic.
 
@@ -49,8 +49,24 @@ Read `prompt.md` and the files in `demo-input/` (`chemistry_declarations.json`, 
 ## 4. Run the task
 
 ```bash
-tokn agent-run --mode batterypass --repo-root . --prompt-file prompt.md --max-steps 40 --no-confirm
+mkdir -p work/demo-input
+cp prompt.md work/prompt.md
+cp demo-input/* work/demo-input/
+cd work
+tokn agent-run --mode batterypass --repo-root . --prompt-file prompt.md --max-steps 40
 ```
+
+PowerShell:
+
+```powershell
+New-Item -ItemType Directory -Force work\demo-input | Out-Null
+Copy-Item prompt.md work\prompt.md
+Copy-Item demo-input\* work\demo-input\
+Set-Location work
+tokn agent-run --mode batterypass --repo-root . --prompt-file prompt.md --max-steps 40
+```
+
+Only `prompt.md` and `demo-input/` are staged in `work/`; do not copy this README or its answer key into the agent's read scope. Grade `work/RESULT.md` from outside `work/`. The result is a training exercise, not product certification; a safe refusal or inconclusive result is unassessed, not a pass.
 
 6 items with 5 tools each can take 30 or more tool calls. If the run stops early, raise `--max-steps`.
 
@@ -86,6 +102,11 @@ All 6 correct counts as PASS. Missing any trap item (`BP-02`, `BP-03`, `BP-04`, 
 - Which item did you get wrong in step 3, and which number or field misled you?
 - Pick one trap item, edit its record in `demo-input/` so the deciding check passes, and predict the new status before you rerun. Did the tool agree?
 - Where did the run's evidence come from a tool result, and where from the model's own reading? Which of those would you show an auditor?
+
+Rewriting a passport generator or schema mapper? The
+[migration-parity](../migration-parity/README.md) walkthrough includes a guided
+`batterypass` oracle variant that grades schema differences by severity, with no
+model required.
 
 ## Troubleshooting
 

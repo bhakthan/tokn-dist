@@ -6,21 +6,27 @@
 Many agent systems begin as a router that hands each request to a specialist
 subagent. As models get better, most of those subagents are just a prompt plus
 a few API calls. They work better as **skills and tools inside one agent
-loop**: there are no handoffs to lose context in and no routing rules to
-maintain, and the system costs less to run. `tokn single-loop` helps you make
-that change step by step, measuring before and after each one:
+loop**: there are fewer handoffs and routing rules to maintain. Whether a fold
+reduces spend depends on the workload. `tokn single-loop` helps you make that
+change step by step, measuring before and after each one:
 
 | Step | Command | What it tells you |
 |---|---|---|
 | Measure | `audit` | Which agents always run together, and a proposed verdict per agent |
-| | `coverage` | Which chains of agents seen in production your eval tasks actually exercise |
+| | `coverage` | Which chains in the supplied traces your eval tasks actually exercise |
 | | `estimate` | Token forecast for the paid eval run, from a small probe run |
 | Fold | `fold` | A `SKILL.md` and tool specs scaffolded from a subagent's prompt |
 | Decide | `compare` | A before/after verdict over two eval runs: score, tokens, writes, routes |
 | Keep as tool | `schema`, `check-response` | A fixed reply shape for subagents that keep their own context |
 
 Every analysis is **offline and deterministic**. Nothing calls a model.
-Nothing is written unless you pass `--write`. You decide every verdict.
+Nothing is written unless you pass `--write` or `--export`. The bundled traces
+and eval rows are synthetic sample data, not a live benchmark. You decide every
+verdict.
+
+Use a model capable of the required tool calls; provider charges and number of
+turns depend on the run. A missing/failed tool result is unassessed, not a pass.
+The optional live step may incur provider charges.
 
 The method and the file formats follow Anthropic's
 [single-agent-loop-kit](https://github.com/anthropics/single-agent-loop-kit),
@@ -46,23 +52,27 @@ provider you configured.
 
 The demo is a synthetic outdoor-gear support desk: a `router` and five
 subagents (`orders`, `shipping`, `returns`, `billing`, `diagnostics`), with 62
-production traces and three eval runs.
+sample traces and three eval datasets.
 
 bash:
 
 ```bash
-tokn single-loop demo --export "$HOME/tokn-single-loop"
-cd "$HOME/tokn-single-loop"
+WORK="$HOME/tokn-single-loop-$(date +%Y%m%d%H%M%S)-$$"
+mkdir "$WORK"
+tokn single-loop demo --export "$WORK/demo"
+cd "$WORK/demo"
 ```
 
 PowerShell:
 
 ```powershell
-tokn single-loop demo --export "$HOME\tokn-single-loop"
-Set-Location "$HOME\tokn-single-loop"
+$WORK = Join-Path $env:TEMP "tokn-single-loop-$([guid]::NewGuid().ToString('N'))"
+New-Item -ItemType Directory -Path $WORK | Out-Null
+tokn single-loop demo --export (Join-Path $WORK 'demo')
+Set-Location (Join-Path $WORK 'demo')
 ```
 
-Expected:
+Example output (synthetic fixture export):
 
 ```text
 wrote …/baseline/results.jsonl
@@ -82,6 +92,17 @@ wrote …/v1-fold-returns/results.jsonl
 | `probe/results.jsonl` | A small 2-task probe run, used for the token estimate |
 | `prompts/returns.md` | The `returns` subagent's system prompt |
 
+### One sample trace and task record
+
+The bundled baseline is synthetic sample data, not a recorded provider run.
+The first three rows of trace `t-0001` list `router` (482 ms, 900 input tokens), `orders` (1,654 ms,
+1,852 tokens), then `shipping` (2,166 ms, 1,274 tokens). Its paired `t01`
+rep `0` record has `task_complete: 1`, status `ok`, six model calls, 4,100
+input tokens and 590 output tokens. The fixture records no actual provider
+charge: calculate an estimate only after supplying your own rates with
+`--price-in` and `--price-out`. Inventory/audit, coverage, and baseline versus
+candidate comparison are separate analyses; none executes an agent.
+
 Just want to see everything at once? `tokn single-loop demo` (with no
 `--export`) runs every analysis below and prints one report.
 
@@ -94,7 +115,7 @@ tokn single-loop audit --traces traces.jsonl --inventory inventory.tsv --main ro
 Expected (shortened):
 
 ```text
-62 traces, 151 calls.
+62 sample traces, 151 sample calls.
 
 | agent | calls | % of traces | % of time | median ms | median input tokens |
 |---|---|---|---|---|---|
@@ -136,7 +157,7 @@ verdict you disagree with. The verdicts are proposals; you decide.
 ## 3. Coverage: do the evals exercise every chain?
 
 Before you change an agent, make sure some eval task runs it. `coverage`
-groups production traces into chains (the set of agents a request touched)
+groups the supplied traces into chains (the set of agents a request touched)
 and lists which tasks run each chain and whether they pass today:
 
 ```bash

@@ -26,7 +26,7 @@ Custom graphs that you write yourself are covered in
 |---|---|---|
 | TOKN v0.3.67 or later | Ships the workflow tools, `ultrawork` and `/workflows save/resume` | `tokn version` |
 | A model provider | The REPL and every node call a model | see [SETUP.md](../../SETUP.md) |
-| Trial tier (step 7 only) | Domain modes such as `finrisk` | `tokn license` |
+| Trial tier (step 7 only) | Domain modes such as `finrisk` | `tokn license features` |
 
 Workflow tools are registered in the interactive session (`tokn agent-repl`),
 not in one-shot `tokn agent-run`.
@@ -67,6 +67,20 @@ tokn agent-repl
 ```
 
 ## 2. Run a bundled workflow
+
+Expected two-node shape for a bounded research exercise (illustrative, not a
+recorded run):
+
+```text
+prompt → research (one model call, read-only sources) → verify (one model call,
+read-only draft and sources) → synthesized answer
+```
+
+Each node is a separate model call to the configured provider. For a
+learner-authored node, explicitly limit its available tools to the minimum
+needed (or none); do not inherit an unrestricted tool set. Review the node
+prompt, tool access, budget and stop condition before dispatch. Stop before
+running any node whose prompt or permissions have not been reviewed.
 
 Ask for one by name. The model calls the `start_workflow` tool with
 `bundled` and `input`:

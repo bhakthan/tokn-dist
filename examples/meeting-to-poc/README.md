@@ -4,7 +4,7 @@
 
 A planning meeting ends with a page of notes, and the decisions in it are easy to lose. This walkthrough turns those minutes into a short design plan and a runnable Go proof of concept. TOKN reads the minutes, writes the plan with explicit sections, and scaffolds the code. A small offline checker then confirms the output has the expected shape.
 
-Path A uses a synthetic minutes file, so you need no Microsoft 365 access. Path B is optional. It pulls the minutes from your own Microsoft 365 work or school account through WorkIQ.
+Path A is the default. It uses a synthetic minutes file and any model provider you configure that can make tool calls; you need no Microsoft 365 access. Path B is optional. It pulls the minutes from your own Microsoft 365 work or school account through WorkIQ, and its generation step uses an Azure OpenAI deployment (`tokn workiq demo --help`), not an arbitrary provider.
 
 | Capability | What it does here |
 |---|---|
@@ -19,7 +19,8 @@ Path A uses a synthetic minutes file, so you need no Microsoft 365 access. Path 
 |---|---|---|
 | TOKN v0.3.57 or newer | The `rw` mode and `tokn workiq` ship in this version. | `tokn version` |
 | Community tier (no trial needed) | The `workiq` and `rw` modes are free in the Community tier. | `tokn license features` |
-| An LLM provider | TOKN calls a model to write the plan and the code. | See [../../SETUP.md](../../SETUP.md) |
+| An LLM provider | TOKN calls a model to write the plan and the code. Use a model capable of the required tool calls; provider charges and number of turns depend on the run. A missing/failed tool result is unassessed, not a pass. | See [../../SETUP.md](../../SETUP.md); static config check: `tokn doctor --provider <id>` |
+| **Path B only:** an Azure OpenAI deployment | `tokn workiq demo` sends the retrieved context to the configured Azure OpenAI deployment. | `NOSPACE_MODEL_PROVIDER=azure-openai` plus `AZURE_OPENAI_ENDPOINT` and `AZURE_OPENAI_DEPLOYMENT`; `tokn doctor --provider azure-openai` |
 | Python 3.9 or newer | Runs the offline checker. | `python --version` (Windows) or `python3 --version` (macOS, Linux) |
 | **Path B only:** a Microsoft 365 work or school account | WorkIQ pulls context from your own tenant. Personal accounts are not supported. | Sign in with your work account. |
 | **Path B only:** WorkIQ access | Check with your organisation's admin whether your account needs a Microsoft 365 Copilot licence for WorkIQ, and whether tenant admin consent is required for the WorkIQ app. Do not assume either. | Ask your admin. `tokn workiq status` shows the error if the account is not ready. |
@@ -84,48 +85,60 @@ Set-Location $HOME\meeting-to-poc-run
 
 ## 2. Configure the LLM
 
-Replace the placeholders with your own values.
+Set these in a trusted shell. `.env.example` lists the names for reference; do not source it or commit a populated `.env`.
 
 ```bash
-export NOSPACE_MODEL_PROVIDER=anthropic
-export NOSPACE_MODEL_NAME=<a model you have access to>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_PROVIDER='anthropic'
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+read -rs -p 'Anthropic key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
+tokn doctor --provider anthropic
 ```
 
 ```powershell
 $env:NOSPACE_MODEL_PROVIDER = "anthropic"
-$env:NOSPACE_MODEL_NAME = "<a model you have access to>"
-$env:ANTHROPIC_API_KEY = "<your key>"
+$env:NOSPACE_MODEL_NAME = "YOUR_MODEL_ID"
+# Supply ANTHROPIC_API_KEY from a trusted secret store or session, not a command containing the key.
+tokn doctor --provider anthropic
 ```
 
-For other providers, see [../../SETUP.md](../../SETUP.md).
+`tokn doctor` checks static configuration only; it does not prove the key works. For other providers, see [../../SETUP.md](../../SETUP.md).
 
 ## 3. Path A: run the flow on the synthetic minutes
 
 Read `minutes.md` first. It is a fictional planning meeting with made-up attendees and a generic customer-feedback idea. `prompt.md` tells the agent to write `design-plan.md` and a `poc/` folder.
 
+**Before you run, write your own acceptance criteria.** Outside the working folder, write two or three checks the PoC must meet that the prompt does not spell out, plus a small CSV of your own (a `text` column with a dozen feedback lines) and the top-five tag counts you expect. The agent never sees these, so they are an out-of-sample test, unlike `check_poc.py`, which only checks shape.
+
+Stage only the minutes and the prompt in `work/`, so the checker and this README stay outside the agent's read scope:
+
 ```bash
-tokn agent-run --mode rw --repo-root . --prompt-file prompt.md --max-steps 20 --no-confirm
+mkdir work && cp minutes.md prompt.md work/
+cd work
+tokn agent-run --mode rw --repo-root . --prompt-file prompt.md --max-steps 20 --permission-mode default
+cd ..
 ```
 
 ```powershell
-tokn agent-run --mode rw --repo-root . --prompt-file prompt.md --max-steps 20 --no-confirm
+New-Item -ItemType Directory work | Out-Null; Copy-Item minutes.md, prompt.md work\
+Set-Location work
+tokn agent-run --mode rw --repo-root . --prompt-file prompt.md --max-steps 20 --permission-mode default
+Set-Location ..
 ```
 
-`--no-confirm` skips the approval prompts so the run can finish unattended. Use it only in a scratch folder. If the run stops early, raise `--max-steps`. To work interactively instead, start `tokn agent-repl` in the same folder and paste the contents of `prompt.md`.
+`--permission-mode default` asks before each edit or mutating command, so you approve each file the agent writes. Do not add `--no-confirm` to this run: it auto-approves every tool call, including code generation and shell commands. If the run stops early, raise `--max-steps`. To work interactively instead, start `tokn agent-repl` in `work/` and paste the contents of `prompt.md`.
 
-Expected output, not a recorded run: a `design-plan.md` in the folder root and a `poc/` folder with `go.mod`, `main.go`, and `README.md`.
+Expected output, not a recorded run: `work/design-plan.md` and a `work/poc/` folder with `go.mod`, `main.go`, and `README.md`.
 
 ## 4. Check the output offline
 
 The checker reads local files only. It makes no network calls.
 
 ```bash
-python3 check_poc.py --plan design-plan.md --poc poc
+python3 check_poc.py --plan work/design-plan.md --poc work/poc
 ```
 
 ```powershell
-python check_poc.py --plan design-plan.md --poc poc
+python check_poc.py --plan work\design-plan.md --poc work\poc
 ```
 
 It fails if a required heading (`Scope`, `Approach`, `Risks`, `Open Questions`) is missing, if a scaffold file is missing, if `main.go` has 200 or more lines, or if `main.go` imports a non-standard package. A word count outside 200 to 400 words prints a note, not a failure.
@@ -133,18 +146,18 @@ It fails if a required heading (`Scope`, `Approach`, `Risks`, `Open Questions`) 
 Optional: check that the PoC compiles. This needs Go installed. It writes no binary.
 
 ```bash
-cd poc && go vet ./... ; cd ..
+cd work/poc && go vet ./... ; cd ../..
 ```
 
 ```powershell
-Set-Location poc; go vet ./...; Set-Location ..
+Set-Location work\poc; go vet ./...; Set-Location ..\..
 ```
 
-To run it, `poc/README.md` describes the CSV columns. The synthetic minutes are not a CSV, so you need your own small sample CSV.
+Then run the PoC on the CSV you wrote before the run (`go run . ../../my-feedback.csv` from `work/poc`, if you saved it as `my-feedback.csv` beside `work/`; see `poc/README.md` describes) and compare its top five with your expected counts. A shape pass from `check_poc.py` plus a wrong count is a fail. If you find yourself repeating this generate-check-fix cycle on the same codebase, that is the job of `tokn factory`, which keeps work items, gates and human approvals in one ledger; see the [RNA-seq software factory](../rnaseq-software-factory/README.md) example.
 
 ## 5. Path B (optional): pull the minutes from your own Microsoft 365 account
 
-Use this path only with a meeting you are allowed to share with your LLM provider. Replace the placeholders with your own values. Do not paste real meeting content into this repo.
+Use this path only with a meeting you are allowed to share with your Azure OpenAI deployment. It needs provider access on two sides: Microsoft 365 (WorkIQ retrieval) and Azure OpenAI (generation, `NOSPACE_MODEL_PROVIDER=azure-openai` plus `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_DEPLOYMENT` and a credential). Replace the placeholders with your own values. Do not paste real meeting content into this repo. The demo writes generated files into a new folder without per-file approval, so read them before you build or run anything.
 
 Sign in to WorkIQ once:
 
@@ -172,7 +185,7 @@ tokn workiq demo -q "Summarise the decisions and action items from <your meeting
 python check_poc.py --plan $HOME\meeting-to-poc-m365\design-plan.md --poc $HOME\meeting-to-poc-m365
 ```
 
-`tokn workiq demo --help` lists the other flags, such as `--dry-run`, which you can use to check the setup before a real run. The demo writes `design-plan.md`, `main.go`, `go.mod`, and `README.md` directly into the output folder, so the checker takes the same folder for `--poc`.
+`tokn workiq demo --help` lists the other flags. Start with `--dry-run`, which prints the plan and scaffold to stdout instead of writing files. The demo writes `design-plan.md`, `main.go`, `go.mod`, and `README.md` directly into the output folder, so the checker takes the same folder for `--poc`.
 
 Expected output, not a recorded run: the demo prints its three steps (retrieve, generate, write), then the checker prints PASS.
 

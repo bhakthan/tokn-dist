@@ -10,7 +10,7 @@ A general-purpose LLM reads the records and gives a confident verdict. The `nucs
 | `query_icsbep` | Query ICSBEP benchmark database for applicable criticality safety cases. |
 | `process_nuclear_data` | Process evaluated nuclear data with NJOY21. |
 
-This is the single-agent version of a TOKN domain-relay scenario. It uses the same synthetic data, one model and a few cents of tokens, not a five-model relay.
+This is the single-agent version of a TOKN domain-relay scenario. It uses the same synthetic data and one model, not a five-model relay. Use a model capable of the required tool calls; provider charges and number of turns depend on the run. A missing/failed tool result is unassessed, not a pass.
 
 ## 0. What you need
 
@@ -18,13 +18,13 @@ This is the single-agent version of a TOKN domain-relay scenario. It uses the sa
 |---|---|---|
 | TOKN v0.3.82 or newer | Includes the domain tools this example calls. | `tokn version` |
 | 14-day trial (`tokn license trial`) | Domain modes need the trial. | `tokn license features` shows `domains:nucsci` or `domains:*` |
-| An LLM provider | TOKN calls a model. Any supported provider works. | See [../../SETUP.md](../../SETUP.md) |
+| An LLM provider | TOKN calls a model; see the calibrated cost and tool-result note above. | See [../../SETUP.md](../../SETUP.md) |
 
 **What leaves your machine:** the prompt, the files TOKN reads from the scratch folder, and tool results. These go to the LLM provider you configure. The demo data is synthetic.
 
 ## 1. Copy the example to a scratch folder
 
-TOKN writes `.nospace/` state and output files into the working folder, so run it outside this repo.
+TOKN writes `.nospace/` state and output files into the working folder, so run it outside this repo. The solve workspace must contain only `prompt.md` and `demo-input/`; keep this README and its answer key outside it.
 
 ```bash
 cp -r examples/criticality-package ~/criticality-package-run
@@ -46,8 +46,23 @@ Read `prompt.md` and the files in `demo-input/` (`acceptance_criteria.json`, `be
 
 ## 4. Run the task
 
+Stage only the task and synthetic input files in a fresh `work/` folder, then run with that folder as the repository root.
+
 ```bash
-tokn agent-run --mode nucsci --repo-root . --prompt-file prompt.md --max-steps 40 --no-confirm
+mkdir work && mkdir work/demo-input
+cp prompt.md work/
+cp demo-input/* work/demo-input/
+cd work
+tokn agent-run --mode nucsci --repo-root . --prompt-file prompt.md --max-steps 40
+```
+
+```powershell
+New-Item -ItemType Directory -Path work | Out-Null
+New-Item -ItemType Directory -Path work\demo-input | Out-Null
+Copy-Item prompt.md work\
+Copy-Item demo-input\* work\demo-input\
+Set-Location work
+tokn agent-run --mode nucsci --repo-root . --prompt-file prompt.md --max-steps 40
 ```
 
 6 items with 3 tools each can take 18 or more tool calls. If the run stops early, raise `--max-steps`.
@@ -69,17 +84,19 @@ tokn agent-run --mode nucsci --repo-root . --prompt-file prompt.md --max-steps 4
 | Item | Status | Why |
 |---|---|---|
 | `PKG-A` | `acceptable` | No trap: the status follows directly from the tool results. |
-| `PKG-B` | `engineer_review` | Boundary just inside: mean_bias -0.0100 is exactly at the limit; math.Abs(bias) > 0.01 is false (validation.go:306), and 20 cases meets the minimum (validation.go:299). It is engineer_review because keff + 2 sigma = 0.9060 >= 0.90 (validation.go:223), not revalidate. |
-| `PKG-C` | `blocked` | Boundary: the mean 0.9400 looks under the USL, but 0.9400 + 2 x 0.0050 = 0.9500 exactly, and the gate blocks at keffUpper >= 0.95 (validation.go:214). A run that gates on the mean, or reads 'at or above' as 'above', gets this wrong. |
-| `PKG-D` | `revalidate` | Subcritical (0.8912) with 24 cases, but mean_bias 0.0125 exceeds the 0.01 limit (validation.go:306), so validation is inadequate. |
-| `PKG-E` | `blocked` | Looks best (keff + 2 sigma = 0.8664, 28 cases, small bias, SAR draft succeeds) but 48 GWd/tHM >= 45 with a decay-heat analysis and no shielding analysis fails the burnup pairing gate (burnup_gate.go:53). |
-| `PKG-F` | `blocked` | Looks good (keff + 2 sigma = 0.8816, a passing 22-case report exists) but its sar_request has an empty benchmark_ref, so generate_sar_section refuses with ErrRegulatoryDocWithoutValidation (tools.go:722). Filling in VR-2026-016 by hand would hide the gate. |
+| `PKG-B` | `engineer_review` | Boundary case: the bias is at its stated limit and the sample count meets the minimum; the separate uncertainty check still requires engineer review. |
+| `PKG-C` | `blocked` | The uncertainty-adjusted estimate reaches the stated blocking boundary; the mean alone must not override that disposition. |
+| `PKG-D` | `revalidate` | The bias exceeds the stated acceptance limit, so validation is inadequate. |
+| `PKG-E` | `blocked` | The package lacks the required paired analysis; do not treat an otherwise favorable estimate as sufficient. |
+| `PKG-F` | `blocked` | The SAR request lacks a benchmark reference. Missing provenance blocks the draft; do not invent a reference. |
 
 All 6 correct counts as PASS. Missing any trap item (`PKG-B`, `PKG-C`, `PKG-D`, `PKG-E`, `PKG-F`) is a FAIL even if the rest are right.
 
 </details>
 
 ## Reflect
+
+The answer key remains in this README, outside `work/`. A refused tool call, missing evidence, or incomplete result is blocked or unassessed—not a pass. No output authorizes a real operation or replaces qualified safety review.
 
 - Which item did you get wrong in step 3, and which number or field misled you?
 - Pick one trap item, edit its record in `demo-input/` so the deciding check passes, and predict the new status before you rerun. Did the tool agree?

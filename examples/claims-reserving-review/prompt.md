@@ -31,3 +31,10 @@ Claims `CLM-2001` … `CLM-2007`; reports `RPT-BAD`, `RPT-GOOD`; underwriting `U
 4. Screen rating models with `ins_rating_factor_screen`, test cohorts with `ins_disparate_impact` (four-fifths rule) and check declines with `ins_adverse_action_check`.
 5. Reserve with `ins_chain_ladder` / `ins_reserve_range`, and pass reserve figures to `ins_reserve_report`. A figure without a method or assumptions is blocked; a point estimate without a range is a warning.
 6. Never state a final coverage, legal or reserve-adequacy determination. Any final report passes `ins_report_finalize` with the decision-support disclaimer.
+
+## Deliverable
+
+Write `RESULT.md` with one row per item and these columns: `item`, `status`,
+`evidence`, and `human_disposition`. Keep `human_disposition` as
+`pending_human_review`; do not infer or supply a final decision on behalf of the
+licensed adjuster, underwriter, or actuary.

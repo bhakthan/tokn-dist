@@ -12,7 +12,7 @@ A general-purpose LLM reads the records and gives a confident verdict. The `apps
 | `appsec_check_control` | Check whether a security control (sanitizer, validator, auth check) is present and effective for a given sink. |
 | `appsec_build_threat_model` | Record a threat model: assets, trust boundaries, attacker capabilities, and security objectives. |
 
-This is the single-agent version of a TOKN domain-relay scenario. It uses the same synthetic data, one model and a few cents of tokens, not a five-model relay.
+This is the single-agent version of a TOKN domain-relay scenario. Use a model capable of the required tool calls; provider charges and number of turns depend on the run. A missing/failed tool result is unassessed, not a pass. It uses the same synthetic data, not a five-model relay.
 
 ## 0. What you need
 
@@ -20,7 +20,7 @@ This is the single-agent version of a TOKN domain-relay scenario. It uses the sa
 |---|---|---|
 | TOKN v0.3.82 or newer | Includes the domain tools this example calls. | `tokn version` |
 | 14-day trial (`tokn license trial`) | Domain modes need the trial. | `tokn license features` shows `domains:appsec` or `domains:*` |
-| An LLM provider | TOKN calls a model. Any supported provider works. | See [../../SETUP.md](../../SETUP.md) |
+| An LLM provider | TOKN calls a model. Use a model capable of the required tool calls; provider charges and number of turns depend on the run. A missing/failed tool result is unassessed, not a pass. | See [../../SETUP.md](../../SETUP.md) |
 
 **What leaves your machine:** the prompt, the files TOKN reads from the scratch folder, and tool results. These go to the LLM provider you configure. The demo data is synthetic.
 
@@ -49,8 +49,24 @@ Read `prompt.md` and the files in `demo-input/` (`candidates.json`, `dataflows_a
 ## 4. Run the task
 
 ```bash
-tokn agent-run --mode appsec --repo-root . --prompt-file prompt.md --max-steps 40 --no-confirm
+mkdir -p work/demo-input
+cp prompt.md work/prompt.md
+cp demo-input/* work/demo-input/
+cd work
+tokn agent-run --mode appsec --repo-root . --prompt-file prompt.md --max-steps 40
 ```
+
+PowerShell:
+
+```powershell
+New-Item -ItemType Directory -Force work\demo-input | Out-Null
+Copy-Item prompt.md work\prompt.md
+Copy-Item demo-input\* work\demo-input\
+Set-Location work
+tokn agent-run --mode appsec --repo-root . --prompt-file prompt.md --max-steps 40
+```
+
+Only `prompt.md` and `demo-input/` are staged in `work/`; do not copy this README or its answer key into the agent's read scope. Keep the defensive queue local; use no real target or upload. Grade `work/RESULT.md` from outside `work/`, requiring `reportable`, `suppressed` or `blocked` plus cited fixture evidence. A safe refusal or inconclusive result is unassessed, not a pass.
 
 6 items with 5 tools each can take 30 or more tool calls. If the run stops early, raise `--max-steps`.
 

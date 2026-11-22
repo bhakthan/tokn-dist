@@ -4,6 +4,10 @@
 
 A general-purpose LLM reads the records and gives a confident verdict. The `gridfm` domain mode runs each item through deterministic domain tools and gates, so the status comes from a tool result, not from the model's impression of the numbers.
 
+All inputs are synthetic. These dispositions are advisory evidence for a
+qualified operator; they do not establish operating conditions or replace the
+operator's decision.
+
 | Tool | What it does |
 |---|---|
 | `verify_surrogate_solution` | Independently verify a GridSFM surrogate AC-OPF prediction against power-flow physics (voltage bounds, generator limits, thermal limits, power balance, flow-voltage consistency). |
@@ -12,7 +16,7 @@ A general-purpose LLM reads the records and gives a confident verdict. The `grid
 | `assess_ood` | Assess whether a grid is out-of-distribution / over-scale for a GridSFM tier and return the implied confidence cap. |
 | `list_verification_checks` | List the independent physics checks the harness runs on a surrogate solution, the lifecycle phases, and the current tolerances. |
 
-This is the single-agent version of the [gridfm relay walkthrough](../domain-relay/walkthroughs/gridfm/README.md). It uses the same synthetic data, one model and a few cents of tokens, not a five-model relay.
+This is the single-agent version of the [gridfm relay walkthrough](../domain-relay/walkthroughs/gridfm/README.md). It uses the same synthetic data with one model, not a five-model relay. Use a model capable of the required tool calls; provider charges and number of turns depend on the run. A missing/failed tool result is unassessed, not a pass.
 
 ## 0. What you need
 
@@ -20,22 +24,28 @@ This is the single-agent version of the [gridfm relay walkthrough](../domain-rel
 |---|---|---|
 | TOKN v0.3.82 or newer | Includes the domain tools this example calls. | `tokn version` |
 | 14-day trial (`tokn license trial`) | Domain modes need the trial. | `tokn license features` shows `domains:gridfm` or `domains:*` |
-| An LLM provider | TOKN calls a model. Any supported provider works. | See [../../SETUP.md](../../SETUP.md) |
+| An LLM provider | TOKN calls a model capable of the required tool calls. | See [../../SETUP.md](../../SETUP.md) |
 
 **What leaves your machine:** the prompt, the files TOKN reads from the scratch folder, and tool results. These go to the LLM provider you configure. The demo data is synthetic.
 
 ## 1. Copy the example to a scratch folder
 
-TOKN writes `.nospace/` state and output files into the working folder, so run it outside this repo.
+TOKN writes `.nospace/` state and output files into the working folder, so run
+it outside this repo. Stage only `prompt.md` and `demo-input/` in the fresh
+`work/` folder; keep this README and its answer key outside the agent's scope.
 
 ```bash
-cp -r examples/grid-surrogate-trust ~/grid-surrogate-trust-run
-cd ~/grid-surrogate-trust-run
+mkdir -p ~/grid-surrogate-trust-run/work/demo-input
+cp examples/grid-surrogate-trust/prompt.md ~/grid-surrogate-trust-run/work/
+cp -R examples/grid-surrogate-trust/demo-input/. ~/grid-surrogate-trust-run/work/demo-input/
+cd ~/grid-surrogate-trust-run/work
 ```
 
 ```powershell
-Copy-Item -Recurse examples\grid-surrogate-trust $HOME\grid-surrogate-trust-run
-Set-Location $HOME\grid-surrogate-trust-run
+New-Item -ItemType Directory -Force $HOME\grid-surrogate-trust-run\work\demo-input | Out-Null
+Copy-Item examples\grid-surrogate-trust\prompt.md $HOME\grid-surrogate-trust-run\work\
+Copy-Item examples\grid-surrogate-trust\demo-input\* $HOME\grid-surrogate-trust-run\work\demo-input\
+Set-Location $HOME\grid-surrogate-trust-run\work
 ```
 
 ## 2. Configure the LLM
@@ -49,7 +59,7 @@ Read `prompt.md` and the files in `demo-input/` (`deployment_context.json`, `pre
 ## 4. Run the task
 
 ```bash
-tokn agent-run --mode gridfm --repo-root . --prompt-file prompt.md --max-steps 40 --no-confirm
+tokn agent-run --mode gridfm --repo-root . --prompt-file prompt.md --max-steps 40
 ```
 
 6 items with 5 tools each can take 30 or more tool calls. If the run stops early, raise `--max-steps`.

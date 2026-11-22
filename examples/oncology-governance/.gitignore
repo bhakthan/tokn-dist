@@ -1,0 +1,9 @@
+# Runtime output from this walkthrough; never commit it.
+.env
+.tokn/
+.nospace/
+__pycache__/
+work/
+scratch/
+out/
+result.json

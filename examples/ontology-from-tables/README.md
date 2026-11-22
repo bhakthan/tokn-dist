@@ -299,61 +299,73 @@ Where does each link's evidence say `declared`, and where `containment`?
 ## 8. A database: PostgreSQL or MySQL
 
 The same SQL scripts load into either server. The commands below start a
-throwaway container. Use your own server if you have one.
+throwaway container that listens on `127.0.0.1` only. Use your own server if
+you have one; for a real server, use a restricted role instead of the
+superuser shown here.
 
-Keep credentials out of the command line and your shell history: put the
-connection string in an environment variable and pass `env:NAME`.
+The password is generated in your shell for this session and is never written
+to a file in this folder or to the command line. The connection string is read
+from an environment variable.
 
 **PostgreSQL**, bash:
 
 ```bash
-docker run -d --name workshop-pg -e POSTGRES_PASSWORD=workshop -e POSTGRES_DB=workshop -p 5432:5432 postgres:16
-sleep 10
+export WORKSHOP_DB_PASSWORD="$(openssl rand -hex 16)"
+export POSTGRES_PASSWORD="$WORKSHOP_DB_PASSWORD"
+docker run -d --name workshop-pg -e POSTGRES_PASSWORD -e POSTGRES_DB=workshop -p 127.0.0.1:5432:5432 postgres:16
+until docker exec workshop-pg pg_isready -q -U postgres; do sleep 1; done
 cat sql/schema.sql sql/data.sql | docker exec -i workshop-pg psql -q -U postgres -d workshop -v ON_ERROR_STOP=1
-export WORKSHOP_PG="postgres://postgres:workshop@localhost:5432/workshop?sslmode=disable"
+export WORKSHOP_PG="postgres://postgres:${WORKSHOP_DB_PASSWORD}@127.0.0.1:5432/workshop?sslmode=disable"
 tokn ontology build --source postgres:env:WORKSHOP_PG --out out/pg
 ```
 
 PowerShell:
 
 ```powershell
-docker run -d --name workshop-pg -e POSTGRES_PASSWORD=workshop -e POSTGRES_DB=workshop -p 5432:5432 postgres:16
-Start-Sleep 10
+$env:WORKSHOP_DB_PASSWORD = [guid]::NewGuid().ToString('N')
+$env:POSTGRES_PASSWORD = $env:WORKSHOP_DB_PASSWORD
+docker run -d --name workshop-pg -e POSTGRES_PASSWORD -e POSTGRES_DB=workshop -p 127.0.0.1:5432:5432 postgres:16
+do { Start-Sleep 1; docker exec workshop-pg pg_isready -q -U postgres *> $null } until ($LASTEXITCODE -eq 0)
 Get-Content sql\schema.sql, sql\data.sql | docker exec -i workshop-pg psql -q -U postgres -d workshop -v ON_ERROR_STOP=1
-$env:WORKSHOP_PG = "postgres://postgres:workshop@localhost:5432/workshop?sslmode=disable"
+$env:WORKSHOP_PG = "postgres://postgres:$($env:WORKSHOP_DB_PASSWORD)@127.0.0.1:5432/workshop?sslmode=disable"
 tokn ontology build --source postgres:env:WORKSHOP_PG --out out/pg
 ```
 
-**MySQL**, bash (MySQL takes longer to start; repeat the load if it says it
-cannot connect):
+**MySQL**, bash. The server takes longer to start; the probe waits until it
+answers on TCP, not just on its initialisation socket:
 
 ```bash
-docker run -d --name workshop-my -e MYSQL_ROOT_PASSWORD=workshop -e MYSQL_DATABASE=workshop -p 3306:3306 mysql:8
-sleep 30
-cat sql/schema.sql sql/data.sql | docker exec -i workshop-my mysql -uroot -pworkshop workshop
-export WORKSHOP_MY="root:workshop@tcp(localhost:3306)/workshop"
+export WORKSHOP_DB_PASSWORD="$(openssl rand -hex 16)"
+export MYSQL_ROOT_PASSWORD="$WORKSHOP_DB_PASSWORD"
+docker run -d --name workshop-my -e MYSQL_ROOT_PASSWORD -e MYSQL_DATABASE=workshop -p 127.0.0.1:3306:3306 mysql:8
+until docker exec workshop-my sh -c 'MYSQL_PWD="$MYSQL_ROOT_PASSWORD" mysqladmin ping -h127.0.0.1 -uroot --silent' >/dev/null 2>&1; do sleep 2; done
+cat sql/schema.sql sql/data.sql | docker exec -i workshop-my sh -c 'MYSQL_PWD="$MYSQL_ROOT_PASSWORD" exec mysql -uroot workshop'
+export WORKSHOP_MY="root:${WORKSHOP_DB_PASSWORD}@tcp(127.0.0.1:3306)/workshop"
 tokn ontology build --source mysql:env:WORKSHOP_MY --out out/mysql
 ```
 
 PowerShell:
 
 ```powershell
-docker run -d --name workshop-my -e MYSQL_ROOT_PASSWORD=workshop -e MYSQL_DATABASE=workshop -p 3306:3306 mysql:8
-Start-Sleep 30
-Get-Content sql\schema.sql, sql\data.sql | docker exec -i workshop-my mysql -uroot -pworkshop workshop
-$env:WORKSHOP_MY = "root:workshop@tcp(localhost:3306)/workshop"
+$env:WORKSHOP_DB_PASSWORD = [guid]::NewGuid().ToString('N')
+$env:MYSQL_ROOT_PASSWORD = $env:WORKSHOP_DB_PASSWORD
+docker run -d --name workshop-my -e MYSQL_ROOT_PASSWORD -e MYSQL_DATABASE=workshop -p 127.0.0.1:3306:3306 mysql:8
+do { Start-Sleep 2; docker exec workshop-my sh -c 'MYSQL_PWD="$MYSQL_ROOT_PASSWORD" mysqladmin ping -h127.0.0.1 -uroot --silent' *> $null } until ($LASTEXITCODE -eq 0)
+Get-Content sql\schema.sql, sql\data.sql | docker exec -i workshop-my sh -c 'MYSQL_PWD="$MYSQL_ROOT_PASSWORD" exec mysql -uroot workshop'
+$env:WORKSHOP_MY = "root:$($env:WORKSHOP_DB_PASSWORD)@tcp(127.0.0.1:3306)/workshop"
 tokn ontology build --source mysql:env:WORKSHOP_MY --out out/mysql
 ```
 
 Both give the same result as SQLite: 6 classes, 7 object properties, 1
 enumeration, 1 proposed. If port 5432 or 3306 is already in use, change the
-left side of `-p` (for example `-p 55432:5432`) and the port in the
-connection string.
+left side of `-p` (for example `-p 127.0.0.1:55432:5432`) and the port in the
+connection string. Never change the bind address to `0.0.0.0`.
 
-Clean up when done:
+Clean up when done, which also removes the container's data:
 
 ```bash
 docker rm -f workshop-pg workshop-my
+unset WORKSHOP_DB_PASSWORD POSTGRES_PASSWORD MYSQL_ROOT_PASSWORD WORKSHOP_PG WORKSHOP_MY
 ```
 
 ## 9. Parquet

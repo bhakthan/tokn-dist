@@ -1,0 +1,9 @@
+{
+  "scenario": "deterministic local factory demo",
+  "observed_run": {
+    "demo_steps": "13/13",
+    "verification_ok": true,
+    "chain_valid": true
+  },
+  "note": "Curated summary, not a runtime log; IDs and timestamps vary."
+}

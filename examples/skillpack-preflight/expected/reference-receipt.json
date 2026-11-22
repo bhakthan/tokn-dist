@@ -1,0 +1,12 @@
+{
+  "version": "0.3.118",
+  "input_digest": "sha256:e9b1cdc70d28d0bca0cd076ad840c51f2bc364dbfb4cf4b5989a0a4c4f22ec04",
+  "digest_scope": "fixture/prompts/mode/default.md; sorted relative path + NUL + bytes + NUL",
+  "scenario": "read-only capability and prompt-override preflight",
+  "checker": "tokn license features, tokn skillpack status, tokn doctor prompts",
+  "status": "read-only commands observed; this fixture's override outcome is expected",
+  "limitations": [
+    "Installed pack inventory and license tier are machine-specific.",
+    "A prompt audit does not establish that guidance is suitable for every task."
+  ]
+}

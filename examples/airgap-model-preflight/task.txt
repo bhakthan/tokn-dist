@@ -1,0 +1,5 @@
+Offline task: summarize the following synthetic note.
+
+The local model catalog was staged before the network boundary was closed.
+Verify the asset hash, model license, and runtime availability before serving.
+Do not treat a successful configuration check as proof of inference.

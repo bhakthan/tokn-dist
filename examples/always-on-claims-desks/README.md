@@ -95,8 +95,8 @@ every missing item, so you do not fix them one at a time.
 | **tokn v0.3.100 or later** | Runs `tokn always-on`. Handoff is new in this version | Download `tokn_windows_amd64.exe` from [the releases page](https://github.com/bhakthan/tokn-dist/releases/latest), rename it `tokn.exe`, put it on `PATH` (or set `TOKN_BIN`) | Download `tokn_darwin_arm64` (Apple Silicon) or `tokn_darwin_amd64` (Intel) from [the releases page](https://github.com/bhakthan/tokn-dist/releases/latest), then `chmod +x` it and move it to `/usr/local/bin/tokn` | Download `tokn_linux_amd64` (or `tokn_linux_arm64`) from [the releases page](https://github.com/bhakthan/tokn-dist/releases/latest), `chmod +x` it, and move it to `/usr/local/bin/tokn` |
 | **Python 3.10+** (for `check.py` only; standard library) | Grades the run | `winget install Python.Python.3.12` | `brew install python` | `sudo apt install python3` |
 | **git** | Each desk folder is its own git repository, so the run can prove nothing was written into it | `winget install Git.Git` | `xcode-select --install` | `sudo apt install git` |
-| **Azure CLI** (Azure path) | Signs you in with `az login`, so no key is stored anywhere | `winget install Microsoft.AzureCLI` | `brew install azure-cli` | `curl -sL https://aka.ms/InstallAzureCLIDeb \| sudo bash` |
-| **An Azure OpenAI deployment** (Azure path) | The model. Any tool-calling chat deployment works. This example uses `gpt-6-astra` | Your Azure resource | Your Azure resource | Your Azure resource |
+| **Azure CLI** (Azure path) | Uses Azure CLI sign-in rather than a static API key; protect the CLI credential cache | `winget install Microsoft.AzureCLI` | `brew install azure-cli` | Follow Microsoft's signed package instructions at [Install Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) |
+| **An Azure OpenAI deployment** (Azure path) | The model. Use a tool-calling deployment and a trusted deployment alias | Your Azure resource | Your Azure resource | Your Azure resource |
 | **llama.cpp `llama-server`** (local path, not live-tested) | Serves a local model on loopback. See [the local variant](#local-variant-not-live-tested) | `winget install ggml.llamacpp` | `brew install llama.cpp` | Build it: [llama.cpp build guide](https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md) |
 | **PowerShell** (Windows) or **bash** with `curl` (macOS, Linux) | Runs `run.ps1` or `run.sh` | Windows PowerShell 5.1 is built in | Bash is built in | Bash is usually installed |
 
@@ -123,22 +123,25 @@ authenticates. So export the values in your real shell:
 
 ```powershell
 az login
-$env:AZURE_OPENAI_ENDPOINT = "https://<your-resource>.openai.azure.com/openai/v1"
-$env:AZURE_OPENAI_DEPLOYMENT = "gpt-6-astra"
+$env:AZURE_OPENAI_ENDPOINT = "YOUR_TRUSTED_ENDPOINT"
+$env:AZURE_OPENAI_DEPLOYMENT = "YOUR_CONFIGURED_DEPLOYMENT"
 $env:AZURE_OPENAI_USE_DEFAULT_CREDENTIAL = "true"
 ```
 
 ```bash
 az login
-export AZURE_OPENAI_ENDPOINT="https://<your-resource>.openai.azure.com/openai/v1"
-export AZURE_OPENAI_DEPLOYMENT="gpt-6-astra"
+export AZURE_OPENAI_ENDPOINT='YOUR_TRUSTED_ENDPOINT'
+export AZURE_OPENAI_DEPLOYMENT='YOUR_CONFIGURED_DEPLOYMENT'
 export AZURE_OPENAI_USE_DEFAULT_CREDENTIAL="true"
 ```
 
 - `AZURE_OPENAI_USE_DEFAULT_CREDENTIAL=true` makes TOKN use your `az login`
-  identity instead of a key. The credential refreshes itself, which a
-  long-running worker needs.
+  identity instead of a static API key. The credential refreshes itself, which a
+  long-running worker needs. Protect the Azure CLI credential cache.
 - `AZURE_OPENAI_DEPLOYMENT` must equal `model.model` in both configs.
+- Replace `YOUR_CONFIGURED_DEPLOYMENT` in `config/claims-intake.yaml` and
+  `config/coverage-review.yaml` with that exact alias. The launchers reject an
+  unset or unreplaced placeholder and check that both configs match.
 - Nothing here is a secret. Do not paste a key into `.env`.
 
 ## 3. Step 2: The two desk configs
@@ -153,7 +156,7 @@ name: claims-intake
 mode: default
 model:
   provider: azure-openai
-  model: gpt-6-astra
+  model: YOUR_CONFIGURED_DEPLOYMENT
   context_size: 128000
 max_steps: 20
 turn_timeout: 10m
@@ -263,7 +266,7 @@ in `doctor --json` (from the live run):
 {
   "check": "handoff peer coverage-review",
   "ok": true,
-  "detail": "C:\\...\\state\\coverage-review"
+  "detail": "<run-root>\\state\\coverage-review"
 }
 ```
 
@@ -350,18 +353,18 @@ first notice, and the review reply that continues the same conversation.
 
 ## 10. Step 9: Schedule the desks for real
 
-Nothing here runs by itself. You run `run --once` on a schedule. TOKN installs
-no service: use Task Scheduler, systemd timers or launchd, one entry per desk.
+The one-shot example does not install a timer. If you choose to automate it,
+install a separate Task Scheduler task, systemd timer or launchd job, one per desk.
 Intake runs often (every 2 minutes here); review runs less often (every 10
 minutes). Use the same flags as above, and keep the Azure variables in the
 environment the scheduler uses.
 
-**Windows (Task Scheduler).** Set the Azure variables for your user, so the
+**Optional automation — Windows (Task Scheduler).** Set the Azure variables for your user, so the
 task inherits them, then register one task per desk:
 
 ```powershell
-setx AZURE_OPENAI_ENDPOINT "https://<your-resource>.openai.azure.com/openai/v1"
-setx AZURE_OPENAI_DEPLOYMENT "gpt-6-astra"
+setx AZURE_OPENAI_ENDPOINT "YOUR_TRUSTED_ENDPOINT"
+setx AZURE_OPENAI_DEPLOYMENT "YOUR_CONFIGURED_DEPLOYMENT"
 setx AZURE_OPENAI_USE_DEFAULT_CREDENTIAL "true"
 
 $root = "C:\path\to\tokn-dist\examples\always-on-claims-desks"
@@ -376,7 +379,7 @@ foreach ($d in @(@{ Name = "claims-intake"; Folder = "intake"; Every = 2 }, @{ N
 
 `setx` writes the variables for future sessions; open a new terminal to see them.
 
-**Linux (systemd user timers).** One service and one timer per desk. Put the
+**Optional automation — Linux (systemd user timers).** One service and one timer per desk. Put the
 Azure variables in `~/.config/tokn-claims.env` as plain `NAME=value` lines, then:
 
 ```ini
@@ -401,15 +404,16 @@ OnUnitActiveSec=2min
 WantedBy=timers.target
 ```
 
-Enable with `systemctl --user enable --now tokn-claims-intake.timer`. Make a
+Enable with `systemctl --user enable --now tokn-claims-intake.timer`; disable with
+`systemctl --user disable --now tokn-claims-intake.timer` before cleanup. Make a
 `tokn-claims-review` pair the same way with `coverage-review`, `review/`, and
 `OnUnitActiveSec=10min`.
 
-**macOS (launchd).** Use a LaunchAgent per desk with `ProgramArguments` set to
+**Optional automation — macOS (launchd).** Use a LaunchAgent per desk with `ProgramArguments` set to
 the same `tokn always-on run ... --once` command, `WorkingDirectory` set to the
 desk folder, `EnvironmentVariables` holding the Azure variables, and
 `StartInterval` set to `120` for intake and `600` for review. Load each with
-`launchctl load`.
+`launchctl load`; unload it with `launchctl unload` before cleanup.
 
 A tick that starts while the previous one is still running exits with
 `another worker holds the lock`, and the next tick tries again. That is expected.
@@ -449,7 +453,8 @@ again. Nothing else is deleted, and the desk fixtures are never changed.
 
 ## What you should see
 
-These numbers are from one live run on `gpt-6-astra` (Azure OpenAI). They will
+These numbers are from one historical observed run on an Azure OpenAI deployment.
+They will
 differ on your run. The shape should not: every check passes, and the chain
 stops at two hops.
 
@@ -522,9 +527,8 @@ thresholds, which is itself a useful test.
 
 ## Troubleshooting
 
-- **Preflight: `AZURE_OPENAI_DEPLOYMENT is 'x' but both configs use 'gpt-6-astra'`.**
-  Set the variable to `gpt-6-astra`, or change `model.model` in both configs to
-  your deployment name. Both must match.
+- **Preflight: deployment alias missing or still a placeholder.** Set a trusted
+  alias in the shell and use the exact same value in both configs' `model.model`.
 - **A handoff is refused: `peer coverage-review has no state directory yet`.**
   Start that desk once: `tokn always-on run coverage-review --once ...` (step 4).
   The doctor finding `handoff peer ...` fails until it exists.
@@ -557,18 +561,18 @@ thresholds, which is itself a useful test.
 
 ## Clean up
 
-Clear the run, then remove the generated folders:
+Run this only in a marked scratch copy. Disable any timer you installed first, then clear the run and remove only generated runtime folders:
 
 ```powershell
 .\run.ps1 -Fresh
-Remove-Item -Recurse -Force state, intake\.git, review\.git, intake\.nospace, review\.nospace, intake\.tokn, review\.tokn, intake\.gitignore, review\.gitignore -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force state, intake\.nospace, review\.nospace, intake\.tokn, review\.tokn -ErrorAction SilentlyContinue
 ```
 
 ```bash
-rm -rf state intake/.git review/.git intake/.nospace review/.nospace intake/.tokn review/.tokn intake/.gitignore review/.gitignore
+rm -rf state intake/.nospace intake/.tokn review/.nospace review/.tokn
 ```
 
-Also remove any scheduled tasks, timers or LaunchAgents you created in step 9.
+Also remove any scheduled tasks, timers or LaunchAgents you created in step 9 before deleting the scratch copy.
 TOKN installs no service, so nothing else is left behind.
 
 ## Files

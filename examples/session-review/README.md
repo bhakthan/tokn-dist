@@ -20,7 +20,7 @@ that drops the last item.
 
 | Requirement | Why | Check |
 |---|---|---|
-| TOKN **v0.3.57 or newer** | First release with the `/review` subcommands shown here | `tokn version` |
+| TOKN **v0.3.57 or newer** | Minimum version for the `/review` subcommands shown here | `tokn version` |
 | `git` | `/review` reads the working tree with `git status` and `git diff` | `git --version` |
 | Python 3 | Runs the fixture's unit tests before and after the agent's fix | `python --version` |
 | An LLM provider and key | Runs the agent | see [SETUP.md](../../SETUP.md) |
@@ -67,14 +67,14 @@ Follow [SETUP.md](../../SETUP.md) for your provider. For Anthropic, for example:
 
 ```bash
 export NOSPACE_MODEL_PROVIDER=anthropic
-export NOSPACE_MODEL_NAME="<a Claude model you have access to>"
-export ANTHROPIC_API_KEY="<your key>"
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+read -rs -p 'Anthropic API key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
 ```
 
 ```powershell
 $env:NOSPACE_MODEL_PROVIDER = "anthropic"
-$env:NOSPACE_MODEL_NAME     = "<a Claude model you have access to>"
-$env:ANTHROPIC_API_KEY      = "<your key>"
+$env:NOSPACE_MODEL_NAME     = "YOUR_MODEL_ID"
+# Set ANTHROPIC_API_KEY from a trusted secret store or your protected shell session.
 ```
 
 Use your shell or `~/.tokn/config/credentials.env` for keys. Never commit a
@@ -82,23 +82,28 @@ key to the repo.
 
 ## 3. Run a short agent session
 
-`--no-confirm` auto-approves tool calls, which is acceptable in this scratch
-repo. Leave it off if you want to approve each edit.
+Keep interactive tool approvals enabled. Review each proposed edit before
+approving it; this disposable fixture is not a reason to auto-approve calls.
 
 macOS / Linux:
 
 ```bash
-tokn agent-run --repo-root . --prompt-file task.md --no-confirm --max-steps 8
+tokn agent-run --repo-root . --prompt-file task.md --max-steps 8
 ```
 
 Windows PowerShell:
 
 ```powershell
-tokn agent-run --repo-root . --prompt-file task.md --no-confirm --max-steps 8
+tokn agent-run --repo-root . --prompt-file task.md --max-steps 8
 ```
 
 `task.md` is the copy in the scratch repo. It asks the agent to run the tests,
 fix the bug with the smallest change, and not touch the tests.
+
+To browse completed sessions, run `tokn list-sessions`, then
+`tokn load-session SESSION_ID` with an ID from that list. A transcript is not
+a checkpoint. `/review` examines the current working tree; `/rewind` is a
+separate action that reverts session edits. Keep the fixture disposable.
 
 ## 4. Open the REPL and run `/review`
 

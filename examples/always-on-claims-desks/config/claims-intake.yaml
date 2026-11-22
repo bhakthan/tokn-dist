@@ -2,7 +2,7 @@ name: claims-intake
 mode: default
 model:
   provider: azure-openai
-  model: gpt-6-astra
+  model: YOUR_CONFIGURED_DEPLOYMENT
   context_size: 128000
 max_steps: 20
 turn_timeout: 10m

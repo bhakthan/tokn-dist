@@ -17,9 +17,8 @@ result to your repository. You review and apply the export yourself.
 | **Held-out** (`tokn rrsi heldout`) | One-shot comparison on the sealed split. |
 | **Export** (`tokn rrsi export`) | Writes the verified bundle and a diff outside the repository. Never applies it. |
 
-> **Scope.** `rrsi` is the user-facing self-improvement command in this release. The
-> internal RWSI engine (`internal/agent/rwsi`) has no CLI command of its own; its
-> live demo runs only as a Go test with a build tag. This example does not use it.
+> **Scope.** This walkthrough uses the public `rrsi` CLI. It does not depend on
+> an internal implementation or test-only demo.
 
 ---
 
@@ -27,7 +26,7 @@ result to your repository. You review and apply the export yourself.
 
 | Requirement | Why | Check |
 |---|---|---|
-| TOKN **v0.3.57 or newer** | Current release with `tokn rrsi` | `tokn version` |
+| TOKN **v0.3.57 or newer** | Minimum version for `tokn rrsi` in this walkthrough | `tokn version` |
 | Licence tier: **Community** | No `rrsi` gate was found in the licence policy. Confirm on your machine. | `tokn license features` |
 | A git repository you can copy | `rrsi` works on a copy, and records the repository root | `git status` |
 | An LLM provider and key (steps 5–6 only) | The proposer, critic, and evaluator call a model | see [SETUP.md](../../SETUP.md) |
@@ -79,9 +78,10 @@ provided notes, say you will escalate it. Never invent order numbers.
 
 ## 3. Write the spec
 
-Save the following as `rrsi.json` in `~/tokn-rrsi`. The keys come from the spec loader in
-`internal/agent/rrsi/spec.go`. Fill in the placeholders for your evaluator. The evaluator
-command is the part of this example you must supply; this walkthrough does not provide one.
+Save the following as `rrsi.json` in `~/tokn-rrsi`. This is a template for
+the public `rrsi` CLI, not a ready-to-run evaluator: replace the quoted
+`YOUR_EVALUATOR` and task IDs with values for your own synthetic evaluation.
+This walkthrough does not include a measured run or an evaluator.
 
 ```json
 {
@@ -92,10 +92,10 @@ command is the part of this example you must supply; this walkthrough does not p
     "components": { "prompts/support_bot.txt": "prompt" },
     "allow_new_under": []
   },
-  "evolve_eval": { "argv": ["<your-evaluator>", "--split", "evolve"], "timeout_sec": 600 },
-  "heldout_eval": { "argv": ["<your-evaluator>", "--split", "heldout"], "timeout_sec": 600 },
-  "evolve_task_ids": ["<task-id-1>", "<task-id-2>"],
-  "heldout_task_ids": ["<task-id-3>"],
+  "evolve_eval": { "argv": ["YOUR_EVALUATOR", "--split", "evolve"], "timeout_sec": 600 },
+  "heldout_eval": { "argv": ["YOUR_EVALUATOR", "--split", "heldout"], "timeout_sec": 600 },
+  "evolve_task_ids": ["YOUR_EVOLVE_TASK_ID_1", "YOUR_EVOLVE_TASK_ID_2"],
+  "heldout_task_ids": ["YOUR_HELDOUT_TASK_ID"],
   "deny_patterns": ["order number", "refund amount"],
   "budget": { "max_evals": 40, "max_proposer_tokens": 200000, "max_wall_sec": 3600 }
 }
@@ -125,14 +125,14 @@ Configure the LLM as in [SETUP.md](../../SETUP.md). For Anthropic:
 
 ```bash
 export NOSPACE_MODEL_PROVIDER=anthropic
-export NOSPACE_MODEL_NAME=<a model you have access to>
-export ANTHROPIC_API_KEY=<your key>
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
+read -rs -p 'Anthropic API key: ' ANTHROPIC_API_KEY; echo; export ANTHROPIC_API_KEY
 ```
 
 ```powershell
 $env:NOSPACE_MODEL_PROVIDER = "anthropic"
-$env:NOSPACE_MODEL_NAME     = "<a model you have access to>"
-$env:ANTHROPIC_API_KEY      = "<your key>"
+$env:NOSPACE_MODEL_NAME     = "YOUR_MODEL_ID"
+# Set ANTHROPIC_API_KEY from a trusted secret store or your protected shell session.
 ```
 
 ```bash

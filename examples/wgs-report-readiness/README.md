@@ -9,7 +9,7 @@ A general-purpose LLM reads the records and gives a confident verdict. The `geno
 | `genomic_coord_ops` | Genomic coordinate operations: validate coordinates against a reference assembly, normalize chromosome naming (chr1 vs 1), parse HGVS notation. |
 | `query_reference_db` | Query a genomics reference database (ClinVar, OMIM via NCBI E-utilities, or local databases) with automatic version tagging. |
 
-This is the single-agent version of a TOKN domain-relay scenario. It uses the same synthetic data, one model and a few cents of tokens, not a five-model relay.
+This is the single-agent version of a TOKN domain-relay scenario. It uses the same synthetic data and one model, not a five-model relay.
 
 ## 0. What you need
 
@@ -17,21 +17,30 @@ This is the single-agent version of a TOKN domain-relay scenario. It uses the sa
 |---|---|---|
 | TOKN v0.3.82 or newer | Includes the domain tools this example calls. | `tokn version` |
 | 14-day trial (`tokn license trial`) | Domain modes need the trial. | `tokn license features` shows `domains:genomics` or `domains:*` |
-| An LLM provider | TOKN calls a model. Any supported provider works. | See [../../SETUP.md](../../SETUP.md) |
+| An LLM provider | TOKN calls a model. | See [../../SETUP.md](../../SETUP.md) |
+
+Use a model capable of the required tool calls; provider charges and number of
+turns depend on the run. A missing/failed tool result is unassessed, not a pass.
 
 **What leaves your machine:** the prompt, the files TOKN reads from the scratch folder, and tool results. These go to the LLM provider you configure. The demo data is synthetic.
 
 ## 1. Copy the example to a scratch folder
 
-TOKN writes `.nospace/` state and output files into the working folder, so run it outside this repo.
+Create a new, empty work folder outside this checkout. Copy only `prompt.md`
+and `demo-input/` into it; do not copy this README or `grading/`. TOKN writes
+`.nospace/` state and output files into the work folder.
 
 ```bash
-cp -r examples/wgs-report-readiness ~/wgs-report-readiness-run
+mkdir -p ~/wgs-report-readiness-run/demo-input
+cp examples/wgs-report-readiness/prompt.md ~/wgs-report-readiness-run/
+cp -r examples/wgs-report-readiness/demo-input/. ~/wgs-report-readiness-run/demo-input/
 cd ~/wgs-report-readiness-run
 ```
 
 ```powershell
-Copy-Item -Recurse examples\wgs-report-readiness $HOME\wgs-report-readiness-run
+New-Item -ItemType Directory -Force $HOME\wgs-report-readiness-run\demo-input | Out-Null
+Copy-Item examples\wgs-report-readiness\prompt.md $HOME\wgs-report-readiness-run\
+Copy-Item examples\wgs-report-readiness\demo-input\* $HOME\wgs-report-readiness-run\demo-input\
 Set-Location $HOME\wgs-report-readiness-run
 ```
 
@@ -46,7 +55,7 @@ Read `prompt.md` and the files in `demo-input/` (`consent_manifest.json`, `run_q
 ## 4. Run the task
 
 ```bash
-tokn agent-run --mode genomics --repo-root . --prompt-file prompt.md --max-steps 40 --no-confirm
+tokn agent-run --mode genomics --repo-root . --prompt-file prompt.md --max-steps 40
 ```
 
 6 items with 2 tools each can take 12 or more tool calls. If the run stops early, raise `--max-steps`.
@@ -65,17 +74,7 @@ tokn agent-run --mode genomics --repo-root . --prompt-file prompt.md --max-steps
 <details>
 <summary>Answer key (open after your run)</summary>
 
-| Item | Status | Why |
-|---|---|---|
-| `GX-01` | `report_ready` | No trap: the status follows directly from the tool results. |
-| `GX-02` | `report_ready` | Mean coverage 30.0x and duplication 15.0% sit exactly on the pass thresholds, which are inclusive (CheckQCMetric uses >= and <=): all pass, report_ready. The /qc metrics table prints '>30x', so a careless run calls it a warning. |
-| `GX-03` | `report_with_caveats` | Coverage 27.4x and duplication 18.6% are in their warning bands only: report_with_caveats, not fail_qc. Its chromosome '17' normalizes to chr17 and validates. |
-| `GX-04` | `fail_qc` | Strong coverage (41.0x) and mapping (99.0%), but Ti/Tv 1.84 is below the 1.9 floor: fail_qc. |
-| `GX-05` | `blocked` | Best QC of the run and parse_hgvs returns parsed=true, but 'NM_000548.5:1832G>A' lacks the c. change-type prefix, so the HGVS PreToolUse gate on query_reference_db rejects it: blocked. |
-| `GX-06` | `blocked` | All metrics pass and the variant is well formed, but consent_level is research_only, which does not permit a clinical return: blocked. |
-
-All 6 correct counts as PASS. Missing any trap item (`GX-02`, `GX-03`, `GX-04`, `GX-05`, `GX-06`) is a FAIL even if the rest are right.
-
+See the [grader-only answer key](grading/answer-key.md). It is outside the staged work folder.
 </details>
 
 ## Reflect
@@ -83,6 +82,7 @@ All 6 correct counts as PASS. Missing any trap item (`GX-02`, `GX-03`, `GX-04`, 
 - Which item did you get wrong in step 3, and which number or field misled you?
 - Pick one trap item, edit its record in `demo-input/` so the deciding check passes, and predict the new status before you rerun. Did the tool agree?
 - Where did the run's evidence come from a tool result, and where from the model's own reading? Which of those would you show an auditor?
+- Missing consent, a failed consent check, or a missing/failed tool result is never a pass. These synthetic statuses are not clinical interpretation or sign-out approval; a qualified clinician must review the case.
 
 ## Troubleshooting
 

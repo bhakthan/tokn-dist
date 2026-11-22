@@ -10,6 +10,6 @@ candidate_id,composite_score
 Then list the five rows, highest composite_score first, with each score rounded to two decimal places.
 
 Rules:
-- Do not edit properties.csv, scoring.json, or check_shortlist.py. They are the fixed inputs and the checker.
+- Do not edit properties.csv or scoring.json; they are fixed inputs.
 - Do not add candidates that are not in properties.csv.
-- Run `python check_shortlist.py` (use `python3` on macOS or Linux) to confirm the result. Fix shortlist.csv until it prints PASS.
+- The loop's external check decides whether shortlist.csv passes; do not claim success without a passing check.

@@ -7,7 +7,7 @@ The data is synthetic. Everything you need is in `demo-input/`:
 | File | Contents |
 |---|---|
 | `demo-input/catalog_requests.json` | Per item, the arguments for `query_cmip6_catalog` and `compute_ensemble_stats` (`variable_id`, `experiment_id`, `table_id`, `deduplicate`, ...) |
-| `demo-input/ensemble_claims.json` | Per item: the claim, `stated_likelihood`, and each model's `agrees_with_claimed_sign`. Also includes TOKN's `model_families` map |
+| `demo-input/ensemble_claims.json` | Per item: the claim, `stated_likelihood`, and each model's `agrees_with_claimed_sign`, plus the synthetic family map for this exercise |
 | `demo-input/field_ranges.json` | Per item: min and max of the regridded ensemble-mean field, in the units the file declares |
 
 ## Items to assess
@@ -26,7 +26,7 @@ If more than one applies, precedence is `implausible` > `insufficient_ensemble` 
 ## Rules
 
 1. Call `query_cmip6_catalog` and `compute_ensemble_stats` for every item, passing the arguments from `catalog_requests.json`. Both tools read the live Pangeo catalog through Python (`intake` and `xarray`). If a call returns a Python, dependency or network error, quote the error in that item's evidence and carry on. The input files are authoritative, and no status depends on the live catalog.
-2. **Physical range** (TOKN `PhysicalRanges` with 10 % tolerance: band = [min − 0.1·span, max + 0.1·span]):
+2. **Physical range** (10 % tolerance: band = [min − 0.1·span, max + 0.1·span]):
 
    | Variable | Plausible range | Tolerance band |
    |---|---|---|
@@ -35,8 +35,8 @@ If more than one applies, precedence is `implausible` > `insufficient_ensemble` 
    | `tos` | 270–315 K | 265.5–319.5 K |
 
    Compare each field against the **tolerance band**, not the plausible range. Do not convert units. Use the values exactly as declared.
-3. **Independence.** Map every `source_id` to its family using `model_families`. A model missing from the map is its own family. Count each family once, as TOKN's `GetIndependentModels` does. Fewer than 5 families means `insufficient_ensemble`.
-4. **Likelihood term.** p = families that agree with the claimed sign ÷ independent families. Members of one family always agree with each other here. Scan this table from the top and take the **first** row where low ≤ p ≤ high (TOKN `IPCCLikelihoodScale`):
+3. **Independence.** Map every `source_id` to its family using `model_families`. A model missing from the map is its own family. Count each family once. Fewer than 5 families means `insufficient_ensemble`.
+4. **Likelihood term.** p = families that agree with the claimed sign ÷ independent families. Members of one family always agree with each other here. Scan this table from the top and take the **first** row where low ≤ p ≤ high:
 
    | Term | low | high |
    |---|---|---|

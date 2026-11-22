@@ -41,6 +41,10 @@ example manifests.
 Steps 1–7 need no model, no API key and no cluster. Every command ran on the
 free Community tier; none was gated.
 
+Start with the local workspace/task exercise in step 5. Manifest generation,
+image packaging, model credentials, priced usage and cluster deployment below
+are optional advanced paths.
+
 TOKN prints a trial or license banner on stderr. It is harmless and is left
 out of the output below.
 
@@ -136,10 +140,10 @@ there. For Docker it also checks the daemon, not just the `PATH`.
 ## 3. Gen: write the manifests for a TOKN task
 
 ```bash
-tokn ax gen --name fix-flake --image ghcr.io/me/tokn-runner:latest \
+tokn ax gen --name fix-flake --image YOUR_REGISTRY/YOUR_RUNNER_IMAGE:TAG \
   --repo https://github.com/me/app.git --branch main \
-  --egress api.anthropic.com --egress github.com:443 \
-  --provider anthropic --model claude-opus-5 \
+  --egress YOUR_PROVIDER_API_HOST:443 --egress github.com:443 \
+  --provider YOUR_PROVIDER --model YOUR_MODEL_ID \
   --secret-name llm-keys --secret-key ANTHROPIC_API_KEY \
   --budget-usd 5 -o fix-flake.yaml
 ```
@@ -147,10 +151,10 @@ tokn ax gen --name fix-flake --image ghcr.io/me/tokn-runner:latest \
 PowerShell:
 
 ```powershell
-tokn ax gen --name fix-flake --image ghcr.io/me/tokn-runner:latest `
+tokn ax gen --name fix-flake --image YOUR_REGISTRY/YOUR_RUNNER_IMAGE:TAG `
   --repo https://github.com/me/app.git --branch main `
-  --egress api.anthropic.com --egress github.com:443 `
-  --provider anthropic --model claude-opus-5 `
+  --egress YOUR_PROVIDER_API_HOST:443 --egress github.com:443 `
+  --provider YOUR_PROVIDER --model YOUR_MODEL_ID `
   --secret-name llm-keys --secret-key ANTHROPIC_API_KEY `
   --budget-usd 5 -o fix-flake.yaml
 ```
@@ -165,14 +169,14 @@ metadata:
     name: fix-flake
     atespace: default
 spec:
-    image: ghcr.io/me/tokn-runner:latest
+    image: YOUR_REGISTRY/YOUR_RUNNER_IMAGE:TAG
     env:
         - name: TOKN_AX_BUDGET_USD
           value: "5"
         - name: TOKN_AX_PROVIDER
-          value: anthropic
+          value: YOUR_PROVIDER
         - name: TOKN_AX_MODEL
-          value: claude-opus-5
+          value: YOUR_MODEL_ID
     workspaces:
         - name: fix-flake-workspace
           path: /workspace
@@ -246,10 +250,10 @@ ENTRYPOINT ["/usr/local/bin/ax-task-runner"]
 `--base` changes the base image. `--with-git=false` leaves git out; the
 runner will then refuse to clone `spec.git` repositories.
 
-Build it with:
+Build it with the image name you chose:
 
 ```bash
-docker build -f Dockerfile.ax -t ghcr.io/me/tokn-runner:latest .
+docker build -f Dockerfile.ax -t YOUR_REGISTRY/YOUR_RUNNER_IMAGE:TAG .
 ```
 
 **This build was not run for this example** (no Docker daemon was running).
@@ -277,16 +281,21 @@ The task command stands in for an agent. Each loop reports one model call of
 fails. The Task mounts the workspace at `./workspace`, not `/workspace`, so the
 test writes under the current folder.
 
-From a clone of this repository, copy the files to an empty folder and start
-the runner in the background:
+From a clone of this repository, create a new, uniquely named scratch root.
+The marker proves ownership for cleanup. Never reuse or remove a pre-existing
+directory:
 
 bash:
 
 ```bash
-mkdir -p ~/tokn-ax && cp examples/ax-runner/*.yaml ~/tokn-ax/ && cd ~/tokn-ax
+RUN_ROOT="$HOME/tokn-ax-$(date +%Y%m%d%H%M%S)"
+mkdir "$RUN_ROOT"
+printf 'tokn-ax-example\n' > "$RUN_ROOT/.tokn-ax-example"
+cp examples/ax-runner/task-local.sh.yaml examples/ax-runner/workspace-local.yaml "$RUN_ROOT/"
+cd "$RUN_ROOT"
 tokn ax runner --task-file task-local.sh.yaml --workspace-file workspace-local.yaml \
   --port 8080 --marker-dir .ax-markers \
-  --provider anthropic --model claude-opus-5 --budget-usd 0.5 \
+  --provider YOUR_PROVIDER --model YOUR_MODEL_ID --budget-usd 0.5 \
   > runner.out 2> runner.err &
 RUNNER_PID=$!
 ```
@@ -294,18 +303,20 @@ RUNNER_PID=$!
 PowerShell:
 
 ```powershell
-New-Item -ItemType Directory -Force "$HOME\tokn-ax" | Out-Null
-Copy-Item examples\ax-runner\*.yaml "$HOME\tokn-ax"
-Set-Location "$HOME\tokn-ax"
-$runner = Start-Process tokn -ArgumentList 'ax','runner','--task-file','task-local.ps1.yaml','--workspace-file','workspace-local.yaml','--port','8080','--marker-dir','.ax-markers','--provider','anthropic','--model','claude-opus-5','--budget-usd','0.5' -RedirectStandardOutput runner.out -RedirectStandardError runner.err -PassThru -NoNewWindow
+$runRoot = Join-Path $HOME ("tokn-ax-" + (Get-Date -Format "yyyyMMddHHmmss") + "-" + [guid]::NewGuid().ToString("N"))
+New-Item -ItemType Directory -Path $runRoot | Out-Null
+Set-Content -Path (Join-Path $runRoot ".tokn-ax-example") -Value "tokn-ax-example"
+Copy-Item examples\ax-runner\task-local.ps1.yaml, examples\ax-runner\workspace-local.yaml $runRoot
+Set-Location $runRoot
+$runner = Start-Process tokn -ArgumentList 'ax','runner','--task-file','task-local.ps1.yaml','--workspace-file','workspace-local.yaml','--port','8080','--marker-dir','.ax-markers','--provider','YOUR_PROVIDER','--model','YOUR_MODEL_ID','--budget-usd','0.5' -RedirectStandardOutput runner.out -RedirectStandardError runner.err -PassThru -NoNewWindow
 ```
 
 | Flag | Why here |
 |---|---|
 | `--port 8080` | The default is 80, which AX probes. Locally, use a free high port. |
 | `--marker-dir .ax-markers` | The default is `/ax`. Markers record that a workspace is already prepared. |
-| `--provider`, `--model` | Used to price reported tokens. Without them, cost is unknown. |
-| `--budget-usd 0.5` | The local spend ceiling. 0 disables it. |
+| `--provider`, `--model` (optional) | Used only to estimate the synthetic reported usage. Without them, cost is unknown. |
+| `--budget-usd 0.5` (optional) | Demonstrates a local accounting ceiling; this does not charge a model provider. |
 
 Wait a few seconds, then probe it (`curl.exe` in Windows PowerShell):
 
@@ -385,10 +396,10 @@ PowerShell:
 Invoke-RestMethod http://127.0.0.1:8080/metadata/v1alpha1/tokn/usage
 ```
 
-Expected (bash):
+Expected (illustrative output; provider/model values reflect the operator configuration):
 
 ```json
-{"provider":"anthropic","model":"claude-opus-5","promptTokens":80000,"completionTokens":8000,"cacheReadTokens":0,"calls":4,"estimatedCostUSD":0.6,"costKnown":true,"ceilingUSD":0.5,"ceilingExceeded":true,"axUsage":{"promptTokens":80000,"completionTokens":8000},"reportedToControlPlane":false,"note":"computed locally; AX has no channel to receive it"}
+{"provider":"YOUR_PROVIDER","model":"YOUR_MODEL_ID","promptTokens":80000,"completionTokens":8000,"cacheReadTokens":0,"calls":4,"estimatedCostUSD":0.6,"costKnown":true,"ceilingUSD":0.5,"ceilingExceeded":true,"axUsage":{"promptTokens":80000,"completionTokens":8000},"reportedToControlPlane":false,"note":"computed locally; AX has no channel to receive it"}
 ```
 
 How to read it:
@@ -421,10 +432,10 @@ Error: report AX usage: metadata server returned 401:
 ### An unpriced model never trips the ceiling
 
 Restart the runner with a model TOKN has no price for (for example
-`--model my-private-model`). The same loop runs all 10 calls:
+`--model YOUR_UNPRICED_MODEL`). The same loop runs all 10 calls:
 
 ```json
-{"provider":"anthropic","model":"my-private-model","promptTokens":200000,"completionTokens":20000,"cacheReadTokens":0,"calls":10,"estimatedCostUSD":0,"costKnown":false,"ceilingExceeded":false,...,"note":"unpriced model; estimated cost is unknown; computed locally; AX has no channel to receive it"}
+{"provider":"YOUR_PROVIDER","model":"YOUR_UNPRICED_MODEL","promptTokens":200000,"completionTokens":20000,"cacheReadTokens":0,"calls":10,"estimatedCostUSD":0,"costKnown":false,"ceilingExceeded":false,...,"note":"unpriced model; estimated cost is unknown; computed locally; AX has no channel to receive it"}
 ```
 
 The runner warns once on stderr and tells you to add a price to
@@ -468,14 +479,22 @@ bash:
 
 ```bash
 kill $RUNNER_PID
-cd ~ && rm -rf ~/tokn-ax
+if [ "$(cat "$RUN_ROOT/.tokn-ax-example")" = "tokn-ax-example" ]; then
+  rm -rf "$RUN_ROOT"
+else
+  echo "Ownership marker missing; refusing cleanup." >&2
+fi
 ```
 
 PowerShell:
 
 ```powershell
 Stop-Process -Id $runner.Id
-Set-Location $HOME; Remove-Item -Recurse -Force "$HOME\tokn-ax"
+if ((Get-Content -Raw (Join-Path $runRoot ".tokn-ax-example")).Trim() -eq "tokn-ax-example") {
+    Remove-Item -LiteralPath $runRoot -Recurse -Force
+} else {
+    throw "Ownership marker missing; refusing cleanup."
+}
 ```
 
 ## 9. Optional: deploy to an AX cluster (not verified)

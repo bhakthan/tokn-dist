@@ -22,6 +22,12 @@ Requires TOKN v0.3.63 or later (`tokn version`).
   (`node --version`, `npm --version`). Install the current Node.js LTS from
   [nodejs.org](https://nodejs.org/en/download) if missing. Antigravity has
   its own installer instead.
+- Install only from each publisher's official instructions. Pin an exact
+  released version for npm packages and verify the package publisher and
+  registry integrity metadata. For Antigravity, use its official release
+  instructions and verify the downloaded version's signature or checksum
+  before running it; do not pipe a mutable installer script directly to a
+  shell.
 
 MCP tool results can be sent to the calling CLI's model. `/conduct` sends the
 task and accessible project context to the selected peer, and can write
@@ -81,11 +87,11 @@ Inside the TOKN REPL (`tokn`), Conductor Mode hands a sub-task to another CLI an
 
 | Peer | What TOKN runs | Before first use |
 |---|---|---|
-| `claude-code` | `claude -p "<goal>"` | `npm install -g @anthropic-ai/claude-code` |
-| `codex` | `codex exec "<goal>"` (read-only sandbox by default) | `npm install -g @openai/codex` |
-| `copilot-cli` | `copilot --prompt "<goal>" --add-dir <dir>` | `npm install -g @github/copilot`; set `COPILOT_GITHUB_TOKEN` or `GH_TOKEN` (classic `ghp_` tokens are rejected) |
-| `gemini-cli` | `gemini --prompt "<goal>" --approval-mode default` | `npm install -g @google/gemini-cli`; trust the folder in Gemini once |
-| `antigravity` | `agy --prompt "<goal>"` | macOS/Linux: `curl -fsSL https://antigravity.google/cli/install.sh \| bash`; Windows: `irm https://antigravity.google/cli/install.ps1 \| iex`; then run `agy` once to sign in |
+| `claude-code` | `claude -p "<goal>"` | `npm install -g @anthropic-ai/claude-code@YOUR_VERSION` |
+| `codex` | `codex exec "<goal>"` (read-only sandbox by default) | `npm install -g @openai/codex@YOUR_VERSION` |
+| `copilot-cli` | `copilot --prompt "<goal>" --add-dir <dir>` | `npm install -g @github/copilot@YOUR_VERSION`; set `COPILOT_GITHUB_TOKEN` or `GH_TOKEN` (classic `ghp_` tokens are rejected) |
+| `gemini-cli` | `gemini --prompt "<goal>" --approval-mode default` | `npm install -g @google/gemini-cli@YOUR_VERSION`; trust the folder in Gemini once |
+| `antigravity` | `agy --prompt "<goal>"` | Follow the publisher's versioned install instructions; verify its release signature/checksum before running, then sign in |
 
 TOKN never passes an auto-approve flag (`--yolo`, `--dangerously-skip-permissions`, `--allow-all-tools`). If a CLI isn't installed, `/conduct` tells you the install command instead of failing.
 

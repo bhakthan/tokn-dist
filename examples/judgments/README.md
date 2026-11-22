@@ -6,6 +6,10 @@ This page adds the behaviours those cases do not show. Every evaluation here
 uses the local `rules` provider, so no model or API key is needed. These are
 checks of supplied run evidence, not proof that an answer is correct.
 
+**First track (no model):** use `request-clean.json` as the worked case, then
+`request-duplicate-key.json` as the negative case. The clean result must include
+`"applied": false`; the duplicate-key request should be rejected.
+
 Install TOKN v0.3.57 or newer (`tokn version`). No Python or model runtime is
 needed. Start from the `tokn-dist` root, then copy the requests to a new
 scratch directory you own. These commands create that directory and write

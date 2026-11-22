@@ -2,7 +2,7 @@
 
 Usage:  python check_scenarios.py out
 
-Reads out/<scenario>.txt, written by `tokn agent-run` (see README step 5),
+Reads out/<scenario>.txt, written by `tokn agent-run` (see README step 3),
 and checks the model's answer for required and forbidden phrases.
 This is a keyword check, not a judge: read the answers too.
 """
@@ -39,8 +39,8 @@ SCENARIOS = {
 
 
 def answer_text(output):
-    # Same scoping as the source runner: keep the text after the session.completed
-    # line and before the run summary, so the prompt echo cannot match.
+    # Keep the text after the session.completed line and before the run
+    # summary, so the prompt echo cannot match.
     idx = output.find("session.completed")
     if idx >= 0:
         newline = output.find("\n", idx)

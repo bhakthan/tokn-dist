@@ -17,7 +17,7 @@ A general-purpose LLM reads the records and gives a confident verdict. The `phar
 | `pv_signal_detect` | Disproportionality analysis on supplied report counts: PRR and ROR with 95% CI and chi-square (Yates), minimum case count. |
 | `pv_phi_screen` | Detect patient/reporter direct identifiers (names, national ids, record numbers, full DOB, address, phone, email) in text or a record. |
 
-This is the single-agent version of a TOKN domain-relay scenario. It uses the same synthetic data, one model and a few cents of tokens, not a five-model relay.
+This is the single-agent version of a TOKN domain-relay scenario. It uses the same synthetic data and one model, not a five-model relay. Use a model capable of the required tool calls; provider charges and number of turns depend on the run. A missing/failed tool result is unassessed, not a pass.
 
 ## 0. What you need
 
@@ -25,13 +25,13 @@ This is the single-agent version of a TOKN domain-relay scenario. It uses the sa
 |---|---|---|
 | TOKN v0.3.83 or newer | Includes the domain tools this example calls. | `tokn version` |
 | 14-day trial (`tokn license trial`) | Domain modes need the trial. | `tokn license features` shows `domains:pharmacovig` or `domains:*` |
-| An LLM provider | TOKN calls a model. Any supported provider works. | See [../../SETUP.md](../../SETUP.md) |
+| An LLM provider | TOKN calls a model; see the calibrated cost and tool-result note above. | See [../../SETUP.md](../../SETUP.md) |
 
 **What leaves your machine:** the prompt, the files TOKN reads from the scratch folder, and tool results. These go to the LLM provider you configure. The demo data is synthetic.
 
 ## 1. Copy the example to a scratch folder
 
-TOKN writes `.nospace/` state and output files into the working folder, so run it outside this repo.
+TOKN writes `.nospace/` state and output files into the working folder, so run it outside this repo. The solve workspace must contain only `prompt.md` and `demo-input/`; keep this README and its answer key outside it.
 
 ```bash
 cp -r examples/expedited-case-triage ~/expedited-case-triage-run
@@ -53,8 +53,23 @@ Read `prompt.md` and the files in `demo-input/` (`cases.json`, `rsi.json`, `sign
 
 ## 4. Run the task
 
+Stage only the task and synthetic input files in a fresh `work/` folder, then run with that folder as the repository root.
+
 ```bash
-tokn agent-run --mode pharmacovig --repo-root . --prompt-file prompt.md --max-steps 40 --no-confirm
+mkdir work && mkdir work/demo-input
+cp prompt.md work/
+cp demo-input/* work/demo-input/
+cd work
+tokn agent-run --mode pharmacovig --repo-root . --prompt-file prompt.md --max-steps 40
+```
+
+```powershell
+New-Item -ItemType Directory -Path work | Out-Null
+New-Item -ItemType Directory -Path work\demo-input | Out-Null
+Copy-Item prompt.md work\
+Copy-Item demo-input\* work\demo-input\
+Set-Location work
+tokn agent-run --mode pharmacovig --repo-root . --prompt-file prompt.md --max-steps 40
 ```
 
 9 items with 10 tools each can take 90 or more tool calls. If the run stops early, raise `--max-steps`.
@@ -97,6 +112,8 @@ All 9 correct counts as PASS. Missing any trap item (`CASE-PV-001`, `CASE-PV-002
 </details>
 
 ## Reflect
+
+The answer key remains in this README, outside `work/`. Keep case details fictional; redact synthetic identifiers from any shared receipt. A blocked or incomplete case remains blocked or unassessed and requires an authorized human decision—model output is not a reporting decision.
 
 - Which item did you get wrong in step 3, and which number or field misled you?
 - Pick one trap item, edit its record in `demo-input/` so the deciding check passes, and predict the new status before you rerun. Did the tool agree?

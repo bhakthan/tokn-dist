@@ -1,0 +1,17 @@
+{
+  "note": "Synthetic held-out catalog request; not a live study or model result.",
+  "requests": [
+    {
+      "item": "CL-HO-01",
+      "variable_id": "tas",
+      "experiment_id": "ssp245",
+      "table_id": "Amon",
+      "member_id": "r1i1p1f1",
+      "deduplicate": true,
+      "region": "synthetic-box-F 10N-20N 100E-120E",
+      "season": "JJA",
+      "baseline_start": "1995",
+      "baseline_end": "2014"
+    }
+  ]
+}

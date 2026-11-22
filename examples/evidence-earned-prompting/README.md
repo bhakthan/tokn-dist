@@ -40,7 +40,7 @@ payments. One open claim, `C-04`, has no payments yet.
 |---|---|---|
 | A TOKN release that includes `tokn earned-prompt run` | This walkthrough runs that command | `tokn earned-prompt run --help` |
 | *Optional:* an LLM provider and key | Only for step 4, the live model | see [SETUP.md](../../SETUP.md) |
-| *Optional:* `python3` (macOS / Linux, step 4 only) | `candidate.sh` reads the run log with the standard library | `python3 --version` |
+| *Optional:* `python3` (macOS / Linux, step 4 only) | `candidate.sh` validates the final JSON result with the standard library | `python3 --version` |
 
 Steps 1–3 need no model, no network and no key. The SQLite engine is built
 into TOKN, so you don't need to install a database. The command has no
@@ -207,13 +207,16 @@ Add `--log scratch/episodes.jsonl` to keep the append-only episode log. The
 
 ## 4. Let a real model earn its patches (optional)
 
-Configure a provider as in [SETUP.md](../../SETUP.md), then:
+Configure a provider as in [SETUP.md](../../SETUP.md), then. The `.env.example`
+is reference-only; the candidate inherits trusted shell settings and does not
+load a repository file. Set the selected provider's secret through a trusted
+secret store or existing session.
 
 macOS / Linux:
 
 ```bash
-export NOSPACE_MODEL_PROVIDER=<provider>   # e.g. openai, anthropic, azure-openai
-export NOSPACE_MODEL_NAME=<model>
+export NOSPACE_MODEL_PROVIDER='YOUR_PROVIDER'
+export NOSPACE_MODEL_NAME='YOUR_MODEL_ID'
 mkdir -p scratch
 tokn earned-prompt run --scenario . --candidate-cmd "bash candidate.sh" --log scratch/episodes.jsonl
 ```
@@ -221,13 +224,18 @@ tokn earned-prompt run --scenario . --candidate-cmd "bash candidate.sh" --log sc
 Windows PowerShell:
 
 ```powershell
-$env:NOSPACE_MODEL_PROVIDER = '<provider>'
-$env:NOSPACE_MODEL_NAME     = '<model>'
+$env:NOSPACE_MODEL_PROVIDER = 'YOUR_PROVIDER'
+$env:NOSPACE_MODEL_NAME     = 'YOUR_MODEL_ID'
 New-Item -ItemType Directory -Force scratch | Out-Null
 tokn earned-prompt run --scenario . `
   --candidate-cmd "powershell -NoProfile -ExecutionPolicy Bypass -File candidate.ps1" `
   --log scratch\episodes.jsonl
 ```
+
+Each invocation writes to a separate unique directory under `scratch/runs/`.
+The candidate consumes only that invocation's final JSON result and fails if
+the terminal status is missing or unsuccessful; it never falls back to a
+shared or stale run log.
 
 Now the model reads the seven-section prompt:
 

@@ -1,0 +1,2 @@
+{"type":"run.start","mode":"default","payload":{"prompt":"Choose the disposition for fictional case 05."}}
+{"type":"run.end","mode":"default","payload":{"answer":"REVIEW"}}
