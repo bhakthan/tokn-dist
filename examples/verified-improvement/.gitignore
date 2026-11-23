@@ -1,0 +1,7 @@
+.nospace/
+.tokn/
+scratch/
+cycles/
+noise/
+promptopt/
+.env

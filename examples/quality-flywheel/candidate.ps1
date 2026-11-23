@@ -34,6 +34,9 @@ Set-Content -Path $pFile -Value $prompt -Encoding utf8 -NoNewline
 # Plan mode: the task is a one-line answer, so the agent may not write or run anything.
 $rOut = Join-Path $repo 'result.json'
 $aErr = Join-Path $repo 'agent.err'
+# Windows PowerShell 5.1 turns redirected native stderr (for example TOKN's tier
+# banner) into a terminating error under 'Stop', so relax it for this call only.
+$ErrorActionPreference = 'Continue'
 & $toknExe agent-run `
   --prompt-file $pFile `
   --repo-root $repo `
@@ -42,7 +45,9 @@ $aErr = Join-Path $repo 'agent.err'
   --max-steps 2 `
   --permission-mode plan `
   --output-format json 1>$rOut 2>$aErr
-if ($LASTEXITCODE -ne 0) { Fail "agent-run failed, see $aErr and $rOut" }
+$code = $LASTEXITCODE
+$ErrorActionPreference = 'Stop'
+if ($code -ne 0) { Fail "agent-run failed, see $aErr and $rOut" }
 
 try { $res = Get-Content -Raw $rOut | ConvertFrom-Json } catch { Fail "unreadable result in $rOut" }
 if ($res.status -ne 'success') { Fail "run status '$($res.status)' in $rOut" }

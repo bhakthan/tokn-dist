@@ -1,0 +1,55 @@
+{
+  "name": "pv-icsr-triage-test",
+  "cases": [
+    {
+      "name": "t-rhabdo-beyond-rsi",
+      "input": "Study drug: TX-441 (investigational, interventional phase II trial)\nRSI expected adverse reactions (Investigator's Brochure): myalgia, headache\nNarrative: A 47-year-old man was admitted for 5 days with rhabdomyolysis (CK 40x ULN). He recovered.\nInvestigator causality: related\nSponsor causality: related",
+      "expect_equals": "SERIOUS=yes CRITERION=hospitalization EXPECTED=no RELATED=yes CLOCK=15-day"
+    },
+    {
+      "name": "t-mild-nausea",
+      "input": "Study drug: TX-441 (investigational, interventional phase II trial)\nRSI expected adverse reactions (Investigator's Brochure): nausea, headache\nNarrative: A 31-year-old woman had mild nausea for one day after dosing. No treatment was needed.\nInvestigator causality: related\nSponsor causality: related",
+      "expect_equals": "SERIOUS=no CRITERION=none EXPECTED=yes RELATED=yes CLOCK=none"
+    },
+    {
+      "name": "t-sponsor-upgrades-optic-neuritis",
+      "input": "Study drug: TX-552 (investigational, interventional phase II trial)\nRSI expected adverse reactions (Investigator's Brochure): headache\nNarrative: A 39-year-old woman was admitted for 4 days with optic neuritis on day 60 of dosing.\nInvestigator causality: not related\nSponsor causality: related (reasonable possibility; two similar reports in the programme)",
+      "expect_equals": "SERIOUS=yes CRITERION=hospitalization EXPECTED=no RELATED=yes CLOCK=15-day"
+    },
+    {
+      "name": "t-fatal-listed-ild",
+      "input": "Study drug: TX-552 (investigational, interventional phase II trial)\nRSI expected adverse reactions (Investigator's Brochure): interstitial lung disease, cough\nNarrative: A 69-year-old man developed interstitial lung disease on day 45 of dosing and died on day 70.\nInvestigator causality: related\nSponsor causality: related",
+      "expect_equals": "SERIOUS=yes CRITERION=death EXPECTED=no RELATED=yes CLOCK=7-day"
+    },
+    {
+      "name": "t-ed-urticaria",
+      "input": "Study drug: TX-663 (investigational, interventional phase II trial)\nRSI expected adverse reactions (Investigator's Brochure): urticaria, pruritus\nNarrative: A 26-year-old man attended the emergency department with urticaria, received an oral antihistamine and was discharged after 2 hours without admission.\nInvestigator causality: related\nSponsor causality: related",
+      "expect_equals": "SERIOUS=no CRITERION=none EXPECTED=yes RELATED=yes CLOCK=none"
+    },
+    {
+      "name": "t-ed-bronchospasm",
+      "input": "Study drug: TX-663 (investigational, interventional phase II trial)\nRSI expected adverse reactions (Investigator's Brochure): rash\nNarrative: A 33-year-old woman had allergic bronchospasm and was treated intensively in the emergency department with nebulised bronchodilators and IV steroids. She was discharged the same night without admission.\nInvestigator causality: related\nSponsor causality: related",
+      "expect_equals": "SERIOUS=yes CRITERION=medically-important EXPECTED=no RELATED=yes CLOCK=15-day"
+    },
+    {
+      "name": "t-scheduled-hernia",
+      "input": "Study drug: TX-774 (investigational, interventional phase II trial)\nRSI expected adverse reactions (Investigator's Brochure): nausea\nNarrative: A 55-year-old man was admitted for an inguinal hernia repair scheduled before enrolment. The hernia had not changed during the study.\nInvestigator causality: not related\nSponsor causality: not related",
+      "expect_equals": "SERIOUS=no CRITERION=none EXPECTED=no RELATED=no CLOCK=none"
+    },
+    {
+      "name": "t-anaphylactic-shock",
+      "input": "Study drug: TX-774 (investigational, interventional phase II trial)\nRSI expected adverse reactions (Investigator's Brochure): rash\nNarrative: A 41-year-old woman had anaphylactic shock (BP 70/40) minutes after infusion, needed adrenaline and was admitted to intensive care for 2 days.\nInvestigator causality: related\nSponsor causality: related",
+      "expect_equals": "SERIOUS=yes CRITERION=life-threatening EXPECTED=no RELATED=yes CLOCK=7-day"
+    },
+    {
+      "name": "t-hyponatraemia-potential-lt",
+      "input": "Study drug: TX-885 (investigational, interventional phase II trial)\nRSI expected adverse reactions (Investigator's Brochure): headache\nNarrative: A 64-year-old woman was admitted for 3 days with hyponatraemia (sodium 124 mmol/L). She was otherwise well; the investigator described it as 'potentially life-threatening if not corrected'.\nInvestigator causality: related\nSponsor causality: related",
+      "expect_equals": "SERIOUS=yes CRITERION=hospitalization EXPECTED=no RELATED=yes CLOCK=15-day"
+    },
+    {
+      "name": "t-unrelated-appendicitis",
+      "input": "Study drug: TX-885 (investigational, interventional phase II trial)\nRSI expected adverse reactions (Investigator's Brochure): headache\nNarrative: A 22-year-old man was admitted for 2 days with acute appendicitis and had an appendectomy.\nInvestigator causality: not related\nSponsor causality: not related",
+      "expect_equals": "SERIOUS=yes CRITERION=hospitalization EXPECTED=no RELATED=no CLOCK=none"
+    }
+  ]
+}

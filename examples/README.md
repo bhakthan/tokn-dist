@@ -34,7 +34,7 @@ exactly what that walkthrough needs.
 | **Start without a model** | [first-ten-minutes](first-ten-minutes/README.md) → [judgments](judgments/README.md) → [factory-evidence-tour](factory-evidence-tour/README.md) | No (one optional live step) |
 | **Talk to a model safely** | [cli-session-lab](cli-session-lab/README.md) → [airgap-model-preflight](airgap-model-preflight/README.md) → [checkpoints](checkpoints/README.md) | Optional, then yes |
 | **Build and prove a change** | [full-stack-app](full-stack-app/README.md) → [verified-completion](verified-completion/README.md) → [migration-parity](migration-parity/README.md) | Yes, then no |
-| **Measure and improve** | [loop-engineering](loop-engineering/README.md) → [quality-flywheel](quality-flywheel/README.md) → [session-drift-lab](session-drift-lab/README.md) | Yes, then optional, then no |
+| **Measure and improve** | [loop-engineering](loop-engineering/README.md) → [quality-flywheel](quality-flywheel/README.md) → [verified-improvement](verified-improvement/README.md) → [session-drift-lab](session-drift-lab/README.md) | Yes, yes, then optional, then no |
 | **Know what you can use** | [skillpack-preflight](skillpack-preflight/README.md) → [cited-local-knowledge](cited-local-knowledge/README.md) → [knowledge-bundles](knowledge-bundles/README.md) | No (last step optional) |
 | **Coordinate** | [flows](flows/README.md) → [peer-collab](peer-collab/README.md) → [agent-organization](agent-organization/README.md) → [federation](federation/README.md) | Varies |
 | **Apply a domain** | Pick a domain row in the table below. Check its entitlement, tools and which decisions stay with a human. | Usually |
@@ -97,6 +97,7 @@ level, model, network and writes, is in [catalog.json](catalog.json).
 | [physai-fleet](physai-fleet/README.md) | `physai` mode generates a 14-agent warehouse robot fleet | trial |
 | [science-review](science-review/README.md) | A reviewer finds three planted defects in a figure caption with `review_artifact` | — |
 | [quality-flywheel](quality-flywheel/README.md) | `tokn flywheel run` grades a dataset over two cycles against a baseline | — |
+| [verified-improvement](verified-improvement/README.md) | A pharmacovigilance triage prompt is optimized, confirmed on held-out cases and gated on a measured noise band | — |
 | [loop-graph](loop-graph/README.md) | A governed graph of loops refuses a metric that is fooling itself; a held-out check confirms it | — |
 | [skill-compose](skill-compose/README.md) | TOKN picks which skills, how many and in what order from a small library | — |
 | [dataflow](dataflow/README.md) | Skills are ordered by what they consume and produce; a broken chain is flagged | — |
