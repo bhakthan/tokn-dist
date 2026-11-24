@@ -65,7 +65,7 @@ version-accurate catalog.
 > A trial is optional for premium features.
 >
 > Prefer a guided, copy-paste walkthrough? **[GETTING_STARTED.md](GETTING_STARTED.md)**
-> takes you from a fresh download to three runnable domain previews and a full
+> takes you from a fresh download to five runnable domain previews and a full
 > offline governed-judgment example, with the expected output printed for each
 > step — no API key and no trial.
 >
@@ -519,7 +519,7 @@ remain separately licensed — what is free is described precisely below.
 **Step-by-step version with expected output for every command:
 [GETTING_STARTED.md](GETTING_STARTED.md).**
 
-### Three domain previews you can run right now
+### Five domain previews you can run right now
 
 Each preview feeds a small **fixed synthetic case** to a **real TOKN domain
 validator** — the same exported function the licensed domain plug calls — and
@@ -531,9 +531,11 @@ tokn community list
 tokn community demo --domain powergrid
 tokn community demo --domain geospatial
 tokn community demo --domain batterypass
+tokn community demo --domain finrisk
+tokn community demo --domain atmchem
 ```
 
-To run all three plus the offline judgment walkthrough in one unattended pass,
+To run all five plus the offline judgment walkthrough in one unattended pass,
 this repository also ships `scripts/community-smoke.sh` (bash) and
 `scripts/community-smoke.ps1` (PowerShell). Each needs only the `tokn` binary,
 works in a temp directory it deletes on exit, and exits `0` only if every check
@@ -544,7 +546,8 @@ passed.
 | `powergrid` | After a single-element outage, is every bus still inside the NERC TPL-001-5 N-1 voltage band? |
 | `geospatial` | Is this coordinate reference system valid for computing **area**, or will the number be plausible and wrong? |
 | `batterypass` | Does the chemistry declared on an EU Battery Passport agree with the cathode formula declared in the same document? |
-
+| `finrisk` | Is this misstatement material — and under whose rules? Classified under IFRS; refused when no regime is named. |
+| `atmchem` | Is this PM2.5 simulation good enough to support a regulatory statement, or does it fail the Boylan & Russell performance criteria? |
 Add `--json` to either command for machine-readable output.
 
 **What a preview is, honestly.** It computes locally, reads no file you supply,
@@ -748,14 +751,14 @@ Three boundaries worth stating plainly, because they are easy to assume wrong:
 ## What full domain access adds
 
 [![TOKN across science, engineering and business, with Community core capabilities separated from licensed domain workflows.](docs/assets/community-breadth.png)](docs/assets/community-breadth.png)
-*Breadth without hidden access promises: Community includes fixed battery-passport,
-geospatial and power-grid previews. Specialized workflows retain their licensing
+*Breadth without hidden access promises: Community includes fixed air-quality,
+battery-passport, financial-materiality, geospatial and power-grid previews. Specialized workflows retain their licensing
 and safeguards. Click for the full 4K image. [Image sources](docs/assets/README.md).*
 
 A **domain harness** adds field-specific tools, checks and review workflows.
 TOKN has **38 domain modes** across science, engineering, healthcare and business.
 Launch an entitled mode with `tokn agent-repl --mode <name>`.
-The free tier previews three domains against real validators.
+The free tier previews five domains against real validators.
 
 Browse the [domain overview](CAPABILITIES.md#domain-harnesses), or inspect
 your installed roster with `tokn introspect --section modes`.
@@ -764,7 +767,7 @@ What a licence changes:
 
 | | Community preview | Licensed domain |
 |---|---|---|
-| Input | three fixed synthetic previews, compiled in | domain-permitted data; some domains remain synthetic/sandbox-only |
+| Input | five fixed synthetic previews, compiled in | domain-permitted data; some domains remain synthetic/sandbox-only |
 | Surface | one validator call, printed | the domain's full tool set, callable by the agent |
 | Process | a single verdict | a lifecycle state machine with named states |
 | Gates | shown, not enforced on anything | enforced on transitions |

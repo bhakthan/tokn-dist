@@ -10,7 +10,7 @@ became available; they are not recommendations to install an old release.
 
 ```mermaid
 flowchart TD
-    A["Download and verify"] --> B["Try three fixed local previews"]
+    A["Download and verify"] --> B["Try five fixed local previews"]
     B --> C["Evaluate an offline rules judgment"]
     C --> D{"What next?"}
     D -->|No model| E["Explore Community commands"]
@@ -44,7 +44,7 @@ needs Python 3.11+; its baseline needs no extra packages, API key or trial.
 
 - [0. Before you start](#0-before-you-start)
 - [1. Install and confirm](#1-install-and-confirm)
-- [2. Three domain previews](#2-three-domain-previews)
+- [2. Five domain previews](#2-five-domain-previews)
 - [3. Governed judgments, offline (no key)](#3-governed-judgments-offline-no-key)
 - [4. Optional: your own Jev key](#4-optional-your-own-jev-key)
 - [5. Optional: a configured LLM and the agent session](#5-optional-a-configured-llm-and-the-agent-session)
@@ -146,7 +146,7 @@ these fields.
 tokn community list
 ```
 
-Expected: a catalog of three domain previews. If you see
+Expected: a catalog of five domain previews. If you see
 `unknown command "community"`, your binary predates v0.3.44 — run `tokn update`
 (that one command does need internet access) and try again.
 
@@ -160,7 +160,7 @@ Nothing in this guide requires a licence.
 ### Optional: check everything at once
 
 If you would rather confirm the whole free tier in one go before reading on,
-this repository ships a smoke script that runs all three previews and the
+this repository ships a smoke script that runs all five previews and the
 offline judgment walkthrough. It needs the `tokn` binary and nothing else — no
 key, no provider, no trial — and keeps every scratch file in a temp directory
 it deletes on exit.
@@ -183,7 +183,7 @@ does not explain the output.
 
 ---
 
-## 2. Three domain previews
+## 2. Five domain previews
 
 A preview feeds a **fixed synthetic case** to a **real TOKN domain validator** —
 the same exported function the licensed domain plug calls — and prints what it
@@ -286,6 +286,68 @@ and cobalt (all absent here) and forbids iron and phosphorus (both present). Two
 sections of one EU Battery Passport disagree — the kind of defect that survives
 human review because each section is individually well-formed. In the licensed
 domain the cross-section consistency gate blocks publication on this finding.
+
+### 2d. `finrisk` — a materiality call that depends on whose rules
+
+```text
+tokn community demo --domain finrisk
+```
+
+Expected output (abridged):
+
+```text
+Synthetic case A — the regime is named: IFRS
+  misstatement:   70,000
+  total assets:   1,000,000
+  regime:         IFRS (stated)
+  Verdict: ACCEPTED
+  Findings: none
+  Classified as material. ... 7.00% of total assets ... this jurisdiction uses
+    principles-based materiality; quantitative thresholds are indicative only.
+
+Synthetic case B — the same numbers, no regime named
+  regime:         (not stated)
+  Verdict: BLOCKED
+  Findings:
+    - regime unknown: no jurisdiction was given, so no thresholds apply;
+      materiality not classified
+```
+
+**Why it matters.** Materiality thresholds differ between SEC, IFRS, EU and UK
+practice. Given the same numbers and no regime, the validator names the missing
+fact instead of quietly borrowing a threshold you never chose. In the licensed
+domain the materiality gate holds the analysis until the regime is stated.
+
+### 2e. `atmchem` — a pollution model that is not good enough to quote
+
+```text
+tokn community demo --domain atmchem
+```
+
+Expected output (abridged):
+
+```text
+Synthetic case A — simulation tracks the monitor
+  observed:   12, 15, 9, 20 µg/m³
+  modelled:   13, 14, 10, 18 µg/m³
+  Verdict: ACCEPTED
+  Findings: none
+  Passes at the "goal" tier (MFB 0.3%, MFE 9.0% against criteria ±60% / 75%).
+
+Synthetic case B — the same monitor, simulation reads three times high
+  modelled:   36, 45, 27, 60 µg/m³
+  Verdict: BLOCKED
+  Findings:
+    - BENCHMARK NOT MET: ... PM2.5 fails Boylan-Russell 2006 criteria
+      (|MFB|=100.0% exceeds criteria ±60%; MFE=100.0% exceeds criteria 75%)
+    - regulatory statement refused: EVALUATION GATE FAILED: ...
+      HEALTH_IMPACT and REGULATORY_REPORT phases are blocked
+```
+
+**Why it matters.** A simulation that overstates pollution threefold still
+produces tidy exceedance tables. The evaluation gate checks the model against
+the monitor first, and refuses any compliance or health-impact statement until
+the model meets the performance criteria.
 
 ### Machine-readable form
 

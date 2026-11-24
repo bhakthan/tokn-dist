@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # community-smoke.sh — confirm a TOKN install can run the free Community tier.
 #
-# Runs the three domain previews and the offline governed-judgment example.
+# Runs the five domain previews and the offline governed-judgment example.
 # No API key, no model provider, no trial. The checks themselves send nothing;
 # set TOKN_NO_REGISTER=1 and TOKN_NO_UPDATE_CHECK=1 to silence TOKN's startup
 # install-count and update-check too.
@@ -54,7 +54,7 @@ fi
 
 step "domain previews"
 tokn community list >/dev/null 2>&1 && ok "community list" || bad "community list"
-for domain in powergrid geospatial batterypass; do
+for domain in powergrid geospatial batterypass finrisk atmchem; do
   out="$(tokn community demo --domain "$domain" 2>&1)" || { bad "demo $domain (exit)"; continue; }
   if printf '%s' "$out" | grep -q "Verdict: ACCEPTED" &&
      printf '%s' "$out" | grep -q "Verdict: BLOCKED"; then
