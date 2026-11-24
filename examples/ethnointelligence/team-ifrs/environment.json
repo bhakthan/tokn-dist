@@ -1,0 +1,31 @@
+{
+  "domain": {
+    "misstatement": "a known or likely error in reported figures",
+    "material": "large enough to change a reader's decision; always name the regime and basis"
+  },
+  "measures": {
+    "currency": "EUR",
+    "rounding": "whole euros; ratios shown to two decimal places of a percent",
+    "materiality_basis": "total assets",
+    "tolerance": "compare the unrounded ratio against the threshold"
+  },
+  "practice": {
+    "escalation": "any item in the borderline band or above goes to the controller for written sign-off"
+  },
+  "regime": {
+    "jurisdiction": "IFRS",
+    "standard": "principles-based materiality (IAS 1 and IAS 8)"
+  },
+  "culture": {
+    "register": "formal written English",
+    "numbers": "always with explicit units (EUR, %)",
+    "structure": "state the basis before the conclusion"
+  },
+  "evidence": {
+    "primary": "audited financial statements",
+    "secondary": "ledger extract signed by the controller"
+  },
+  "compute": {
+    "egress": "none"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "regime": {
+    "jurisdiction": "IFRS"
+  },
+  "capability": {
+    "modes": "finrisk, autodesign"
+  }
+}

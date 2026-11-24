@@ -125,6 +125,7 @@ level, model, network and writes, is in [catalog.json](catalog.json).
 | [checkpoints](checkpoints/README.md) | Roll back a bad agent edit with checkpoints, `/undo` and `/rewind` | — |
 | [codebase-graph](codebase-graph/README.md) | Blast-radius analysis with `/codebase blast` on a small synthetic Go service | — |
 | [first-ten-minutes](first-ten-minutes/README.md) | Onboarding: version and licence checks, first `agent-run`, the REPL, offline judgments | — |
+| [ethnointelligence](ethnointelligence/README.md) | The Environment Contract: declared vs. probed vs. open context, an invalid declaration refused, and finrisk refusing to guess a regime | v0.3.125; step 4 needs a model and the finrisk trial |
 | [judgments](judgments/README.md) | Local advisory checks on supplied run evidence, not proof of answer correctness | — |
 | [full-stack-app](full-stack-app/README.md) | Build a small full-stack task-manager app from a written spec, then check it | — |
 | [flows](flows/README.md) | Multi-step workflows started from the REPL | — |
