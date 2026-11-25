@@ -567,6 +567,10 @@
     "2026-11-23": {
       "count": 35,
       "uniques": 15
+    },
+    "2026-11-24": {
+      "count": 27,
+      "uniques": 14
     }
   },
   "downloads_daily": {
@@ -698,7 +702,8 @@
     "2026-11-21": 15,
     "2026-11-22": 33,
     "2026-11-23": 29,
-    "2026-11-24": 14
+    "2026-11-24": 14,
+    "2026-11-25": 14
   },
   "downloads_snapshots": {
     "2026-07-18": {
@@ -2240,6 +2245,18 @@
         "tokn_windows_amd64.exe": 39
       },
       "total": 1199
+    },
+    "2026-11-25": {
+      "assets": {
+        "SHA256SUMS": 43,
+        "SHA256SUMS.sig": 42,
+        "tokn_darwin_amd64": 35,
+        "tokn_darwin_arm64": 34,
+        "tokn_linux_amd64": 40,
+        "tokn_linux_arm64": 35,
+        "tokn_windows_amd64.exe": 41
+      },
+      "total": 1213
     }
   },
   "downloads_state_v2": {
@@ -2919,31 +2936,59 @@
       },
       "v0.3.125/SHA256SUMS": {
         "carry": 0,
-        "last": 0
+        "last": 1
       },
       "v0.3.125/SHA256SUMS.sig": {
         "carry": 0,
-        "last": 0
+        "last": 1
       },
       "v0.3.125/tokn_darwin_amd64": {
         "carry": 0,
-        "last": 0
+        "last": 1
       },
       "v0.3.125/tokn_darwin_arm64": {
         "carry": 0,
-        "last": 0
+        "last": 1
       },
       "v0.3.125/tokn_linux_amd64": {
         "carry": 0,
-        "last": 0
+        "last": 1
       },
       "v0.3.125/tokn_linux_arm64": {
         "carry": 0,
-        "last": 0
+        "last": 1
       },
       "v0.3.125/tokn_windows_amd64.exe": {
         "carry": 0,
-        "last": 0
+        "last": 1
+      },
+      "v0.3.126/SHA256SUMS": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.126/SHA256SUMS.sig": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.126/tokn_darwin_amd64": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.126/tokn_darwin_arm64": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.126/tokn_linux_amd64": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.126/tokn_linux_arm64": {
+        "carry": 0,
+        "last": 1
+      },
+      "v0.3.126/tokn_windows_amd64.exe": {
+        "carry": 0,
+        "last": 1
       },
       "v0.3.92/SHA256SUMS": {
         "carry": 0,
@@ -3179,7 +3224,7 @@
       "uniques": 2
     },
     {
-      "count": 36,
+      "count": 37,
       "path": "/bhakthan/tokn-dist/tree/main/examples",
       "title": "/tree/main/examples",
       "uniques": 1
@@ -3191,7 +3236,7 @@
       "uniques": 2
     },
     {
-      "count": 7,
+      "count": 8,
       "path": "/bhakthan/tokn-dist/pulse",
       "title": "/pulse",
       "uniques": 1
@@ -3200,6 +3245,12 @@
       "count": 7,
       "path": "/bhakthan/tokn-dist/tree/main/examples/rnaseq-software-factory",
       "title": "/tree/main/examples/rnaseq-software-factory",
+      "uniques": 1
+    },
+    {
+      "count": 6,
+      "path": "/bhakthan/tokn-dist/graphs/traffic",
+      "title": "/graphs/traffic",
       "uniques": 1
     },
     {
@@ -3216,12 +3267,6 @@
     },
     {
       "count": 5,
-      "path": "/bhakthan/tokn-dist/graphs/traffic",
-      "title": "/graphs/traffic",
-      "uniques": 1
-    },
-    {
-      "count": 5,
       "path": "/bhakthan/tokn-dist/tree/main/examples/rnaseq-software-factory/spec",
       "title": "/tree/main/examples/rnaseq-software-factory/spec",
       "uniques": 1
@@ -3235,13 +3280,13 @@
   ],
   "referrers": [
     {
-      "count": 29,
+      "count": 31,
       "referrer": "github.com",
       "uniques": 1
     }
   ],
   "repo": "bhakthan/tokn-dist",
-  "updated_at": "2026-11-24T17:52:50.531117+00:00",
+  "updated_at": "2026-11-25T17:19:28.122763+00:00",
   "views_daily": {
     "2026-07-05": {
       "count": 0,
@@ -3809,6 +3854,10 @@
     },
     "2026-11-23": {
       "count": 20,
+      "uniques": 1
+    },
+    "2026-11-24": {
+      "count": 14,
       "uniques": 1
     }
   }
