@@ -1,0 +1,22 @@
+{
+  "enabled": true,
+  "source_root": "/absolute/private/staging/boltz2-source",
+  "weights_root": "/absolute/private/staging/boltz2-weights",
+  "output_root": "/absolute/private/state/boltz2-output",
+  "scratch_root": "/absolute/private/tmpfs/boltz2-scratch",
+  "docker_socket": "/var/run/docker.sock",
+  "image_id": "sha256:<reviewed Boltz-2 image content ID>",
+  "reviewer_key": "<base64 external prediction reviewer Ed25519 PUBLIC key>",
+  "policy_version": "external-review-v1",
+  "source_manifest": {
+    "<every-relative-source-file>": "<SHA256>"
+  },
+  "weights_manifest": {
+    "<every-relative-cache-and-data-file-including-unpacked-mols>": "<SHA256>"
+  },
+  "data_terms_sha256": "<SHA256 of reviewed ancillary-data terms evidence>",
+  "revoked_ids": [],
+  "timeout_seconds": 3600,
+  "memory_mib": 65536,
+  "cpus": 8
+}

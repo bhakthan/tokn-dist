@@ -1,0 +1,4 @@
+{
+  "design_config": "/absolute/private/tokn-program/proteinmpnn-config.json",
+  "predict_config": "/absolute/private/tokn-program/boltz2-config.json"
+}

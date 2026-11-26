@@ -4,6 +4,14 @@ Requires **TOKN v0.3.69 or newer**. The first two steps need no GPU, Docker,
 Python, model weights, LLM key or paid model call. No scientific inference has
 been run for this example. The adapter is **experimental and disabled by default**.
 
+For a complete **v0.3.127+ programmable molecular-design program**, use
+[the ProteinMPNN-to-Boltz-2 walkthrough](programmable-design/README.md).
+It contains an eight-residue typed synthetic backbone, separate model
+configurations and design/prediction reviews, exact signature handoff, private
+state/receipt interpretation, recovery without replay and a non-inferential
+geometry check. It is still an operator procedure, not a runnable biological
+target or a scientific result.
+
 This is a protein-only extension of `structbio`, not the existing cryo-EM/FSC
 walkthrough. It supports one-chain prediction and two-to-four-protein cofolding,
 not ligands, affinity, design or genomics. See

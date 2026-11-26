@@ -343,8 +343,31 @@
       "last_verified": null,
       "evidence_kind": "catalog and preflight output",
       "next": [
+        "programmable-molecular-design",
         "change-tracking",
         "clintrial"
+      ]
+    },
+    {
+      "id": "programmable-molecular-design",
+      "url": "biomolecular-modeling/programmable-design/README.md",
+      "family": "knowledge",
+      "level": "guided",
+      "tier": null,
+      "requires": [
+        "tokn",
+        "linux-docker-nvidia",
+        "external-ed25519-reviewer"
+      ],
+      "model": "required",
+      "remote_calls": "none",
+      "writes": "private operator state, signed request records and admitted model artifacts outside the repository",
+      "minimum_version": "0.3.127",
+      "last_verified": null,
+      "evidence_kind": "typed synthetic program and independently reviewed stage workflow",
+      "next": [
+        "biomolecular-modeling",
+        "structural-biology"
       ]
     },
     {

@@ -1,0 +1,11 @@
+{
+  "expires_at": "<UTC RFC3339 timestamp within 24 hours>",
+  "review": {
+    "operator_assertion": "<opaque external operator assertion reference>",
+    "operator_evidence": "<64 lowercase hex SHA-256 of retained operator evidence>",
+    "target_evidence": "<64 lowercase hex SHA-256 of retained target-purpose review evidence>",
+    "purpose": "separately reviewed prediction of the exact sampled design-stage sequence",
+    "no_hard_exclusion": true,
+    "uncertainty": "none"
+  }
+}
