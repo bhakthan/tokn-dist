@@ -799,6 +799,9 @@ The trial writes a signed, machine-bound token to `~/.tokn/license.json` and is
 limited to **one trial per machine**. When it expires, TOKN automatically
 reverts to the community tier — the binary keeps working.
 
+> **Restricted domains (`synbio`):** Not included in self-issued trials;
+> requires explicit administrator approval.
+
 > ⚠️ **Apple Silicon:** developer-license support is **not ready** on macOS
 > arm64. Do not rely on a trial there to evaluate licensed workflows. The
 > trial is one per machine — use it on Windows, Linux, or an Intel Mac. See
@@ -824,8 +827,8 @@ Updating **does not** reset or invalidate an active trial.
 | Tier | Cost | Features | Expiry |
 |------|------|----------|--------|
 | Community | Free | Core agent loop, built-in lessons, System One decisions, governed judgments, and read-only domain previews (`tokn community`); licensed domain workflows remain gated | Perpetual |
-| Trial | Free | Full feature surface — see [Platform support](#platform-support); not ready on Apple Silicon | 14 days, one per machine |
-| Pro / Enterprise | Paid | Full surface, production & regulated use | Annual / perpetual |
+| Trial | Free | Standard licensed features (`synbio` excluded; requires admin approval) — see [Platform support](#platform-support); not ready on Apple Silicon | 14 days, one per machine |
+| Pro / Enterprise | Paid | Full surface, production & regulated use (`synbio` requires explicit admin approval) | Annual / perpetual |
 
 ## Support & licensing
 

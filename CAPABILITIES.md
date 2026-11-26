@@ -325,14 +325,15 @@ Inspect your installed roster with `tokn introspect --section modes`.
 | `semicon` | Semiconductor engineering |
 | `spacemarine` | Space and maritime engineering |
 | `structbio` | Structural biology |
-| `synbio` | Synthetic biology with screening controls |
+| `synbio` | Synthetic biology with screening controls (requires admin approval; excluded from trials) |
 | `tradecomp` | Trade-compliance review |
 | `transcriptomics` | RNA-seq quality and analysis |
 
 Community includes fixed read-only previews for power-grid, geospatial and
 Battery Passport checks. Full domain workflows require appropriate entitlement;
-some accept only synthetic or sandbox inputs. **A licence does not bypass safety
-gates.** Installing a skill pack does not unlock a domain.
+some accept only synthetic or sandbox inputs. `synbio` is excluded from
+self-issued trials and requires explicit administrator approval. **A licence
+does not bypass safety gates.** Installing a skill pack does not unlock a domain.
 
 Outputs are decision support, not professional advice, certification or
 permission to make clinical, legal, financial or operational decisions.
